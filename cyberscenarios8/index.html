@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Scenario v8: TRAFİK TSUNAMİSİ: Büyük Ölçekli DDoS Krizi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background-color: var(--dark-bg); 
+            color: var(--text-light); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            min-height: 100vh;
+            font-size: 0.95em; 
+        }
+
+        .container { 
+            background-color: var(--container-bg); 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            padding: 20px; 
+            max-width: 950px; 
+            width: 100%; 
+            margin: 40px 0; 
+        }
+
+        @media (min-width: 768px) { .container { padding: 40px; } }
+
+        .centered-page { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            min-height: 60vh; 
+            animation: fadeIn 0.5s ease-out; 
+        }
+
+        h1 { font-size: 2.4em; color: var(--accent-blue); margin-bottom: 20px; }
+        h2 { font-size: 1.9em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 25px; text-align: left; }
+        h3 { font-size: 1.5em; color: var(--accent-purple); text-align: left; margin-top: 25px; margin-bottom: 15px; }
+        h4 { font-size: 1.1em; color: var(--accent-yellow); text-align: left; margin-top: 0; border-bottom: 1px solid var(--interactive-bg); padding-bottom: 10px; }
+        p { line-height: 1.7; font-size: 1em; }
+
+        .section { display: none; padding: 20px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.5s ease-out; }
+        @media (min-width: 768px) { .section { padding: 30px; } }
+
+        .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+        .btn { background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center; gap: 15px; font-weight: 700; }
+        .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        .btn .btn-text { flex-grow: 1; }
+        .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; }
+        .btn-start, .btn-continue { font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green); color: var(--text-dark); justify-content: center; }
+
+        #intermissionSection .metric-change { font-size: 1.2em; margin: 15px 0; display: flex; align-items: center; gap: 10px; }
+        .metric-change .positive { color: var(--accent-green); }
+        .metric-change .negative { color: var(--accent-red); }
+        .metric-change .neutral { color: var(--accent-blue); } 
+
+        #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; }
+        #statusBar .metric { text-align: center; font-size: 0.9em; flex: 1; min-width: 100px; } 
+        #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); }
+
+        .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; width: 100%; max-width: 850px; } 
+        .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 150px; }
+        .metric-card:hover { transform: scale(1.05); border-color: var(--accent-blue); }
+        .metric-card .icon { font-size: 2.5em; color: var(--accent-blue); margin-bottom: 10px; }
+        .metric-card .label { font-size: 1.1em; margin-bottom: 5px; color: var(--text-light); }
+        .metric-card .value { font-size: 1.8em; font-weight: bold; color: var(--accent-yellow); }
+
+        .code-block, .slack-chat { background-color: var(--text-dark); border: 1px solid #6272a4; border-radius: 8px; padding: 20px; margin-top: 15px; white-space: pre-wrap; word-break: break-all; font-family: 'Consolas', monospace; }
+        .learning-note { background-color: var(--text-dark); border-left: 5px solid var(--accent-blue); padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .scenario-image { width: 100%; max-width: 500px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .slack-chat .message { margin-bottom: 10px; padding: 8px; border-radius: 5px; background-color: #3f3f5a; }
+        .slack-chat .sender { font-weight: bold; color: var(--accent-pink); }
+        .slack-chat .sender.ciso { color: var(--accent-green); }
+        .slack-chat .sender.ops { color: var(--accent-yellow); }
+        .slack-chat .sender.legal { color: var(--accent-blue); }
+        .slack-chat .sender.ceo { color: var(--accent-purple); }
+        .slack-chat .sender.cto { color: var(--accent-green); } 
+        .slack-chat .sender.pr { color: var(--accent-pink); } 
+        .slack-chat .sender.finance { color: var(--accent-red); } 
+        .slack-chat .sender.vendor { color: var(--accent-blue); } /* New for DDoS vendor */
+
+        .suspect-card { background-color: var(--interactive-bg); border-radius: 8px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--accent-purple); box-shadow: 0 2px 8px rgba(0,0,0,0.2); text-align: left;}
+        .suspect-card h4 { margin-top: 0; margin-bottom: 10px; border-bottom: none; color: var(--accent-purple); }
+        .suspect-card p {font-size: 0.9em; line-height: 1.6;}
+        .suspect-card strong { color: var(--accent-yellow); }
+
+        /* === FİNAL SAYFASI STİLLERİ === */
+        #finalSection { text-align: center; }
+        #performance-badge-container { margin: 25px 0; }
+        #performance-badge { padding: 12px 30px; font-size: 1.8em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease; }
+        #performance-badge:hover { transform: scale(1.05); }
+        .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+        @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+        .event-timeline, .strategic-debrief { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--section-bg); margin-top: 20px; }
+        .event-timeline h3, .strategic-debrief h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .event-timeline ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
+        .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); font-size: 0.95em; }
+        .event-timeline li:last-child { border-left: none; }
+        .event-timeline li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-green); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; border: 2px solid var(--section-bg); }
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+        .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+        .event-timeline li .decision-impact { font-style: italic; opacity: 0.8; font-size: 0.9em; }
+        #strategic-debrief-content p { font-size: 1em; margin-bottom: 15px; }
+
+        /* Roles Info specific styles */
+        .intro-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        @media (min-width: 768px) {
+            .intro-info-grid {
+                grid-template-columns: 1fr 1fr; 
+            }
+        }
+
+        .intro-roles-container, .intro-metrics-container {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Shadow adjusted for better visibility */
+            border: 1px solid var(--interactive-bg);
+        }
+
+        .intro-roles-container h3, .intro-metrics-container h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .intro-roles-container ul, .intro-metrics-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .intro-roles-container li, .intro-metrics-container li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--interactive-bg);
+            font-size: 1.05em;
+        }
+
+        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .intro-roles-container li .icon, .intro-metrics-container li .icon {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            width: 35px;
+            text-align: center;
+        }
+        
+        .intro-roles-container li strong {
+            color: var(--accent-yellow);
+        }
+
+        .intro-roles-container li small {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-light);
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-water"></i> TRAFİK TSUNAMİSİ: Büyük Ölçekli DDoS Krizi</h1>
+            <p style="max-width: 600px;">Hoş geldiniz, **ÇOLHAK Teknoloji**'nin **Ağ Güvenlik Uzmanı**! Göreviniz kritik: Şirketinizin ana sunucularına yönelik, uluslararası bir botnet tarafından gerçekleştirilen **büyük ölçekli bir DDoS saldırısı** altındasınız. Web siteleri, hizmetler ve hatta iç ağ bağlantıları kesintiye uğramak üzere. Bu saldırı, sistemleri aşırı yükleyerek iş sürekliliğini tehdit ediyor ve itibarınıza büyük zarar veriyor. Göreviniz: Saldırıyı hafifletmek, trafiği yönlendirmek, altyapıyı korumak ve iş sürekliliğini sağlamak için zamana karşı yarışmak!</p>
+            <img src="intro.png" alt="DDoS attack themed intro image" class="scenario-image">
+
+            <div class="intro-info-grid">
+                <div class="intro-roles-container">
+                    <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+                    <ul>
+                        <li class="your-role">
+                            <span class="icon"><i class="fa-solid fa-network-wired"></i></span>
+                            <div>
+                                <strong>Sizin Rolünüz: Ağ Güvenlik Uzmanı</strong> 
+                                <small>Şirketin ağ altyapısının güvenliğinden sorumlusun. DDoS mitigasyon adımlarında aktif rol alıyorsun. Seçimlerin sonucu doğrudan etkileyecek.</small>
+                            </div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span><div><strong>CISO Melih Kaan</strong> <small>Güvenlikten sorumlu, hızlı ve etkili mitigasyon bekliyor.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-microchip"></i></span><div><strong>CTO Onur Güngor</strong> <small>Altyapı performansı ve iş sürekliliği öncelikli.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span><div><strong>CEO Ayfer Yıldız</strong> <small>Şirket itibarı ve finansal kayıpları minimize etmek istiyor.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-cloud"></i></span><div><strong>CDN/DDoS Koruma Sağlayıcısı</strong> <small>Dışarıdan destek sağlayacak, ancak her zaman hızlı yanıt veremeyebilir.</small></div></li>
+                    </ul>
+                </div>
+
+                <div class="intro-metrics-container">
+                    <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+                    <ul>
+                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-gauge-high"></i></span><div><strong>Sistem Yükü</strong> <small>Sunucuların DDoS trafiğine karşı direnci. (Başlangıç: Aşırı Yüksek)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-shield-virus"></i></span><div><strong>Saldırı Etkinliği</strong> <small>DDoS saldırısının gücü ve etkisi. (Başlangıç: Tam)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-sack-dollar"></i></span><div><strong>Finansal Zarar</strong> <small>Kesintiden kaynaklanan maliyet. (Başlangıç: ₺0)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-hourglass-half"></i></span><div><strong>Kesinti Süresi</strong> <small>Hizmet kesintisinin toplam süresi. (Başlangıç: 0 Dakika)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-pink);"><i class="fa-solid fa-heart-crack"></i></span><div><strong>Müşteri Memnuniyeti</strong> <small>Müşterilerin hizmete erişiminden memnuniyeti. (Başlangıç: 100)</small></div></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <p id="intermissionText" style="max-width: 600px;"></p>
+            <div class="interactive-element" style="width: 100%; max-width: 500px;">
+                <h4>Karar Etkileri</h4>
+                <div id="intermissionMetrics"></div>
+            </div>
+            <div class="interactive-element" style="width: 100%; max-width: 500px; border-left-color: var(--accent-blue); margin-top: 20px;">
+                <h4>Stratejik Değerlendirme</h4>
+                <p id="strategicText" style="font-size: 1em;"></p>
+            </div>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-gauge-high"></i> Sistem Yükü</span><div class="value" id="status-systemLoad">Aşırı Yüksek</div></div>
+                <div class="metric"><span><i class="fa-solid fa-shield-virus"></i> Saldırı Etkinliği</span><div class="value" id="status-attackEffectiveness">Tam</div></div>
+                <div class="metric"><span><i class="fa-solid fa-sack-dollar"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-hourglass-half"></i> Kesinti Süresi</span><div class="value" id="status-downtime">0 Dakika</div></div>
+                <div class="metric"><span><i class="fa-solid fa-heart-crack"></i> Müşteri Memnuniyeti</span><div class="value" id="status-customerSatisfaction">100</div></div>
+            </div>
+            <div id="game-content">
+
+                <div id="ddos_phase1_initial_detection" class="section">
+                    <h2><i class="fa-solid fa-wave-square"></i> Aşama 1: İlk Tespit ve Trafik Anormalliği</h2>
+                    <h3>Saat 0:00 - Trafik Uyarısı!</h3>
+                    <p>Gece yarısı, ağ izleme sistemlerinizden art arda kritik uyarılar gelmeye başladı: "Anormal trafik artışı tespit edildi!" Kısa sürede, normal trafiğin onlarca katı büyüklüğünde, dağıtık ve yoğun bir istek seli ana sunucularınıza yöneldiğini fark ettiniz. Bu, bariz bir **büyük ölçekli DDoS saldırısı**! Web siteniz yavaşlamaya başladı, hatta bazı kullanıcılar erişim sorunları yaşıyor.</p>
+                    <img src="spike.png" alt="DDoS traffic spike visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <div class="decision-buttons">
+                            <button class="btn critical" data-decision="ddos-p1-enable-onprem-mitigation" data-next-section="ddos_phase2_cdn_contact"><i class="fa-solid fa-firewall"></i><div class="btn-text">Seçenek A: Mevcut On-Prem DDoS Mitigasyon Sistemlerini Aktive Et.<small>Trafiği kendi altyapındaki çözümlerle filtrelemeye başla. Hızlı ancak kapasitesi sınırlı olabilir.</small></div></button>
+                            <button class="btn" data-decision="ddos-p1-contact-isp" data-next-section="ddos_phase2_cdn_contact"><i class="fa-solid fa-phone-volume"></i><div class="btn-text">Seçenek B: ISP ile İletişime Geç ve Trafik Filtrelemesini Talep Et.<small>Saldırı trafiğinin şirket ağına ulaşmadan önce filtrelemesini iste. Dış bağımlılık ve gecikme riski var.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> DDoS saldırılarında ilk müdahale hızı hayati önem taşır. Kendi mevcut kapasitelerini kullanmak hızlı bir çözüm olabilirken, ISP desteği daha büyük saldırılar için gereklidir.</div>
+                </div>
+
+                <div id="ddos_phase2_cdn_contact" class="section">
+                    <h2><i class="fa-solid fa-cloud-arrow-up"></i> Aşama 2: CDN/DDoS Koruma Sağlayıcısı ile İletişim</h2>
+                    <h3>Saat 0:45 - CDN Sağlayıcısından Yanıt!</h3>
+                    <p>On-prem çözümleriniz bir miktar rahatlama sağlasa da, saldırının büyüklüğü devam ediyor. CISO ve CTO'nun onayıyla, CDN ve DDoS koruma sağlayıcınızla (örneğin CloudFlare, Akamai) acil bir görüşme başlattınız. Durumu detaylarıyla aktardınız. Sağlayıcı, trafik temizleme (scrubbing) hizmetini tam kapasite devreye alabileceklerini, ancak tam aktivasyonun ve trafiğin yönlendirilmesinin **yaklaşık 15-30 dakika sürebileceğini** belirtti.</p>
+                    <div class="interactive-element">
+                    <img src="ddos.png" alt="DDoS attack themed intro image" class="scenario-image">
+
+                        <h4>Bu bekleme süresinde, iş sürekliliğini sağlamak için ne yapacaksın?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn critical" data-decision="ddos-p2-temporary-service-degradation" data-next-section="ddos_phase3_traffic_diversion"><i class="fa-solid fa-minus-circle"></i><div class="btn-text">Seçenek A: Bazı Kritik Olmayan Hizmetleri Geçici Olarak Kapat.<small>Sistem yükünü azaltmak ve ana hizmetleri ayakta tutmak için kaynak tüketimini düşür.</small></div></button>
+                            <button class="btn" data-decision="ddos-p2-scale-up-resources" data-next-section="ddos_phase3_traffic_diversion"><i class="fa-solid fa-arrow-up-right-dots"></i><div class="btn-text">Seçenek B: Sunucu Kaynaklarını Hızla Artır (Scale Up/Out).<small>Mevcut sunucuların kapasitesini artır veya ek sunucular devreye al. Maliyetli olabilir.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> DDoS saldırılarında harici mitigasyon çözümlerinin devreye alınma süresi önemlidir. Bu sürede iç kaynakları yönetmek, kesintiyi minimize etmek için kritiktir.</div>
+                </div>
+
+                <div id="ddos_phase3_traffic_diversion" class="section">
+                    <h2><i class="fa-solid fa-route"></i> Aşama 3: Trafik Yönlendirme ve Hasar Kontrolü</h2>
+                    <h3>Saat 1:30 - Trafik Temizleme Başladı!</h3>
+                    <p>CDN sağlayıcınız devreye girdi ve saldırı trafiğini temizlemeye başladı. İlk sinyaller olumlu, sistem yükü yavaş yavaş düşüyor. Ancak saldırganlar taktik değiştirmiş gibi görünüyor; Layer 7 (uygulama katmanı) saldırılarına odaklanarak, belirli API uç noktalarını ve oturum yönetimini hedefliyorlar. Bu, daha akıllı, bant genişliği yerine kaynak tükenmesine odaklanan bir saldırı türü.</p>
+                    <p>CTO Onur Güngor arıyor: *"Saldırı gücü azaldı ama halen erişim sorunları var! API'lar yavaşlamış. Müşterilerimizden şikayetler gelmeye devam ediyor. Ne yapıyoruz bu Layer 7 saldırısına karşı?"*</p>
+                    <img src="traffic.png" alt="Traffic diversion visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <div class="decision-buttons">
+                            <button class="btn critical" data-decision="ddos-p3-rate-limiting" data-next-section="ddos_phase4_communication_and_reputation"><i class="fa-solid fa-hand-holding-dollar"></i><div class="btn-text">Seçenek A: Uygulama Katmanında Oran Sınırlaması (Rate Limiting) Uygula.<small>Belirli IP adreslerinden veya kullanıcı oturumlarından gelen istek hızını kısıtla. Meşru kullanıcıları etkileyebilir.</small></div></button>
+                            <button class="btn" data-decision="ddos-p3-captcha-challenges" data-next-section="ddos_phase4_communication_and_reputation"><i class="fa-solid fa-robot"></i><div class="btn-text">Seçenek B: Şüpheli Trafik için CAPTCHA Zorlaması Getir.<small>Bot trafiğini ayırt etmek için CAPTCHA gibi interaktif zorlamalar kullan. Kullanıcı deneyimini kötü etkileyebilir.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Layer 7 DDoS saldırıları daha sofistike olup, kaynak tüketimi yoluyla hizmet kesintisi yaratır. Bu tür saldırılara karşı oran sınırlaması ve CAPTCHA gibi uygulama katmanı önlemleri önemlidir.</div>
+                </div>
+
+                <div id="ddos_phase4_communication_and_reputation" class="section">
+                    <h2><i class="fa-solid fa-podcast"></i> Aşama 4: İletişim ve İtibar Yönetimi</h2>
+                    <h3>Saat 2:30 - Medya ve Müşteri Baskısı!</h3>
+                    <p>DDoS saldırısının etkisi kamuoyuna yayıldı. Sosyal medyada şikayetler çığ gibi büyüyor, bazı haber siteleri ÇOLHAK Teknoloji'nin hizmet kesintilerini manşetine taşıyor. Özellikle büyük bir e-ticaret lansmanının bu hafta yapılacak olması, CEO Ayfer Yıldız'yi çileden çıkarıyor: *"Bu durum lansmanı tehlikeye atıyor! Güvenimiz sarsılıyor. Müşterilere ne açıklama yapacağız? Finansal kayıplarımız ne olacak?"*</p>
+                    <p>PR ekibi ve hukuk danışmanlarınız, kamuoyuna yapılacak açıklamanın içeriği ve zamanlaması konusunda acil bir toplantı istiyor.</p>
+                    <img src="media.png" alt="DDoS public pressure visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="ddos-p4-transparent-apology" data-next-section="ddos_phase5_post_attack_recovery"><i class="fa-solid fa-bullhorn"></i><div class="btn-text">Seçenek A: Saldırıyı Açıkla, Özür Dile ve Alınan Önlemleri Paylaş.<small>Şeffaf ol, DDoS saldırısı altında olduğunuzu ve mitigasyon adımlarını duyur. Güveni geri kazanmaya çalış.</small></div></button>
+                            <button class="btn critical" data-decision="ddos-p4-downplay-issue" data-next-section="ddos_phase5_post_attack_recovery"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Seçenek B: Sorunu 'Yoğun Bakım' veya 'Teknik Aksaklık' Olarak Nitele.<small>DDoS saldırısından bahsetme, durumu küçümse ve iç bir teknik sorun olarak göster.</small></div></button>
+                            <button class="btn" data-decision="ddos-p4-offer-compensation" data-next-section="ddos_phase5_post_attack_recovery"><i class="fa-solid fa-gift"></i><div class="btn-text">Seçenek C: Hizmet Kesintisi İçin Kullanıcılara Telafi Teklif Et.<small>Finansal kaybı telafi etmek için indirim veya ücretsiz hizmet gibi teşvikler sun.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Siber güvenlik olaylarında iletişim stratejisi, itibar ve müşteri güvenini doğrudan etkiler. Şeffaflık genellikle en iyi yaklaşımdır.</div>
+                </div>
+
+                <div id="ddos_phase5_post_attack_recovery" class="section">
+                    <h2><i class="fa-solid fa-circle-check"></i> Aşama 5: Saldırı Sonrası Kurtarma ve Dersler</h2>
+                    <h3>Saat 3:30 - Saldırı Kontrol Altında!</h3>
+                    <p>CDN sağlayıcınızın tam desteği ve sizin proaktif müdahaleleriniz sayesinde, DDoS saldırısı nihayet kontrol altına alındı. Trafik normal seviyelere döndü ve hizmetleriniz tamamen erişilebilir durumda. Ancak, saldırının etkilerini değerlendirme ve gelecekteki olası saldırılara karşı altyapınızı güçlendirme zamanı. CISO, CTO ve CEO ile birlikte kriz sonrası toplantı yapıyorsunuz.</p>
+                    <div class="interactive-element">
+                        <h4>Bu büyük DDoS saldırısından çıkarılan derslerle, gelecekteki savunmanızı nasıl güçlendireceksin?</h4>
+                        <div class="slack-chat" id="slackChatDDoS_P5"></div>
+                        <div class="decision-buttons">
+                            <button class="btn critical" data-decision="ddos-p5-invest-advanced-mitigation" data-next-section="ddos_phase6_investigation"><i class="fa-solid fa-chart-line-up"></i><div class="btn-text">Seçenek A: Gelişmiş DDoS Mitigasyon Çözümlerine Yatırım Yap.<small>Daha sofistike DDoS koruma hizmetleri ve donanımları edinerek altyapıyı daha dayanıklı hale getir.</small></div></button>
+                            <button class="btn" data-decision="ddos-p5-conduct-drills" data-next-section="ddos_phase6_investigation"><i class="fa-solid fa-users-medical"></i><div class="btn-text">Seçenek B: Düzenli DDoS Simülasyonları ve Tatbikatlar Yap.<small>Ekibin kriz anında daha hızlı ve koordineli hareket etmesi için düzenli tatbikatlar düzenle.</small></div></button>
+                            <button class="btn" data-decision="ddos-p5-review-network-architecture" data-next-section="ddos_phase6_investigation"><i class="fa-solid fa-sitemap"></i><div class="btn-text">Seçenek C: Ağ Altyapısını DDoS Dayanıklılığı İçin Yeniden Tasarla.<small>Tek bir noktadan başarısızlığı önlemek için ağ mimarisini dağıtık ve yedekli hale getir.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> DDoS saldırılarından sonra çıkarılan dersler, gelecekteki dayanıklılık için kritiktir. Teknoloji yatırımları, eğitim ve mimari değişiklikler uzun vadeli koruma sağlar.</div>
+                </div>
+
+                <div id="ddos_phase6_investigation" class="section">
+                    <h2><i class="fa-solid fa-user-secret"></i> Aşama 6: Soruşturma ve Atıf</h2>
+                    <h3>Saat 4:30 - Saldırganın İzinde</h3>
+                    <p>Saldırı tamamen durduruldu ve sistemler stabil. CISO Melih Kaan, şimdi kimin ve neden saldırdığını bulmaya odaklanmanızı istiyor. Adli bilişim ekibi, saldırı vektörlerini, kaynak IP'lerini ve trafik modellerini analiz ederek üç olası şüpheli belirledi. </p>
+                    
+                    <div class="suspect-card">
+                        <h4>Şüpheli 1: Disruptor Tech (Rakip Firma)</h4>
+                        <p><strong>Motivasyon:</strong> ÇOLHAK Teknoloji'nin büyük e-ticaret lansmanını sabote etmek ve pazar avantajı elde etmek. <br>
+                        <strong>Kanıt:</strong> Saldırı, özellikle yeni ürünle ilgili API uç noktalarını hedef alan sofistike bir Layer 7 (uygulama katmanı) saldırısıydı. Bu, şirketinizin iç işleyişine dair bilgi sahibi olduklarını gösteriyor olabilir.</p>
+                    </div>
+
+                    <div class="suspect-card">
+                        <h4>Şüpheli 2: Digital Justice Front (Hacktivist Grup)</h4>
+                        <p><strong>Motivasyon:</strong> ÇOLHAK Teknoloji'nin son zamanlarda duyurduğu ve kamuoyunda tartışma yaratan veri politikalarını protesto etmek.<br>
+                        <strong>Kanıt:</strong> Saldırı sırasında grupla ilişkili sosyal medya hesaplarından şirketinizi eleştiren çok sayıda paylaşım yapıldı. Saldırı, yüksek hacimli ancak daha az karmaşık olan Layer 3/4 (ağ katmanı) odaklıydı.</p>
+                    </div>
+
+                    <div class="suspect-card">
+                        <h4>Şüpheli 3: Crypto-Lock Çetesi (Fidye Grubu)</h4>
+                        <p><strong>Motivasyon:</strong> Tamamen finansal. Şirketi hizmet dışı bırakarak fidye talep etmek.<br>
+                        <strong>Kanıt:</strong> Saldırıdan 24 saat önce, spam klasörüne düşmüş ve gözden kaçmış düşük profilli bir e-postada, "hizmetlerinizde yaşanacak kesintileri önlemek için" 5 BTC ödeme talep edildiği görüldü. Kullanılan botnet, bu grupla ilişkilendirilen önceki saldırılarda da görülmüştü.</p>
+                    </div>
+                    
+                    <div class="interactive-element">
+                         <h4>Şimdi karar zamanı: Toplanan kanıtlar ışığında, saldırının arkasında kimin olduğuna inanıyorsun? Bu karar, yasal süreci ve gelecekteki savunma önceliklerini etkileyecektir.</h4>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="ddos-p6-blame-competitor" data-next-section="finalSection"><i class="fa-solid fa-briefcase"></i><div class="btn-text">Seçenek A: Rakip Firma (Disruptor Tech)<small>Yasal işlem başlatmak ve endüstriyel casusluğa karşı önlemleri artırmak için yönetime bu bilgiyi sun.</small></div></button>
+                            <button class="btn" data-decision="ddos-p6-blame-hacktivists" data-next-section="finalSection"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Seçenek B: Hacktivist Grup (Digital Justice Front)<small>Halkla ilişkiler ekibini devreye sokarak şirketin kamuoyu imajını düzeltmeye ve politikaları gözden geçirmeye odaklan.</small></div></button>
+                            <button class="btn critical" data-decision="ddos-p6-blame-gang" data-next-section="finalSection"><i class="fa-solid fa-skull-crossbones"></i><div class="btn-text">Seçenek C: Fidye Grubu (Crypto-Lock Çetesi)<small>Soruşturmayı siber suç birimlerine devret ve gelecekteki fidye saldırılarına karşı savunma mekanizmalarını güçlendir.</small></div></button>
+                        </div>
+                    </div>
+                </div>
+                <div id="finalSection" class="section centered-page" style="display: none;">
+                    <h2><i class="fa-solid fa-chart-line"></i> DDoS Krizi Sonrası Değerlendirme Raporu</h2>
+                    <p>Simülasyon tamamlandı. DDoS saldırısı yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+                    <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                    <div class="final-metrics" id="finalMetricsContainer"></div>
+                    <div class="post-crisis-layout">
+                        <div class="event-timeline">
+                            <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                            <ul id="decision-timeline-list"></ul>
+                        </div>
+                        <div class="strategic-debrief">
+                            <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme ve Dersler</h3>
+                            <div id="strategic-debrief-content"></div>
+                        </div>
+                    </div>
+                    <div class="decision-buttons" style="margin-top: 40px;">
+                        <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    // DDoS Simülasyonu Mantığı - ZORLAŞTIRILMIŞ VERSİYON
+    window.game = {
+        score: { systemLoad: 'Aşırı Yüksek', attackEffectiveness: 'Tam', financialLoss: 0, downtime: 0, customerSatisfaction: 100 },
+        state: {
+            currentSectionId: 'start',
+            decisionHistory: [],
+            attribution: null
+        },
+        elements: {},
+        
+        // ZORLAŞTIRILMIŞ KARAR ETKİLERİ: Artık her kararın bir bedeli var.
+        decisionInfo: {
+            'ddos-p1-enable-onprem-mitigation': {
+                title: "On-Prem Mitigasyonu Aktive Et",
+                text: "Kendi sistemlerini devreye soktun. Bu hızlı bir ilk müdahale oldu ancak saldırının devasa boyutu karşısında yetersiz kalarak sistemlerini daha da strese soktu ve maliyeti artırdı.",
+                strat: "Kendi kaynaklarını kullanmak hızlıdır ama büyük saldırılarda genellikle sadece zaman kazandırır ve tam bir çözüm sunmaz. Bu hamle, sistemleri korurken aynı zamanda mali ve operasyonel yük getirir.",
+                changes: { systemLoad: 'Yüksek', attackEffectiveness: 'Azalmış', financialLoss: 25000, downtime: 30, customerSatisfaction: -15 },
+                impact: 'Neutral' // Artık pozitif değil, nötr bir başlangıç
+            },
+            'ddos-p1-contact-isp': {
+                title: "ISP ile İletişime Geç ve Filtreleme Talep Et",
+                text: "ISP'ye ulaşmak ve onları aksiyon almaya ikna etmek değerli dakikalara mal oldu. Bu gecikme sırasında saldırı tam gücüyle devam etti, hizmet kesintisi derinleşti ve müşteri güveni ciddi oranda düştü.",
+                strat: "ISP desteği kritik olsa da, dış bir partiye bağımlılık kriz anında büyük bir risktir. Geciken her dakika, finansal ve itibar kaybını katlayarak artırır.",
+                changes: { systemLoad: 'Aşırı Yüksek', attackEffectiveness: 'Tam', financialLoss: 60000, downtime: 60, customerSatisfaction: -30 },
+                impact: 'Negative'
+            },
+            'ddos-p2-temporary-service-degradation': {
+                title: "Kritik Olmayan Hizmetleri Kapat",
+                text: "Ana hizmetleri korumak adına bazı servisleri kapattın. Bu, sunuculara nefes aldırdı ancak bu servisleri kullanan müşteriler için tam bir kesinti anlamına geldi ve memnuniyetsizlik yarattı.",
+                strat: "Hizmet önceliklendirme (triage) akıllıca bir taktiktir, ancak her zaman bir bedeli vardır. Hangi hizmetin feda edileceği kararı, müşteri segmentleri üzerindeki etki düşünülerek verilmelidir.",
+                changes: { systemLoad: 'Orta', financialLoss: 15000, downtime: 5, customerSatisfaction: -18 },
+                impact: 'Positive'
+            },
+            'ddos-p2-scale-up-resources': {
+                title: "Sunucu Kaynaklarını Artır",
+                text: "Bulut kaynaklarını sonuna kadar açarak saldırıyı kaba kuvvetle karşılamaya çalıştın. Bu, sistemlere bir miktar dayanıklılık kazandırsa da, saldırganlar için sadece daha büyük bir hedef haline geldi ve maliyetleri fırlattı.",
+                strat: "Saldırıya para harcamak nadiren etkili bir çözümdür. Saldırganlar genellikle sizin finansal limitlerinizden daha fazla kaynağa sahiptir. Bu, geçici bir yara bandı olabilir ama kanamayı durdurmaz.",
+                changes: { systemLoad: 'Yüksek', financialLoss: 70000, downtime: 15, customerSatisfaction: -20 },
+                impact: 'Negative'
+            },
+            'ddos-p3-rate-limiting': {
+                title: "Uygulama Katmanında Oran Sınırlaması Uygula",
+                text: "Agresif oran sınırlaması (rate limiting) getirdin. Bu, Layer 7 bot trafiğini büyük ölçüde kesti ama aynı zamanda bazı meşru kullanıcıları ve API entegrasyonlarını da yanlışlıkla engelleyerek yeni şikayetlere yol açtı.",
+                strat: "Oran sınırlaması L7 saldırılarına karşı en etkili silahlardan biridir, ancak ayarları çok hassastır. Fazla agresif olmak, saldırganın işini sizin yerinize yapmak anlamına gelebilir.",
+                changes: { systemLoad: 'Düşük', attackEffectiveness: 'Kısmen Kontrol', financialLoss: 10000, downtime: 5, customerSatisfaction: -10 },
+                impact: 'Positive'
+            },
+            'ddos-p3-captcha-challenges': {
+                title: "Şüpheli Trafik için CAPTCHA Zorlaması Getir",
+                text: "Her şüpheli isteğe CAPTCHA göstermek, botları durdurdu ancak kullanıcı deneyimini mahvetti. Müşterileriniz, sitenize her girişte robot olmadıklarını kanıtlamaktan yoruldu ve bu durum memnuniyeti dibe çekti.",
+                strat: "CAPTCHA, nükleer bir seçenektir. Botları etkili bir şekilde durdurur ama meşru kullanıcıları da cezalandırır. Sadece en çaresiz anlarda ve geçici olarak kullanılmalıdır.",
+                changes: { systemLoad: 'Orta', attackEffectiveness: 'Kısmen Kontrol', financialLoss: 5000, downtime: 5, customerSatisfaction: -35 },
+                impact: 'Neutral'
+            },
+            'ddos-p4-transparent-apology': {
+                title: "Saldırıyı Açıkla, Özür Dile ve Önlemleri Paylaş",
+                text: "Tam şeffaflık politikası izledin. Bu, bazı müşteriler tarafından takdir edilse de, şirketin zayıf göründüğünü düşünen ve güveni sarsılan büyük bir kitle de oldu. İtibarı onarmak uzun ve maliyetli olacak.",
+                strat: "Şeffaflık genellikle en iyi yoldur, ancak zamanlaması ve tonu kritiktir. Krizi kontrol altına almadan yapılan açıklamalar, paniği artırabilir ve şirketi zayıf gösterebilir.",
+                changes: { customerSatisfaction: +5, financialLoss: 20000 },
+                impact: 'Positive'
+            },
+            'ddos-p4-downplay-issue': {
+                title: "Sorunu 'Teknik Aksaklık' Olarak Nitele",
+                text: "Sorunu 'teknik aksaklık' olarak geçiştirdin. Ancak siber güvenlik muhabirleri gerçeği ortaya çıkardığında, şirketiniz hem beceriksiz hem de yalancı durumuna düştü. Bu, telafisi çok zor bir itibar krizi yarattı.",
+                strat: "Asla yalan söyleme. Kriz anında söylenen bir yalan, krizin kendisinden daha büyük bir hasara yol açar. Güven bir kez kaybedildiğinde geri kazanılması neredeyse imkansızdır.",
+                changes: { customerSatisfaction: -60, financialLoss: 100000 },
+                impact: 'Negative'
+            },
+            'ddos-p4-offer-compensation': {
+                title: "Hizmet Kesintisi İçin Telafi Teklif Et",
+                text: "Müşterilerin gönlünü almak için cömert bir telafi paketi sundun. Bu, memnuniyeti bir miktar artırsa da, şirkete devasa bir finansal yük getirdi ve 'sorunları parayla çözen şirket' imajı yarattı.",
+                strat: "Telafi, iyi niyet göstergesidir ama temel sorunu çözmez. Eğer altyapınız hala zayıfsa, bu sadece bir sonraki kriz için önden ödeme yapmak anlamına gelir.",
+                changes: { customerSatisfaction: +15, financialLoss: 80000 },
+                impact: 'Neutral'
+            },
+            'ddos-p5-invest-advanced-mitigation': {
+                title: "Gelişmiş DDoS Mitigasyon Çözümlerine Yatırım Yap",
+                text: "En pahalı ve en gelişmiş koruma sistemlerine yatırım yapma kararı aldın. Bu, gelecekte koruma sağlayacak ancak bütçede devasa bir delik açtı.",
+                strat: "Teknoloji tek başına yeterli değildir. En iyi araçlar bile doğru insanlar ve süreçler olmadan etkisiz kalabilir. Bu yatırım, bütünsel bir stratejinin sadece bir parçası olmalıdır.",
+                changes: { financialLoss: 80000, customerSatisfaction: +5 },
+                impact: 'Positive'
+            },
+            'ddos-p5-conduct-drills': {
+                title: "Düzenli DDoS Simülasyonları ve Tatbikatlar Yap",
+                text: "Ekibin hazırlığını artırmak için düzenli tatbikatlar planladın. Bu, insan faktörünü güçlendiren en maliyet-etkin çözümlerden biri.",
+                strat: "Kas hafızası oluşturmak kritiktir. Ekipler ne kadar çok pratik yaparsa, gerçek kriz anında o kadar sakin ve etkili olurlar.",
+                changes: { financialLoss: 20000, customerSatisfaction: +10 },
+                impact: 'Positive'
+            },
+            'ddos-p5-review-network-architecture': {
+                title: "Ağ Altyapısını DDoS Dayanıklılığı İçin Yeniden Tasarla",
+                text: "Altyapıyı daha dayanıklı hale getirmek için mimariyi yeniden tasarlama projesi başlattın. Bu, uzun vadede en kalıcı çözüm olsa da, uygulanması uzun ve maliyetli olacak.",
+                strat: "Dayanıklılık, tasarımla başlar. Kriz anında yama yapmak yerine, en başından sağlam bir temel oluşturmak her zaman daha iyidir.",
+                changes: { financialLoss: 50000, customerSatisfaction: +7 },
+                impact: 'Positive'
+            },
+             'ddos-p6-blame-competitor': {
+                title: "Saldırgan: Rakip Firma",
+                text: "Kanıtlar zayıf olmasına rağmen rakip firmayı suçladın. Bu, yasal bir savaşı tetikledi ve sektörde itibarınıza zarar verdi. Gerçek fail ise hala dışarıda.",
+                strat: "Atıf, kesin kanıt gerektirir. Yanlış bir suçlama, kaynakları boşa harcamakla kalmaz, aynı zamanda sizi asıl tehdide karşı körleştirir ve yasal sonuçlar doğurur.",
+                changes: { financialLoss: 50000, customerSatisfaction: -20 },
+                impact: 'Negative',
+                attribution: 'competitor'
+            },
+            'ddos-p6-blame-hacktivists': {
+                title: "Saldırgan: Hacktivist Grup",
+                text: "Saldırıyı hacktivistlere atfettin. Bu, şirketin politikalarını gözden geçirmesine neden oldu ancak teknik savunma mekanizmaları ikinci plana atıldı. Gerçek fail olan fidye grubu, bir sonraki saldırı için hazırlanıyor.",
+                strat: "Motivasyonu yanlış anlamak, yanlış savunmayı hazırlar. PR sorununa odaklanırken, teknik borcunuzu ve zafiyetlerinizi göz ardı etmiş olursunuz.",
+                changes: { financialLoss: 10000, customerSatisfaction: -10 },
+                impact: 'Negative',
+                attribution: 'hacktivist'
+            },
+            'ddos-p6-blame-gang': {
+                title: "Saldırgan: Fidye Grubu",
+                text: "Kanıtları doğru bir şekilde analiz ederek saldırının arkasında finansal motivasyonlu bir çetenin olduğunu tespit ettin. Bu, kaynakların doğru tehdit modeline odaklanmasını sağladı ve kolluk kuvvetleriyle işbirliği yolunu açtı.",
+                strat: "Doğru atıf, etkili bir savunmanın temelidir. Düşmanınızı tanıdığınızda, ona karşı doğru silahları ve stratejileri geliştirebilirsiniz.",
+                changes: { financialLoss: 5000, customerSatisfaction: +10 },
+                impact: 'Positive',
+                attribution: 'gang'
+            }
+        },
+
+        setup() {
+            this.elements = {
+                intro: document.getElementById('introSection'), 
+                game: document.getElementById('gameContainer'), 
+                gameContent: document.getElementById('game-content'),
+                startButton: document.getElementById('startButton'), 
+                intermission: document.getElementById('intermissionSection'),
+                intermissionTitle: document.getElementById('intermissionTitle'), 
+                intermissionText: document.getElementById('intermissionText'),
+                intermissionMetrics: document.getElementById('intermissionMetrics'), 
+                strategicText: document.getElementById('strategicText'),
+                continueButton: document.getElementById('continueButton'),
+                statusBar: { 
+                    systemLoad: document.getElementById('status-systemLoad'),
+                    attackEffectiveness: document.getElementById('status-attackEffectiveness'),
+                    financialLoss: document.getElementById('status-financialLoss'),
+                    downtime: document.getElementById('status-downtime'),
+                    customerSatisfaction: document.getElementById('status-customerSatisfaction')
+                }
+            };
+            this.loadGameHTML();
+            this.attachListeners();
+            this.elements.intro.style.display = 'flex';
+            this.elements.game.style.display = 'none';
+        },
+
+        attachListeners() {
+            this.elements.startButton.addEventListener('click', () => {
+                this.elements.intro.style.display = 'none';
+                this.elements.game.style.display = 'block';
+                this.showSection('ddos_phase1_initial_detection'); 
+            });
+            
+            this.elements.gameContent.addEventListener('click', (e) => {
+                const button = e.target.closest('.btn[data-decision]');
+                if (!button || button.disabled) {
+                    return; 
+                }
+                
+                const decisionId = button.dataset.decision;
+                const nextSection = button.dataset.nextSection;
+
+                const currentSectionElement = document.getElementById(this.state.currentSectionId);
+                currentSectionElement.querySelectorAll('.btn[data-decision]').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = 0.6;
+                    btn.style.cursor = 'not-allowed';
+                });
+
+                this.handleDecision(decisionId, nextSection);
+            });
+
+            this.elements.continueButton.addEventListener('click', () => {
+                const nextSectionId = this.elements.continueButton.dataset.nextSection;
+                this.elements.intermission.style.display = 'none';
+                
+                if (nextSectionId === 'finalSection') {
+                    this.showFinalReport();
+                } else {
+                    this.elements.game.style.display = 'block';
+                    this.showSection(nextSectionId);
+                }
+            });
+        },
+        
+        handleDecision(decisionId, nextSectionId) {
+            const info = this.decisionInfo[decisionId];
+            if (!info) { console.error("Decision info not found:", decisionId); return; }
+
+            this.score.systemLoad = info.changes.systemLoad || this.score.systemLoad;
+            this.score.attackEffectiveness = info.changes.attackEffectiveness || this.score.attackEffectiveness;
+            this.score.financialLoss += info.changes.financialLoss || 0;
+            this.score.downtime += info.changes.downtime || 0;
+            this.score.customerSatisfaction = Math.max(0, Math.min(100, this.score.customerSatisfaction + (info.changes.customerSatisfaction || 0)));
+            if (info.attribution) {
+                this.state.attribution = info.attribution;
+            }
+
+            this.state.decisionHistory.push({ id: decisionId, title: info.title, text: info.text, impactType: info.impact, sectionId: this.state.currentSectionId });
+            
+            this.updateState();
+            this.showIntermission(info.title, info.text, info.strat, info.changes, nextSectionId);
+        },
+
+        showIntermission(title, text, strat, changes, nextSectionId) {
+            this.elements.intermissionTitle.textContent = title;
+            this.elements.intermissionText.textContent = text;
+            this.elements.strategicText.textContent = strat;
+            
+            let metricsHTML = '';
+            const formatChange = (label, value, unit, icon) => {
+                let colorClass = 'neutral';
+                let displayValue = value;
+                let arrowIcon = ''; 
+                let sign = '';
+
+                if (typeof value === 'number') {
+                    if (value > 0) {
+                        colorClass = (label === 'Müşteri Memnuniyeti') ? 'positive' : 'negative';
+                        arrowIcon = 'fa-arrow-up-long';
+                        sign = '+';
+                    } else if (value < 0) {
+                        colorClass = (label === 'Müşteri Memnuniyeti') ? 'negative' : 'positive';
+                         arrowIcon = 'fa-arrow-down-long';
+                    }
+                    displayValue = `${sign}${value.toLocaleString('tr-TR')}`;
+                } else {
+                    colorClass = 'neutral'; // String değerler için
+                }
+
+                return `<div class="metric-change ${colorClass}"><i class="fa-solid ${icon}"></i> ${label}: ${arrowIcon ? `<i class="fa-solid ${arrowIcon}"></i>` : ''} ${displayValue}${unit}</div>`;
+            };
+
+            if (changes.systemLoad !== undefined) metricsHTML += formatChange('Sistem Yükü', changes.systemLoad, '', 'fa-gauge-high');
+            if (changes.attackEffectiveness !== undefined) metricsHTML += formatChange('Saldırı Etkinliği', changes.attackEffectiveness, '', 'fa-shield-virus');
+            if (changes.financialLoss !== undefined && changes.financialLoss !== 0) metricsHTML += formatChange('Finansal Zarar', changes.financialLoss, '₺', 'fa-sack-dollar');
+            if (changes.downtime !== undefined && changes.downtime !== 0) metricsHTML += formatChange('Kesinti Süresi', changes.downtime, ' Dakika', 'fa-hourglass-half');
+            if (changes.customerSatisfaction !== undefined && changes.customerSatisfaction !== 0) metricsHTML += formatChange('Müşteri Memnuniyeti', changes.customerSatisfaction, '', 'fa-heart-crack');
+            
+            if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1em; opacity: 0.8;">Bu kararın metrikler üzerinde doğrudan bir etkisi olmadı.</p>';
+
+            this.elements.intermissionMetrics.innerHTML = metricsHTML;
+            this.elements.continueButton.dataset.nextSection = nextSectionId;
+            this.elements.game.style.display = 'none';
+            this.elements.intermission.style.display = 'flex';
+        },
+
+        updateStatusBar() {
+            const s = this.score;
+            this.elements.statusBar.systemLoad.textContent = s.systemLoad;
+            this.elements.statusBar.attackEffectiveness.textContent = s.attackEffectiveness;
+            this.elements.statusBar.financialLoss.textContent = `₺${s.financialLoss.toLocaleString('tr-TR')}`;
+            this.elements.statusBar.downtime.textContent = `${s.downtime} Dakika`;
+            this.elements.statusBar.customerSatisfaction.textContent = Math.max(0, s.customerSatisfaction);
+        },
+
+        showSection(sectionId) {
+            this.elements.sections.forEach(section => { section.style.display = 'none'; });
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                this.state.currentSectionId = sectionId;
+                this.updateDynamicContent(sectionId); 
+            } else {
+                console.error('Bölüm bulunamadı:', sectionId);
+                this.showFinalReport();
+            }
+            this.updateState();
+        },
+        
+        // ZORLAŞTIRILMIŞ RAPORLAMA VE PUANLAMA
+        showFinalReport() {
+            this.elements.intro.style.display = 'none';
+            this.elements.intermission.style.display = 'none';
+            this.elements.game.style.display = 'block'; 
+            document.getElementById('statusBar').style.display = 'none';
+            this.elements.sections.forEach(section => { section.style.display = 'none'; });
+            
+            const finalSection = document.getElementById('finalSection');
+            if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
+            finalSection.style.display = 'flex';
+            
+            const badge = document.getElementById('performance-badge');
+            const metricsContainer = document.getElementById('finalMetricsContainer');
+            const timelineList = document.getElementById('decision-timeline-list');
+            const debriefContent = document.getElementById('strategic-debrief-content');
+            
+            // --- YENİ PUANLAMA MANTIĞI ---
+            let totalScore = 100; // 100'den aşağı düşülecek
+            const correctAttribution = this.state.attribution === 'gang';
+
+            // 1. Finansal Zarar Cezası (Her 10,000₺ için ~1.5 puan kayıp)
+            totalScore -= (this.score.financialLoss / 10000) * 1.5;
+
+            // 2. Kesinti Süresi Cezası (Her 10 dakika için ~2 puan kayıp)
+            totalScore -= (this.score.downtime / 10) * 2;
+
+            // 3. Müşteri Memnuniyeti Cezası (100'ün altındaki her puan için 0.5 puan kayıp)
+            totalScore -= (100 - this.score.customerSatisfaction) * 0.5;
+            
+            // 4. Yanlış Atıf Cezası
+            if (!correctAttribution) {
+                totalScore -= 25; // Çok ağır ceza
+            }
+
+            // Negatif skoru engelle
+            totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+
+            let badgeInfo = {};
+            // YENİ UNVAN EŞİKLERİ
+            if (totalScore >= 90 && correctAttribution) { 
+                badgeInfo = { text: 'DDoS EFENDİSİ!', color: 'var(--accent-green)' };
+            } else if (totalScore >= 75) { 
+                badgeInfo = { text: 'DİRENÇLİ AĞ UZMANI', color: 'var(--accent-blue)' };
+            } else if (totalScore >= 50) { 
+                badgeInfo = { text: 'ZORLU DDoS DENEYİMİ', color: 'var(--accent-yellow)' };
+            } else { 
+                badgeInfo = { text: 'DDoS FELAKETİ', color: 'var(--accent-red)' };
+            }
+
+            badge.textContent = badgeInfo.text;
+            badge.style.backgroundColor = badgeInfo.color;
+
+            metricsContainer.innerHTML = `
+                <div class="metric-card"><div class="icon"><i class="fa-solid fa-file-invoice-dollar"></i></div><div class="label">Nihai Puan</div><div class="value">${totalScore}/100</div></div>
+                <div class="metric-card"><div class="icon"><i class="fa-solid fa-sack-dollar"></i></div><div class="label">Finansal Zarar</div><div class="value">₺${this.score.financialLoss.toLocaleString('tr-TR')}</div></div>
+                <div class="metric-card"><div class="icon"><i class="fa-solid fa-hourglass-half"></i></div><div class="label">Kesinti Süresi</div><div class="value">${this.score.downtime} Dakika</div></div>
+                <div class="metric-card"><div class="icon"><i class="fa-solid fa-heart-crack"></i></div><div class="label">Müşteri Memnuniyeti</div><div class="value">${this.score.customerSatisfaction}/100</div></div>
+            `;
+
+            timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                let liClass = decision.impactType.toLowerCase();
+                return `<li class="${liClass}"><span class="decision-title">${decision.title}</span></li>`;
+            }).join('');
+
+            let debriefHTML = `<p><strong>Genel Performans Puanınız: ${totalScore}/100.</strong></p>`;
+             if (badgeInfo.text === 'DDoS EFENDİSİ!') { 
+                debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Neredeyse imkansızı başardın. Krizi minimum hasar, maliyet ve kesintiyle yönettin. Verdiğin kararlar sadece teknik olarak değil, stratejik olarak da mükemmeldi. Siber güvenlikte bir usta olduğunu kanıtladın.</p>`;
+            } else if (badgeInfo.text === 'DİRENÇLİ AĞ UZMANI') { 
+                debriefHTML += `<p><strong>Etkili Kriz Yönetimi!</strong> Bu zorlu senaryoda ayakta kalmayı başardın. Bazı kayıplar yaşansa da, soğukkanlılığını koruyarak ve doğru stratejik kararlar alarak şirketi büyük bir felaketten kurtardın. Bu, kazanılmış bir başarıdır.</p>`;
+            } else if (badgeInfo.text === 'ZORLU DDoS DENEYİMİ') { 
+                debriefHTML += `<p><strong>Büyük Dersler Çıkarıldı.</strong> Kriz atlatıldı ancak ağır bir bedelle. Finansal kayıplar ve kesinti süresi, gelecekteki hazırlıkların ne kadar kritik olduğunu gösteriyor. Bu deneyim, zafiyetlerinizi anlamak için acı ama gerekli bir dersti.</p>`;
+            } else { 
+                debriefHTML += `<p><strong>DDoS FELAKETİ.</strong> Kriz yönetimi yetersiz kaldı ve sonuçları ağır oldu. Finansal, operasyonel ve itibar açısından büyük bir darbe alındı. Şirketin siber güvenlik stratejisini ve acil durum müdahale planlarını temelden yeniden inşa etmesi gerekiyor.</p>`;
+            }
+
+            if (this.state.attribution) {
+                if (correctAttribution) {
+                    debriefHTML += `<p><strong>Soruşturma Notu:</strong> Saldırganı (Fidye Grubu) doğru tespit ettin. Bu kritik hamle, seni daha büyük bir felaketten kurtardı ve puanını önemli ölçüde etkiledi.</p>`;
+                } else {
+                    debriefHTML += `<p><strong>Soruşturma Notu:</strong> Saldırganı yanlış teşhis ettin. Bu büyük hata, kaynakların yanlış yere harcanmasına neden oldu ve nihai puanını ciddi şekilde düşürdü. Bir siber krizde doğru atıf hayati önem taşır.</p>`;
+                }
+            }
+            debriefContent.innerHTML = debriefHTML;
+        },
+
+        updateState() { 
+            this.updateStatusBar(); 
+            this.updateSlackChat(this.state.currentSectionId); 
+        },
+
+        updateSlackChat(currentSection) {
+            const chatViewer = document.getElementById(this.state.currentSectionId)?.querySelector('.slack-chat');
+            if (!chatViewer) return; 
+
+            let chat = '';
+            if (currentSection === 'ddos_phase5_post_attack_recovery') {
+                chat = `
+                    <div class="message"><span class="sender ciso">CISO Melih Kaan:</span> Saldırıyı atlattık ama yara aldık. Bir daha bu kadar hazırlıksız yakalanamayız. Bütçe ne olursa olsun, doğru adımları atmalıyız.</div>
+                    <div class="message"><span class="sender cto">CTO Onur Güngor:</span> Altyapı mı, ekip eğitimi mi? Önceliğimiz ne olmalı? Kaynaklarımız sınırsız değil.</div>
+                    <div class="message"><span class="sender ceo">CEO Ayfer Yıldız:</span> Finansal tablo hiç iyi görünmüyor. Yapılacak her yatırımın geri dönüşünü görmek zorundayım. Bana en maliyet-etkin çözümü sunun.</div>
+                `;
+            }
+            chatViewer.innerHTML = chat;
+        },
+        
+        updateDynamicContent(sectionId) {},
+
+        loadGameHTML() {
+            this.elements.sections = document.querySelectorAll('#game-content .section');
+            if (typeof hljs !== 'undefined') {
+                hljs.highlightAll();
+            }
+        }
+    };
+
+    window.game.setup();
+});
+    </script>
+</body>
+</html>

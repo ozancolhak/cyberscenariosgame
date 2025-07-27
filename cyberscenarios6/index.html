@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+ <html lang="tr">
+ <head>
+ 	 <meta charset="UTF-8">
+ 	 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 	 <title>Cyber Scenario V6: Bulut Güvenliği Kriz Simülasyonu</title>
+ 	 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+ 	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+ 	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
+ 	 <style>
+ 		 :root {
+ 			 --dark-bg: #1a1a2e;
+ 			 --container-bg: #2a2a4a;
+ 			 --section-bg: #333355;
+ 			 --interactive-bg: #444466;
+ 			 --accent-blue: #8be9fd;
+ 			 --accent-purple: #bd93f9;
+ 			 --accent-pink: #ff79c6;
+ 			 --accent-green: #50fa7b;
+ 			 --accent-yellow: #f1fa8c;
+ 			 --accent-red: #ff5555;
+ 			 --text-light: #e0e0e0;
+ 			 --text-dark: #282a36;
+ 		 }
+
+ 		 @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+ 		 body { 
+ 			 font-family: 'Roboto', sans-serif; 
+ 			 background-color: var(--dark-bg); 
+ 			 color: var(--text-light); 
+ 			 margin: 0; 
+ 			 padding: 20px; 
+ 			 display: flex; 
+ 			 justify-content: center; 
+ 			 align-items: flex-start; 
+ 			 min-height: 100vh;
+ 			 font-size: 0.95em; 
+ 		 }
+
+ 		 .container { 
+ 			 background-color: var(--container-bg); 
+ 			 border-radius: 12px; 
+ 			 box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+ 			 padding: 20px; 
+ 			 max-width: 950px; 
+ 			 width: 100%; 
+ 			 margin: 40px 0; 
+ 		 }
+
+ 		 @media (min-width: 768px) { .container { padding: 40px; } }
+
+ 		 .centered-page { 
+ 			 display: flex; 
+ 			 flex-direction: column; 
+ 			 justify-content: center; 
+ 			 align-items: center; 
+ 			 text-align: center; 
+ 			 min-height: 60vh; 
+ 			 animation: fadeIn 0.5s ease-out; 
+ 		 }
+
+ 		 h1 { font-size: 2.4em; color: var(--accent-blue); margin-bottom: 20px; }
+ 		 h2 { font-size: 1.9em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 25px; text-align: left; }
+ 		 h3 { font-size: 1.5em; color: var(--accent-purple); text-align: left; margin-top: 25px; margin-bottom: 15px; }
+ 		 h4 { font-size: 1.1em; color: var(--accent-yellow); text-align: left; margin-top: 0; border-bottom: 1px solid var(--interactive-bg); padding-bottom: 10px; }
+ 		 p { line-height: 1.7; font-size: 1em; }
+
+ 		 .section { display: none; padding: 20px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.5s ease-out; }
+ 		 @media (min-width: 768px) { .section { padding: 30px; } }
+
+ 		 .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 20px; margin-top: 20px; }
+ 		 .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+ 		 .btn { background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center; gap: 15px; font-weight: 700; }
+ 		 .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+ 		 .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+ 		 .btn .btn-text { flex-grow: 1; }
+ 		 .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; }
+ 		 .btn-start, .btn-continue { font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green); color: var(--text-dark); justify-content: center; }
+ 		 .btn.critical { background-color: var(--accent-pink); }
+
+ 		 #intermissionSection .metric-change { font-size: 1.2em; margin: 15px 0; display: flex; align-items: center; gap: 10px; }
+ 		 .metric-change .positive { color: var(--accent-green); }
+ 		 .metric-change .negative { color: var(--accent-red); }
+ 		 .metric-change .neutral { color: var(--accent-blue); } 
+
+ 		 #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; }
+ 		 #statusBar .metric { text-align: center; font-size: 0.9em; flex: 1; min-width: 100px; } 
+ 		 #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); }
+
+ 		 .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; width: 100%; max-width: 850px; } 
+ 		 .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 150px; }
+ 		 .metric-card:hover { transform: scale(1.05); border-color: var(--accent-blue); }
+ 		 .metric-card .icon { font-size: 2.5em; color: var(--accent-blue); margin-bottom: 10px; }
+ 		 .metric-card .label { font-size: 1.1em; margin-bottom: 5px; color: var(--text-light); }
+ 		 .metric-card .value { font-size: 1.8em; font-weight: bold; color: var(--accent-yellow); }
+
+ 		 .code-block, .slack-chat { background-color: var(--text-dark); border: 1px solid #6272a4; border-radius: 8px; padding: 20px; margin-top: 15px; white-space: pre-wrap; word-break: break-all; font-family: 'Consolas', monospace; }
+ 		 .learning-note { background-color: var(--text-dark); border-left: 5px solid var(--accent-blue); padding: 20px; border-radius: 8px; margin-top: 30px; }
+ 		 .scenario-image { width: 100%; max-width: 500px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+ 		 .slack-chat .message { margin-bottom: 10px; padding: 8px; border-radius: 5px; background-color: #3f3f5a; }
+ 		 .slack-chat .sender { font-weight: bold; color: var(--accent-pink); }
+ 		 .slack-chat .sender.cso { color: var(--accent-green); }
+ 		 .slack-chat .sender.ops { color: var(--accent-yellow); }
+ 		 .slack-chat .sender.legal { color: var(--accent-blue); }
+ 		 .slack-chat .sender.ceo { color: var(--accent-purple); }
+ 		 .slack-chat .sender.cto { color: var(--accent-green); } 
+ 		 .slack-chat .sender.pr { color: var(--accent-pink); } 
+ 		 .slack-chat .sender.finance { color: var(--accent-red); } 
+ 		 .suspect-card { background-color: var(--interactive-bg); border-radius: 8px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--accent-purple); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+ 		 .suspect-card h4 { margin-top: 0; margin-bottom: 5px; border-bottom: none; color: var(--accent-purple); }
+
+ 		 /* === FİNAL SAYFASI STİLLERİ === */
+ 		 #finalSection { text-align: center; }
+ 		 #performance-badge-container { margin: 25px 0; }
+ 		 #performance-badge { padding: 12px 30px; font-size: 1.8em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease; }
+ 		 #performance-badge:hover { transform: scale(1.05); }
+ 		 .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+ 		 @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+ 		 .event-timeline, .strategic-debrief { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--section-bg); margin-top: 20px; }
+ 		 .event-timeline h3, .strategic-debrief h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+ 		 .event-timeline ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
+ 		 .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); font-size: 0.95em; }
+ 		 .event-timeline li:last-child { border-left: none; }
+ 		 .event-timeline li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-green); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; border: 2px solid var(--section-bg); }
+ 		 .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+ 		 .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+ 		 .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+ 		 .event-timeline li .decision-impact { font-style: italic; opacity: 0.8; font-size: 0.9em; }
+ 		 #strategic-debrief-content p { font-size: 1em; margin-bottom: 15px; }
+
+ 		 /* Roles Info specific styles */
+ 		 .intro-info-grid {
+ 			 display: grid;
+ 			 grid-template-columns: 1fr;
+ 			 gap: 30px;
+ 			 margin-top: 30px;
+ 			 width: 100%;
+ 			 max-width: 800px;
+ 			 text-align: left;
+ 		 }
+
+ 		 @media (min-width: 768px) {
+ 			 .intro-info-grid {
+ 				 grid-template-columns: 1fr 1fr; 
+ 			 }
+ 		 }
+
+ 		 .intro-roles-container, .intro-metrics-container {
+ 			 background-color: var(--section-bg);
+ 			 border-radius: 10px;
+ 			 padding: 25px;
+ 			 box-shadow: 0 5px 15px var(--shadow-light);
+ 			 border: 1px solid var(--interactive-bg);
+ 		 }
+
+ 		 .intro-roles-container h3, .intro-metrics-container h3 {
+ 			 margin-top: 0;
+ 			 padding-bottom: 10px;
+ 			 border-bottom: 1px solid var(--interactive-bg);
+ 			 color: var(--accent-purple);
+ 			 text-align: center;
+ 			 display: flex;
+ 			 align-items: center;
+ 			 justify-content: center;
+ 			 gap: 10px;
+ 		 }
+
+ 		 .intro-roles-container ul, .intro-metrics-container ul {
+ 			 list-style: none;
+ 			 padding: 0;
+ 			 margin: 0;
+ 		 }
+
+ 		 .intro-roles-container li, .intro-metrics-container li {
+ 			 display: flex;
+ 			 align-items: center;
+ 			 gap: 15px;
+ 			 margin-bottom: 15px;
+ 			 padding: 10px 0;
+ 			 border-bottom: 1px dashed var(--interactive-bg);
+ 			 font-size: 1.05em;
+ 		 }
+
+ 		 .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+ 			 border-bottom: none;
+ 			 margin-bottom: 0;
+ 		 }
+
+ 		 .intro-roles-container li .icon, .intro-metrics-container li .icon {
+ 			 font-size: 1.8em;
+ 			 color: var(--accent-blue);
+ 			 flex-shrink: 0;
+ 			 width: 35px;
+ 			 text-align: center;
+ 		 }
+ 		 
+ 		 .intro-roles-container li strong {
+ 			 color: var(--accent-yellow);
+ 		 }
+
+ 		 .intro-roles-container li small {
+ 			 display: block;
+ 			 font-size: 0.9em;
+ 			 color: var(--text-light);
+ 			 opacity: 0.8;
+ 			 margin-top: 3px;
+ 		 }
+ 	 </style>
+ </head>
+ <body>
+ 	 <div class="container">
+ 		 <div id="introSection" class="centered-page">
+ 			 <h1><i class="fa-solid fa-cloud-bolt"></i> Bulut Güvenliği Krizi Simülasyonu</h1>
+ 			 <p style="max-width: 600px;">Hoş geldiniz, **ÇOLHAK Teknoloji**'nin **Kıdemli Bulut Güvenliği Uzmanı**! Şirketiniz, finans sektörüne yönelik risk analiz ürününü bulut ortamında barındırıyor ve lansmana sadece 72 saat kaldı. Ancak, güvenlik ekibimiz dışarıdan gelen olağandışı veri çekme talepleri ve sızıntı raporlarıyla alarma geçmiş durumda. Bir saldırganın, korumasız bırakılmış bir veri deposu, yanlış yapılandırılmış erişim izni veya devre dışı kalmış bir güvenlik adımı üzerinden sızdığı düşünülüyor. Görevin: Bu gizli veri sızıntısını durdurmak, hasarı kontrol altına almak ve bulut altyapınızın gelecekteki dayanıklılığını sağlamak!</p>
+ 			 <img src="images/intro.png" alt="Cloud security themed intro image" class="scenario-image">
+
+ 			 <div class="intro-info-grid">
+ 				 <div class="intro-roles-container">
+ 					 <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+ 					 <ul>
+ 						 <li class="your-role">
+ 							 <span class="icon"><i class="fa-solid fa-cloud-bolt"></i></span>
+ 							 <div>
+ 								 <strong>Sizin Rolünüz: Kıdemli Bulut Güvenliği Uzmanı</strong> 
+ 								 <small>Bulut altyapısının güvenliğinden sorumlusun. Teknik analizler, yanlış yapılandırmaların tespiti ve erişim izinleri gibi alanlarda aktif rol alıyorsun. Seçimlerin sonucu doğrudan etkileyecek.</small>
+ 							 </div>
+ 						 </li>
+ 						 <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span><div><strong>CEO Dilara Akın</strong> <small>İtibar ve medya öncelikli.</small></div></li>
+ 						 <li><span class="icon"><i class="fa-solid fa-microchip"></i></span><div><strong>CTO Furkan Tekin</strong> <small>Teknik altyapıya hâkim, seni destekliyor.</small></div></li>
+ 						 <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span><div><strong>CISO Can Çolhak</strong> <small>Güvenlikten sorumlu, panik halinde.</small></div></li>
+ 						 <li><span class="icon"><i class="fa-solid fa-bullhorn"></i></span><div><strong>PR Direktörü Serap Nur</strong> <small>Basın kontrolünü ister.</small></div></li>
+ 						 <li><span class="icon"><i class="fa-solid fa-money-bill-transfer"></i></span><div><strong>Finans Direktörü Enes Mert</strong> <small>Proje iptali bütçe açısından felaket olur.</small></div></li>
+ 					 </ul>
+ 				 </div>
+
+ 				 <div class="intro-metrics-container">
+ 					 <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+ 					 <ul>
+ 						 <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-square-check"></i></span><div><strong>Veri Sızıntısı Boyutu</strong> <small>Sızdırılan hassas veri miktarı. (Başlangıç: 0 GB)</small></div></li>
+ 						 <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-hand-holding-dollar"></i></span><div><strong>Finansal Zarar</strong> <small>Krizin şirkete maliyeti. (Başlangıç: ₺0)</small></div></li>
+ 						 <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-users"></i></span><div><strong>Müşteri Güveni</strong> <small>Müşterilerin şirkete olan inancı. (Başlangıç: 100)</small></div></li>
+ 						 <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-building-shield"></i></span><div><strong>İtibar Puanı</strong> <small>Şirketinizin kamuoyu ve sektördeki imajı. (Başlangıç: 100)</small></div></li>
+ 						 <li><span class="icon" style="color: var(--accent-pink);"><i class="fa-solid fa-scale-balanced"></i></span><div><strong>Yasal Risk</strong> <small>Yasal uyum ihlali riski (Ölçek: Düşük-Yüksek). (Başlangıç: Düşük)</small></div></li>
+ 					 </ul>
+ 				 </div>
+ 			 </div>
+
+ 			 <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+ 		 </div>
+
+ 		 <div id="intermissionSection" class="centered-page" style="display: none;">
+ 			 <h2 id="intermissionTitle"></h2>
+ 			 <p id="intermissionText" style="max-width: 600px;"></p>
+ 			 <div class="interactive-element" style="width: 100%; max-width: 500px;">
+ 				 <h4>Karar Etkileri</h4>
+ 				 <div id="intermissionMetrics"></div>
+ 			 </div>
+ 			 <div class="interactive-element" style="width: 100%; max-width: 500px; border-left-color: var(--accent-blue); margin-top: 20px;">
+ 				 <h4>Stratejik Değerlendirme</h4>
+ 				 <p id="strategicText" style="font-size: 1em;"></p>
+ 			 </div>
+ 			 <button class="btn btn-continue" id="continueButton" style="margin-top: 30px;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+ 		 </div>
+
+ 		 <div id="gameContainer" style="display: none;">
+ 			 <div id="statusBar">
+ 				 <div class="metric"><span><i class="fa-solid fa-cloud-arrow-down"></i> Sızan Veri</span><div class="value" id="status-dataLeakSize">0 GB</div></div>
+ 				 <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
+ 				 <div class="metric"><span><i class="fa-solid fa-users"></i> Müşteri Güveni</span><div class="value" id="status-customerTrust">100</div></div>
+ 				 <div class="metric"><span><i class="fa-solid fa-building-shield"></i> İtibar Puanı</span><div class="value" id="status-reputation">100</div></div>
+ 				 <div class="metric"><span><i class="fa-solid fa-scale-balanced"></i> Yasal Risk</span><div class="value" id="status-regulatoryRisk">Düşük</div></div>
+ 			 </div>
+ 			 <div id="game-content">
+ 				 
+ 				 <div id="day1_alarm" class="section">
+ 					 <h2><i class="fa-solid fa-triangle-exclamation"></i> Gün 1: Veri Sızıntısı Alarmı - Lansmana 72 Saat Kala!</h2>
+ 					 <h3>Sabah 09:00 - Güvenlik Ekibinden Gelen Çağrı ve Olağandışı Trafik</h3>
+ 					 <p>Sabah, güvenlik operasyon ekibinden acil bir çağrıyla güne başlıyorsun. Baş Analist, bulut ortamınızdaki risk analiz ürününden dışarıya doğru olağandışı veri çekme talepleri olduğunu raporluyor. Özellikle `Analiz-Verileri-Uretim` adındaki veri deposundan normal olmayan bir trafik akışı var. Lansmana sadece 72 saat kaldı ve her dakika kritik.</p>
+ 					 <p>Saldırganın potansiyel olarak:</p>
+ 					 <ul>
+ 						 <li>Herkese açık bırakılmış bir veri deposunu,</li>
+ 						 <li>Hatalı yapılandırılmış bir erişim iznini,</li>
+ 						 <li>Devre dışı kalmış bir ek güvenlik doğrulamasını,</li>
+ 						 <li>Veya korumasız bir bulut fonksiyonunu kullandığı düşünülüyor.</li>
+ 					 </ul>
+ 					 <img src="images/alarm.png" alt="Veri sızıntısı alarmı görseli" class="scenario-image">
+ 					 <div class="interactive-element">
+ 						 <h4>Kıdemli Bulut Güvenliği Uzmanı olarak ilk tepkin ne olacak?</h4>
+ 						 <div class="decision-buttons">
+ 							 <button class="btn" data-decision="d1-a-cut-connection" data-next-section="day1_s3_scan"><i class="fa-solid fa-cut"></i><div class="btn-text">Seçenek A: `Analiz-Verileri-Uretim` deposu ile tüm dış bağlantıları derhal kes.<small>Sızıntıyı anında durdurmak için hızlı ve radikal bir müdahale yap.</small></div></button>
+ 							 <button class="btn" data-decision="d1-a-monitor-attacker" data-next-section="day1_s3_scan"><i class="fa-solid fa-eye"></i><div class="btn-text">Seçenek B: Sistemleri izlemeye devam ederek saldırganın yöntemlerini analiz et.<small>Saldırının doğasını, hedeflerini ve kullanılan zafiyetleri anlamak için gizli gözlem yap.</small></div></button>
+ 						 </div>
+ 					 </div>
+ 					 <div class="learning-note"><strong>Öğrenme Notu:</strong> Krizin ilk anları kritik öneme sahiptir. Hızlı müdahale mi, yoksa istihbarat toplama mı? Kararın hem teknik hem de operasyonel sonuçları olacak.</div>
+ 				 </div>
+
+ 				 <div id="day1_s3_scan" class="section">
+ 					 <h2><i class="fa-solid fa-cloud-arrow-down"></i> Gün 1: Öğleden Sonra - Depolama Zafiyeti Keşfi</h2>
+ 					 <h3>Öğleden Sonra 15:30 - "Analiz-Verileri-Uretim" Veri Deposu Herkese Açık!</h3>
+ 					 <p>İlk müdahalelerin ardından, ekip `Analiz-Verileri-Uretim` veri deposunun yapılandırmasını derinlemesine incelemeye aldı. Şok edici bir bulguyla karşılaştınız: Veri deposu, yanlışlıkla "Herkese Açık" olarak ayarlanmış! Bu, saldırganın doğrudan isteklerle verileri çekebileceği anlamına geliyor. Ayrıca, denetim kayıtlarında, bu depodan son 24 saat içinde **500 GB'tan fazla veri** sızdırıldığına dair kesin kanıtlar bulundu. Bu, finans sektörüne yönelik risk analiz ürününüzün temelini oluşturan hassas analiz algoritmalarını ve müşteri test verilerini içeriyor.</p>
+ 					 <img src="images/bucket.png" alt="Herkese açık S3 bucket görseli" class="scenario-image">
+ 					 <div class="interactive-element">
+ 						 <h4>Bu kritik bulgu karşısında bir sonraki acil teknik adımın ne olacak?</h4>
+ 						 <div class="slack-chat" id="slackChat"></div>
+ 						 <div class="decision-buttons">
+ 							 <button class="btn critical" data-decision="d1-s3-close-access" data-next-section="day2_iam_review"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: `Analiz-Verileri-Uretim` deposunun herkese açık erişimini derhal kapat ve izinleri en kısıtlı seviyeye getir.<small>En büyük güvenlik açığını anında kapat ve sızıntıyı durdur.</small></div></button>
+ 							 <button class="btn" data-decision="d1-s3-scan-all" data-next-section="day2_iam_review"><i class="fa-solid fa-search-plus"></i><div class="btn-text">Seçenek B: Bulut ortamındaki tüm diğer veri depolarını da acil olarak güvenlik taramasından geçir.<small>Benzer yanlış yapılandırmaların olup olmadığını tespit etmek için kapsamlı bir denetim yap.</small></div></button>
+ 						 </div>
+ 					 </div>
+ 					 <div class="learning-note"><strong>Öğrenme Notu:</strong> Yanlış yapılandırmalar, bulut güvenliğinin en büyük zafiyetlerindendir. En kritik varlıkların erişim kontrolleri, sürekli denetlenmelidir.</div>
+ 				 </div>
+
+ 				 <div id="day2_iam_review" class="section">
+ 					 <h2><i class="fa-solid fa-id-card-clip"></i> Gün 2: Sabah - Kimlik ve Erişim Felaketi</h2>
+ 					 <h3>Sabah 09:30 - Eski Geliştiricinin Hayalet Hesabı ve Tam Yetki!</h3>
+ 					 <p>Veri deposunun kapatılmasıyla birlikte, saldırının başka bir katmanını keşfetmek için erişim kayıtlarını incelemeye başladınız. Şirketten aylar önce ayrılan eski bir geliştiricinin (`developer_cem`) hesabının hala aktif olduğunu ve şok edici bir şekilde **tüm bulut kaynaklarına tam yetkiye** sahip olduğunu gördünüz! Bu hesabın, `Analiz-Verileri-Uretim` veri deposuna erişimden hemen önce, yönetim paneli üzerinden şüpheli işlemler yaptığı tespit edildi. Görünüşe göre saldırgan, bu "hayalet hesabı" kullanarak ilk erişimi sağlamış.</p>
+ 					 <img src="images/root.png" alt="IAM Root Access görseli" class="scenario-image">
+ 					 <div class="interactive-element">
+ 						 <h4>Bu kritik güvenlik açığını kapatmak ve saldırganın daha fazla hareketini engellemek için ne yapacaksın?</h4>
+ 						 <div class="decision-buttons">
+ 							 <button class="btn critical" data-decision="d2-iam-suspend-report" data-next-section="day2_internal_connections"><i class="fa-solid fa-user-slash"></i><div class="btn-text">Seçenek A: `developer_cem` hesabını derhal askıya al ve bulguları yöneticilerine acilen bildir.<small>Kritik bir güvenlik açığını kapat, ancak olayı üst yönetime raporlayarak sorumluluk al.</small></div></button>
+ 							 <button class="btn" data-decision="d2-iam-delete-quietly" data-next-section="day2_internal_connections"><i class="fa-solid fa-user-minus"></i><div class="btn-text">Seçenek B: `developer_cem` hesabını kimseye bildirmeden derhal sil.<small>Açığı hızla kapat, ancak olayla ilgili resmi bir kayıt bırakmadan ve potansiyel iç soruşturmayı engellemeden.</small></div></button>
+ 						 </div>
+ 					 </div>
+ 					 <div class="learning-note"><strong>Öğrenme Notu:</strong> Erişim izinleri ve eski hesap yönetimi, bulut güvenliğinin temelini oluşturur. En küçük bir zafiyet dahi, tüm sisteme tam erişime yol açabilir.</div>
+ 				 </div>
+
+ 				 <div id="day2_internal_connections" class="section">
+ 					 <h2><i class="fa-solid fa-arrows-turn-right"></i> Gün 2: Öğleden Sonra - İçeriden Şüpheli Bağlantılar</h2>
+ 					 <h3>Öğleden Sonra 14:00 - Bir Saldırı Merkezi Fısıltısı mı?</h3>
+ 					 <p>Eski geliştirici hesabının kullanılması, saldırganın sadece dışarıdan veri sızdırmadığını, aynı zamanda iç ağınızda da kalıcı olmaya çalıştığını düşündürüyor. Ağ trafiği kayıtlarında, içerideki bir bilgisayardan (`10.0.0.42`), şifreli ve sürekli olarak dışarıdaki bir Telegram sunucusuna veri aktarımı olduğunu tespit ettiniz. Bu bilgisayar, Finans Departmanı'ndaki bir geliştiriciye aitmiş.</p>
+ 					 <p>Bu durum, saldırganın ele geçirdiği bir şirket içi cihazı, bir **saldırı kontrol merkezi** olarak kullandığına işaret ediyor olabilir. Ancak, bu aynı zamanda Finans Departmanı'ndaki geliştiricinin "izinli" bir test veya araştırma yapıyor olma ihtimalini de barındırıyor. CTO Furkan Tekin, departmanlarının sık sık dış hizmetlerle testler yaptığını belirtiyor.</p>
+ 					 <img src="images/data.png" alt="Telegram veri aktarımı görseli" class="scenario-image">
+ 					 <div class="interactive-element">
+ 						 <h4>Bu şüpheli iç bağlantıyı nasıl ele alacaksın?</h4>
+ 						 <div class="decision-buttons">
+ 							 <button class="btn" data-decision="d2-internal-isolate-device" data-next-section="day3_media_leak"><i class="fa-solid fa-plug-circle-xmark"></i><div class="btn-text">Seçenek A: Şüpheli cihazı derhal ağdan izole et ve adli inceleme başlat.<small>Potansiyel iç tehdidi anında durdur, ancak operasyonel aksaklığa ve çalışan moraline etki edebilir.</small></div></button>
+ 							 <button class="btn critical" data-decision="d2-internal-confront-dev" data-next-section="day3_media_leak"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek B: Finans departmanındaki geliştiriciyle doğrudan ve gizli bir görüşme ayarla.<small>Şüpheli bağlantının nedenini anlamak için doğrudan bilgi topla, ancak geliştiriciyi uyarabilir veya işbirliğini kaybetme riski taşırsın.</small></div></button>
+ 							 <button class="btn" data-decision="d2-internal-monitor-further" data-next-section="day3_media_leak"><i class="fa-solid fa-chart-line"></i><div class="btn-text">Seçenek C: Cihazı izlemeye devam et ve daha fazla bilgi topla.<small>Saldırganın (veya geliştiricinin) niyetini anlamak için gözlemi sürdür, ancak veri sızıntısının devam etme riski var.</small></div></button>
+ 						 </div>
+ 					 </div>
+ 					 <div class="learning-note"><strong>Öğrenme Notu:</strong> İç tehditler, tespiti ve yönetimi en zor olanlardır. Yanlış kararlar, hem güvenlik hem de şirket içi güven üzerinde yıkıcı etkilere sahip olabilir.</div>
+ 				 </div>
+
+ 				 <div id="day3_media_leak" class="section">
+ 					 <h2><i class="fa-solid fa-newspaper"></i> Gün 3: Sabah - Medya Sızıntısı ve İtibar Felaketi</h2>
+ 					 <h3>Sabah 08:00 - Sosyal Medyada Gündem: "ÇOLHAK Ürününde Güvenlik Açığı!"</h3>
+ 					 <p>Tam iç soruşturman devam ederken, kabus senaryosu gerçekleşir: Sosyal medyada yüksek takipçili bir teknoloji gazetecisi, "ÇOLHAK Teknoloji'nin çok beklenen ürün projesinde büyük bir güvenlik açığı ve müşteri veri sızıntısı iddiaları!" başlığıyla bir paylaşım yapıyor. Paylaşım hızla viral oluyor ve medya kuruluşları size ulaşmaya başlıyor. Lansmana sadece saatler kala, CEO Dilara Akın sizi acilen ofisine çağırıyor. Yüzünde ciddi bir ifade var: *"Bu bir felaket! Hemen bir açıklama yapmalıyız. İtibarımız yerle bir oluyor! Ne yapmalıyız?"*</p>
+ 					 <img src="images/media.png" alt="Medya sızıntısı görseli" class="scenario-image">
+ 					 <div class="interactive-element">
+ 						 <h4>PR Direktörü Serap Nur ve Hukuk Müşaviri ile birlikte, bu medya krizini nasıl yönetecek ve kamuoyuna nasıl bir mesaj vereceksin?</h4>
+ 						 <div class="decision-buttons">
+ 							 <button class="btn" data-decision="d3-media-full-disclosure" data-next-section="day3_management_decision"><i class="fa-solid fa-check-double"></i><div class="btn-text">Seçenek A: Tam Şeffaflıkla Hemen Basına Açıkla.<small>Olayı tüm detaylarıyla, sızıntının nedenini ve alınan önlemleri şeffafça kamuoyuna duyur.</small></div></button>
+ 							 <button class="btn critical" data-decision="d3-media-deny-ignore" data-next-section="day3_management_decision"><i class="fa-solid fa-ban"></i><div class="btn-text">Seçenek B: İddiaları Kesinlikle Reddet ve Medyayla Teması Engelle.<small>Sızıntı iddialarını yalanla ve krizin büyümesini önlemek için medyadan uzak dur.</small></div></button>
+ 							 <button class="btn" data-decision="d3-media-controlled-leak" data-next-section="day3_management_decision"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek C: Sızıntının Kontrollü Bir Versiyonunu Yayınla.<small>Hassas detayları atlayarak, olayı önemsiz gösteren, kontrollü bir açıklama sızdır.</small></div></button>
+ 						 </div>
+ 					 </div>
+ 					 <div class="learning-note"><strong>Öğrenme Notu:</strong> Medya krizi, siber saldırının en yıkıcı sonuçlarından biri olabilir. İtibar yönetimi, şeffaflık, hız ve doğru mesaj, kamuoyu güvenini yeniden kazanmak için anahtardır.</div>
+ 				 </div>
+
+ 				 <div id="day3_management_decision" class="section">
+ 					 <h2><i class="fa-solid fa-users-viewfinder"></i> Gün 3: Öğleden Sonra - Yönetim Kurulu Toplantısı ve Kritik Karar</h2>
+ 					 <h3>Öğleden Sonra 13:00 - Lansman İptali mi?</h3>
+ 					 <p>Medya krizinin ortasında, yönetim kurulu acil bir toplantı için bir araya gelir. Herkesin farklı bir önceliği vardır ve tansiyon yüksektir. Karar anı gelmiştir:</p>
+ 					 <img src="images/board.png" alt="Yönetim kurulu toplantısı görseli" class="scenario-image">
+ 					 <div class="interactive-element">
+ 						 <h4>Kıdemli Bulut Güvenliği Uzmanı olarak, tüm bu baskılar altında, şirketin kaderini belirleyecek son büyük teknik ve stratejik kararı nasıl vereceksin?</h4>
+ 						 <div class="slack-chat" id="slackChat"></div>
+ 						 <div class="decision-buttons">
+ 							 <button class="btn critical" data-decision="d3-m-take-offline" data-next-section="day3_regulatory_threat"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek A: Tüm kritik sistemleri derhal kapat ve kapsamlı bir güvenlik denetimi ve temizliği yap.<small>En güvenli yolu seç, ancak lansmanı süresiz ertele ve büyük finansal kayıplara yol aç.</small></div></button>
+ 							 <button class="btn" data-decision="d3-m-patch-continue" data-next-section="day3_regulatory_threat"><i class="fa-solid fa-wrench"></i><div class="btn-text">Seçenek B: Hızlı güvenlik yamaları uygula ve ürün lansmanına devam et.<small>Riski kabul et, lansmanı kurtar, ancak gizli zafiyetler veya kalan saldırganlar için risk altında ol.</small></div></button>
+ 						 </div>
+ 					 </div>
+ 					 <div class="learning-note"><strong>Öğrenme Notu:</strong> Kritik iş kararları, teknik güvenlik riskleriyle doğrudan çelişebilir. Bu tür anlarda dengeyi bulmak ve yönetimle etkin iletişim kurmak hayati önem taşır.</div>
+ 				 </div>
+
+ 				 <div id="day3_regulatory_threat" class="section">
+ 					 <h2><i class="fa-solid fa-gavel"></i> Gün 3: Akşam - Yasal Yükümlülükler</h2>
+ 					 <h3>Akşam 18:00 - Hukuk Müşavirinden Çağrı</h3>
+ 					 <p>Krizin teknik ve yönetimsel boyutlarıyla uğraşırken, Hukuk Müşaviri Zeynep Kaya'dan endişeli bir çağrı alıyorsun: *"Elimizdeki verilere göre, sızdırılan müşteri bilgileri KVKK ve GDPR kapsamında hassas veri niteliğinde. Bu, bize devasa para cezaları ve yasal davalar getirebilir. İlgili kurumlara 48 saat içinde resmi veri ihlali bildirimi yapmamız gerekiyor. Bu durum, kamuoyundaki algımızı ve yasal pozisyonumuzu doğrudan etkileyecek. Ne yapıyoruz?"*</p>
+ 					 <img src="images/threat.png" alt="Regülasyon tehdidi görseli" class="scenario-image">
+ 					 <div class="interactive-element">
+ 						 <h4>Bu yasal yükümlülük ve itibar riskini nasıl ele alacaksın?</h4>
+     						 <div class="decision-buttons">
+ 							 <button class="btn" data-decision="d3-e-officially-report" data-next-section="finalSection"><i class="fa-solid fa-file-invoice"></i><div class="btn-text">Seçenek A: Yasal Yükümlülükleri Yerine Getirerek Veri İhlalini Resmi Olarak Bildir.<small>Şeffaflığı ve yasal uyumu önceliklendir, ancak bu, şirketin itibarını daha fazla etkileyebilir.</small></div></button>
+ 							 <button class="btn critical" data-decision="d3-e-internal-incident" data-next-section="finalSection"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek B: Olayı İç Kaynaklı Küçük Bir Olay Olarak Göster ve Resmi Bildirimi Ertele.<small>Kısa vadede paniği önle, ancak uzun vadede yasal ve itibari riskleri artırabilir.</small></div></button>
+ 						 </div>
+ 					 </div>
+ 					 <div class="learning-note"><strong>Öğrenme Notu:</strong> Veri ihlallerinde yasal uyumluluk, sadece cezalardan kaçınmakla kalmaz, aynı zamanda şirketin etik duruşunu ve müşteri güvenini de yansıtır.</div>
+ 				 </div>
+
+ 				 <div id="finalSection" class="section centered-page" style="display: none;">
+ 					 <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
+ 					 <p>Simülasyon tamamlandı. Kriz yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+ 					 <div id="performance-badge-container"><span id="performance-badge"></span></div>
+ 					 <div class="final-metrics" id="finalMetricsContainer"></div>
+ 					 <div class="post-crisis-layout">
+ 						 <div class="event-timeline">
+ 							 <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+ 							 <ul id="decision-timeline-list"></ul>
+ 						 </div>
+ 						 <div class="strategic-debrief">
+ 							 <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme ve Dersler</h3>
+ 							 <div id="strategic-debrief-content"></div>
+ 						 </div>
+ 					 </div>
+ 					 <div class="decision-buttons" style="margin-top: 40px;">
+ 						 <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+ 					 </div>
+ 				 </div>
+ 			 </div>
+ 		 </div>
+ 	 </div>
+
+ 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+ 	 <script>
+ 		 document.addEventListener('DOMContentLoaded', () => {
+ 			 window.game = {
+ 				 // Metrikler: Veri Sızıntısı Boyutu (GB), Finansal Zarar (₺), Müşteri Güveni (0-100), İtibar Puanı (0-100), Yasal Risk (Düşük, Orta, Yüksek, Çok Yüksek)
+ 				 score: { dataLeakSize: 0, financialLoss: 0, customerTrust: 100, reputation: 100, regulatoryRisk: 'Düşük' },
+ 				 state: {
+ 					 currentSectionId: 'start',
+ 					 // Kararları ve etkilerini takip etmek için kullanılan 'clue' değişkenleri
+ 					 initialConnectionCut: false, 
+ 					 attackerMonitored: false, 	 
+ 					 s3AccessClosed: false, 		
+ 					 allS3Scanned: false, 		 
+ 					 iamAccountSuspended: false,	 
+ 					 iamAccountDeletedQuietly: false, 
+ 					 internalDeviceIsolated: false, 
+ 					 internalDevConfronted: false, 	 
+ 					 internalDevMonitored: false, 
+ 					 mediaFullDisclosure: false, 	 
+ 					 mediaDenied: false, 				
+ 					 mediaControlledLeak: false, 	 
+ 					 systemOffline: false, 			
+ 					 systemPatched: false, 			
+ 					 officialRegulatoryReport: false, 
+ 					 internalIncidentCoverup: false,	 
+ 					 
+ 					 decisionHistory: [] 
+ 				 },
+ 				 elements: {},
+ 				 
+ 				 decisionInfo: {
+ 					 // Gün 1: Veri Sızıntısı Alarmı (day1_alarm)
+ 					 'd1-a-cut-connection': { 
+ 						 title: "Dış Bağlantıları Kes", 
+ 						 text: "`Analiz-Verileri-Uretim` deposu ile tüm dış bağlantılar derhal kesildi. Sızıntı anında durduruldu, ancak ne kadar verinin sızdığı veya saldırganın kimliği hakkında daha az bilgiye sahipsin.", 
+ 						 strat: "Veri sızıntılarında hızlı izolasyon, hasarı minimize etmek için kritik bir adımdır. Ancak, bu, saldırganın yöntemleri hakkında istihbarat toplama fırsatını kaçırmana neden olabilir.", 
+ 						 changes: { dataLeakSize: 50, financialLoss: 25000, customerTrust: -5, reputation: -3 }, 
+ 						 clue: 'initialConnectionCut', 
+ 						 impact: 'Positive' 
+ 					 },
+ 					 'd1-a-monitor-attacker': { 
+ 						 title: "Saldırganı İzle", 
+ 						 text: "Sistemleri izlemeye devam ederek saldırganın yöntemlerini analiz ettin. Bu sayede saldırganın kullandığı zafiyeti (açık veri deposu) ve sızdırdığı veri türlerini net bir şekilde tespit ettin. Ancak bu sırada daha fazla veri sızdı.", 
+ 						 strat: "Saldırganı izlemek, gelecekteki savunmalar için değerli istihbarat sağlar. Ancak bu taktik, daha fazla veri sızıntısı riskini içerir ve büyük bir kumar olabilir.", 
+ 						 changes: { dataLeakSize: 150, financialLoss: 50000, customerTrust: -15, reputation: -10 }, 
+ 						 clue: 'attackerMonitored', 
+ 						 impact: 'Negative' 
+ 					 },
+
+ 					 // Gün 1: Öğleden Sonra - Depolama Zafiyeti Keşfi (day1_s3_scan)
+ 					 'd1-s3-close-access': {
+ 						 title: "Herkese Açık Erişimi Kapat",
+ 						 text: "`Analiz-Verileri-Uretim` veri deposunun herkese açık erişimini derhal kapattın ve izinlerini en kısıtlı seviyeye getirdin. Bu, en büyük güvenlik açığını anında kapattı ve sızıntıyı durdurdu.",
+ 						 strat: "Yanlış yapılandırmaların hızlı bir şekilde giderilmesi, bulut güvenliğinde en etkili savunma yöntemlerinden biridir. Bu, veri sızıntısını hızla durdurur.",
+ 						 changes: { dataLeakSize: 20, financialLoss: 10000, customerTrust: +5, reputation: +5 }, 
+ 						 clue: 's3AccessClosed',
+ 						 impact: 'Positive'
+ 					 },
+ 					 'd1-s3-scan-all': {
+ 						 title: "Tüm Veri Depolarını Tara",
+ 						 text: "Bulut ortamındaki tüm diğer veri depolarını da acil olarak güvenlik taramasından geçirdin. Bu, başka 2 potansiyel yanlış yapılandırma tespit etmene olanak sağladı, ancak `Analiz-Verileri-Uretim` deposundaki sızıntı bir süre daha devam etti.",
+ 						 strat: "Kapsamlı denetim, benzer zafiyetlerin tespit edilmesi için önemlidir. Ancak, mevcut krizi durdurmada önceliği geciktirebilir.",
+ 						 changes: { dataLeakSize: 100, financialLoss: 30000, customerTrust: -10, reputation: -7 },
+ 						 clue: 'allS3Scanned',
+ 						 impact: 'Neutral' 
+ 					 },
+
+ 					 // Gün 2: Sabah - Kimlik ve Erişim Felaketi (day2_iam_review)
+ 					 'd2-iam-suspend-report': {
+ 						 title: "Erişim Hesabını Askıya Al ve Raporla",
+ 						 text: "`developer_cem` hesabını derhal askıya aldın ve bulguları yöneticilerine acilen bildirdin. Bu, güvenlik açığını kapattı ve yönetimi olaya dahil etti, ancak iç gerilimi artırdı.",
+ 						 strat: "Erişim zafiyetlerinde hızlı müdahale ve şeffaf raporlama, hem teknik çözümü sağlar hem de kurumsal risk yönetimini destekler.",
+ 						 changes: { financialLoss: 5000, customerTrust: -2, reputation: -1 },
+ 						 clue: 'iamAccountSuspended',
+ 						 impact: 'Positive'
+ 					 },
+ 					 'd2-iam-delete-quietly': {
+ 						 title: "Erişim Hesabını Sessizce Sil",
+ 						 text: "`developer_cem` hesabını kimseye bildirmeden derhal sildin. Açığı hızla kapattın ve olayı örtbas etmeye çalıştın. Bu, kısa vadede paniği önledi ancak uzun vadede yasal riskleri ve güven eksikliğini artırdı.",
+ 						 strat: "Gizlilik ve hızlı çözüm bazen cazip gelse de, siber krizlerde şeffaflık ve doğru kayıt tutma yasal ve etik açıdan hayati öneme sahiptir.",
+ 						 changes: { financialLoss: 20000, customerTrust: -10, reputation: -8, regulatoryRisk: 'Orta' },
+ 						 clue: 'iamAccountDeletedQuietly',
+ 						 impact: 'Negative'
+ 					 },
+
+ 					 // Gün 2: Öğleden Sonra - İçeriden Şüpheli Bağlantılar (day2_internal_connections)
+ 					 'd2-internal-isolate-device': {
+ 						 title: "Şüpheli Cihazı İzole Et",
+ 						 text: "Finans Departmanı'ndaki şüpheli cihazı derhal ağdan izole ettin ve adli inceleme başlattın. Bu, potansiyel iç tehdidi anında durdurdu ve daha fazla veri sızıntısını engelledi. Ancak geliştiricinin işi aksadı ve moralini düşürdü.",
+ 						 strat: "İç tehdit şüphesinde hızlı izolasyon, yayılımı durdurmak için önemlidir. Ancak, operasyonel etkiyi ve insan faktörünü göz önünde bulundurmalısın.",
+ 						 changes: { dataLeakSize: 0, financialLoss: 10000, customerTrust: -2, reputation: -1 },
+ 						 clue: 'internalDeviceIsolated',
+ 						 impact: 'Positive'
+ 					 },
+ 					 'd2-internal-confront-dev': {
+ 						 title: "Geliştiriciyle Yüzleş",
+ 						 text: "Finans departmanındaki geliştiriciyle doğrudan ve gizli bir görüşme ayarladın. Geliştirici, kişisel bir projede kullandığı bir test aracıyla Telegram'a veri gönderdiğini itiraf etti. Bu sana önemli bir içgörü sağladı ancak şirket içi güveni zedeledi.",
+ 						 strat: "Doğrudan görüşme, insan istihbaratı için değerlidir ancak potansiyel olarak tehdidi uyarabilir veya çatışmaya yol açabilir. Etik sınırlar önemlidir.",
+ 						 changes: { dataLeakSize: 50, financialLoss: 5000, customerTrust: -5, reputation: -3 },
+ 						 clue: 'internalDevConfronted',
+ 						 impact: 'Neutral'
+ 					 },
+ 					 'd2-internal-monitor-further': {
+ 						 title: "Cihazı İzlemeye Devam Et",
+ 						 text: "Cihazı izlemeye devam ettin ve daha fazla bilgi topladın. Bu süreçte cihazdan kritik düzeyde veri sızıntısı devam etti, ancak sana gelecekteki saldırılara karşı değerli savunma stratejileri geliştirmende yardımcı olacak detaylı istihbarat topladın.",
+ 						 strat: "Gözlem ve istihbarat toplama, uzun vadede daha iyi savunma stratejileri geliştirmek için önemlidir. Ancak bu süreç, aktif bir tehdit durumunda ciddi veri kaybı riskini artırır.",
+ 						 changes: { dataLeakSize: 200, financialLoss: 30000, customerTrust: -20, reputation: -15 },
+ 						 clue: 'internalDevMonitored',
+ 						 impact: 'Negative'
+ 					 },
+
+ 					 // Gün 3: Sabah - Medya Sızıntısı ve İtibar Felaketi (day3_media_leak)
+ 					 'd3-media-full-disclosure': {
+ 						 title: "Tam Şeffaflıkla Hemen Açıkla",
+ 						 text: "Olayı tüm detaylarıyla, sızıntının nedenini (yanlış yapılandırma), alınan önlemleri ve müşteri verilerinin etkilenme durumunu şeffafça kamuoyuna duyurdun. Bu, başlangıçta büyük bir medya fırtınası yaratsa da, uzun vadede şirketine olan güveni artırdı.",
+ 						 strat: "Kriz iletişiminde tam şeffaflık, kısa vadeli şoku artırabilir ancak uzun vadede güven ve itibarı güçlendirir. Dürüstlük, en iyi politikadır.",
+ 						 changes: { financialLoss: 100000, customerTrust: +10, reputation: +15, regulatoryRisk: 'Düşük' },
+ 						 clue: 'mediaFullDisclosure',
+ 						 impact: 'Positive'
+ 					 },
+ 					 'd3-media-deny-ignore': {
+ 						 title: "İddiaları Reddet ve Medyayla Teması Engelle",
+ 						 text: "Sızıntı iddialarını yalanladın ve krizin büyümesini önlemek için medyadan uzak durdun. Bu, kısa vadede haber akışını yavaşlatsa da, gerçekler ortaya çıktığında şirketin itibarını geri dönülmez şekilde zedeledi ve yasal soruşturmaları tetikledi.",
+ 						 strat: "Gerçekleri inkar etmek, kısa vadede durumu 'idare' etse de, modern dünyada bilginin yayılma hızı göz önüne alındığında uzun vadeli ve daha büyük felaketlere yol açar.",
+ 						 changes: { financialLoss: 500000, customerTrust: -40, reputation: -30, regulatoryRisk: 'Yüksek' },
+ 						 clue: 'mediaDenied',
+ 						 impact: 'Negative'
+ 					 },
+ 					 'd3-media-controlled-leak': {
+ 						 title: "Sızıntının Kontrollü Bir Versiyonunu Yayınla",
+ 						 text: "Hassas detayları atlayarak, olayı önemsiz gösteren, kontrollü bir açıklama sızdırdın. Bu, halkla ilişkiler ekibinin baskısını azaltsa da, gerçekler zamanla ortaya çıktığında müşteri güvenini sarstı ve şirketin şeffaflık algısını zedeledi.",
+ 						 strat: "Kısmi şeffaflık, geçici olarak durumu yatıştırabilir. Ancak, bilgi boşlukları spekülasyonlara ve daha büyük şüpheye yol açarak uzun vadeli itibar kaybına neden olabilir.",
+ 						 changes: { financialLoss: 250000, customerTrust: -20, reputation: -15, regulatoryRisk: 'Orta' },
+ 						 clue: 'mediaControlledLeak',
+ 						 impact: 'Neutral'
+ 					 },
+
+ 					 // Gün 3: Öğleden Sonra - Yönetim Kurulu Toplantısı ve Kritik Karar (day3_management_decision)
+ 					 'd3-m-take-offline': {
+ 						 title: "Tüm Kritik Sistemleri Kapat",
+ 						 text: "Tüm kritik sistemleri derhal kapattın ve kapsamlı bir güvenlik denetimi ile temizlik başlattın. Bu, ürün lansmanını süresiz erteledi ve büyük finansal kayıplara yol açtı, ancak sızıntının tamamen durmasını ve gelecekteki güvenliği sağladı.",
+ 						 strat: "Kritik bir ihlalde radikal önlemler, tam güvenliği garanti edebilir. Ancak bu, ciddi operasyonel ve finansal maliyetleri beraberinde getirir. İş sürekliliği ile güvenlik arasında zor bir denge.",
+ 						 changes: { dataLeakSize: +20, financialLoss: 1000000, customerTrust: -30, reputation: -20, regulatoryRisk: 'Düşük' },
+ 						 clue: 'systemOffline',
+ 						 impact: 'Negative' 
+ 					 },
+ 					 'd3-m-patch-continue': {
+ 						 title: "Hızlı Yamalar Uygula ve Lansmana Devam Et",
+ 						 text: "Hızlı güvenlik yamaları uyguladın ve ürün lansmanına devam etme kararı aldın. Bu, lansmanı kurtardı ve finansal kayıpları azalttı, ancak sistemde gizli zafiyetler veya kalan saldırganlar için risk altında olunduğu anlamına geliyor.",
+ 						 strat: "Risk iştahı ve iş öncelikleri doğrultusunda hızlı çözümler uygulamak mümkündür. Ancak bu, siber riskin tamamen ortadan kalkmadığı, sadece azaltıldığı anlamına gelir ve gelecekteki tehditler için bir kumar olabilir.",
+ 						 changes: { dataLeakSize: +50, financialLoss: 200000, customerTrust: +5, reputation: +5, regulatoryRisk: 'Orta' },
+ 						 clue: 'systemPatched',
+ 						 impact: 'Neutral'
+ 					 },
+
+ 					 // Gün 3: Akşam - Yasal Yükümlülük (day3_regulatory_threat)
+ 					 'd3-e-officially-report': {
+ 						 title: "Veri İhlalini Resmi Olarak Bildir",
+ 						 text: "Yasal yükümlülükleri yerine getirerek veri ihlalini ilgili kurumlara resmi olarak bildirdin. Bu, şirketin şeffaflığını ve yasalara uyumunu gösterdi, ancak medya ve kamuoyu baskısını artırdı ve potansiyel para cezalarının önünü açtı.",
+ 						 strat: "Yasal uyumluluk ve şeffaflık, uzun vadeli itibar ve güven için hayati öneme sahiptir. Kısa vadeli zorluklara rağmen doğru olanı yapmak, şirketin etik duruşunu güçlendirir.",
+ 						 changes: { financialLoss: 50000, customerTrust: +10, reputation: +5, regulatoryRisk: 'Düşük' },
+ 						 clue: 'officialRegulatoryReport',
+ 						 impact: 'Positive'
+ 					 },
+ 					 'd3-e-internal-incident': {
+ 						 title: "Olayı Önemsiz Göstererek Bildirimi Ertele",
+ 						 text: "Olayı iç kaynaklı küçük bir güvenlik olayı olarak göstermeye ve resmi bildirimi ertelemeye karar verdin. Bu, kısa vadede paniği ve yasal süreçleri engelledi, ancak uzun vadede şirketin itibarını geri dönülmez şekilde zedeledi ve çok daha ağır yasal sonuçlara yol açma riski taşıyor.",
+ 						 strat: "Gerçekleri saptırmak veya gizlemek, kısa vadede fayda sağlayabilir, ancak modern denetim ve şeffaflık beklentileri karşısında uzun vadede felaketle sonuçlanır. Güveni kaybedersin.",
+ 						 changes: { financialLoss: 150000, customerTrust: -20, reputation: -15, regulatoryRisk: 'Çok Yüksek' },
+ 						 clue: 'internalIncidentCoverup',
+ 						 impact: 'Negative'
+ 					 },
+ 				 },
+
+ 				 setup() {
+ 					 this.elements = {
+ 						 intro: document.getElementById('introSection'), 
+ 						 game: document.getElementById('gameContainer'), 
+ 						 gameContent: document.getElementById('game-content'),
+ 						 startButton: document.getElementById('startButton'), 
+ 						 intermission: document.getElementById('intermissionSection'),
+ 						 intermissionTitle: document.getElementById('intermissionTitle'), 
+ 						 intermissionText: document.getElementById('intermissionText'),
+ 						 intermissionMetrics: document.getElementById('intermissionMetrics'), 
+ 						 strategicText: document.getElementById('strategicText'),
+ 						 continueButton: document.getElementById('continueButton'),
+ 						 statusBar: { 
+ 							 dataLeakSize: document.getElementById('status-dataLeakSize'), 
+ 							 financialLoss: document.getElementById('status-financialLoss'), 
+ 							 customerTrust: document.getElementById('status-customerTrust'), 
+ 							 reputation: document.getElementById('status-reputation'), 
+ 							 regulatoryRisk: document.getElementById('status-regulatoryRisk') 
+ 						 }
+ 					 };
+ 					 this.loadGameHTML();
+ 					 this.attachListeners();
+ 					 this.elements.intro.style.display = 'flex';
+ 					 this.elements.game.style.display = 'none';
+ 				 },
+
+ 				 attachListeners() {
+ 					 this.elements.startButton.addEventListener('click', () => {
+ 						 console.log("Start button clicked!");
+ 						 this.elements.intro.style.display = 'none';
+ 						 this.elements.game.style.display = 'block';
+ 						 this.showSection('day1_alarm'); 
+ 					 });
+ 					 
+ 					 this.elements.gameContent.addEventListener('click', (e) => {
+ 						 const button = e.target.closest('.btn[data-decision]');
+ 						 if (!button || button.disabled) {
+ 							 console.log("Clicked element is not a button or is disabled.");
+ 							 return; 
+ 						 }
+ 						 
+ 						 const decisionId = button.dataset.decision;
+ 						 const nextSection = button.dataset.nextSection;
+ 						 console.log(`Decision made: ${decisionId}, next section: ${nextSection}`);
+
+ 						 const currentSectionElement = document.getElementById(this.state.currentSectionId);
+ 						 currentSectionElement.querySelectorAll('.btn[data-decision]').forEach(btn => {
+ 							 btn.disabled = true;
+ 							 btn.style.backgroundColor = '#555';
+ 							 btn.style.color = '#999';
+ 						 });
+
+ 						 this.handleDecision(decisionId, nextSection, button);
+ 					 });
+
+ 					 this.elements.continueButton.addEventListener('click', () => {
+ 						 console.log("Continue button clicked in intermission!");
+ 						 const nextSectionId = this.elements.continueButton.dataset.nextSection;
+ 						 this.elements.intermission.style.display = 'none';
+ 						 
+ 						 if (nextSectionId === 'finalSection') {
+ 							 this.showFinalReport();
+ 						 } else {
+ 							 this.elements.game.style.display = 'block';
+ 							 this.showSection(nextSectionId);
+ 						 }
+ 					 });
+ 				 },
+ 				 
+ 				 handleDecision(decisionId, nextSectionId, button) {
+ 					 const info = this.decisionInfo[decisionId];
+ 					 if (!info) { console.error("Decision info not found:", decisionId); return; }
+
+ 					 this.score.dataLeakSize += info.changes.dataLeakSize || 0;
+ 					 this.score.financialLoss += info.changes.financialLoss || 0;
+ 					 this.score.customerTrust = Math.max(0, Math.min(100, this.score.customerTrust + (info.changes.customerTrust || 0)));
+ 					 this.score.reputation = Math.max(0, Math.min(100, this.score.reputation + (info.changes.reputation || 0)));
+ 					 this.score.regulatoryRisk = info.changes.regulatoryRisk || this.score.regulatoryRisk;
+ 					 
+ 					 if (info.clue) {
+ 						 this.state[info.clue] = true;
+ 					 }
+ 					 
+ 					 this.state.decisionHistory.push({ id: decisionId, title: info.title, text: info.text, impactType: info.impact }); 
+ 					 
+ 					 this.updateState();
+ 					 this.showIntermission(info.title, info.text, info.strat, info.changes, nextSectionId);
+ 				 },
+
+ 				 showIntermission(title, text, strat, changes, nextSectionId) {
+ 					 this.elements.intermissionTitle.textContent = title;
+ 					 this.elements.intermissionText.textContent = text;
+ 					 this.elements.strategicText.textContent = strat;
+ 					 
+ 					 let metricsHTML = '';
+ 					 const formatChange = (label, value, unit, icon, isPositive) => {
+ 						 const arrow = (typeof value === 'number' && value >= 0) ? 'up' : 'down'; 
+ 						 const sign = (typeof value === 'number' && value >= 0) ? '+' : ''; 
+ 						 
+ 						 let colorClass = 'neutral';
+ 						 if (label === 'Finansal Zarar' || label === 'Veri Sızıntısı Boyutu') {
+ 							 colorClass = value > 0 ? 'negative' : (value < 0 ? 'positive' : 'neutral');
+ 						 } else if (label === 'Müşteri Güveni' || label === 'İtibar Puanı') {
+ 							 colorClass = value > 0 ? 'positive' : (value < 0 ? 'negative' : 'neutral');
+ 						 } else if (label === 'Yasal Risk') {
+ 							 if (value === 'Düşük') colorClass = 'positive';
+ 							 else if (value === 'Yüksek' || value === 'Çok Yüksek') colorClass = 'negative';
+ 							 else colorClass = 'neutral';
+ 						 }
+
+ 						 let displayValue = (typeof value === 'number') ? `${sign}${Math.abs(value).toLocaleString('en-US')}` : value;
+
+ 						 return `<div class="metric-change ${colorClass}"><i class="fa-solid ${icon}"></i> ${label}: <i class="fa-solid fa-arrow-${arrow}-long"></i> ${displayValue}${unit}</div>`;
+ 					 };
+
+ 					 if (changes.dataLeakSize !== undefined) metricsHTML += formatChange('Veri Sızıntısı Boyutu', changes.dataLeakSize, ' GB', 'fa-cloud-arrow-down', false);
+ 					 if (changes.financialLoss !== undefined) metricsHTML += formatChange('Finansal Zarar', changes.financialLoss, '₺', 'fa-hand-holding-dollar', false);
+ 					 if (changes.customerTrust !== undefined) metricsHTML += formatChange('Müşteri Güveni', changes.customerTrust, '', 'fa-users', true);
+ 					 if (changes.reputation !== undefined) metricsHTML += formatChange('İtibar Puanı', changes.reputation, '', 'fa-building-shield', true);
+ 					 if (changes.regulatoryRisk !== undefined) metricsHTML += formatChange('Yasal Risk', changes.regulatoryRisk, '', 'fa-scale-balanced', false);
+ 					 
+ 					 if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1em; opacity: 0.8;">This decision had no direct impact on metrics.</p>';
+
+ 					 this.elements.intermissionMetrics.innerHTML = metricsHTML;
+ 					 this.elements.continueButton.dataset.nextSection = nextSectionId;
+ 					 this.elements.game.style.display = 'none';
+ 					 this.elements.intermission.style.display = 'flex';
+ 				 },
+
+ 				 updateStatusBar() {
+ 					 const s = this.score;
+ 					 this.elements.statusBar.dataLeakSize.textContent = `${s.dataLeakSize} GB`;
+ 					 this.elements.statusBar.financialLoss.textContent = `₺${s.financialLoss.toLocaleString('tr-TR')}`;
+ 					 this.elements.statusBar.customerTrust.textContent = Math.max(0, s.customerTrust);
+ 					 this.elements.statusBar.reputation.textContent = Math.max(0, s.reputation);
+ 					 this.elements.statusBar.regulatoryRisk.textContent = s.regulatoryRisk;
+ 				 },
+
+ 				 showSection(sectionId) {
+ 					 this.elements.sections.forEach(section => { section.style.display = 'none'; });
+ 					 const targetSection = document.getElementById(sectionId);
+ 					 if (targetSection) {
+ 						 targetSection.style.display = 'block';
+ 						 this.state.currentSectionId = sectionId;
+ 						 this.updateDynamicContent(sectionId);
+ 						 this.updateButtonStates(sectionId); 
+ 					 } else {
+ 						 console.error('Bölüm bulunamadı:', sectionId);
+ 						 this.showFinalReport();
+ 					 }
+ 					 this.updateState();
+ 				 },
+ 				 
+ 				 updateButtonStates(sectionId) {
+ 					 const currentSectionElement = document.getElementById(sectionId);
+ 					 if (!currentSectionElement) return;
+
+ 					 const decisionButtonsContainer = currentSectionElement.querySelector('.decision-buttons');
+ 					 if (!decisionButtonsContainer) return;
+
+ 					 const buttons = decisionButtonsContainer.querySelectorAll('.btn[data-decision]');
+ 					 buttons.forEach(button => {
+ 						 button.disabled = false; 
+ 						 button.style.backgroundColor = ''; 
+ 						 button.style.color = '';
+ 						 
+ 						 const decisionId = button.dataset.decision;
+ 						 const isDecisionMade = this.state.decisionHistory.some(d => d.id === decisionId);
+ 						 if (isDecisionMade) {
+ 							 button.disabled = true;
+ 							 button.style.backgroundColor = '#555'; 
+ 							 button.style.color = '#999';
+ 						 }
+ 					 });
+ 				 },
+
+ 				 showFinalReport() {
+ 					 this.elements.intro.style.display = 'none';
+ 					 this.elements.intermission.style.display = 'none';
+ 					 this.elements.game.style.display = 'block'; 
+ 					 document.getElementById('statusBar').style.display = 'none';
+
+ 					 this.elements.sections.forEach(section => {
+ 						 section.style.display = 'none';
+ 					 });
+ 					 
+ 					 const finalSection = document.getElementById('finalSection');
+ 					 if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
+
+ 					 finalSection.style.display = 'flex';
+ 					 
+ 					 const badge = document.getElementById('performance-badge');
+ 					 const metricsContainer = document.getElementById('finalMetricsContainer');
+ 					 const timelineList = document.getElementById('decision-timeline-list');
+ 					 const debriefContent = document.getElementById('strategic-debrief-content');
+ 					 
+ 					 const finalDataLeak = this.score.dataLeakSize;
+ 					 const finalFinancialLoss = this.score.financialLoss;
+ 					 const finalCustomerTrust = this.score.customerTrust;
+ 					 const finalReputation = this.score.reputation;
+ 					 const finalRegulatoryRisk = this.score.regulatoryRisk;
+
+ 					 let totalScore = 0;
+ 					 totalScore += finalCustomerTrust * 0.4; 
+ 					 totalScore += finalReputation * 0.3; 
+ 					 totalScore -= (finalDataLeak / 100) * 15; 
+ 					 totalScore -= (finalFinancialLoss / 200000) * 10; 
+
+ 					 if (finalRegulatoryRisk === 'Yüksek') {
+ 						 totalScore -= 25;
+ 					 } else if (finalRegulatoryRisk === 'Çok Yüksek') {
+ 						 totalScore -= 50;
+ 					 } else if (finalRegulatoryRisk === 'Düşük') {
+ 						 totalScore += 10; 
+ 					 }
+
+ 					 totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+
+ 					 let badgeInfo = {};
+ 					 if (totalScore >= 85 && finalDataLeak < 50 && finalRegulatoryRisk === 'Düşük') { 
+ 						 badgeInfo = { text: 'BULUT KAHRAMANI', color: 'var(--accent-green)' };
+ 					 } else if (totalScore >= 60 && finalDataLeak < 200) { 
+ 						 badgeInfo = { text: 'DİRENÇLİ BULUT UZMANI', color: 'var(--accent-blue)' };
+ 					 } else if (totalScore >= 30) { 
+ 						 badgeInfo = { text: 'BULUTTA ZORLU DENEYİM', color: 'var(--accent-yellow)' };
+ 					 } else { 
+ 						 badgeInfo = { text: 'BULUT FELAKETİ', color: 'var(--accent-red)' };
+ 					 }
+
+ 					 badge.textContent = badgeInfo.text;
+ 					 badge.style.backgroundColor = badgeInfo.color;
+
+ 					 metricsContainer.innerHTML = `
+ 						 <div class="metric-card"><div class="icon"><i class="fa-solid fa-cloud-arrow-down"></i></div><div class="label">Sızan Veri</div><div class="value">${finalDataLeak} GB</div></div>
+ 						 <div class="metric-card"><div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="label">Finansal Zarar</div><div class="value">₺${finalFinancialLoss.toLocaleString('tr-TR')}</div></div>
+ 						 <div class="metric-card"><div class="icon"><i class="fa-solid fa-users"></i></div><div class="label">Müşteri Güveni</div><div class="value">${finalCustomerTrust}/100</div></div>
+ 						 <div class="metric-card"><div class="icon"><i class="fa-solid fa-building-shield"></i></div><div class="label">İtibar Puanı</div><div class="value">${finalReputation}/100</div></div>
+ 						 <div class="metric-card"><div class="icon"><i class="fa-solid fa-scale-balanced"></i></div><div class="label">Yasal Risk</div><div class="value">${finalRegulatoryRisk}</div></div>
+ 					 `;
+
+ 					 timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+ 						 let liClass = decision.impactType === 'Positive' ? 'positive' : (decision.impactType === 'Negative' ? 'negative' : 'neutral');
+ 						 return `<li class="${liClass}"><span class="decision-title">${decision.title}</span></li>`;
+ 					 }).join('');
+
+ 					 let debriefHTML = '';
+ 					 if (badgeInfo.text === 'BULUT KAHRAMANI') { 
+ 						 debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir Kıdemli Bulut Güvenliği Uzmanı olarak, bulut ortamınızdaki sinsi zafiyetleri ustalıkla tespit ettiniz ve en hassas müşteri verilerinin sızıntısını minimuma indirdiniz. Hızlı teknik müdahaleleriniz, doğru iletişim stratejileriniz ve yasal uyumdaki liderliğiniz sayesinde ÇOLHAK Teknoloji, bu büyük krizden güçlenerek çıktı. Bulut güvenliğinde sektör lideri olduğunuzu kanıtladınız!</p>`;
+ 					 } else if (badgeInfo.text === 'DİRENÇLİ BULUT UZMANI') { 
+ 						 debriefHTML += `<p><strong>Başarılı Bir Müdahale!</strong> Oldukça karmaşık bir bulut güvenliği kriziyle karşı karşıya kalmanıza rağmen, etkili teknik müdahalelerle ve stratejik kararlarla krizi kontrol altına almayı başardınız. Bazı veri sızıntıları ve finansal kayıplar yaşansa da, genel olarak müşteri güvenini ve şirket itibarını önemli ölçüde korudunuz. Aldığınız derslerle gelecekteki bulut güvenliği duruşunuzu daha da sağlamlaştıracaksınız.</p>`;
+ 					 } else if (badgeInfo.text === 'BULUTTA ZORLU DENEYİM') { 
+ 						 debriefHTML += `<p><strong>Öğrenilen Büyük Dersler:</strong> Bulut güvenliği krizini yönetmekte zorlandınız ve kritik müşteri verilerinin sızmasıyla sonuçlanan önemli kayıplar yaşadınız. Finansal zararlar arttı ve şirketin itibarı ciddi şekilde zedelendi. Ancak bu deneyim, bulut güvenliği stratejilerinizi kökten değiştirmek ve altyapınızı daha sağlam hale getirmek için paha biçilmez dersler sağladı. Acil eylem planlarına ihtiyacınız var.</p>`;
+ 					 } else { 
+ 						 debriefHTML += `<p><strong>BULUT FELAKETİ:</strong> Kıdemli Bulut Güvenliği Uzmanı olarak bu krizi yönetmekte ciddi zorluklar yaşadınız. Büyük miktarda hassas müşteri verisi sızdırıldı, finansal kayıplar devasa boyutlara ulaştı ve şirketin itibarı ile müşteri güveni tamamen çöktü. Yasal soruşturmalar ve yüksek para cezaları kaçınılmaz görünüyor. Bu durum, ÇOLHAK Teknoloji için bulut güvenliği stratejilerinde köklü bir değişim gerektiren acı bir ders oldu.</p>`;
+ 					 }
+ 					 debriefContent.innerHTML = debriefHTML;
+ 				 },
+
+ 				 updateState() { this.updateStatusBar(); this.updateSlackChat(this.state.currentSectionId); },
+
+ 				 updateSlackChat(currentSection) {
+ 					 const chatViewer = document.getElementById(this.state.currentSectionId).querySelector('.slack-chat');
+ 					 if (!chatViewer) return; 
+
+ 					 let chat = '';
+ 					 if (currentSection === 'day1_alarm') {
+ 						 chat = `
+ 							 <div class="message"><span class="sender ciso">CISO Can Çolhak:</span> Güvenlik ekibinden gelen bu raporlar ne anlama geliyor? Lansmana 72 saat kaldı, panik başlıyor!</div>
+ 							 <div class="message"><span class="sender cto">CTO Furkan Tekin:</span> Bulut sistemimizde böyle bir sızıntı olması imkansız. Her şeyi en iyi pratiklere göre yapılandırdık. Bir yanlış alarm olmalı!</div>
+ 							 <div class="message"><span class="sender ceo">CEO Dilara Akın:</span> Lansman bu ürüne bağlı. En ufak bir aksaklık bile kabul edilemez. Tamamen güvende olduğumuzdan emin olun!</div>
+ 							 <div class="message"><span class="sender">Siz (Bulut Güvenliği Uzmanı):</span> Sakin olun. Anormallikleri inceliyorum. Kaynağı ve kapsamı hızla tespit etmeliyiz.</div>
+ 						 `;
+ 					 } else if (currentSection === 'day1_s3_scan') {
+ 						 chat = `
+ 							 <div class="message"><span class="sender ciso">CISO Can Çolhak:</span> Herkese açık veri deposu mu?! Bu nasıl olabilir? Acil bir eylem planına ihtiyacımız var!</div>
+ 							 <div class="message"><span class="sender cto">CTO Furkan Tekin:</span> Tüm ekibi topla! Bu veri deposunu kimin açtığını bulmalıyız. Bu, yapılandırma hatalarının bir göstergesi.</div>
+ 							 <div class="message"><span class="sender finance">Finans Direktörü Enes Mert:</span> Sızan veri boyutu ne kadar? Bu bize ne kadara mal olacak?</div>
+ 							 <div class="message"><span class="sender">Siz (Bulut Güvenliği Uzmanı):</span> Erişimi kapattık. Şimdi kök nedeni ve ne kadar bilginin sızdığını anlamalıyız. Erişim kayıtları öncelikli.</div>
+ 						 `;
+ 					 } else if (currentSection === 'day2_iam_review') {
+ 						 chat = `
+ 							 <div class="message"><span class="sender ciso">CISO Can Çolhak:</span> Eski geliştirici hesabında tam yetki mi? Bu korkunç! İç denetim süreçlerimizde nasıl kaçtı bu?</div>
+ 							 <div class="message"><span class="sender cto">CTO Furkan Tekin:</span> Bu hesabı derhal devre dışı bırakmalıyız. Ayrıca, tüm eski geliştirici hesaplarını ve erişim izinlerini acilen denetlemeliyiz.</div>
+ 							 <div class="message"><span class="sender ceo">CEO Dilara Akın:</span> Bu sızıntının kaynağı içimizden biri mi? Bu çok daha kötü! Müşteri güveni tamamen sarsılır.</div>
+ 							 <div class="message"><span class="sender">Siz (Bulut Güvenliği Uzmanı):</span> Erişim yönetimi en büyük zafiyetimizdi. Hata bizde. Şimdi saldırganın başka nerelere eriştiğini bulmalıyız.</div>
+ 						 `;
+ 					 } else if (currentSection === 'day2_internal_connections') {
+ 						 chat = `
+ 							 <div class="message"><span class="sender ciso">CISO Can Çolhak:</span> İçeriden Telegram'a mı? Bu bir içeriden tehdit mi, yoksa bir yanlış anlaşılma mı?</div>
+ 							 <div class="message"><span class="sender cto">CTO Furkan Tekin:</span> Geliştirme ekibimiz bazen dış araçları test amaçlı kullanır. Ancak Telegram, şirket için onaylı bir araç değil. Dikkatli olmalıyız.</div>
+ 							 <div class="message"><span class="sender ceo">CEO Dilara Akın:</span> İçeriden bir sızıntı dedikodusu, dış sızıntıdan bile daha kötü! Çalışan moralini ve şirket içi güveni düşünün!</div>
+ 						 	 <div class="message"><span class="sender">Siz (Bulut Güvenliği Uzmanı):</span> Bu bağlantıyı tam olarak anlamalıyız. Niyet ne? Kapsam ne? Hızlı ve doğru bir değerlendirme şart.</div>
+ 						 `;
+ 					 } else if (currentSection === 'day3_media_leak') {
+ 						 chat = `
+ 							 <div class="message"><span class="sender ceo">CEO Dilara Akın:</span> Medya bizi parçalıyor! Lansman iptal mi olacak? Hemen bir şeyler yapın!</div>
+ 							 <div class="message"><span class="sender pr">PR Direktörü Serap Nur:</span> Bu haber hızla yayılıyor. Kontrollü bir açıklama yapmazsak, durumu yönetemeyiz. Acele edin!</div>
+ 							 <div class="message"><span class="sender ciso">CISO Can Çolhak:</span> Ne kadar veri sızdığını bilmeden nasıl bir açıklama yapacağız?</div>
+ 							 <div class="message"><span class="sender cto">CTO Furkan Tekin:</span> Henüz tüm zafiyetleri kapatmadık. Açıklama yapmadan önce sistemleri tamamen güvenceye almalıyız!</div>
+ 							 <div class="message"><span class="sender">Siz (Bulut Güvenliği Uzmanı):</span> Mesajımızı dikkatle seçmeliyiz. Şeffaflık önemli, ancak paniği de önlemeliyiz.</div>
+ 						 `;
+ 					 } else if (currentSection === 'day3_management_decision') {
+ 						 chat = `
+ 							 <div class="message"><span class="sender ceo">CEO Dilara Akın:</span> Lansman kararı ne olacak? Riski almaya hazır mıyız, yoksa her şeyi durduruyor muyuz?</div>
+ 							 <div class="message"><span class="sender ciso">CISO Can Çolhak:</span> Güvenlik bir risk yönetimidir. Sistemi temizlemeden ilerlemek çok büyük bir risk. Kurban olmak istemeyiz!</div>
+ 							 <div class="message"><span class="sender cto">CTO Furkan Tekin:</span> Ürün hazır! Küçük yamalarla lansmanı yapabiliriz. Pazarı kaçıramayız!</div>
+ 							 <div class="message"><span class="sender finance">Finans Direktörü Enes Mert:</span> Lansman iptali demek, milyonlarca liralık yatırımın çöpe gitmesi demek. Şirketin geleceği tehlikede!</div>
+ 							 <div class="message"><span class="sender">Siz (Bulut Güvenliği Uzmanı):</span> Her iki kararın da ciddi sonuçları var. Teknik riskleri ve iş önceliklerini dengelemeliyiz.</div>
+ 						 `;
+ 					 } else if (currentSection === 'day3_regulatory_threat') {
+ 						 chat = `
+ 							 <div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Kaya:</span> Bu yasal bildirim süreci nasıl işleyecek? İtibarımıza daha fazla zarar verir mi?</div>
+ 							 <div class="message"><span class="sender ciso">CISO Can Çolhak:</span> Yasalara uymak zorundayız. Ancak bildirim metni ve zamanlaması kritik.</div>
+ 							 <div class="message"><span class="sender finance">Finans Direktörü Enes Mert:</span> Olası para cezaları ne kadar? Bu krizin maliyetini daha da artıracak mı?</div>
+ 							 <div class="message"><span class="sender">Siz (Bulut Güvenliği Uzmanı):</span> Yasalara uymak bir zorunluluk. Ancak bunu yaparken şirketin itibarını ve müşteri güvenini de korumalıyız.</div>
+ 						 `;
+ 					 }
+ 					 chatViewer.innerHTML = chat;
+ 				 },
+ 				 
+ 				 updateDynamicContent(sectionId) {
+ 					// Gelecekte dinamik içerik güncellemeleri için boş bırakıldı
+ 				 },
+
+ 				 loadGameHTML() {
+ 					 this.elements.sections = document.querySelectorAll('.section');
+ 					 hljs.highlightAll();
+ 				 }
+ 			 };
+ 			 window.game.setup();
+ 		 });
+ 	 </script>
+ </body>
+ </html>

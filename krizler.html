@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber Güvenlik Simülasyonları: Görevini Seç</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Simulations: Choose Your Mission</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --dark-blue-bg: #0A0A1E;
+            --main-accent: #00E6FF;
+            --text-color-light: #E0E0E0;
+            --text-color-medium: #A0A0A0;
+            --card-bg: rgba(20, 20, 40, 0.85);
+            --border-glow: rgba(0, 230, 255, 0.5);
+            --button-hover: #00B3CC;
+            --shadow-light: rgba(0, 230, 255, 0.2);
+            --shadow-strong: rgba(0, 230, 255, 0.4);
+            --title-glow-color: rgba(0, 230, 255, 0.4); /* Parlaklık daha da düşürüldü */
+
+            --title-glow-color: rgba(0, 230, 255, 0.4);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--dark-blue-bg);
+            color: var(--text-color-light);
+            margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated grid background - consistent with homepage */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .grid-bg::before {
+            content: '';
+            position: absolute;
+            width: 200vw;
+            height: 200vh;
+            background-image: 
+                linear-gradient(0deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%),
+                linear-gradient(90deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%);
+            background-size: 50px 50px;
+            animation: grid-move 60s linear infinite;
+            transform-origin: 0 0;
+            opacity: 0.2;
+        }
+
+        @keyframes grid-move {
+            from { transform: translate(0, 0); }
+            to { transform: translate(-50px, -50px); }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8em;
+            margin-bottom: 40px;
+            color: var(--main-accent);
+            /* Parlaklık daha da azaltıldı */
+            text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color);
+            z-index: 1;
+            letter-spacing: 1px;
+            animation: textGlow 4s ease-in-out infinite alternate; /* Animasyon yavaşlatıldı */
+            text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color);
+            z-index: 1;
+            letter-spacing: 1px;
+            animation: textGlow 4s ease-in-out infinite alternate;
+        }
+
+        /* Title glow animation - consistent with homepage */
+        @keyframes textGlow {
+            from { text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color); }
+            to { text-shadow: 0 0 8px var(--title-glow-color), 0 0 15px var(--title-glow-color); }
+        }
+
+
+        .kriz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1300px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .kriz-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            text-align: center;
+            border: 1px solid rgba(0, 230, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .kriz-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle at center, rgba(0, 230, 255, 0.15) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+            opacity: 0;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .kriz-card:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .kriz-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 18px 40px var(--shadow-strong);
+            border-color: var(--main-accent);
+        }
+
+        .kriz-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.9em;
+            color: var(--main-accent);
+            margin-bottom: 12px;
+            /* Parlaklık daha da azaltıldı */
+            text-shadow: 0 0 4px var(--title-glow-color), 0 0 8px var(--title-glow-color); 
+        }
+
+        .kriz-card p.role {
+            font-size: 1.15em;
+            color: var(--text-color-light);
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+
+        .kriz-card p.description {
+            font-size: 1em;
+            color: var(--text-color-medium);
+            line-height: 1.6;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .kriz-card .start-button {
+            display: inline-block;
+            padding: 14px 35px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--dark-blue-bg);
+            background-color: var(--main-accent);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 6px 15px var(--shadow-light);
+            text-transform: uppercase;
+        }
+
+        .kriz-card .start-button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 9px 20px var(--shadow-strong);
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+ 
+    <h1>Siber Güvenlik Simülasyonları: Görevini Seç</h1>
+
+    <div class="kriz-grid">
+        <div class="kriz-card">
+            <h2>IoT Krizi</h2>
+            <p class="role">👨‍💻 Siber Güvenlik Mühendisi</p>
+            <p class="description">Akıllı cihazların kontrol dışı davranışları ağını felç ediyor. Hızlı müdahale et!</p>
+            <a href="cyberscenarios1/index.html" class="start-button">Başla</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Fidye Yazılımı</h2>
+            <p class="role">🕵️ Siber Güvenlik Analisti</p>
+            <p class="description">Şirket verileri şifrelendi! Verileri kurtar ve saldırganı durdur.</p>
+            <a href="cyberscenarios2/index.html" class="start-button">Başla</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>İç Tehdit Krizi</h2>
+            <p class="role">👤 Siber Güvenlik Direktörü</p>
+            <p class="description">Gizli bilgiler içeriden sızdırılıyor. Şüphelinin peşine düş!</p>
+            <a href="cyberscenarios3/index.html" class="start-button">Başla</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Oltalama Krizi</h2>
+            <p class="role">🎯 Siber İstihbarat Şefi</p>
+            <p class="description">Çalışanlar oltalama saldırısına kurban gitti. Hasarı minimuma indir!</p>
+            <a href="cyberscenarios5/index.html" class="start-button">Başla</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Tedarik Zinciri Krizi</h2>
+            <p class="role">🧩 Siber Tehdit İstihbaratı (CTI) Uzmanı</p>
+            <p class="description">Güvendiğin iş ortağın aracılığıyla saldırıya uğradın. Zinciri koru!</p>
+            <a href="cyberscenarios4/index.html" class="start-button">Başla</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Büyük Ölçekli DDoS Krizi</h2>
+            <p class="role">🌐 Ağ Güvenlik Uzmanı</p>
+            <p class="description">Yoğun trafikle siteler çökertiliyor. Ağını savun ve hizmeti geri getir!</p>
+            <a href="cyberscenarios8/index.html" class="start-button">Başla</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Zero-Day Krizi</h2>
+            <p class="role">💾 SOC Analisti</p>
+            <p class="description">Kimsenin bilmediği bir zafiyet sömürülüyor. Hızla bir yama oluştur!</p>
+            <a href="cyberscenarios7/index.html" class="start-button">Başla</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Bulut Güvenliği Krizi</h2>
+            <p class="role">📢 Bulut Güvenliği Uzmanı</p>
+            <p class="description">Hassas veriler ele geçirildi. İtibarı kurtar ve kamuoyunu bilgilendir!</p>
+            <a href="cyberscenarios6/index.html" class="start-button">Başla</a>
+    <h1>Cybersecurity Simulations: Choose Your Mission</h1>
+
+    <div class="kriz-grid">
+        <div class="kriz-card">
+            <h2>IoT Crisis</h2>
+            <p class="role">👨‍💻 Cybersecurity Engineer</p>
+            <p class="description">Rogue smart devices are paralyzing your network. Respond quickly!</p>
+            <a href="cyberscenarios-1/index.html" class="start-button">Start</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Ransomware Attack</h2>
+            <p class="role">🕵️ SOC Analyst</p>
+            <p class="description">Company data is encrypted! Recover data and stop the attacker.</p>
+            <a href="cyberscenarios-2/index.html" class="start-button">Start</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Insider Threat</h2>
+            <p class="role">👤 Cybersecurity Director</p>
+            <p class="description">Sensitive information is being leaked internally. Hunt down the suspect!</p>
+            <a href="cyberscenarios-3/index.html" class="start-button">Start</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Phishing Attack</h2>
+            <p class="role">🎯 Cyber Intelligence Chief</p>
+            <p class="description">Employees fell victim to a phishing attack. Minimize the damage!</p>
+            <a href="cyberscenarios-4/index.html" class="start-button">Start</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Supply Chain Attack</h2>
+            <p class="role">🧩 Cyber Threat Intelligence (CTI) Specialist</p>
+            <p class="description">You've been attacked through a trusted partner. Secure the chain!</p>
+            <a href="cyberscenarios-5/index.html" class="start-button">Start</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Large-Scale DDoS Attack</h2>
+            <p class="role">🌐 Network Security Expert</p>
+            <p class="description">Sites are crashing under heavy traffic. Defend your network and restore service!</p>
+            <a href="cyberscenarios-6/index.html" class="start-button">Start</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Zero-Day Exploit</h2>
+            <p class="role">💾 SOC Analyst</p>
+            <p class="description">An unknown vulnerability is being exploited. Quickly develop a patch!</p>
+            <a href="cyberscenarios-7/index.html" class="start-button">Start</a>
+        </div>
+
+        <div class="kriz-card">
+            <h2>Cloud Security Breach</h2>
+            <p class="role">📢 Cloud Security Specialist</p>
+            <p class="description">Sensitive data has been compromised. Salvage reputation and inform the public!</p>
+            <a href="cyberscenarios-8/index.html" class="start-button">Start</a>
+        </div>
+    </div>
+</body>
+</html>

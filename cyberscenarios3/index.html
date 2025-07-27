@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V3: Güven İhlali - İçeriden Gelen Tehdit Simülasyonu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--dark-bg); color: var(--text-light); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
+        .container { background-color: var(--container-bg); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 20px; max-width: 950px; width: 100%; margin: 40px 0; }
+        @media (min-width: 768px) { .container { padding: 40px; } }
+        .centered-page { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 60vh; animation: fadeIn 0.5s ease-out; }
+        h1 { font-size: 2.5em; color: var(--accent-blue); margin-bottom: 20px; }
+        h2 { font-size: 2em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 25px; }
+        h3 { font-size: 1.5em; color: var(--accent-blue); }
+        h4 { font-size: 1.2em; color: var(--accent-purple); text-align: left; margin-top: 0; border-bottom: 1px solid var(--interactive-bg); padding-bottom: 10px; }
+        p { line-height: 1.7; font-size: 1.1em; }
+        .section { display: none; padding: 20px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.5s ease-out; }
+        @media (min-width: 768px) { .section { padding: 30px; } }
+        .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+        .btn { background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center; gap: 15px; font-weight: 700; }
+        .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        .btn .btn-text { flex-grow: 1; }
+        .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; }
+        .btn-start, .btn-continue { font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green); color: var(--text-dark); justify-content: center; }
+        .btn.critical { background-color: var(--accent-pink); }
+        #intermissionSection .metric-change { font-size: 1.2em; margin: 15px 0; display: flex; align-items: center; gap: 10px; }
+        .metric-change .positive { color: var(--accent-green); }
+        .metric-change .negative { color: var(--accent-red); }
+        #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; }
+        #statusBar .metric { text-align: center; font-size: 0.9em; }
+        #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); }
+        .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; width: 100%; max-width: 850px; }
+        .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 150px; }
+        .metric-card:hover { transform: scale(1.05); border-color: var(--accent-blue); }
+        .metric-card .icon { font-size: 2.5em; color: var(--accent-blue); margin-bottom: 10px; }
+        .metric-card .label { font-size: 1.1em; margin-bottom: 5px; color: var(--text-light); }
+        .metric-card .value { font-size: 1.8em; font-weight: bold; color: var(--accent-yellow); }
+        .code-block, .slack-chat { background-color: var(--text-dark); border: 1px solid #6272a4; border-radius: 8px; padding: 20px; margin-top: 15px; white-space: pre-wrap; word-break: break-all; font-family: 'Consolas', monospace; }
+        .learning-note { background-color: var(--text-dark); border-left: 5px solid var(--accent-blue); padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .scenario-image { width: 100%; max-width: 500px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .slack-chat .message { margin-bottom: 10px; padding: 8px; border-radius: 5px; background-color: #3f3f5a; }
+        .slack-chat .sender { font-weight: bold; color: var(--accent-pink); }
+        .slack-chat .sender.cfo { color: var(--accent-yellow); }
+        .slack-chat .sender.legal { color: var(--accent-blue); }
+        .suspect-card { background-color: var(--interactive-bg); border-radius: 8px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--accent-purple); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .suspect-card h4 { margin-top: 0; margin-bottom: 5px; border-bottom: none; color: var(--accent-purple); }
+
+        /* === YENİ FİNAL SAYFASI STİLLERİ === */
+        #finalSection { text-align: center; }
+        #performance-badge-container { margin: 25px 0; }
+        #performance-badge { padding: 12px 30px; font-size: 1.8em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease; }
+        #performance-badge:hover { transform: scale(1.05); }
+        .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+        @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+        .event-timeline, .strategic-debrief, .recommendations { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--section-bg); margin-top: 20px; }
+        .event-timeline h3, .strategic-debrief h3, .recommendations h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .event-timeline ul, .recommendations ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
+        .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); font-size: 0.95em; }
+        .event-timeline li:last-child { border-left: none; }
+        .event-timeline li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-green); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; border: 2px solid var(--section-bg); }
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+        .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+        .event-timeline li .decision-impact { font-style: italic; opacity: 0.8; font-size: 0.9em; }
+        #strategic-debrief-content p { font-size: 1em; margin-bottom: 15px; }
+        .recommendations ul li { padding: 8px 0 8px 30px; position: relative; font-size: 1em; }
+        .recommendations ul li::before { content: '\f0a9'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-yellow); position: absolute; left: 0; top: 10px; }
+
+        /* Roles Info specific styles */
+        #rolesInfo {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+        #rolesInfo h3 {
+            color: var(--accent-green);
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--interactive-bg);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #rolesInfo ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        #rolesInfo ul li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        #rolesInfo ul li:last-child {
+            margin-bottom: 0;
+        }
+        #rolesInfo ul li::before {
+            content: '\f007'; /* User icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-purple);
+            position: absolute;
+            left: 0;
+            top: 3px;
+        }
+        #rolesInfo ul li.your-role::before {
+            color: var(--accent-yellow); /* Highlight your role */
+        }
+        #rolesInfo ul li strong {
+            color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-user-secret"></i> Güven İhlali Simülasyonu</h1>
+            <p style="max-width: 600px;">Hoş geldiniz, Siber Güvenlik Direktörü! Bugün şirketinizi saran, teknolojinin ötesine geçen bir krizle yüzleşeceksiniz: **İçeriden Gelen Tehdit**. Sızan veriler, düşen itibar ve sarsılan güven... Bu simülasyonda, sadece teknik sorunları çözmekle kalmayacak, aynı zamanda insan psikolojisi, şirket kültürü ve etik ikilemlerle dolu zor kararlar vereceksiniz. Her seçiminiz, krizin seyrini ve şirketin kaderini belirleyecek. Hazır mısınız?</p>
+            <img src="images/intro_cyber.png" alt="Siber güvenlik temalı bir giriş görseli" class="scenario-image">
+
+            <div id="rolesInfo">
+                <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+                <ul>
+                    <li class="your-role"><strong>Sizin Rolünüz: Siber Güvenlik Direktörü</strong> - Soruşturmayı yönetmek, kritik kararlar almak ve şirketin krize yanıtını idare etmekle sorumlusunuz. Seçimleriniz sonucu doğrudan etkileyecektir.</li>
+                    <li><strong>CEO Hande Hanım</strong> - Şirketin en üst düzey yöneticisi, genel iş sürekliliği ve kamuoyu algısına odaklanmış durumda.</li>
+                    <li><strong>CFO Arda Bey</strong> - Şirketin finansal sağlığından sorumlu, kayıpları ve gelecekteki yatırımlar üzerindeki potansiyel etkileri yakından takip ediyor.</li>
+                    <li><strong>Hukuk Müşaviri Zeynep Hanım</strong> - Hukuki uyumluluğu denetler ve yasal riskleri azaltmak için kamuoyu açıklamaları konusunda danışmanlık yapar.</li>
+                    <li><strong>Satış Müdürü Ayşe Sarı </strong> - Sızıntıyı ilk keşfeden ekip arkadaşınız.</li>
+                    <li><strong>Potansiyel Şüpheliler (Elif, Can, Burak, Ayşe Sarı)</strong> - Olaya karışmış olabilecek çalışanlar, failler ya da mağdurlar.</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <p id="intermissionText" style="max-width: 600px;"></p>
+            <div class="interactive-element" style="width: 100%; max-width: 500px;">
+                <h4>Karar Etkileri</h4>
+                <div id="intermissionMetrics"></div>
+            </div>
+            <div class="interactive-element" style="width: 100%; max-width: 500px; border-left-color: var(--accent-blue); margin-top: 20px;">
+                <h4>Stratejik Değerlendirme</h4>
+                <p id="strategicText" style="font-size: 1em;"></p>
+            </div>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-user-times"></i> Etkilenen Personel</span><div class="value" id="status-affectedPersonnel">0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-database"></i> Veri Sızıntısı</span><div class="value" id="status-dataLeak">0%</div></div>
+                <div class="metric"><span><i class="fa-solid fa-building-shield"></i> İtibar Puanı</span><div class="value" id="status-reputation">100</div></div>
+            </div>
+            <div id="game-content">
+                </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = {
+                score: { affectedPersonnel: 0, financialLoss: 0, dataLeak: 0, reputation: 100 },
+                state: {
+                    currentSectionId: 'start',
+                    phishingVictimIdentified: false,
+                    elifClueFound: false,
+                    canClueFound: false,
+                    burakClueFound: false,
+                    ayseClueFound: false,
+                    decisionHistory: []
+                },
+                elements: {},
+                
+                decisionInfo: {
+                    's1-notify-ceo': { title: "Hızlı Bildirim", text: "Durumu hemen CEO ve Yönetim Kurulu'na bildirerek şeffaflık sağladınız. Bu, üst yönetimden tam destek almanızı sağladı ancak ilk aşamada bir miktar panik yarattı.", strat: "Kritik güvenlik olaylarında üst yönetimi hızla bilgilendirmek, proaktif kriz yönetimi için esastır.", changes: { financialLoss: 5000, reputation: -5 }, impact: 'Pozitif' },
+                    's1-gather-evidence': { title: "Gecikmeli Tepki", text: "Durumu gizlemeye çalışırken sızıntı kamuoyuna yayıldı. Kontrolü kaybettiniz ve CEO'dan sert tepki aldınız.", strat: "Siber güvenlik krizlerinde gizlilik, olayın kontrol dışına çıkmasına neden olabilir.", changes: { financialLoss: 150000, reputation: -20, dataLeak: 5 }, impact: 'Negatif' },
+                    's2-c-interrogate-elif': { title: "Elif'i Sorgulama", text: "Elif'i sorguladınız. Direnişine rağmen, son zamanlarda dışarıdan, 'iş arayan' birisiyle iletişim kurduğunu itiraf etti. Şirket içi bazı 'sorunları' dile getirdi.", strat: "Memnuniyetsiz çalışanlar, içeriden tehditler için potansiyel hedeflerdir.", changes: { reputation: -5, affectedPersonnel: 1 }, clue: 'elifClueFound', impact: 'Nötr' },
+                    's2-d-investigate-can': { title: "Can'ı İnceleme", text: "Can'ın mali durumunu araştırdınız. Ciddi kumar borçları olduğu ve tefecilerle ilişkisi olduğu anlaşıldı. Bu, onu dış manipülasyona açık hale getiriyor.", strat: "Finansal zorluklar, çalışanların içeriden tehdit olma riskini artırabilir.", changes: { financialLoss: 10000, reputation: -5 }, clue: 'canClueFound', impact: 'Nötr' },
+                    's2-e-block-burak': { title: "Burak'ın Erişimlerini Kapatma", text: "Burak'ın eski erişimlerini kapattınız ve dijital ayak izini incelediniz. Aktif bir erişim bulunamadı ancak sistem loglarında, ayrıldıktan sonra bir kez VPN ile bağlandığı ve şirketin eski bir test sunucusuna erişmeye çalıştığı görüldü. Bu durum dikkat çekiciydi.", strat: "Çalışan ayrılış süreçlerinde tüm erişimlerin titizlikle sonlandırılması, potansiyel içeriden tehditleri önlemek için temel bir güvenlik uygulamasıdır.", changes: { reputation: 5 }, clue: 'burakClueFound', impact: 'Pozitif' },
+                    's2-f-talk-ayse': { title: "Ayşe ile Güven Görüşmesi", text: "Ayşe ile samimi bir konuşma yaparak onun bir oltalama saldırısının kurbanı olduğunu anladınız. Yanlışlıkla şirket içi anket linkine tıklayıp, şifresini girdiğini itiraf etti. Krizin anahtarı bulundu!", strat: "Sosyal mühendislik saldırılarının kökenini anlamak için kurbanla empati kurmak ve güvenli bir ortam sağlamak hayati öneme sahiptir. İnsan faktörünü eğitmek, en iyi savunmadır.", changes: { reputation: 10, affectedPersonnel: 1 }, clue: 'ayseClueFound', impact: 'Pozitif' },
+                    's3-f1-support-ayse': { title: "Mağdura Destek", text: "Ayşe'ye mağdur olarak destek verdiniz ve ona psikolojik yardım sağladınız. Bu, şirket içinde güveni artırdı ve diğer çalışanların da benzer durumları bildirmesi için cesaretlendirdi. Ancak olayın 'insan hatası' olduğu algısı kamuoyunda risk oluşturabilir.", strat: "Güven ortamı oluşturmak, içeriden gelen tehditlerin tespiti ve önlenmesinde hayati rol oynar. Çalışanların korkmadan bildirim yapabilmeleri sağlanmalıdır.", changes: { reputation: 5 }, impact: 'Pozitif' },
+                    's3-f2-punish-ayse': { title: "Cezalandırma Kararı", text: "Ayşe'yi güvenlik protokollerini ihlal etmekle suçlayarak cezalandırdınız. Bu, şirketin 'sıfır tolerans' politikasını gösterdi ancak çalışanlar arasında korku ve güvensizlik yarattı.", strat: "Sert cezalar, uzun vadede çalışanların şüpheli durumları bildirme isteğini azaltabilir ve içeriden tehditleri gizli tutmaya itebilir.", changes: { reputation: -15, affectedPersonnel: 1 }, impact: 'Negatif' },
+                    's3-f3-investigate-ayse': { title: "Detaylı İnceleme", text: "Ayşe'nin hesabını derinlemesine inceleyerek saldırganın diğer zafiyetleri de kullanıp kullanmadığını araştırdınız. Bu, krizin boyutunu daha iyi anlamanızı sağladı ve başka potansiyel kurbanları belirlemenize yardımcı oldu.", strat: "Tek bir güvenlik olayı genellikle buzdağının görünen kısmının ötesinde olabilir. Kapsamlı araştırma ve diğer potansiyel zafiyetleri tespit etmek, gelecekteki saldırıları önlemek için kritik öneme sahiptir.", changes: { financialLoss: 20000, reputation: 5 }, impact: 'Pozitif' },
+                    's4-full-transparency': { title: "Tam Şeffaflık", text: "Olayı tüm detaylarıyla kamuoyuna açıkladınız, hatta oltalama saldırısının Ayşe'yi nasıl etkilediğini bile paylaştınız. Bu, ilk başta şok yaratsa da, dürüstlüğünüz uzun vadede şirketinize olan güveni artırdı.", strat: "Kriz iletişiminde tam şeffaflık, riskli olsa da, dürüstlük algısı yaratarak uzun vadeli itibar kazanımı sağlayabilir. Bu aynı zamanda diğer şirketler ve bireyler için de bir öğrenme fırsatıdır.", changes: { reputation: 15 }, impact: 'Pozitif' },
+                    's4-limited-disclosure': { title: "Sınırlı Açıklama", text: "Sadece sızıntının teyit edildiğini ve soruşturmanın devam ettiğini belirttiniz. Detaylardan kaçınmanız, başlangıçta paniği önlese de, kamuoyunda şüphe uyandırdı ve güveni tam olarak sağlayamadı.", strat: "Sınırlı bilgi paylaşımı, kısa vadede durumu idare etse de, uzun vadede şirketin şeffaflık algısını zedeleyebilir ve daha fazla spekülasyona yol açabilir.", changes: { reputation: -10, dataLeak: 5 }, impact: 'Nötr' },
+                    's4-downplay-incident': { title: "Olayı Küçümseme", text: "Sızıntının küçük bir teknik hata olduğunu, hassas veri kaybı olmadığını iddia ettiniz. Ancak kısa süre sonra yalanınız ortaya çıktı ve şirketiniz büyük bir itibar felaketiyle yüzleşti. Yasal soruşturmalar başladı.", strat: "Krizde yalan veya olayı küçümseme, kısa vadede işe yarasa da, gerçeğin ortaya çıkması durumunda şirketi telafisi mümkün olmayan itibar kaybına uğratır ve yasal sonuçlar doğurur.", changes: { reputation: -50, financialLoss: 1000000, dataLeak: 20 }, impact: 'Negatif' }
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'), gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
+                        intermissionTitle: document.getElementById('intermissionTitle'), intermissionText: document.getElementById('intermissionText'),
+                        intermissionMetrics: document.getElementById('intermissionMetrics'), strategicText: document.getElementById('strategicText'),
+                        continueButton: document.getElementById('continueButton'),
+                        statusBar: { affectedPersonnel: document.getElementById('status-affectedPersonnel'), financialLoss: document.getElementById('status-financialLoss'), dataLeak: document.getElementById('status-dataLeak'), reputation: document.getElementById('status-reputation') }
+                    };
+                    this.loadGameHTML();
+                    this.attachListeners();
+                    this.elements.intro.style.display = 'flex';
+                    this.elements.game.style.display = 'none';
+                },
+
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.intro.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+                        this.showSection('start');
+                    });
+                    
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button) return;
+                        
+                        const decisionId = button.dataset.decision;
+                        const nextSection = button.dataset.nextSection;
+
+                        if (decisionId === 's3-combine-clues') {
+                            this.handleCombineClues(button);
+                        } else {
+                            this.handleDecision(decisionId, nextSection, button);
+                        }
+                    });
+
+                    this.elements.continueButton.addEventListener('click', () => {
+                        const nextSectionId = this.elements.continueButton.dataset.nextSection;
+                        this.elements.intermission.style.display = 'none';
+                        
+                        if (nextSectionId === 'finalSection') {
+                             this.showFinalReport();
+                        } else {
+                            this.elements.game.style.display = 'block';
+                            this.showSection(nextSectionId);
+                        }
+                    });
+                },
+                
+                handleDecision(decisionId, nextSectionId, button) {
+                    button.closest('.decision-buttons').querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+                    const info = this.decisionInfo[decisionId];
+                    if (!info) { console.error("Karar bilgisi bulunamadı:", decisionId); return; }
+
+                    this.score.financialLoss += info.changes.financialLoss || 0;
+                    this.score.reputation += info.changes.reputation || 0;
+                    this.score.dataLeak += info.changes.dataLeak || 0;
+                    this.score.affectedPersonnel += info.changes.affectedPersonnel || 0;
+                    if (info.clue) {
+                        this.state[info.clue] = true;
+                        if (info.clue === 'ayseClueFound') this.state.phishingVictimIdentified = true;
+                    }
+                    
+                    this.state.decisionHistory.push({ title: info.title, impactText: info.text, impactType: info.impact });
+                    this.updateState();
+                    this.showIntermission(info.title, info.text, info.strat, info.changes, nextSectionId);
+                },
+
+                handleCombineClues(button) {
+                    button.closest('.decision-buttons').querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+                    let nextSection = 'finalSection', outcomeTitle, outcomeText, outcomeStrat, changes = {}, finalDecisionInfo = {};
+
+                     if (this.state.phishingVictimIdentified) {
+                        outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
+                        outcomeText = "Ayşe Sarı'nın bir oltalama saldırısının kurbanı olduğu ve bu yolla hassas verilerin sızdırıldığı tespit edildi.";
+                        outcomeStrat = "Bu durum, çalışan farkındalığı eğitimlerinin ne kadar hayati olduğunu bir kez daha gösterdi.";
+                        changes = { reputation: 10 }; nextSection = 'section4';
+                        finalDecisionInfo = { title: 'Kök Neden Tespiti: Oltalama', impactText: 'Doğru ipucunu takip ederek sızıntının kaynağını buldunuz.', impactType: 'Pozitif' };
+                    } else if (this.state.elifClueFound) {
+                        outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
+                        outcomeText = "Elif Demir'in şirket memnuniyetsizliği nedeniyle dışarıdan biriyle hassas bilgiler paylaştığı tespit edildi. Bu, içeriden gelen kötü niyetli bir tehdittir.";
+                        outcomeStrat = "Çalışan memnuniyetsizliğinin yönetimi ve etik kuralların önemi bu tür durumlarda ortaya çıkar.";
+                        changes = { reputation: -10, affectedPersonnel: 1 }; nextSection = 'section4';
+                        finalDecisionInfo = { title: 'Kök Neden Tespiti: Kötü Niyetli Çalışan', impactText: 'Memnuniyetsiz çalışanı tespit ettiniz ancak bu durum şirkete zarar verdi.', impactType: 'Nötr' };
+                    } else if (this.state.canClueFound) {
+                        outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
+                        outcomeText = "Can Yılmaz'ın finansal borçları nedeniyle dış güçler tarafından manipüle edildiği ve bilgi sızdırdığı ortaya çıktı. Bu bir 'içeriden manipüle edilmiş' tehdittir.";
+                        outcomeStrat = "Çalışanların kişisel sorunlarının, siber güvenlik risklerini nasıl artırabileceği anlaşıldı.";
+                        changes = { financialLoss: 50000, reputation: -15, affectedPersonnel: 1 }; nextSection = 'section4';
+                        finalDecisionInfo = { title: 'Kök Neden Tespiti: Manipüle Edilmiş Çalışan', impactText: 'Finansal baskı altındaki çalışanı buldunuz.', impactType: 'Nötr' };
+                    } else if (this.state.burakClueFound) {
+                        outcomeTitle = "Yanlış İz Üzerinde!";
+                        outcomeText = "Eski çalışan Burak Kara'nın eski erişimlerini kullanarak bilgi çalmaya çalıştığı ancak başarılı olamadığı anlaşıldı. Bu durum bir güvenlik açığı olsa da, asıl sızıntının kaynağı bu değildi.";
+                        outcomeStrat = "İşten ayrılma süreçlerindeki güvenlik protokollerinin ne kadar kritik olduğu anlaşıldı.";
+                        changes = { reputation: 5 }; nextSection = 'section4';
+                        finalDecisionInfo = { title: 'Güvenlik Açığı Tespiti', impactText: 'Eski çalışan açığını kapattınız, ancak sızıntının ana kaynağını kaçırdınız.', impactType: 'Nötr' };
+                    } else {
+                        outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlenemedi!";
+                        outcomeText = "Tüm çabalarınıza rağmen, sızıntının kesin nedeni ve kaynağı tam olarak tespit edilemedi. Bu durum, şirketin gelecekteki güvenlik duruşu için büyük bir belirsizlik yaratıyor.";
+                        outcomeStrat = "Siber güvenlikte, her zaman tüm cevapları bulamayabilirsiniz. Ancak eksik bilgilerin yönetimi ve gelecekteki güvenlik yatırımlarının planlanması kritik öneme sahiptir.";
+                        changes = { financialLoss: 100000, reputation: -25, dataLeak: 10 };
+                        finalDecisionInfo = { title: 'Sonuçlandırma: Başarısız Soruşturma', impactText: 'Kök neden bulunamadı, bu da belirsizliğe ve ek maliyetlere yol açtı.', impactType: 'Negatif' };
+                    }
+                    
+                    this.state.decisionHistory.push(finalDecisionInfo);
+                    this.score.financialLoss += changes.financialLoss || 0;
+                    this.score.reputation += changes.reputation || 0;
+                    this.score.dataLeak += changes.dataLeak || 0;
+                    this.score.affectedPersonnel += changes.affectedPersonnel || 0;
+                    
+                    this.showIntermission(outcomeTitle, outcomeText, outcomeStrat, changes, nextSection);
+                },
+
+                showIntermission(title, text, strat, changes, nextSectionId) {
+                    this.elements.intermissionTitle.textContent = title;
+                    this.elements.intermissionText.textContent = text;
+                    this.elements.strategicText.textContent = strat;
+                    
+                    let metricsHTML = '';
+                    const formatChange = (label, value, unit, icon, isPositive) => `<div class="metric-change ${isPositive ? 'positive' : 'negative'}"><i class="fa-solid ${icon}"></i> ${label}: <i class="fa-solid fa-arrow-${isPositive ? 'up' : 'down'}-long"></i> ${Math.abs(value).toLocaleString('tr-TR')}${unit}</div>`;
+                    if (changes.financialLoss) metricsHTML += formatChange('Finansal Zarar', changes.financialLoss, '₺', 'fa-sack-xmark', false);
+                    if (changes.dataLeak) metricsHTML += formatChange('Veri Sızıntısı', changes.dataLeak, '%', 'fa-database', false);
+                    if (changes.reputation !== undefined) metricsHTML += formatChange('İtibar Puanı', Math.abs(changes.reputation), '', 'fa-building-shield', changes.reputation > 0);
+                    if (changes.affectedPersonnel) metricsHTML += formatChange('Etkilenen Personel', changes.affectedPersonnel, '', 'fa-user-times', false);
+                    if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1.1em; opacity: 0.8;">Bu kararın metriklere doğrudan bir etkisi olmadı.</p>';
+
+                    this.elements.intermissionMetrics.innerHTML = metricsHTML;
+                    this.elements.continueButton.dataset.nextSection = nextSectionId;
+                    this.elements.game.style.display = 'none';
+                    this.elements.intermission.style.display = 'flex';
+                },
+
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.affectedPersonnel.textContent = s.affectedPersonnel;
+                    this.elements.statusBar.financialLoss.textContent = `₺${s.financialLoss.toLocaleString('tr-TR')}`;
+                    this.elements.statusBar.dataLeak.textContent = `${s.dataLeak}%`;
+                    this.elements.statusBar.reputation.textContent = Math.max(0, s.reputation);
+                },
+
+                showSection(sectionId) {
+                    this.elements.sections.forEach(section => { section.style.display = 'none'; });
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        this.state.currentSectionId = sectionId;
+                        this.updateDynamicContent(sectionId);
+                    } else {
+                        console.error('Bölüm bulunamadı:', sectionId);
+                        this.showFinalReport();
+                    }
+                    this.updateState();
+                },
+                
+                showFinalReport() {
+                    this.elements.intro.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block'; 
+                    document.getElementById('statusBar').style.display = 'none';
+
+                    this.elements.sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    const finalSection = document.getElementById('finalSection');
+                    if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
+
+                    finalSection.style.display = 'flex';
+                    
+                    const badge = document.getElementById('performance-badge');
+                    const metricsContainer = document.getElementById('finalMetricsContainer');
+                    const timelineList = document.getElementById('decision-timeline-list');
+                    const debriefContent = document.getElementById('strategic-debrief-content');
+                    const recommendationsList = document.getElementById('recommendations-list');
+
+                    const finalRep = Math.max(0, this.score.reputation);
+                    let totalScore = finalRep - (this.score.dataLeak * 2) - (this.score.financialLoss / 50000);
+                    
+                    let badgeInfo = {};
+                    if (totalScore >= 80) badgeInfo = { text: 'SİBER KAHRAMAN', color: 'var(--accent-green)' };
+                    else if (totalScore >= 50) badgeInfo = { text: 'KRİZİ YÖNETTİ', color: 'var(--accent-blue)' };
+                    else if (totalScore >= 20) badgeInfo = { text: 'AĞIR HASARLI', color: 'var(--accent-yellow)' };
+                    else badgeInfo = { text: 'FELAKET', color: 'var(--accent-red)' };
+
+                    badge.textContent = badgeInfo.text;
+                    badge.style.backgroundColor = badgeInfo.color;
+
+                    metricsContainer.innerHTML = `
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-building-shield"></i></div><div class="label">İtibar Puanı</div><div class="value">${finalRep}/100</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="label">Finansal Zarar</div><div class="value">₺${this.score.financialLoss.toLocaleString('tr-TR')}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-database"></i></div><div class="label">Veri Sızıntısı</div><div class="value">${this.score.dataLeak}%</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-user-times"></i></div><div class="label">Etkilenen Personel</div><div class="value">${this.score.affectedPersonnel}</div></div>
+                    `;
+
+                    timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                        let liClass = decision.impactType === 'Pozitif' ? 'positive' : (decision.impactType === 'Negatif' ? 'negative' : 'neutral');
+                        return `<li class="${liClass}"><span class="decision-title">${decision.title}</span><span class="decision-impact">${decision.impactText.split('.')[0]}.</span></li>`;
+                    }).join('');
+
+                    let debriefHTML = '';
+                    if(this.state.phishingVictimIdentified) {
+                        debriefHTML += `<p><strong>Harika Teşhis:</strong> Soruşturmanın odağını doğru bir şekilde 'insan faktörüne' çevirerek, oltalama saldırısını başarıyla tespit ettiniz. Bu, krizin daha fazla büyümesini engelleyen kritik bir adımdı.</p>`;
+                    } else {
+                        debriefHTML += `<p><strong>Kaçırılan Fırsat:</strong> Soruşturma sırasında insan faktörü ve sosyal mühendislik ihtimali göz ardı edildi. Bu durum, kök nedenin bulunmasını zorlaştırdı ve süreci uzattı.</p>`;
+                    }
+                    if(finalRep > 80) {
+                           debriefHTML += `<p><strong>İtibar Yönetimi Başarısı:</strong> Kriz iletişiminde sergilediğiniz şeffaf ve proaktif tutum, kamuoyu güvenini yeniden tesis etmede kilit rol oynadı.</p>`;
+                    } else if (finalRep < 50) {
+                           debriefHTML += `<p><strong>İletişim Zafiyeti:</strong> Kriz iletişiminde yapılan hatalar, itibarın ciddi şekilde zedelenmesine yol açtı. Güveni yeniden inşa etmek uzun sürecektir.</p>`;
+                    }
+                    debriefContent.innerHTML = debriefHTML;
+
+                    let recommendationsHTML = new Set();
+                    recommendationsHTML.add(`<li>Tüm çalışanlar için zorunlu ve periyodik 'Oltalama Farkındalık Eğitimleri' düzenlenmeli.</li>`);
+                    if(!this.state.phishingVictimIdentified || this.score.dataLeak > 0) {
+                        recommendationsHTML.add(`<li>Çok faktörlü kimlik doğrulama (MFA) gibi teknik kontroller güçlendirilmeli.</li>`);
+                    }
+                    if(this.state.burakClueFound) {
+                           recommendationsHTML.add(`<li>İşten ayrılan personel için 'off-boarding' prosedürleri güncellenmeli ve tüm erişimlerin anında kesilmesi sağlanmalı.</li>`);
+                    }
+                    recommendationsHTML.add(`<li>Kriz anları için net rollerin ve sorumlulukların belirlendiği bir 'Kriz İletişim Planı' oluşturulmalı.</li>`);
+                    recommendationsList.innerHTML = Array.from(recommendationsHTML).join('');
+                },
+
+                updateState() { this.updateStatusBar(); this.updateDynamicContent(this.state.currentSectionId); },
+                updateDynamicContent(currentSectionId) { this.updateSlackChat(currentSectionId); },
+                updateSlackChat(currentSection) {
+                    const chatViewer = document.getElementById('slackChat');
+                    if (!chatViewer) return;
+                    let chat = '';
+                    if (['section2', 'section2-1', 'section3', 'section3-ayse', 'section3-ayse-conclusion'].includes(currentSection)) {
+                           chat = `<div class="message"><span class="sender">CEO Hande Hanım:</span> Bu sızıntı kabul edilemez! Kim sorumlu? Hızlıca bulun!</div><div class="message"><span class="sender cfo">CFO Arda Bey:</span> Finansal riskleri değerlendiriyoruz. Olası yasal sonuçlar ne olur?</div><div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Hanım:</span> Durumu tam olarak anlamadan dışarıya açıklama yapmaktan kaçınalım.</div><div class="message"><span class="sender">Siz:</span> Ekibimle birlikte detaylı bir iç soruşturma başlattık.</div>`;
+                    } else if (currentSection === 'section4') {
+                        chat = `<div class="message"><span class="sender">CEO Hande Hanım:</span> Kamuoyu açıklamasını hazırlıyoruz. Son bir kez teyit edelim. Ne kadarını paylaşacağız?</div><div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Hanım:</span> Yasal sorumluluklarımız var, ancak şirketin imajını da korumalıyız. Hassas dengeyi bulmalıyız.</div><div class="message"><span class="sender cfo">CFO Arda Bey:</span> Bu krizin maliyeti çok yüksek. Gelecekteki yatırımlarımız etkilenecek mi?</div>`;
+                    }
+                    chatViewer.innerHTML = chat;
+                },
+
+                loadGameHTML() {
+                    const gameHTMLContent = `
+                        <div id="start" class="section">
+                            <h2><i class="fa-solid fa-hourglass-start"></i> Kriz Başlangıcı: Proje Phoenix Tehlikede!</h2>
+                            <p>Tarih: 21 Haziran 2025. Proje Phoenix'in lansmanına sadece bir hafta kalmışken, Siber Güvenlik Analistiniz Ayşe'den bir e-posta aldınız: "Patron, bu sabah Dark Web'de gezinirken Proje Phoenix'e ait bazı dokümanlara rastladım. Tamamı şifrelenmemiş ve doğrudan bizim şirketimizin dahili damgalarını taşıyor. Küçük bir forumda yayınlanmış ama hızla yayılıyor gibi görünüyor. Ne yapmalıyız?"</p>
+                            <img src="images/email_leak.png" alt="E-posta ile gelen sızıntı bildirimi" class="scenario-image">
+                            <div class="decision-buttons">
+                                <button class="btn" data-decision="s1-notify-ceo" data-next-section="section2"><i class="fa-solid fa-share-nodes"></i><div class="btn-text">Seçenek A: Hemen CEO'ya ve Yönetim Kuruluna Bildir.<small>Durumu anında en üst yönetime raporlayarak şeffaf ve hızlı hareket et.</small></div></button>
+                                <button class="btn critical" data-decision="s1-gather-evidence" data-next-section="section2"><i class="fa-solid fa-eye-slash"></i><div class="btn-text">Seçenek B: Önce Ayşe ile daha fazla kanıt topla ve durumu gizle.<small>Panik yaratmadan durumu kontrol altına almayı dene.</small></div></button>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Siber krizin ilk anları kritik öneme sahiptir. İlk tepkiniz, krizin seyrini büyük ölçüde etkileyebilir.</div>
+                        </div>
+
+                        <div id="section2" class="section">
+                            <h2><i class="fa-solid fa-users-line"></i> Bölüm 2: Şüpheliler Ortaya Çıkıyor</h2>
+                            <p>Yapılan ilk analizler, sızıntının dışarıdan bir saldırıdan ziyade, **içeriden bir kaynaktan** veya **içerideki bir zayıf halkanın istismar edilmesiyle** gerçekleştiğini gösteriyor. Verilere erişim sağlayan kişinin şirketin dahili ağındaki bir "üst düzey erişim"e sahip olduğu anlaşıldı.</p>
+                            <img src="images/suspect_board.png" alt="Şüpheli panosu" class="scenario-image">
+                            <p>Şirket içinde gergin bir hava var. Herkes birbirine şüpheyle bakıyor. Dedikodular yayılıyor. Çalışanların morali hızla düşüyor.</p>
+                            <div class="interactive-element">
+                                <h4>Potansiyel Şüpheliler:</h4>
+                                <div class="suspect-card"><h4>Elif Demir - Kıdemli Yazılım Mühendisi</h4><p>Geçtiğimiz ay terfi alamadığı için hayal kırıklığına uğramış, şirket politikalarından sık sık şikayet eden, oldukça zeki ve teknik becerileri yüksek bir çalışan.</p></div>
+                                <div class="suspect-card"><h4>Can Yılmaz - Finans Uzmanı</h4><p>Şirket kayıtlarında finansal zorluklar yaşadığına dair işaretler var. Kumar borçları olduğu dedikoduları da kulislerde dolaşıyor. Kolay manipüle edilebilir bir hedef olabilir.</p></div>
+                                <div class="suspect-card"><h4>Burak Kara - Eski Sistem Yöneticisi</h4><p>Üç ay önce şirketten ayrıldı ancak bazı eski VPN erişimlerinin tam olarak kapatılmadığına dair şüpheleriniz var. Belki de içeriden birine yardım ediyor.</p></div>
+                                <div class="suspect-card"><h4>Ayşe Sarı - Satış Müdürü</h4><p>Çok güvendiğiniz, uzun yıllardır şirkette çalışan bir yönetici. Ancak son zamanlarda e-posta hesaplarına şüpheli oturum açma girişimleri tespit edildi. Belki de bir oltalama saldırısının kurbanı oldu ve farkında olmadan erişim sağladı.</p></div>
+                            </div>
+                            <div class="decision-buttons">
+                                <button class="btn btn-continue" onclick="game.showSection('section2-1');"><i class="fa-solid fa-arrow-right"></i> Soruşturma Başlat</button>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> İlk araştırma hedefini belirlemek, sınırlı kaynaklarla en etkili sonucu alma stratejisidir. Her şüphelinin farklı bir yaklaşım gerektirdiğini unutmayın.</div>
+                        </div>
+
+                        <div id="section2-1" class="section">
+                            <h2><i class="fa-solid fa-magnifying-glass"></i> Bölüm 2.1: Soruşturma Başlıyor</h2>
+                            <p>Şüphelilerin profillerini değerlendirdiniz. Şimdi bu krizin ardındaki gerçeği ortaya çıkarmak için ilk adımı atma zamanı. Kime öncelik vereceksiniz?</p>
+                            <img src="images/interrogation.png" alt="Sorgulama odası veya araştırma" class="scenario-image">
+                            <h3>İlk hamlen ne olacak?</h3>
+                            <div class="decision-buttons">
+                                <button class="btn" data-decision="s2-c-interrogate-elif" data-next-section="section3"><i class="fa-solid fa-gavel"></i><div class="btn-text">Seçenek C: Elif'i Sorgula.<small>Teknik becerisi ve memnuniyetsizliği onu baş şüpheli yapıyor. Resmi ve baskıcı bir sorgulama.</small></div></button>
+                                <button class="btn" data-decision="s2-d-investigate-can" data-next-section="section3"><i class="fa-solid fa-money-bill-transfer"></i><div class="btn-text">Seçenek D: Can'ı İncele ve Mali Durumunu Araştır.<small>Finansal sorunları onu dış güçler tarafından manipüle edilmeye açık hale getiriyor. İnsan Kaynakları ile gizlice iletişim.</small></div></button>
+                                <button class="btn" data-decision="s2-e-block-burak" data-next-section="section3"><i class="fa-solid fa-user-slash"></i><div class="btn-text">Seçenek E: Burak'ın Eski Erişimlerini Kapat ve Dijital Ayak İzini Takip Et.<small>Teknik olarak en mantıklı adım. Sistemdeki açığı kapatma ve geçmiş aktiviteyi inceleme.</small></div></button>
+                                <button class="btn" data-decision="s2-f-talk-ayse" data-next-section="section3-ayse"><i class="fa-solid fa-comments"></i><div class="btn-text">Seçenek F: Ayşe ile Samimi Bir Görüşme Yap.<small>Ayşe'ye güveniyorsun. Dostça bir sohbetle durumu anlamaya çalış.</small></div></button>
+                            </div>
+                        </div>
+
+                        <div id="section3" class="section">
+                            <h2><i class="fa-solid fa-users-viewfinder"></i> Bölüm 3: Soruşturma Devam Ediyor</h2>
+                            <p>Yaptığınız seçim doğrultusunda soruşturma ilerliyor. Ancak krizin kaynağı tam olarak belirlenmeden şirket içinde gerginlik artıyor. İç iletişimler sürekli izleniyor.</p>
+                            <img src="images/kriz_masasi.png" alt="Kriz masası ve yönetim ekibi" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4><i class="fa-solid fa-headset"></i> Kriz Masası Sohbeti</h4>
+                                <div class="slack-chat" id="slackChat"></div>
+                            </div>
+                            <h3>Topladığınız ipuçlarını birleştirme zamanı geldi.</h3>
+                            <div class="decision-buttons">
+                                <button class="btn btn-continue" data-decision="s3-combine-clues"><i class="fa-solid fa-puzzle-piece"></i> İpuçlarını Birleştir ve Karar Ver</button>
+                            </div>
+                        </div>
+
+                        <div id="section3-ayse" class="section">
+                            <h2><i class="fa-solid fa-handshake-angle"></i> Bölüm 3.1: Ayşe ile Görüşme - Oltalama Kurbanı!</h2>
+                            <p>Ayşe ile kahve içme bahanesiyle buluştunuz. Gergin olduğunu fark ettiniz. Ona son zamanlarda ilginç e-postalar veya mesajlar alıp almadığını sorduğunuzda, yüzü bembeyaz oldu.</p>
+                            <p>"Aslında... evet," diye fısıldar Ayşe. "Geçen hafta, 'İnsan Kaynakları'ndan geldiğini sandığım bir e-posta aldım. Şirket içi bir anket için bir linke tıklamam istendi. Tıkladım ve şifremi girmemi istedi. Çok garipti, ama 'resmi' görünüyordu..."</p>
+                            <img src="images/phishing_email.png" alt="Oltalama e-postası örneği" class="scenario-image">
+                            <p>Ayşe, Proje Phoenix'in belgelerine erişimi olan üst düzey yöneticilerden biri. Bir oltalama saldırısının kurbanı olmuş olabilir. Şifresi ele geçirilmiş ve bu sayede sızan kişi Ayşe'nin hesabını kullanarak verilere erişmiş.</p>
+                            <h3>Şimdi ne yapacaksın?</h3>
+                            <div class="decision-buttons">
+                                <button class="btn" data-decision="s3-f1-support-ayse" data-next-section="section3-ayse-conclusion"><i class="fa-solid fa-hand-holding-heart"></i><div class="btn-text">Seçenek F1: Ayşe'yi Mağdur İlan Et ve Ona Destek Ol.<small>Ayşe'nin bir kurban olduğunu kabul et ve ona psikolojik destek sağla. Güven oluşturur.</small></div></button>
+                                <button class="btn critical" data-decision="s3-f2-punish-ayse" data-next-section="section3-ayse-conclusion"><i class="fa-solid fa-user-xmark"></i><div class="btn-text">Seçenek F2: Ayşe'yi Güvenlik Protokollerini İhlal Etmekle Suçla.<small>Dikkatsizliğinin büyük krize yol açtığını düşünerek cezalandırma. Şirket disiplinini vurgular.</small></div></button>
+                                <button class="btn" data-decision="s3-f3-investigate-ayse" data-next-section="section3-ayse-conclusion"><i class="fa-solid fa-magnifying-glass-plus"></i><div class="btn-text">Seçenek F3: Ayşe'nin Hesabını Detaylı İncele.<small>Bu oltalama saldırısının başka çalışanları da etkileyip etkilemediğini araştır.</small></div></button>
+                            </div>
+                        </div>
+                        
+                        <div id="section3-ayse-conclusion" class="section">
+                            <h2><i class="fa-solid fa-check-circle"></i> Bölüm 3.2: Kök Neden Belirlendi: Oltalama Saldırısı!</h2>
+                            <p>Yapılan detaylı soruşturma ve Ayşe ile yapılan görüşmeler sonucunda, Proje Phoenix belgelerinin bir **oltalama (phishing) saldırısı** yoluyla çalındığı netleşti. Saldırganlar, Ayşe'nin kimlik bilgilerini çalarak şirket ağına sızmış ve bilgileri dışarıya aktarmış.</p>
+                            <img src="images/root_cause.png" alt="Kök neden analizi görseli" class="scenario-image">
+                            <div class="decision-buttons">
+                                <button class="btn btn-continue" onclick="game.showSection('section4');"><i class="fa-solid fa-forward"></i> İtibar Yönetimine Geç</button>
+                            </div>
+                        </div>
+
+                        <div id="section4" class="section">
+                            <h2><i class="fa-solid fa-bullhorn"></i> Bölüm 4: Kriz İletişimi ve İtibar Yönetimi</h2>
+                            <p>Krizin kökeni büyük ölçüde anlaşıldı. Şimdi en zorlu kısım: kamuoyuna açıklama yapmak ve şirketin itibarını kurtarmak. Medya, müşteriler ve paydaşlar şirketten şeffaf bir açıklama bekliyor.</p>
+                            <img src="images/press_conference.png" alt="Basın toplantısı görseli" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4><i class="fa-solid fa-newspaper"></i> Medya Manşetleri (Duyuru Öncesi)</h4>
+                                <div class="code-block" style="font-family: 'Times New Roman', serif;">
+                                    <p style="font-size:1.2em; font-weight:bold; color:var(--accent-red);">SON DAKİKA: Proje Phoenix Belgeleri Dark Web'de!</p>
+                                    <p style="font-size:1em; color:var(--text-light); margin-top:5px;">[TECHNEWS] Sızan dokümanlar, şirket içi bir güvenlik zafiyetine işaret ediyor.</p>
+                                </div>
+                            </div>
+                            <h3>Halka ve paydaşlara nasıl bir açıklama yapacaksın?</h3>
+                            <div class="decision-buttons">
+                                <button class="btn" data-decision="s4-full-transparency" data-next-section="finalSection"><i class="fa-solid fa-check-double"></i><div class="btn-text">Seçenek A: Tam Şeffaflık.<small>Olayı tüm detaylarıyla, sızıntının nedenini ve varsa kurbanı açıklayın.</small></div></button>
+                                <button class="btn" data-decision="s4-limited-disclosure" data-next-section="finalSection"><i class="fa-solid fa-file-contract"></i><div class="btn-text">Seçenek B: Sınırlı Açıklama.<small>Sadece sızıntıyı teyit edin, detaylardan kaçının.</small></div></button>
+                                <button class="btn critical" data-decision="s4-downplay-incident" data-next-section="finalSection"><i class="fa-solid fa-mask"></i><div class="btn-text">Seçenek C: Olayı Küçümse.<small>Sızıntının küçük bir teknik hata olduğunu iddia edin. Büyük risk taşır.</small></div></button>
+                            </div>
+                        </div>
+
+                        <div id="finalSection" class="section centered-page" style="display: none;">
+                            <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
+                            <p>Simülasyon tamamlandı. Kriz yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+                            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                            <div class="final-metrics" id="finalMetricsContainer"></div>
+                            <div class="post-crisis-layout">
+                                <div class="event-timeline">
+                                    <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                                    <ul id="decision-timeline-list"></ul>
+                                </div>
+                                <div class="strategic-debrief">
+                                    <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme ve Dersler</h3>
+                                    <div id="strategic-debrief-content"></div>
+                                </div>
+                            </div>
+                            <div class="recommendations">
+                                <h3><i class="fa-solid fa-tasks"></i> İleriye Yönelik Aksiyon Planı</h3>
+                                <ul id="recommendations-list"></ul>
+                            </div>
+                            <div class="decision-buttons" style="margin-top: 40px;">
+                                <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                            </div>
+                        </div>
+                    `;
+                    this.elements.gameContent.innerHTML = gameHTMLContent;
+                    this.elements.sections = this.elements.gameContent.querySelectorAll('.section');
+                    hljs.highlightAll();
+                }
+            };
+            window.game.setup();
+        });
+    </script>
+</body>
+</html>

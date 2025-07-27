@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Scenario v7: Zero-Day Kriz Simülasyonu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background-color: var(--dark-bg); 
+            color: var(--text-light); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            min-height: 100vh;
+            font-size: 0.95em; 
+        }
+
+        .container { 
+            background-color: var(--container-bg); 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            padding: 20px; 
+            max-width: 950px; 
+            width: 100%; 
+            margin: 40px 0; 
+        }
+
+        @media (min-width: 768px) { .container { padding: 40px; } }
+
+        .centered-page { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            min-height: 60vh; 
+            animation: fadeIn 0.5s ease-out; 
+        }
+
+        h1 { font-size: 2.4em; color: var(--accent-blue); margin-bottom: 20px; }
+        h2 { font-size: 1.9em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 25px; text-align: left; }
+        h3 { font-size: 1.5em; color: var(--accent-purple); text-align: left; margin-top: 25px; margin-bottom: 15px; }
+        h4 { font-size: 1.1em; color: var(--accent-yellow); text-align: left; margin-top: 0; border-bottom: 1px solid var(--interactive-bg); padding-bottom: 10px; }
+        p { line-height: 1.7; font-size: 1em; }
+
+        .section { display: none; padding: 20px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.5s ease-out; }
+        @media (min-width: 768px) { .section { padding: 30px; } }
+
+        .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+        .btn { background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center; gap: 15px; font-weight: 700; }
+        .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        .btn .btn-text { flex-grow: 1; }
+        .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; }
+        .btn-start, .btn-continue { font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green); color: var(--text-dark); justify-content: center; }
+        .btn.critical { background-color: var(--accent-pink); }
+
+        #intermissionSection .metric-change { font-size: 1.2em; margin: 15px 0; display: flex; align-items: center; gap: 10px; }
+        .metric-change .positive { color: var(--accent-green); }
+        .metric-change .negative { color: var(--accent-red); }
+        .metric-change .neutral { color: var(--accent-blue); } 
+
+        #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; }
+        #statusBar .metric { text-align: center; font-size: 0.9em; flex: 1; min-width: 100px; } 
+        #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); }
+
+        .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; width: 100%; max-width: 850px; } 
+        .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 150px; }
+        .metric-card:hover { transform: scale(1.05); border-color: var(--accent-blue); }
+        .metric-card .icon { font-size: 2.5em; color: var(--accent-blue); margin-bottom: 10px; }
+        .metric-card .label { font-size: 1.1em; margin-bottom: 5px; color: var(--text-light); }
+        .metric-card .value { font-size: 1.8em; font-weight: bold; color: var(--accent-yellow); }
+
+        .code-block, .slack-chat { background-color: var(--text-dark); border: 1px solid #6272a4; border-radius: 8px; padding: 20px; margin-top: 15px; white-space: pre-wrap; word-break: break-all; font-family: 'Consolas', monospace; }
+        .learning-note { background-color: var(--text-dark); border-left: 5px solid var(--accent-blue); padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .scenario-image { width: 100%; max-width: 500px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .slack-chat .message { margin-bottom: 10px; padding: 8px; border-radius: 5px; background-color: #3f3f5a; }
+        .slack-chat .sender { font-weight: bold; color: var(--accent-pink); }
+        .slack-chat .sender.cso { color: var(--accent-green); }
+        .slack-chat .sender.ops { color: var(--accent-yellow); }
+        .slack-chat .sender.legal { color: var(--accent-blue); }
+        .slack-chat .sender.ceo { color: var(--accent-purple); }
+        .slack-chat .sender.cto { color: var(--accent-green); } 
+        .slack-chat .sender.pr { color: var(--accent-pink); } 
+        .slack-chat .sender.finance { color: var(--accent-red); } 
+        .suspect-card { background-color: var(--interactive-bg); border-radius: 8px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--accent-purple); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .suspect-card h4 { margin-top: 0; margin-bottom: 5px; border-bottom: none; color: var(--accent-purple); }
+
+        /* === FİNAL SAYFASI STİLLERİ === */
+        #finalSection { text-align: center; }
+        #performance-badge-container { margin: 25px 0; }
+        #performance-badge { padding: 12px 30px; font-size: 1.8em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease; }
+        #performance-badge:hover { transform: scale(1.05); }
+        .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+        @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+        .event-timeline, .strategic-debrief { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--section-bg); margin-top: 20px; }
+        .event-timeline h3, .strategic-debrief h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .event-timeline ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
+        .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); font-size: 0.95em; }
+        .event-timeline li:last-child { border-left: none; }
+        .event-timeline li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-green); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; border: 2px solid var(--section-bg); }
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+        .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+        .event-timeline li .decision-impact { font-style: italic; opacity: 0.8; font-size: 0.9em; }
+        #strategic-debrief-content p { font-size: 1em; margin-bottom: 15px; }
+
+        /* Roles Info specific styles */
+        .intro-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        @media (min-width: 768px) {
+            .intro-info-grid {
+                grid-template-columns: 1fr 1fr; 
+            }
+        }
+
+        .intro-roles-container, .intro-metrics-container {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Shadow adjusted for better visibility */
+            border: 1px solid var(--interactive-bg);
+        }
+
+        .intro-roles-container h3, .intro-metrics-container h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .intro-roles-container ul, .intro-metrics-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .intro-roles-container li, .intro-metrics-container li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--interactive-bg);
+            font-size: 1.05em;
+        }
+
+        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .intro-roles-container li .icon, .intro-metrics-container li .icon {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            width: 35px;
+            text-align: center;
+        }
+        
+        .intro-roles-container li strong {
+            color: var(--accent-yellow);
+        }
+
+        .intro-roles-container li small {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-light);
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-cloud-bolt"></i> Zero-Day Saldırısı</h1>
+            <p style="max-width: 600px;">Hoş geldiniz, **ÇOLHAK Teknoloji**'nin **Kıdemli SOC Analisti**! SOC ekibinizde kritik bir rolünüz var. Şirketinizin web uygulamasına yönelik, henüz yamalanmamış bir **zero-day açığın aktif olarak sömürüldüğünü** fark ettiniz. Saldırganlar, sistemlere sızarak hassas verilere ulaşmaya çalışıyor. Göreviniz: Bu saldırıyı durdurmak, hasarı kontrol altına almak, vendor'dan acil mitigasyon talep etmek ve sistemleri izole etme kararlarıyla zamana karşı bir yarış başlatmak!</p>
+            <img src="intro.png" alt="Siber saldırı themed intro image" class="scenario-image">
+
+            <div class="intro-info-grid">
+                <div class="intro-roles-container">
+                    <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+                    <ul>
+                        <li class="your-role">
+                            <span class="icon"><i class="fa-solid fa-user-secret"></i></span>
+                            <div>
+                                <strong>Sizin Rolünüz: Kıdemli SOC Analisti</strong> 
+                                <small>Aktif saldırıyı tespit eden ve ilk müdahaleyi yapan ekibin liderisin. Teknik analizler, tehdit avcılığı ve mitigasyon adımlarında aktif rol alıyorsun. Seçimlerin sonucu doğrudan etkileyecek.</small>
+                            </div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span><div><strong>CISO Anıl Yılmaz</strong> <small>Güvenlikten sorumlu, hızlı aksiyon bekliyor.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-microchip"></i></span><div><strong>CTO Sadi Orçun</strong> <small>Teknik altyapı ve uygulama sorumlusu, vendor iletişimi ondan geçiyor.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span><div><strong>CEO Sultan Göze</strong> <small>İtibar ve iş sürekliliği öncelikli.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-handshake-angle"></i></span><div><strong>Vendor Temsilcisi (Uygulama Geliştiricisi)</strong> <small>Zero-day açığı yamalamakla yükümlü, yavaş kalabilir.</small></div></li>
+                    </ul>
+                </div>
+
+                <div class="intro-metrics-container">
+                    <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+                    <ul>
+                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-shield-halved"></i></span><div><strong>Uygulama Güvenlik Durumu</strong> <small>Uygulamanın zafiyetlere karşı ne kadar savunmasız olduğu. (Başlangıç: Kritik)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-user-lock"></i></span><div><strong>Saldırgan Erişimi</strong> <small>Saldırganın sistemdeki nüfuzu. (Başlangıç: Sınırlı)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-sack-dollar"></i></span><div><strong>Potansiyel Finansal Zarar</strong> <small>Saldırının maliyeti. (Başlangıç: ₺0)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-hourglass-half"></i></span><div><strong>Kriz Süresi</strong> <small>Krizin kontrol altına alınma süresi. (Başlangıç: 0 Saat)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-pink);"><i class="fa-solid fa-heart-crack"></i></span><div><strong>Kullanıcı Güveni</strong> <small>Kullanıcıların uygulamaya olan inancı. (Başlangıç: 100)</small></div></li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <p id="intermissionText" style="max-width: 600px;"></p>
+            <div class="interactive-element" style="width: 100%; max-width: 500px;">
+                <h4>Karar Etkileri</h4>
+                <div id="intermissionMetrics"></div>
+            </div>
+            <div class="interactive-element" style="width: 100%; max-width: 500px; border-left-color: var(--accent-blue); margin-top: 20px;">
+                <h4>Stratejik Değerlendirme</h4>
+                <p id="strategicText" style="font-size: 1em;"></p>
+            </div>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-shield-halved"></i> Uygulama Güvenliği</span><div class="value" id="status-appSecurity">Kritik</div></div>
+                <div class="metric"><span><i class="fa-solid fa-user-lock"></i> Saldırgan Erişimi</span><div class="value" id="status-attackerAccess">Sınırlı</div></div>
+                <div class="metric"><span><i class="fa-solid fa-sack-dollar"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-hourglass-half"></i> Kriz Süresi</span><div class="value" id="status-crisisDuration">0 Saat</div></div>
+                <div class="metric"><span><i class="fa-solid fa-heart-crack"></i> Kullanıcı Güveni</span><div class="value" id="status-userTrust">100</div></div>
+            </div>
+            <div id="game-content">
+                
+                <div id="phase1_initial_detection" class="section">
+                    <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Aşama 1: İlk Tespit ve Şok</h2>
+                    <h3>An 0:00 - Zero-Day Exploit Alarmı!</h3>
+                    <p>Gece vardiyası sırasında, kritik web uygulamanızdaki WAF (Web Application Firewall) loglarında olağan dışı bir aktivite tespit ettiniz. Normalde engellenen bazı isteklerin bu kez bypass edildiğini ve uygulamanın beklenmedik şekillerde yanıt verdiğini görüyorsunuz. İlk analizler, henüz bilinmeyen bir zafiyetin aktif olarak sömürüldüğünü gösteriyor: Bir **zero-day saldırısı**! Saldırganlar, uygulamanın kullanıcı veritabanına erişmeye çalışıyor.</p>
+                    <p>CISO Anıl Yılmaz'tan acil bir çağrı alıyorsunuz: *"Bu ne demek oluyor? Nasıl olur da farkında olmadığımız bir zafiyet sömürülür? Derhal durdurmalıyız! Ne yapıyoruz?!"*</p>
+                    <img src="zero_day_detection.png" alt="Zero-day detection visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Kıdemli SOC Analisti olarak ilk acil müdahalen ne olacak?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn critical" data-decision="p1-isolate-app" data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-server"></i><div class="btn-text">Seçenek A: Riskli Web Uygulamasını Derhal Ağdan İzole Et.<small>Saldırının yayılmasını ve veri sızıntısını anında durdurmak için radikal bir adım at.</small></div></button>
+                            <button class="btn" data-decision="p1-monitor-traffic" data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-eye"></i><div class="btn-text">Seçenek B: Saldırganın Davranışını İzle ve Zafiyeti Anlamaya Çalış.<small>Zero-day'in nasıl sömürüldüğünü ve saldırganın hedeflerini anlamak için gözlem yap.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Zero-day saldırılarında ilk tepki kritik öneme sahiptir. Hızlı izolasyon, hasarı sınırlar; detaylı gözlem ise istihbarat sağlar ancak risk taşır.</div>
+                </div>
+
+                <div id="phase2a_vendor_contact_initial" class="section">
+                    <h2><i class="fa-solid fa-headset"></i> Aşama 2A: Vendor İletişimi - İlk Yanıt ve Bilgilendirme</h2>
+                    <h3>An 1:30 - Vendor'dan Gelen İlk Yanıt</h3>
+                    <p>Zero-day açığını tespit ettikten hemen sonra, uygulamanın geliştiricisi olan vendor firmayla acil bir toplantı ayarladınız. Durumu tüm detaylarıyla aktardınız. Vendor ekibi şaşkın ve bu zafiyetin kendi bilgilerinde olmadığını doğruladı. Bu, gerçekten bir **zero-day** olduğunu kanıtlıyor. Vendor, hızlıca bir yama geliştirmek için tüm ekibini seferber edeceğini ancak bunun **tahmini 8-12 saat** sürebileceğini belirtti.</p>
+                    <img src="vendor_contact.png" alt="Vendor communication visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Bu bilgiyle birlikte, kriz ekibindeki yöneticilere nasıl bir bildirimde bulunacaksın?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="p2a-inform-wait" data-next-section="phase2b_mitigation_strategy"><i class="fa-solid fa-clock"></i><div class="btn-text">Seçenek A: Yönetimi Bilgilendir ve Vendor'ın Yamasını Bekle.<small>Durumu üst yönetime raporla ve vendor'ın resmi yaması gelene kadar beklemeyi öner.</small></div></button>
+                            <button class="btn critical" data-decision="p2a-demand-temp-fix" data-next-section="phase2b_mitigation_strategy"><i class="fa-solid fa-hand-holding-medical"></i><div class="btn-text">Seçenek B: Vendor'dan Acilen Geçici Mitigasyon Talep Et.<small>Yama gelene kadar saldırıyı durduracak hızlı ve geçici bir çözüm için vendor'a baskı yap.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Zero-day'lerde vendor yanıtı ve yama süreci hayati öneme sahiptir. Bu süreçte boş durmak yerine, geçici çözümler için baskı yapmak kriz yönetiminde proaktif bir yaklaşım gösterir.</div>
+                </div>
+
+                <div id="phase2b_mitigation_strategy" class="section">
+                    <h2><i class="fa-solid fa-screwdriver-wrench"></i> Aşama 2B: Geçici Çözüm Stratejileri</h2>
+                    <h3>An 2:30 - Acil Geçici Mitigasyon Arayışı</h3>
+                    <p>Vendor'dan beklenen tam yama için zaman daralırken, CISO Anıl Yılmaz ve CTO Sadi Orçun, sizinle birlikte acil bir toplantı yapıyor. Uygulamanın riskli durumda kalmasını istemiyorlar. "Uygulamanın aktif kalması bizim için hayati. Vendor'dan gelen yama gelene kadar ne yapabiliriz?" diye soruyorlar. Önünüzde üç olası geçici mitigasyon stratejisi var:</p>
+                    <p>1.  **WAF Kuralları:** Saldırganın exploit paternlerine dayalı olarak Web Application Firewall (WAF) üzerine özel kurallar eklemek. Bu, saldırıları belirli imzalar üzerinden engellemeyi sağlar ancak bilinmeyen varyasyonlara karşı savunmasız kalabilir.
+                    2.  **Özelliği Devre Dışı Bırakma:** Zero-day açığını barındıran spesifik uygulama özelliğini geçici olarak devre dışı bırakmak. Bu, açığı kesin olarak kapatır ancak uygulamanın bir bölümünü kullanılamaz hale getirir.
+                    3.  **Uygulamayı Çevrimdışı Alma:** Uygulamayı tamamen çevrimdışı bırakmak. En güvenli yöntemdir ancak iş kesintisine neden olur ve müşteri memnuniyetini olumsuz etkiler.</p>
+                    <div class="interactive-element">
+                        <h4>Mevcut riskler ve iş ihtiyaçları doğrultusunda hangi geçici mitigasyon stratejisini önereceksin?</h4>
+                        <div class="slack-chat" id="slackChat"></div>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="p2b-waf-rules" data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-shield-virus"></i><div class="btn-text">Seçenek A: WAF'a Saldırganın Exploiti Hedefleyen Özel Kurallar Ekle.<small>Bilinen exploit paternlerine dayalı olarak WAF kuralları oluşturarak geçici koruma sağla.</small></div></button>
+                            <button class="btn critical" data-decision="p2b-disable-feature" data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-toggle-off"></i><div class="btn-text">Seçenek B: Sömürülen Özelliği Geçici Olarak Devre Dışı Bırak.<small>Zero-day açığı barındıran uygulama özelliğini kapatarak saldırı yüzeyini küçült.</small></div></button>
+                            <button class="btn" data-decision="p2b-take-offline" data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek C: Uygulamayı Tamamen Çevrimdışı Al.<small>En risksiz ancak en büyük iş kesintisine neden olacak adımı at.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Geçici mitigasyonlar, zero-day krizlerinde zaman kazanmak için hayati öneme sahiptir. Her seçeneğin güvenlik, işlevsellik ve kullanıcı deneyimi üzerinde farklı etkileri vardır.</div>
+                </div>
+
+                <div id="phase3a_data_breach_detection" class="section">
+                    <h2><i class="fa-solid fa-database"></i> Aşama 3A: Veri İhlali Tespiti ve Hasar Değerlendirmesi</h2>
+                    <h3>An 3:00 - Kullanıcı Veritabanına Erişim Tespit Edildi!</h3>
+                    <p>Geçici mitigasyon adımlarına rağmen, sistem izlemeleriniz devam ederken ürkütücü bir gerçekle yüzleşiyorsunuz: Saldırgan, zero-day açığını kullanarak kullanıcı veritabanına erişim sağlamış! Hassas müşteri bilgileri (e-posta adresleri, şifre hash'leri ve telefon numaraları) sızdırılmaya başlandı. İlk etapta **10.000 kullanıcının verisinin** etkilenmiş olabileceği tahmin ediliyor. CISO, şimdi panik içinde: *"Bu bir veri ihlali! GDPR ve KVKK ihlali demek! Nasıl bir açıklama yapacağız? Finansal etkisi ne olacak?"*</p>
+                    <img src="data_breach.png" alt="Data breach visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Bu kritik veri ihlali karşısında, hasarı kontrol altına almak ve gelecekteki adımları belirlemek için ne yapacaksın?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn critical" data-decision="p3a-reset-passwords" data-next-section="phase3b_insider_threat_suspicion"><i class="fa-solid fa-key"></i><div class="btn-text">Seçenek A: Tüm Kullanıcı Şifrelerini Zorunlu Olarak Sıfırla ve Kullanıcılara Bilgilendirme Yap.<small>Kullanıcı hesaplarının güvenliğini hemen sağla, ancak kullanıcı deneyimini olumsuz etkile.</small></div></button>
+                            <button class="btn" data-decision="p3a-forensic-analysis" data-next-section="phase3b_insider_threat_suspicion"><i class="fa-solid fa-microscope"></i><div class="btn-text">Seçenek B: Adli Bilişim Analizi Başlat ve Sızıntının Tam Kapsamını Belirle.<small>Saldırının derinliğini ve etkilenen verilerin tam listesini çıkarmak için detaylı inceleme yap.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Veri ihlallerinde hızlı ve doğru bilgilendirme, kullanıcı güvenini sürdürmek için önemlidir. Teknik adımlar ve iletişim stratejileri eş zamanlı yürütülmelidir.</div>
+                </div>
+
+                <div id="phase3b_insider_threat_suspicion" class="section">
+                    <h2><i class="fa-solid fa-user-secret"></i> Aşama 3B: İç Tehdit Şüphesi ve Kök Neden Analizi</h2>
+                    <h3>An 4:00 - İç Ağda Şüpheli Hareketlilik!</h3>
+                    <p>Veri ihlali sonrası yaptığınız derinlemesine log analizleri ve adli bilişim incelemeleri sırasında şaşırtıcı bir bulguya rastladınız: Saldırganın zero-day açığını sömürmesinin hemen ardından, şirket içi ağdan, yani bir geliştirici iş istasyonundan (<span style="color: var(--accent-yellow); font-weight: bold;">dev_workstation_01</span>), dışarıya doğru şüpheli bir bağlantı (<span style="color: var(--accent-pink); font-weight: bold;">anonim proxy sunucusu</span> üzerinden) kurulduğu tespit edildi. Bu bağlantı, sızdırılan verinin bir kopyasının gönderilmesiyle ilişkili olabilir. Bu durum, ya içeriden bir işbirliği ya da başka bir kötü niyetli yazılımın iş istasyonuna bulaşmış olma ihtimalini akla getiriyor.</p>
+                    <p>CTO Sadi Orçun, bu bilginin duyulmasından endişeli: *"Bu, içeriden bir tehdit mi demek? Bu dedikodu yayılırsa ekibin morali tamamen çöker! Ne yapmalıyız?"*</p>
+                    <img src="insider_threat.png" alt="Insider threat visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Bu kritik iç tehdit şüphesiyle ilgili olarak nasıl bir adım atacaksın?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn critical" data-decision="p3b-isolate-workstation" data-next-section="phase4_public_announcement"><i class="fa-solid fa-plug-circle-xmark"></i><div class="btn-text">Seçenek A: Şüpheli İş İstasyonunu Derhal Ağdan İzole Et ve Hızlı Adli İnceleme Başlat.<small>Potansiyel iç tehdidi anında durdur, ancak gizliliği ihlal etme ve çalışan moralini etkileme riski taşı.</small></div></button>
+                            <button class="btn" data-decision="p3b-covert-monitor" data-next-section="phase4_public_announcement"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek B: İş İstasyonunu Gizlice İzlemeye Al ve Daha Fazla Bilgi Topla.<small>Saldırının kökenini ve kapsamını daha iyi anlamak için gizlice gözlem yap, ancak sızıntının devam etme riski al.</small></div></button>
+                            <button class="btn" data-decision="p3b-employee-interview" data-next-section="phase4_public_announcement"><i class="fa-solid fa-users-viewfinder"></i><div class="btn-text">Seçenek C: İş İstasyonu Sahibini Gizli Bir Mülakata Çağır.<small>Şüpheli bağlantının nedenini doğrudan öğrenmeye çalış, ancak çalışanı uyarabilir ve kanıtları yok etmesine neden olabilirsin.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> İç tehditler, siber güvenlik krizlerinin en karmaşık boyutlarından biridir. Dengeyi bulmak, hem hızlı yanıt hem de doğru bilgi toplama arasında hassas bir denge gerektirir.</div>
+                </div>
+
+                <div id="phase4_public_announcement" class="section">
+                    <h2><i class="fa-solid fa-bullhorn"></i> Aşama 4: Halkla İlişkiler ve Zero-Day Yarışı</h2>
+                    <h3>An 5:00 - Basın ve Sosyal Medya Baskısı!</h3>
+                    <p>Zero-day saldırısı ve potansiyel veri ihlali haberleri sızmaya başladı. Sosyal medyada fısıltılar dönüyor, teknoloji haber siteleri ÇOLHAK Teknoloji hakkında olumsuz haberler yapmaya başladı. CEO Sultan Göze, öfkeyle sizi arıyor: *"İtibarımız yerle bir oluyor! Lansman iptal mi olacak? Acilen bir basın açıklaması yapmalıyız. Bu zero-day olayını nasıl açıklayacağız?"*</p>
+                    <p>Vendor'dan henüz resmi bir yama gelmedi. Kriz ekibi, kamuoyuna yapılacak açıklamanın içeriği ve zamanlaması konusunda hararetli bir tartışma içinde.</p>
+                    <img src="press_social_media_pressure.png" alt="Public announcement visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Bu zero-day saldırısı ve veri ihlali konusunda kamuoyuna nasıl bir mesaj vereceksin?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="p4-transparent-disclosure" data-next-section="phase5_patch_deployment"><i class="fa-solid fa-handshake"></i><div class="btn-text">Seçenek A: Tamamen Şeffaf Ol, Durumu ve Alınan Önlemleri Açıkla.<small>Zero-day zafiyetini, veri ihlalini ve alınan tüm mitigasyon adımlarını kamuoyuyla paylaş.</small></div></button>
+                            <button class="btn critical" data-decision="p4-minimize-impact" data-next-section="phase5_patch_deployment"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Seçenek B: Zero-Day Teriminden Kaçın, Durumu 'Teknik Sorun' Olarak Nitele.<small>Olayın ciddiyetini küçümse, zero-day terimini kullanmaktan kaçın ve olayın 'küçük bir teknik sorun' olduğunu belirt.</small></div></button>
+                            <button class="btn" data-decision="p4-focus-on-future" data-next-section="phase5_patch_deployment"><i class="fa-solid fa-lightbulb"></i><div class="btn-text">Seçenek C: Gelecek Güvenlik Yatırımlarına Odaklan, Zero-Day'i Detaylandırma.<small>Krizin detaylarını atlayarak, şirketin gelecekteki güvenlik taahhütlerine ve yatırımlarına vurgu yap.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Zero-day gibi ciddi krizlerde iletişim stratejisi, itibar ve kullanıcı güveni üzerinde doğrudan etkilidir. Dürüstlük, uzun vadede en iyi politikadır.</div>
+                </div>
+
+                <div id="phase5_patch_deployment" class="section">
+                    <h2><i class="fa-solid fa-screwdriver-wrench"></i> Aşama 5: Yama Dağıtımı ve Krizin Kapatılması</h2>
+                    <h3>An 7:00 - Zero-Day Yaması Hazır!</h3>
+                    <p>Nihayet! Vendor, zero-day açığını kapatan yamayı tamamladı ve size iletti. Ancak, bu yama kritik bir sistem güncellemesi gerektiriyor ve uygulamanın kısa süreliğine (yaklaşık 30 dakika) devre dışı kalmasını gerektirecek. CTO Sadi Orçun, yamayı hemen uygulamak istiyor. Ancak, uygulamanın kapatılması, aktif kullanıcılara kesinti yaşatacak ve lansman öncesi son testleri etkileyecek.</p>
+                    <img src="patch_deployment.png" alt="Patch deployment visual" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Zero-day yamasını ne zaman ve nasıl dağıtacaksın?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn critical" data-decision="p5-immediate-patch" data-next-section="finalSection"><i class="fa-solid fa-bolt"></i><div class="btn-text">Seçenek A: Yamayı Hemen, Mesai Saatleri İçinde Dağıt.<small>Riski hızlıca kapatmak için anında müdahale et, ancak kullanıcı kesintisini göze al.</small></div></button>
+                            <button class="btn" data-decision="p5-scheduled-patch" data-next-section="finalSection"><i class="fa-solid fa-clock"></i><div class="btn-text">Seçenek B: Yamayı Gece Yarısı veya Düşük Kullanım Saatlerinde Dağıt.<small>Kullanıcı etkisini minimize etmek için planlı bir kesinti yap, ancak zero-day riskini birkaç saat daha sürdür.</small></div></button>
+                            <button class="btn" data-decision="p5-risk-acceptance" data-next-section="finalSection"><i class="fa-solid fa-triangle-exclamation"></i><div class="btn-text">Seçenek C: Yamayı Uygulama, Sadece Geçici Mitigasyonlarla İlerlemeye Çalış.<small>Uygulamayı hiç kapatmamak adına risk al, ancak zero-day açığı tam olarak kapatılamaz.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Siber güvenlikte risk yönetimi, bazen iş sürekliliği ile doğrudan çelişebilir. En iyi kararı vermek için tüm paydaşların beklentilerini ve risk toleransını anlamak önemlidir.</div>
+                </div>
+
+                <div id="finalSection" class="section centered-page" style="display: none;">
+                    <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
+                    <p>Simülasyon tamamlandı. Zero-day saldırısı yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+                    <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                    <div class="final-metrics" id="finalMetricsContainer"></div>
+                    <div class="post-crisis-layout">
+                        <div class="event-timeline">
+                            <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                            <ul id="decision-timeline-list"></ul>
+                        </div>
+                        <div class="strategic-debrief">
+                            <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme ve Dersler</h3>
+                            <div id="strategic-debrief-content"></div>
+                        </div>
+                    </div>
+                    <div class="decision-buttons" style="margin-top: 40px;">
+                        <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = {
+                // Metrikler: Uygulama Güvenlik Durumu (Kritik, Riskli, Orta, İyi, Güvenli), Saldırgan Erişimi (Tam, Gelişmiş, Sınırlı, Engellendi), Potansiyel Finansal Zarar (₺), Kriz Süresi (Saat), Kullanıcı Güveni (0-100)
+                score: { appSecurity: 'Kritik', attackerAccess: 'Sınırlı', financialLoss: 0, crisisDuration: 0, userTrust: 100 },
+                state: {
+                    currentSectionId: 'start',
+                    decisionHistory: [] 
+                },
+                elements: {},
+                
+                decisionInfo: {
+                    // Aşama 1: İlk Tespit ve Şok (phase1_initial_detection)
+                    'p1-isolate-app': { 
+                        title: "Uygulamayı İzole Et", 
+                        text: "Web uygulamasını derhal ağdan izole ettin. Bu, saldırının yayılmasını ve veri sızıntısını anında durdurdu. Uygulama geçici olarak çevrimdışı.", 
+                        strat: "Zero-day saldırılarında ilk ve en radikal adım, saldırı yüzeyini kapatmaktır. Bu, hasarı minimuma indirir ancak iş kesintisine neden olur.", 
+                        changes: { appSecurity: 'Riskli', attackerAccess: 'Engellendi', financialLoss: 20000, crisisDuration: 1, userTrust: -5 }, 
+                        impact: 'Positive' 
+                    },
+                    'p1-monitor-traffic': { 
+                        title: "Saldırganı İzle", 
+                        text: "Saldırganın davranışını izlemeye devam ettin ve zero-day exploitinin tam olarak nasıl çalıştığına dair kritik istihbarat topladın. Ancak bu sırada saldırgan biraz daha içeri sızmayı başardı ve daha fazla veri tehlikeye girdi.", 
+                        strat: "Saldırganı izlemek, uzun vadede savunmaları güçlendirmek için değerli bilgiler sağlar. Ancak, aktif bir saldırıda bu, daha fazla hasar riskini artırır.", 
+                        changes: { appSecurity: 'Kritik', attackerAccess: 'Gelişmiş', financialLoss: 50000, crisisDuration: 2, userTrust: -15 }, 
+                        impact: 'Negative' 
+                    },
+
+                    // Aşama 2A: Vendor İletişimi - İlk Yanıt ve Bilgilendirme (phase2a_vendor_contact_initial)
+                    'p2a-inform-wait': {
+                        title: "Yönetimi Bilgilendir ve Vendor'ı Bekle",
+                        text: "Durumu üst yönetime raporladın ve vendor'ın resmi yaması gelene kadar beklemeyi önerdin. Bu, iş akışında büyük bir aksaklığa yol açmadı ancak zero-day açığına karşı proaktif bir mitigasyon adımının atılmaması, riskin devam etmesine neden oldu.",
+                        strat: "Yönetimi bilgilendirmek her zaman önemlidir. Ancak zero-day durumunda sadece beklemek, saldırının ilerlemesine zemin hazırlayabilir ve şirketin proaktif güvenlik duruşunu zayıflatır.",
+                        changes: { financialLoss: 10000, crisisDuration: 2, userTrust: -5 }, // Artan finansal zarar ve kriz süresi
+                        impact: 'Neutral'
+                    },
+                    'p2a-demand-temp-fix': {
+                        title: "Vendor'dan Acilen Geçici Mitigasyon Talep Et",
+                        text: "Vendor'a yama gelene kadar saldırıyı durduracak hızlı ve geçici bir çözüm geliştirmeleri için baskı yaptın. Vendor ekibi, beklentin üzerine acil bir geçici çözüm (örneğin WAF kuralı veya özellik devre dışı bırakma) üzerinde çalışmaya başladı.",
+                        strat: "Proaktif olmak ve vendor'dan acil geçici çözümler talep etmek, zero-day saldırılarında iş kesintisini ve hasarı minimize etmek için hayati önem taşır. Bu, şirketin güvenlik duruşunu güçlendirir.",
+                        changes: { financialLoss: 0, crisisDuration: 0.5, userTrust: +5 }, // Finansal zarar artmaz, kriz süresi kısalır, güven artar
+                        impact: 'Positive'
+                    },
+
+                    // Aşama 2B: Geçici Çözüm Stratejileri (phase2b_mitigation_strategy)
+                    'p2b-waf-rules': {
+                        title: "WAF'a Özel Kurallar Ekle",
+                        text: "Saldırganın exploit paternlerini hedefleyen özel WAF kuralları ekledin. Bu, saldırıyı büyük ölçüde engelledi ve uygulamanın çalışmaya devam etmesini sağladı. Ancak, sıfırıncı gün açığı hala temel kodda var ve saldırgan yeni varyasyonlar deneyebilir.",
+                        strat: "WAF kuralları, zero-day saldırılarına karşı hızlı ve etkili bir geçici çözüm olabilir. Bu, iş sürekliliğini korurken riski azaltır.",
+                        changes: { appSecurity: 'Orta', financialLoss: 10000, crisisDuration: 1, userTrust: +5 }, 
+                        impact: 'Positive'
+                    },
+                    'p2b-disable-feature': {
+                        title: "Sömürülen Özelliği Devre Dışı Bırak",
+                        text: "Zero-day açığı barındıran kritik uygulama özelliğini geçici olarak devre dışı bıraktın. Bu, açığı anında kapattı ve saldırganın erişimini kesti. Ancak, uygulamanın bir bölümü kullanılamaz hale geldi, bu da kullanıcı deneyimini etkiledi.",
+                        strat: "Zero-day açığına karşı en kesin geçici çözüm, zafiyetli özelliğin kapatılmasıdır. Ancak bu, uygulamanın işlevselliğini kısıtlayabilir.",
+                        changes: { appSecurity: 'İyi', financialLoss: 15000, crisisDuration: 1, userTrust: -10 },
+                        impact: 'Positive'
+                    },
+                    'p2b-take-offline': {
+                        title: "Uygulamayı Tamamen Çevrimdışı Al",
+                        text: "Uygulamayı tamamen çevrimdışı bırakmaya karar verdin. Bu, güvenlik açısından en risksiz yoldu ve saldırganın daha fazla ilerlemesini engelledi. Ancak, uygulamanın uzun süre erişilemez kalması ve önemli iş kesintisine neden oldu.",
+                        strat: "Tam güvenlik için beklemek mantıklı olabilir, ancak zero-day saldırılarında her an kritik öneme sahiptir ve iş sürekliliği maliyetleri çok yüksek olabilir.",
+                        changes: { appSecurity: 'Güvenli', financialLoss: 100000, crisisDuration: 4, userTrust: -20 },
+                        impact: 'Negative'
+                    },
+
+                    // Aşama 3A: Veri İhlali Tespiti ve Hasar Değerlendirmesi (phase3a_data_breach_detection)
+                    'p3a-reset-passwords': {
+                        title: "Tüm Kullanıcı Şifrelerini Sıfırla",
+                        text: "Etkilenen tüm kullanıcıların şifrelerini zorunlu olarak sıfırladın ve onlara acil bilgilendirme e-postaları gönderdin. Bu, ele geçirilen hesapların kötüye kullanılmasını engelledi ve proaktif bir güvenlik duruşu sergiledi. Bazı kullanıcılar rahatsız olsa da, çoğu bunu takdir etti.",
+                        strat: "Veri ihlali durumunda kullanıcı hesaplarının güvenliğini sağlamak önceliklidir. Şeffaf iletişim ve hızlı aksiyon, kullanıcı güvenini korumak için hayati önem taşır.",
+                        changes: { userTrust: +10, financialLoss: 5000, attackerAccess: 'Sınırlı' },
+                        impact: 'Positive'
+                    },
+                    'p3a-forensic-analysis': {
+                        title: "Adli Bilişim Analizi Başlat",
+                        text: "Kapsamlı bir adli bilişim analizi başlattın. Bu, sızıntının tam kapsamını, etkilenen veri türlerini ve saldırganın yöntemlerini derinlemesine anlamana yardımcı oldu. Ancak bu süreç zaman aldı ve bu sırada saldırgan potansiyel olarak daha fazla bilgi toplayabildi.",
+                        strat: "Adli analiz, bir ihlalin kök nedenini ve tam kapsamını belirlemek için kritiktir. Ancak acil durumlarda, operasyonel adımlarla dengelenmelidir.",
+                        changes: { userTrust: -5, financialLoss: 10000, attackerAccess: 'Gelişmiş', crisisDuration: 2 },
+                        impact: 'Neutral'
+                    },
+                    
+                    // Aşama 3B: İç Tehdit Şüphesi ve Kök Neden Analizi (phase3b_insider_threat_suspicion)
+                    'p3b-isolate-workstation': {
+                        title: "İş İstasyonunu İzole Et ve İncele",
+                        text: "Şüpheli iş istasyonunu derhal ağdan izole ettin ve hızlı bir adli inceleme başlattın. Bu, potansiyel iç tehdidin yayılmasını engelledi ve kanıtların korunmasını sağladı. Çalışanın işi aksasa da güvenlik önceliklendirildi.",
+                        strat: "İç tehdit şüphesinde hızlı izolasyon, hasarı ve yayılımı durdurmak için kritik bir adımdır. Kanıt bütünlüğünü korumak için adli inceleme şarttır.",
+                        changes: { attackerAccess: 'Engellendi', financialLoss: 10000, crisisDuration: 1, userTrust: -3 }, // İş aksaklığı
+                        impact: 'Positive'
+                    },
+                    'p3b-covert-monitor': {
+                        title: "İş İstasyonunu Gizlice İzlemeye Al",
+                        text: "İş istasyonunu gizlice izlemeye aldın ve daha fazla bilgi toplamaya çalıştın. Bu, saldırının tam doğasını ve içeriden mi yoksa dışarıdan mı kaynaklandığını anlamak için değerli istihbarat toplamanı sağladı. Ancak bu süreçte küçük çaplı veri sızıntısı devam etti.",
+                        strat: "Gizli izleme, tehdit aktörünün yöntemlerini anlamak için iyi bir yöntemdir ancak aktif bir sızıntı riskini artırır. İstihbarat toplama ile risk yönetimi arasında denge kurulmalı.",
+                        changes: { attackerAccess: 'Gelişmiş', financialLoss: 25000, crisisDuration: 2, userTrust: -10 },
+                        impact: 'Neutral'
+                    },
+                    'p3b-employee-interview': {
+                        title: "İş İstasyonu Sahibini Mülakata Çağır",
+                        text: "İş istasyonu sahibini gizli bir mülakata çağırdın. Çalışan, şüpheli bağlantıyı yanlışlıkla kurduğunu iddia etti ve işbirliği yaptı. Bu, durumu hızla açıklığa kavuşturdu ancak olası bir kötü niyetli aktörü uyandırma ve kanıtları yok etmesine neden olma riski taşıdı.",
+                        strat: "Doğrudan sorgulama, hızlı yanıt sağlayabilir ancak iç tehditlerde hassas bir yaklaşımdır. Güven sarsılabilir veya kanıtlar kaybolabilir.",
+                        changes: { attackerAccess: 'Sınırlı', financialLoss: 5000, userTrust: -5 }, // Güven zedelenmesi
+                        impact: 'Neutral'
+                    },
+
+                    // Aşama 4: Halkla İlişkiler ve Zero-Day Yarışı (phase4_public_announcement)
+                    'p4-transparent-disclosure': {
+                        title: "Tamamen Şeffaf Ol, Durumu Açıkla",
+                        text: "Zero-day zafiyetini, veri ihlalini ve alınan tüm mitigasyon adımlarını kamuoyuyla şeffafça paylaştın. Bu, başlangıçta bazı medya tepkilerine yol açsa da, uzun vadede şirketin dürüstlük ve sorumluluk algısını güçlendirdi ve kullanıcı güvenini artırdı.",
+                        strat: "Siber krizlerde şeffaflık, kısa vadede zor olsa da, uzun vadede itibar ve güvenin temelidir. Dürüstlük, en iyi politikadır.",
+                        changes: { userTrust: +15, financialLoss: 20000, appSecurity: 'Riskli' }, // Public disclosure might slightly highlight vulnerability
+                        impact: 'Positive'
+                    },
+                    'p4-minimize-impact': {
+                        title: "Zero-Day Teriminden Kaçın, 'Teknik Sorun' De",
+                        text: "Olayın ciddiyetini küçümseyerek, zero-day terimini kullanmaktan kaçındın ve olayı 'küçük bir teknik sorun' olarak niteledin. Bu, kısa vadede paniği azalttı ancak medya ve kullanıcılar gerçeği anladığında şirketinizin itibarı ağır darbe aldı ve güven kaybı yaşandı.",
+                        strat: "Gerçekleri çarpıtmak veya küçümsemek, kısa vadede baskıyı azaltabilir ancak uzun vadede güveni ve itibarı geri dönülmez şekilde zedeler.",
+                        changes: { userTrust: -30, financialLoss: 100000, appSecurity: 'Kritik' }, // Continued critical
+                        impact: 'Negative'
+                    },
+                    'p4-focus-on-future': {
+                        title: "Gelecek Güvenlik Yatırımlarına Odaklan",
+                        text: "Krizin detaylarını atlayarak, şirketin gelecekteki güvenlik taahhütlerine ve yatırımlarına vurgu yapan bir açıklama yaptın. Bu, medya odağını biraz değiştirdi ancak zero-day açığı ve veri ihlali hakkında yeterince bilgi vermediği için bazı şüpheleri artırdı.",
+                        strat: "Odağı geleceğe çevirmek, kriz iletişiminde bir strateji olabilir ancak mevcut durumu yeterince açıklamadığında güvensizliğe yol açabilir.",
+                        changes: { userTrust: -10, financialLoss: 50000, appSecurity: 'Riskli' },
+                        impact: 'Neutral'
+                    },
+
+                    // Aşama 5: Yama Dağıtımı ve Krizin Kapatılması (phase5_patch_deployment)
+                    'p5-immediate-patch': {
+                        title: "Yamayı Hemen Dağıt",
+                        text: "Yamayı hemen, mesai saatleri içinde dağıttın. Uygulama kısa süreliğine devre dışı kaldı, bu da bazı kullanıcılarda rahatsızlığa neden oldu. Ancak zero-day açığı anında kapatıldı ve saldırının devam etme riski tamamen ortadan kalktı.",
+                        strat: "Kritik bir zafiyette hızlı yama dağıtımı, iş kesintisi pahasına bile olsa en güvenli yoldur. Güvenlik, iş sürekliliğine tercih edilebilir.",
+                        changes: { appSecurity: 'Güvenli', attackerAccess: 'Engellendi', financialLoss: 5000, userTrust: -2, crisisDuration: 0.5 },
+                        impact: 'Positive'
+                    },
+                    'p5-scheduled-patch': {
+                        title: "Yamayı Gece Yarısı Dağıt",
+                        text: "Yamayı gece yarısı veya düşük kullanım saatlerinde dağıtmak için planlama yaptın. Bu, kullanıcı kesintisini minimize etti ve daha sorunsuz bir dağıtım sağladı. Ancak bu, zero-day açığının birkaç saat daha aktif kalması anlamına geldi ve bu sürede küçük bir risk oluştu.",
+                        strat: "Kullanıcı deneyimini önceliklendiren bir yama stratejisi, yaygın olarak kullanılır. Ancak zero-day durumunda, gecikme ek riskler taşıyabilir.",
+                        changes: { appSecurity: 'İyi', attackerAccess: 'Sınırlı', financialLoss: 10000, userTrust: +5, crisisDuration: 8 },
+                        impact: 'Neutral'
+                    },
+                    'p5-risk-acceptance': {
+                        title: "Yamayı Uygulama, Sadece Geçici Mitigasyonlarla İlerlemeye Çalış",
+                        text: "Yamayı uygulamama ve sadece geçici mitigasyonlarla ilerlemeye çalıştın. Bu, uygulamayı çevrimdışı tutmaktan kaçındı ancak zero-day açığının hala var olduğu anlamına geliyor. Saldırganın yeni exploit yöntemleri bulma riski devam ediyor.",
+                        strat: "Zero-day yamasını uygulamamak, sürekli bir risk demektir. Geçici çözümler, tam bir koruma sağlamaz ve uzun vadede sürdürülebilir değildir.",
+                        changes: { appSecurity: 'Kritik', attackerAccess: 'Gelişmiş', financialLoss: 75000, userTrust: -25, crisisDuration: 12 },
+                        impact: 'Negative'
+                    },
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'), 
+                        game: document.getElementById('gameContainer'), 
+                        gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'), 
+                        intermission: document.getElementById('intermissionSection'),
+                        intermissionTitle: document.getElementById('intermissionTitle'), 
+                        intermissionText: document.getElementById('intermissionText'),
+                        intermissionMetrics: document.getElementById('intermissionMetrics'), 
+                        strategicText: document.getElementById('strategicText'),
+                        continueButton: document.getElementById('continueButton'),
+                        statusBar: { 
+                            appSecurity: document.getElementById('status-appSecurity'), 
+                            attackerAccess: document.getElementById('status-attackerAccess'), 
+                            financialLoss: document.getElementById('status-financialLoss'), 
+                            crisisDuration: document.getElementById('status-crisisDuration'), 
+                            userTrust: document.getElementById('status-userTrust') 
+                        }
+                    };
+                    this.loadGameHTML();
+                    this.attachListeners();
+                    this.elements.intro.style.display = 'flex';
+                    this.elements.game.style.display = 'none';
+                },
+
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        console.log("Start button clicked!");
+                        this.elements.intro.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+                        this.showSection('phase1_initial_detection'); 
+                    });
+                    
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button || button.disabled) {
+                            console.log("Clicked element is not a button or is disabled.");
+                            return; 
+                        }
+                        
+                        const decisionId = button.dataset.decision;
+                        const nextSection = button.dataset.nextSection;
+                        console.log(`Decision made: ${decisionId}, next section: ${nextSection}`);
+
+                        // Yalnızca mevcut bölümdeki butonları devre dışı bırak
+                        const currentSectionElement = document.getElementById(this.state.currentSectionId);
+                        currentSectionElement.querySelectorAll('.btn[data-decision]').forEach(btn => {
+                            btn.disabled = true;
+                            btn.style.backgroundColor = '#555';
+                            btn.style.color = '#999';
+                        });
+
+                        this.handleDecision(decisionId, nextSection, button);
+                    });
+
+                    this.elements.continueButton.addEventListener('click', () => {
+                        console.log("Continue button clicked in intermission!");
+                        const nextSectionId = this.elements.continueButton.dataset.nextSection;
+                        this.elements.intermission.style.display = 'none';
+                        
+                        if (nextSectionId === 'finalSection') {
+                            this.showFinalReport();
+                        } else {
+                            this.elements.game.style.display = 'block';
+                            this.showSection(nextSectionId);
+                        }
+                    });
+                },
+                
+                handleDecision(decisionId, nextSectionId, button) {
+                    const info = this.decisionInfo[decisionId];
+                    if (!info) { console.error("Decision info not found:", decisionId); return; }
+
+                    // Apply metric changes
+                    this.score.appSecurity = info.changes.appSecurity || this.score.appSecurity;
+                    this.score.attackerAccess = info.changes.attackerAccess || this.score.attackerAccess;
+                    this.score.financialLoss += info.changes.financialLoss || 0;
+                    this.score.crisisDuration += info.changes.crisisDuration || 0;
+                    this.score.userTrust = Math.max(0, Math.min(100, this.score.userTrust + (info.changes.userTrust || 0)));
+                    
+                    this.state.decisionHistory.push({ id: decisionId, title: info.title, text: info.text, impactType: info.impact, sectionId: this.state.currentSectionId }); // Add sectionId
+                    
+                    this.updateState();
+                    this.showIntermission(info.title, info.text, info.strat, info.changes, nextSectionId);
+                },
+
+                showIntermission(title, text, strat, changes, nextSectionId) {
+                    this.elements.intermissionTitle.textContent = title;
+                    this.elements.intermissionText.textContent = text;
+                    this.elements.strategicText.textContent = strat;
+                    
+                    let metricsHTML = '';
+                    const formatChange = (label, value, unit, icon, isPositive) => {
+                        let colorClass = 'neutral';
+                        let displayValue = value;
+                        let arrowIcon = ''; 
+
+                        if (typeof value === 'number') {
+                            if (label === 'Finansal Zarar' || label === 'Kriz Süresi') {
+                                colorClass = value > 0 ? 'negative' : (value < 0 ? 'positive' : 'neutral');
+                                arrowIcon = value > 0 ? 'fa-arrow-up-long' : (value < 0 ? 'fa-arrow-down-long' : '');
+                            } else if (label === 'Kullanıcı Güveni') {
+                                colorClass = value > 0 ? 'positive' : (value < 0 ? 'negative' : 'neutral');
+                                arrowIcon = value > 0 ? 'fa-arrow-up-long' : (value < 0 ? 'fa-arrow-down-long' : '');
+                            }
+                            displayValue = `${value >= 0 ? '+' : ''}${value.toLocaleString('en-US')}`;
+                        } else { 
+                            if (label === 'Uygulama Güvenlik Durumu') {
+                                if (value === 'Güvenli' || value === 'İyi') colorClass = 'positive';
+                                else if (value === 'Kritik') colorClass = 'negative';
+                                else colorClass = 'neutral';
+                            } else if (label === 'Saldırgan Erişimi') {
+                                if (value === 'Engellendi') colorClass = 'positive';
+                                else if (value === 'Tam') colorClass = 'negative';
+                                else colorClass = 'neutral';
+                            }
+                        }
+
+                        return `<div class="metric-change ${colorClass}"><i class="fa-solid ${icon}"></i> ${label}: ${arrowIcon ? `<i class="fa-solid ${arrowIcon}"></i>` : ''} ${displayValue}${unit}</div>`;
+                    };
+
+                    if (changes.appSecurity !== undefined) metricsHTML += formatChange('Uygulama Güvenlik Durumu', changes.appSecurity, '', 'fa-shield-halved', false);
+                    if (changes.attackerAccess !== undefined) metricsHTML += formatChange('Saldırgan Erişimi', changes.attackerAccess, '', 'fa-user-lock', false);
+                    if (changes.financialLoss !== undefined) metricsHTML += formatChange('Finansal Zarar', changes.financialLoss, '₺', 'fa-sack-dollar', false);
+                    if (changes.crisisDuration !== undefined) metricsHTML += formatChange('Kriz Süresi', changes.crisisDuration, ' Saat', 'fa-hourglass-half', false);
+                    if (changes.userTrust !== undefined) metricsHTML += formatChange('Kullanıcı Güveni', changes.userTrust, '', 'fa-heart-crack', true);
+                    
+                    if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1em; opacity: 0.8;">Bu kararın metrikler üzerinde doğrudan bir etkisi olmadı.</p>';
+
+                    this.elements.intermissionMetrics.innerHTML = metricsHTML;
+                    this.elements.continueButton.dataset.nextSection = nextSectionId;
+                    this.elements.game.style.display = 'none';
+                    this.elements.intermission.style.display = 'flex';
+                },
+
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.appSecurity.textContent = s.appSecurity;
+                    this.elements.statusBar.attackerAccess.textContent = s.attackerAccess;
+                    this.elements.statusBar.financialLoss.textContent = `₺${s.financialLoss.toLocaleString('tr-TR')}`;
+                    this.elements.statusBar.crisisDuration.textContent = `${s.crisisDuration} Saat`;
+                    this.elements.statusBar.userTrust.textContent = Math.max(0, s.userTrust);
+                },
+
+                showSection(sectionId) {
+                    this.elements.sections.forEach(section => { section.style.display = 'none'; });
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        this.state.currentSectionId = sectionId;
+                        this.updateDynamicContent(sectionId);
+                        this.updateButtonStates(sectionId); 
+                    } else {
+                        console.error('Bölüm bulunamadı:', sectionId);
+                        this.showFinalReport();
+                    }
+                    this.updateState();
+                },
+                
+                updateButtonStates(sectionId) {
+                    const currentSectionElement = document.getElementById(sectionId);
+                    if (!currentSectionElement) return;
+
+                    const decisionButtonsContainer = currentSectionElement.querySelector('.decision-buttons');
+                    if (!decisionButtonsContainer) return;
+
+                    const buttons = decisionButtonsContainer.querySelectorAll('.btn[data-decision]');
+                    buttons.forEach(button => {
+                        button.disabled = false; 
+                        button.style.backgroundColor = ''; 
+                        button.style.color = '';
+                        
+                        // Yalnızca mevcut bölüm için bir karar verilip verilmediğini kontrol et
+                        const isDecisionMadeForThisSection = this.state.decisionHistory.some(d => d.sectionId === sectionId);
+
+                        if (isDecisionMadeForThisSection) {
+                            button.disabled = true;
+                            button.style.backgroundColor = '#555'; 
+                            button.style.color = '#999';
+                        }
+                    });
+                },
+
+                showFinalReport() {
+                    this.elements.intro.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block'; 
+                    document.getElementById('statusBar').style.display = 'none';
+
+                    this.elements.sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    const finalSection = document.getElementById('finalSection');
+                    if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
+
+                    finalSection.style.display = 'flex';
+                    
+                    const badge = document.getElementById('performance-badge');
+                    const metricsContainer = document.getElementById('finalMetricsContainer');
+                    const timelineList = document.getElementById('decision-timeline-list');
+                    const debriefContent = document.getElementById('strategic-debrief-content');
+                    
+                    const finalAppSecurity = this.score.appSecurity;
+                    const finalAttackerAccess = this.score.attackerAccess;
+                    const finalFinancialLoss = this.score.financialLoss;
+                    const finalCrisisDuration = this.score.crisisDuration;
+                    const finalUserTrust = this.score.userTrust;
+
+                    let totalScore = 0;
+                    totalScore += finalUserTrust * 0.5; 
+
+                    // App Security Score
+                    if (finalAppSecurity === 'Güvenli') totalScore += 30;
+                    else if (finalAppSecurity === 'İyi') totalScore += 20;
+                    else if (finalAppSecurity === 'Orta') totalScore += 10;
+                    else if (finalAppSecurity === 'Riskli') totalScore -= 10;
+                    else if (finalAppSecurity === 'Kritik') totalScore -= 30;
+
+                    // Attacker Access Score
+                    if (finalAttackerAccess === 'Engellendi') totalScore += 25;
+                    else if (finalAttackerAccess === 'Sınırlı') totalScore += 10;
+                    else if (finalAttackerAccess === 'Gelişmiş') totalScore -= 15;
+                    else if (finalAttackerAccess === 'Tam') totalScore -= 40;
+
+                    // Financial Loss Score (Inverse)
+                    if (finalFinancialLoss < 20000) totalScore += 20;
+                    else if (finalFinancialLoss < 50000) totalScore += 10;
+                    else if (finalFinancialLoss < 100000) totalScore -= 5;
+                    else if (finalFinancialLoss >= 100000) totalScore -= 20;
+
+                    // Crisis Duration Score (Inverse)
+                    if (finalCrisisDuration <= 2) totalScore += 15;
+                    else if (finalCrisisDuration <= 5) totalScore += 5;
+                    else if (finalCrisisDuration > 5) totalScore -= 10;
+
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+
+                    let badgeInfo = {};
+                    if (totalScore >= 85 && finalAppSecurity === 'Güvenli' && finalAttackerAccess === 'Engellendi') { 
+                        badgeInfo = { text: 'ZERO-DAY EFENDİSİ!', color: 'var(--accent-green)' };
+                    } else if (totalScore >= 60 && finalAppSecurity !== 'Kritik') { 
+                        badgeInfo = { text: 'DİRENÇLİ SOC ANALİSTİ', color: 'var(--accent-blue)' };
+                    } else if (totalScore >= 30) { 
+                        badgeInfo = { text: 'ZORLU ZERO-DAY DENEYİMİ', color: 'var(--accent-yellow)' };
+                    } else { 
+                        badgeInfo = { text: 'ZERO-DAY FELAKETİ', color: 'var(--accent-red)' };
+                    }
+
+                    badge.textContent = badgeInfo.text;
+                    badge.style.backgroundColor = badgeInfo.color;
+
+                    metricsContainer.innerHTML = `
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-shield-halved"></i></div><div class="label">Uygulama Güvenliği</div><div class="value">${finalAppSecurity}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-user-lock"></i></div><div class="label">Saldırgan Erişimi</div><div class="value">${finalAttackerAccess}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-sack-dollar"></i></div><div class="label">Finansal Zarar</div><div class="value">₺${finalFinancialLoss.toLocaleString('tr-TR')}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-hourglass-half"></i></div><div class="label">Kriz Süresi</div><div class="value">${finalCrisisDuration} Saat</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-heart-crack"></i></div><div class="label">Kullanıcı Güveni</div><div class="value">${finalUserTrust}/100</div></div>
+                    `;
+
+                    timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                        let liClass = decision.impactType === 'Positive' ? 'positive' : (decision.impactType === 'Negative' ? 'negative' : 'neutral');
+                        return `<li class="${liClass}"><span class="decision-title">${decision.title}</span></li>`;
+                    }).join('');
+
+                    let debriefHTML = '';
+                    if (badgeInfo.text === 'ZERO-DAY EFENDİSİ!') { 
+                        debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir Kıdemli SOC Analisti olarak, bir zero-day saldırısını ustalıkla yönettin. Hızlı tespit, akıllıca geçici mitigasyonlar ve etkin iletişim stratejileri sayesinde, şirketiniz bu kritik tehditten minimum hasarla kurtuldu. Uygulama güvenliğini tam olarak sağladın ve kullanıcı güvenini güçlendirdin. Siber güvenlikte gerçek bir lider olduğunu kanıtladın!</p>`;
+                    } else if (badgeInfo.text === 'DİRENÇLİ SOC ANALİSTİ') { 
+                        debriefHTML += `<p><strong>Başarılı Bir Zero-Day Müdahalesi!</strong> Oldukça karmaşık bir zero-day kriziyle karşı karşıya kalmanıza rağmen, etkili teknik müdahalelerle ve stratejik kararlarla krizi kontrol altına almayı başardınız. Bazı finansal kayıplar ve kesintiler yaşansa da, genel olarak uygulama güvenliği ve kullanıcı güvenini önemli ölçüde korudunuz. Aldığınız derslerle gelecekteki zero-day savunmalarınızı daha da güçlendireceksiniz.</p>`;
+                    } else if (badgeInfo.text === 'ZORLU ZERO-DAY DENEYİMİ') { 
+                        debriefHTML += `<p><strong>Öğrenilen Büyük Dersler:</strong> Zero-day saldırısını yönetmekte zorlandınız ve uygulama güvenliği ile kullanıcı güveni açısından önemli kayıplar yaşadınız. Finansal zararlar arttı ve kriz süresi uzadı. Ancak bu deneyim, zero-day savunma stratejilerinizi kökten değiştirmek ve ekibinizi daha iyi hazırlamak için paha biçilmez dersler sağladı. Acil eylem planlarına ve eğitimlere ihtiyacınız var.</p>`;
+                    } else { 
+                        debriefHTML += `<p><strong>ZERO-DAY FELAKETİ:</strong> Kıdemli SOC Analisti olarak bu zero-day krizini yönetmekte ciddi zorluklar yaşadınız. Uygulama güvenliği kritik seviyede kaldı, saldırgan sistemlerde geniş bir erişim sağladı, finansal kayıplar devasa boyutlara ulaştı ve kullanıcı güveni tamamen çöktü. Bu durum, ÇOLHAK Teknoloji için siber güvenlik stratejilerinde köklü bir değişim gerektiren acı bir ders oldu.</p>`;
+                    }
+                    debriefContent.innerHTML = debriefHTML;
+                },
+
+                updateState() { this.updateStatusBar(); this.updateSlackChat(this.state.currentSectionId); },
+
+                updateSlackChat(currentSection) {
+                    const chatViewer = document.getElementById(this.state.currentSectionId).querySelector('.slack-chat');
+                    if (!chatViewer) return; 
+
+                    let chat = '';
+                    if (currentSection === 'phase1_initial_detection') {
+                        chat = `
+                            <div class="message"><span class="sender ciso">CISO Anıl Yılmaz:</span> Sıfırıncı gün mü? Nasıl olur da kimsenin bilmediği bir açık sömürülür?! Bu kabul edilemez!</div>
+                            <div class="message"><span class="sender cto">CTO Sadi Orçun:</span> WAF logları ne gösteriyor? Hemen vendor ile iletişime geçmeliyiz. Uygulamayı çevrimdışı almalı mıyız?</div>
+                            <div class="message"><span class="sender ceo">CEO Sultan Göze:</span> Sakin olun, panik yok! Ama hızla bir çözüm bulmalıyız. Müşterilerimizin verileri tehlikede mi?</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> Tam kapsamı anlamak için logları derinlemesine inceliyoruz. İlk önceliğimiz saldırıyı durdurmak.</div>
+                        `;
+                    } else if (currentSection === 'phase2a_vendor_contact_initial') {
+                        chat = `
+                            <div class="message"><span class="sender ciso">CISO Anıl Yılmaz:</span> Vendor'dan gelen bu haber kötü. Yama bu kadar uzun sürer mi? Risk altındayız!</div>
+                            <div class="message"><span class="sender cto">CTO Sadi Orçun:</span> Evet, maalesef zero-day'lerde bu gecikmeler olabiliyor. Yönetimi nasıl bilgilendireceğiz?</div>
+                            <div class="message"><span class="sender ceo">CEO Sultan Göze:</span> Bu bilgiyi nasıl sunacağımız çok önemli. Panik yaratmadan, ancak durumu ciddiyetini anlatmalıyız.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> En şeffaf ve doğru şekilde bilgilendirmeliyiz. Ayrıca vendor'dan hemen bir geçici çözüm talep etmeliyiz.</div>
+                        `;
+                    } else if (currentSection === 'phase2b_mitigation_strategy') {
+                        chat = `
+                            <div class="message"><span class="sender ciso">CISO Anıl Yılmaz:</span> Uygulama çevrimdışı kalırsa büyük kayıp yaşarız. Ama güvenlikten de ödün veremeyiz!</div>
+                            <div class="message"><span class="sender cto">CTO Sadi Orçun:</span> WAF kuralları mı, yoksa özelliği kapatmak mı daha az aksaklık yaratır? Kullanıcı deneyimini düşünmeliyiz.</div>
+                            <div class="message"><span class="sender vendor">Vendor Temsilcisi:</span> Hızlı bir WAF kuralı uygulayabiliriz ama %100 garanti vermez. Özelliği kapatmak daha kesin çözüm.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> Her kararın risk ve faydası var. En uygun dengeyi bulmalıyız.</div>
+                        `;
+                    } else if (currentSection === 'phase3a_data_breach_detection') {
+                        chat = `
+                            <div class="message"><span class="sender ciso">CISO Anıl Yılmaz:</span> Veri ihlali mi?! İşte şimdi gerçek felaket başladı! Yasal departmanı bilgilendirin!</div>
+                            <div class="message"><span class="sender legal">Hukuk Müşaviri:</span> KVKK ve GDPR kapsamında 72 saat içinde bildirim zorunluluğumuz var. Etkilenen kişi sayısı nedir?</div>
+                            <div class="message"><span class="sender ceo">CEO Sultan Göze:</span> Şifre sıfırlamak zorunda mıyız? Kullanıcılarımızın bize olan güveni sarsılır. Bu kararı çok iyi düşünün.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> Kullanıcı güvenini yeniden tesis etmek için şeffaf olmalıyız. Önce hasarı tam olarak tespit edelim.</div>
+                        `;
+                    } else if (currentSection === 'phase3b_insider_threat_suspicion') {
+                        chat = `
+                            <div class="message"><span class="sender ciso">CISO Anıl Yılmaz:</span> İç tehdit mi? Bu, sızıntıyı daha da karmaşık hale getirir. Ekibe nasıl yansıyacak?</div>
+                            <div class="message"><span class="sender cto">CTO Sadi Orçun:</span> Çalışanlarımızın gizliliği de önemli. Doğrudan yüzleşmek mi, yoksa uzaktan izlemek mi daha mantıklı?</div>
+                            <div class="message"><span class="sender legal">Hukuk Müşaviri:</span> Adli inceleme için yasal dayanaklarımız olmalı. Kişisel verilerin gizliliğine dikkat!</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> Kanıt toplamak ve tehdidi etkisiz hale getirmek için en doğru yolu bulmalıyız, ancak şirket içi dinamikleri de göz ardı etmemeliyiz.</div>
+                        `;
+                    } else if (currentSection === 'phase4_public_announcement') {
+                        chat = `
+                            <div class="message"><span class="sender ceo">CEO Sultan Göze:</span> Basın bizi linç ediyor! Zero-day mi diyeceğiz, teknik sorun mu? Kelime oyunları önemli!</div>
+                            <div class="message"><span class="sender pr">PR Direktörü Ezgi Su:</span> Şeffaflık, uzun vadede iyi olabilir ama kısa vadede panik yaratır. Ne kadar bilgi paylaşmalıyız?</div>
+                            <div class="message"><span class="sender cto">CTO Sadi Orçun:</span> Henüz zero-day yaması elimizde değilken tam şeffaf olmak bize karşı kullanılabilir.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> İletişim, güvenin temelidir. Ne kadar zor olursa olsun, doğru ve eksiksiz bilgi vermeliyiz.</div>
+                        `;
+                    } else if (currentSection === 'phase5_patch_deployment') {
+                        chat = `
+                            <div class="message"><span class="sender cto">CTO Sadi Orçun:</span> Yama elimizde! Hemen uygulayalım mı? Uygulama kısa süreliğine kapalı kalacak ama risk kalmayacak.</div>
+                            <div class="message"><span class="sender ceo">CEO Sultan Göze:</span> Mesai saatlerinde mi? Bu kesinti yüzünden daha çok tepki alacağız! Gece yapamaz mıyız?</div>
+                            <div class="message"><span class="sender ciso">CISO Anıl Yılmaz:</span> Zero-day hala aktif! Her dakika risk demek. En kısa sürede yamayı uygulamalıyız.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> En güvenli ve en az zararla bu işi bitirmeliyiz. Kesinti zamanlaması kritik bir karar.</div>
+                        `;
+                    }
+                    chatViewer.innerHTML = chat;
+                },
+                
+                updateDynamicContent(sectionId) {
+                    // Bu fonksiyon, önceki kararlara bağlı olarak dinamik metin veya görsel güncellemeleri için kullanılabilir.
+                    // Örneğin:
+                    /*
+                    if (sectionId === 'phase3a_data_breach_detection') {
+                        if (this.state.decisionHistory.some(d => d.id === 'p1-monitor-traffic')) {
+                            document.querySelector('#phase3a_data_breach_detection p').textContent = "Önceki gözlem kararınız nedeniyle, sızdırılan veri miktarının beklenenden daha fazla olduğunu fark ettiniz.";
+                        }
+                    }
+                    */
+                },
+
+                loadGameHTML() {
+                    this.elements.sections = document.querySelectorAll('.section');
+                    hljs.highlightAll();
+                }
+            };
+            window.game.setup();
+        });
+    </script>
+</body>
+</html>

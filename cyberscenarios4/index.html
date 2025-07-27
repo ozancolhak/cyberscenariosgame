@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V4: Tedarik Zinciri Felaketi Simülasyonu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background-color: var(--dark-bg); 
+            color: var(--text-light); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            min-height: 100vh;
+            font-size: 0.95em; /* V5'teki gibi biraz küçültüldü */
+        }
+
+        .container { 
+            background-color: var(--container-bg); 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            padding: 20px; 
+            max-width: 950px; 
+            width: 100%; 
+            margin: 40px 0; 
+        }
+
+        @media (min-width: 768px) { .container { padding: 40px; } }
+
+        .centered-page { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            min-height: 60vh; 
+            animation: fadeIn 0.5s ease-out; 
+        }
+
+        h1 { font-size: 2.4em; /* V5'e uyarlandı */ color: var(--accent-blue); margin-bottom: 20px; }
+        h2 { font-size: 1.9em; /* V5'e uyarlandı */ color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 25px; text-align: left; }
+        h3 { font-size: 1.5em; /* V5'e uyarlandı */ color: var(--accent-purple); text-align: left; margin-top: 25px; margin-bottom: 15px; } /* V5'teki h3 stilleri eklendi */
+        h4 { font-size: 1.1em; /* V5'e uyarlandı */ color: var(--accent-yellow); text-align: left; margin-top: 0; border-bottom: 1px solid var(--interactive-bg); padding-bottom: 10px; }
+        p { line-height: 1.7; font-size: 1em; /* V5'e uyarlandı */ }
+
+        .section { display: none; padding: 20px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.5s ease-out; }
+        @media (min-width: 768px) { .section { padding: 30px; } }
+
+        .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+        .btn { background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center; gap: 15px; font-weight: 700; }
+        .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        .btn .btn-text { flex-grow: 1; }
+        .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; }
+        .btn-start, .btn-continue { font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green); color: var(--text-dark); justify-content: center; }
+        .btn.critical { background-color: var(--accent-pink); }
+
+        #intermissionSection .metric-change { font-size: 1.2em; margin: 15px 0; display: flex; align-items: center; gap: 10px; }
+        .metric-change .positive { color: var(--accent-green); }
+        .metric-change .negative { color: var(--accent-red); }
+        .metric-change .neutral { color: var(--accent-blue); } /* Eklendi */
+
+        #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; }
+        #statusBar .metric { text-align: center; font-size: 0.9em; flex: 1; min-width: 100px; } /* flex ve min-width eklendi */
+        #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); }
+
+        .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; width: 100%; max-width: 850px; } /* max-width ayarlandı */
+        .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 150px; }
+        .metric-card:hover { transform: scale(1.05); border-color: var(--accent-blue); }
+        .metric-card .icon { font-size: 2.5em; color: var(--accent-blue); margin-bottom: 10px; }
+        .metric-card .label { font-size: 1.1em; margin-bottom: 5px; color: var(--text-light); }
+        .metric-card .value { font-size: 1.8em; font-weight: bold; color: var(--accent-yellow); }
+
+        .code-block, .slack-chat { background-color: var(--text-dark); border: 1px solid #6272a4; border-radius: 8px; padding: 20px; margin-top: 15px; white-space: pre-wrap; word-break: break-all; font-family: 'Consolas', monospace; }
+        .learning-note { background-color: var(--text-dark); border-left: 5px solid var(--accent-blue); padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .scenario-image { width: 100%; max-width: 500px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .slack-chat .message { margin-bottom: 10px; padding: 8px; border-radius: 5px; background-color: #3f3f5a; }
+        .slack-chat .sender { font-weight: bold; color: var(--accent-pink); }
+        .slack-chat .sender.cso { color: var(--accent-green); }
+        .slack-chat .sender.ops { color: var(--accent-yellow); }
+        .slack-chat .sender.legal { color: var(--accent-blue); }
+        .slack-chat .sender.ceo { color: var(--accent-purple); }
+        .suspect-card { background-color: var(--interactive-bg); border-radius: 8px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--accent-purple); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .suspect-card h4 { margin-top: 0; margin-bottom: 5px; border-bottom: none; color: var(--accent-purple); }
+
+        /* === YENİ FİNAL SAYFASI STİLLERİ === */
+        #finalSection { text-align: center; }
+        #performance-badge-container { margin: 25px 0; }
+        #performance-badge { padding: 12px 30px; font-size: 1.8em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease; }
+        #performance-badge:hover { transform: scale(1.05); }
+        .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+        @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+        .event-timeline, .strategic-debrief, .recommendations { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--section-bg); margin-top: 20px; }
+        .event-timeline h3, .strategic-debrief h3, .recommendations h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .event-timeline ul, .recommendations ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
+        .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); font-size: 0.95em; }
+        .event-timeline li:last-child { border-left: none; }
+        .event-timeline li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-green); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; border: 2px solid var(--section-bg); }
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+        .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+        .event-timeline li .decision-impact { font-style: italic; opacity: 0.8; font-size: 0.9em; }
+        #strategic-debrief-content p { font-size: 1em; margin-bottom: 15px; }
+        .recommendations ul li { padding: 8px 0 8px 30px; position: relative; font-size: 1em; }
+        .recommendations ul li::before { content: '\f0a9'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-yellow); position: absolute; left: 0; top: 10px; }
+
+        /* Roles Info specific styles */
+        #rolesInfo {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+        #rolesInfo h3 {
+            color: var(--accent-purple); /* V5'e uyarlandı */
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--interactive-bg);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: center; /* Ortalandı */
+            justify-content: center; /* Ortalandı */
+        }
+        #rolesInfo ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        #rolesInfo ul li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            font-size: 1.05em; /* V5'e uyarlandı */
+            display: flex; /* V5'ten eklendi */
+            align-items: center; /* V5'ten eklendi */
+            gap: 10px; /* V5'ten eklendi */
+        }
+        #rolesInfo ul li:last-child {
+            margin-bottom: 0;
+        }
+        #rolesInfo ul li::before {
+            content: '\f007'; /* User icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-purple);
+            position: absolute;
+            left: 0;
+            top: 3px;
+            width: 20px; /* İkonun kapladığı alanı genişlet */
+            text-align: center; /* İkonu ortala */
+        }
+        #rolesInfo ul li.your-role::before {
+            color: var(--accent-yellow); /* Highlight your role */
+        }
+        #rolesInfo ul li strong {
+            color: var(--accent-yellow); /* V5'e uyarlandı */
+        }
+
+        /* Yeni eklenen Temel Metrikler stilleri */
+        .intro-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        @media (min-width: 768px) {
+            .intro-info-grid {
+                grid-template-columns: 1fr 1fr; /* 768px ve üzeri ekranlarda iki sütun */
+            }
+        }
+
+        .intro-roles-container, .intro-metrics-container {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border: 1px solid var(--interactive-bg);
+        }
+
+        .intro-metrics-container h3 { /* Sadece metrik başlığı için */
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple);
+            text-align: center;
+        }
+
+        .intro-metrics-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .intro-metrics-container li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--interactive-bg);
+            font-size: 1.05em; /* Metrik listesi elemanlarının boyutu */
+        }
+
+        .intro-metrics-container li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .intro-metrics-container li .icon {
+            font-size: 1.8em; /* Metrik ikonlarının boyutu */
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            width: 35px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-user-secret"></i> Tedarik Zinciri Saldırı Simülasyonu</h1>
+            <p style="max-width: 600px;">Hoş geldiniz, Siber Tehdit İstihbaratı (CTI) Uzmanı! Bugün şirketiniz **ÇOLHAK Teknoloji**'yi saran, küresel bir tedarik zinciri felaketiyle yüzleşeceksiniz. Gizli kapılar, sızan veriler ve sarsılan müşteri güveni... Bu simülasyonda, sadece teknik sorunları çözmekle kalmayacak, aynı zamanda stratejik istihbaratın gücünü kullanarak karmaşık bir siber savaşı yönetecek ve şirketin kaderini belirleyeceksiniz. Hazır mısınız?</p>
+            <img src="images/intro_cyber.png" alt="Siber güvenlik temalı bir giriş görseli" class="scenario-image">
+
+            <div class="intro-info-grid">
+                <div class="intro-roles-container">
+                    <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+                    <ul>
+                        <li class="your-role">
+                            <span class="icon"><i class="fa-solid fa-user-shield"></i></span>
+                            <div>
+                                <strong>Sizin Rolünüz: CTI Uzmanı</strong> 
+                                <small>Siber tehdit istihbaratını toplamak, analiz etmek, yorumlamak ve kriz ekibine rehberlik etmekle sorumlusunuz. Seçimleriniz sonucu doğrudan etkileyecektir.</small>
+                            </div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span><div><strong>CEO Elara Yılmaz</strong> <small>Şirketin genel iş sürekliliği ve kamuoyu algısına odaklanmış durumda.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span><div><strong>CSO Can Demir</strong> <small>Siber güvenlik operasyonlarından ve savunma stratejilerinden sorumlu.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-gavel"></i></span><div><strong>Hukuk Müşaviri Zeynep Kaya</strong> <small>Hukuki uyumluluğu denetler ve yasal riskleri azaltmak için danışmanlık yapar.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-chart-line"></i></span><div><strong>Operasyon Direktörü Levent Akın</strong> <small>Müşteri hizmetleri ve iş sürekliliği konusunda endişeli.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-handshake"></i></span><div><strong>Tedarikçi İlişkileri Yöneticisi Dr. Aylin Güneş</strong> <small>Tedarikçilerle ilişkileri yönetiyor ve onların güvenilirliğini değerlendiriyor.</small></div></li>
+                    </ul>
+                </div>
+
+                <div class="intro-metrics-container">
+                    <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+                    <ul>
+                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-square-check"></i></span><div><strong>Etkilenen Sistemler</strong> <small>Saldırıdan etkilenen sistem sayısı. (Başlangıç: 0)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-hand-holding-dollar"></i></span><div><strong>Finansal Zarar</strong> <small>Krizin şirkete maliyeti. (Başlangıç: ₺0)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-database"></i></span><div><strong>Veri Sızıntısı</strong> <small>Şirket dışına sızan veri yüzdesi. (Başlangıç: 0%)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-building-shield"></i></span><div><strong>İtibar Puanı</strong> <small>Şirketinizin kamuoyu ve sektördeki imajı. (Başlangıç: 100)</small></div></li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <p id="intermissionText" style="max-width: 600px;"></p>
+            <div class="interactive-element" style="width: 100%; max-width: 500px;">
+                <h4>Karar Etkileri</h4>
+                <div id="intermissionMetrics"></div>
+            </div>
+            <div class="interactive-element" style="width: 100%; max-width: 500px; border-left-color: var(--accent-blue); margin-top: 20px;">
+                <h4>Stratejik Değerlendirme</h4>
+                <p id="strategicText" style="font-size: 1em;"></p>
+            </div>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-triangle-exclamation"></i> Etkilenen Sistem</span><div class="value" id="status-affectedSystems">0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-database"></i> Veri Sızıntısı</span><div class="value" id="status-dataLeak">0%</div></div>
+                <div class="metric"><span><i class="fa-solid fa-building-shield"></i> İtibar Puanı</span><div class="value" id="status-reputation">100</div></div>
+            </div>
+            <div id="game-content">
+                <div id="day1_morning" class="section">
+                    <h2><i class="fa-solid fa-hourglass-start"></i> Gün 1: İlk Sinyaller ve Fısıltılar</h2>
+                    <h3>Sabah 08:30 - Kahve ve Kötü Bir His</h3>
+                    <p>Sabah rutinini yaparken, özel CTI kanallarından birinde ani bir hareketlilik fark ettiniz. Genellikle sızıntı istihbaratı paylaşan bir dark web forumunda, ÇOLHAK'ın kritik tedarikçilerinden <strong>Smart Teknoloji</strong> ile ilgili şifreli bir gönderi belirdi. Smart Teknoloji, Çolhak'a <strong>temel yazılım altyapısı</strong> sağlıyor.</p>
+                    <p>Gönderi, Temel yazılım altyapısının "gizli bir kapıya" sahip olabileceğine dair belirsiz ama endişe verici imalar içeriyor. Henüz bir kanıt yok, sadece bir fısıltı.</p>
+                    <img src="images/darkweb_forum.png" alt="Dark Web forumunda şifreli gönderi" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>CTI Uzmanı olarak ilk adımın ne olacak?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="g1-s-bilgilendir-ust-yonetim" data-next-section="day1_afternoon"><i class="fa-solid fa-share-nodes"></i><div class="btn-text">Seçenek A: Hemen CEO Elara Yılmaz ve CSO Can Demir'i Bilgilendir.<small>Durumu anında en üst yönetime raporlayarak proaktif bir yaklaşım sergile.</small></div></button>
+                            <button class="btn" data-decision="g1-s-istihbarat-dogrula" data-next-section="day1_afternoon"><i class="fa-solid fa-magnifying-glass"></i><div class="btn-text">Seçenek B: Önce Kendi İstihbaratını Doğrula ve Güvenilir Kaynaklardan Ek Bilgi Topla.<small>Dark web gönderisinin güvenilirliğini teyit etmek için daha fazla araştırma yap.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Siber krizin ilk anları kritik öneme sahiptir. İlk tepkiniz, krizin seyrini büyük ölçüde etkileyebilir. Bilgi paylaşımı ve doğrulama arasında denge kurmak önemlidir.</div>
+                </div>
+
+                <div id="day1_afternoon" class="section">
+                    <h2><i class="fa-solid fa-bell"></i> Gün 1: Öğleden Sonra - Onaylanmayan Şüpheler</h2>
+                    <h3>Öğleden Sonra 15:00 - Sektör Alarmı</h3>
+                    <p>Sektör lideri bir siber güvenlik araştırma firması olan "Tehdit Analiz Laboratuvarı" (TAL), "Kara Tayfun" grubunun tedarik zinciri saldırılarında yeni bir vektör kullandığına dair bir uyarı yayınladı. Uyarıda, spesifik olarak yazılım imzalama süreçlerine sızıldığı ve meşru yazılımlara gizlice kötü amaçlı kod eklendiği belirtiliyor. Henüz ÇOLHAK veya Smart Teknoloji'den bahsedilmiyor, ancak temel yazılım altyapısının yapısına dair teknik detaylarla şaşırtıcı benzerlikler var.</p>
+                    <img src="images/sector_alert.png" alt="Sektör uyarı ekran görüntüsü" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>CTI Uzmanı olarak hangi adımı atacaksın?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="g1-o-teknik-tarama" data-next-section="day2_morning"><i class="fa-solid fa-bug-slash"></i><div class="btn-text">Seçenek A: CSO Can Demir'in Ekibine Detaylı IOC/TTP Listesi Sağla ve Acil Teknik Tarama Talep Et.<small>Olası zafiyetleri hızla tespit etmek için teknik ekibi yönlendir.</small></div></button>
+                            <button class="btn" data-decision="g1-o-tedarikci-iletisim" data-next-section="day2_morning"><i class="fa-solid fa-handshake"></i><div class="btn-text">Seçenek B: Tedarikçi İlişkileri Yöneticisi Dr. Aylin Güneş Aracılığıyla Smart Teknoloji ile Derhal İletişime Geç.<small>Ortak soruşturma başlatmak için tedarikçiyle temasa geç.</small></div></button>
+                            <button class="btn critical" data-decision="g1-o-hukuki-degerlendirme" data-next-section="day2_morning"><i class="fa-solid fa-gavel"></i><div class="btn-text">Seçenek C: Hukuk Müşaviri Zeynep Kaya'dan Yasal Değerlendirme Talep Et ve Kriz İletişim Planını Hazırla.<small>Potansiyel yasal yükümlülükleri ve kamuoyu açıklamasını değerlendir.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz anlarında doğru önceliklendirme, kaynakların verimli kullanılması için hayati öneme sahiptir. Teknik müdahale, iş birliği ve yasal hazırlık arasındaki dengeyi iyi kurmalısın.</div>
+                </div>
+
+                <div id="day2_morning" class="section">
+                    <h2><i class="fa-solid fa-burst"></i> Gün 2: Krizin Patlak Vermesi</h2>
+                    <h3>Sabah 09:30 - Felaket Senaryosu Gerçekleşiyor!</h3>
+                    <p>Birkaç kritik ÇOLHAK müşterisi (büyük bir finans kurumu ve bir enerji dağıtım şebekesi), temel yazılım altyapısının son güncellemesi sonrasında kimlik doğrulama sistemlerinde anormal davranışlar rapor etmeye başladı. Kullanıcı hesaplarında rastgele kilitlenmeler, yetkisiz erişim denemeleri ve beklenmedik log hareketleri tespit ediliyor.</p>
+                    <p>CSO Can Demir'den panik içinde bir çağrı aldınız: <em>"Smart Teknoloji'nin temel yazılım altyapısından gelen telemetri verilerinde, daha önce bahsettiğin yazılım imzalama anormallikleriyle eşleşen imzalar bulduk. Sanırım <strong>Kara Tayfun içeride!</strong>"</em></p>
+                    <img src="images/crisis_desk.png" alt="Acil durum kriz masası" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Kriz ekibine acil olarak hangi CTI temelli öneride bulunursun?</h4>
+                        <div class="slack-chat" id="slackChat"></div>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="g2-s-tersine-muhendislik" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-code-branch"></i><div class="btn-text">Seçenek A: Kötü Amaçlı Yazılımın Yeteneklerini Anında Tersine Mühendislik Ekibine Sevk Et.<small>Saldırının kapsamını ve potansiyel etkilerini tam olarak anlamak için detaylı analiz yap.</small></div></button>
+                            <button class="btn critical" data-decision="g2-s-modul-yalıtma" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-unlink"></i><div class="btn-text">Seçenek B: Etkilenen Tüm Müşterilerin Temel Yazılım Altyapısını Acilen Devre Dışı Bırakmayı veya Yalıtmayı Öner.<small>Saldırının yayılmasını durdurmak için radikal ve hızlı bir müdahale yap.</small></div></button>
+                            <button class="btn" data-decision="g2-s-motivasyon-analizi" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-chart-network"></i><div class="btn-text">Seçenek C: Kara Tayfun Grubunun Motivasyonlarını ve Hedeflerini Analiz Et ve Kriz Ekibine İstihbarat Brifingi Ver.<small>Saldırının arkasındaki niyeti ve uzun vadeli hedefleri ortaya koy.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir saldırı kesinleştiğinde, hız ve doğru müdahale kritik öneme sahiptir. Kararlarının hem teknik hem de operasyonel sonuçları olacaktır.</div>
+                </div>
+
+                <div id="day2_afternoon_investigation" class="section">
+                    <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Gün 2: Öğleden Sonra - Derinlemesine Soruşturma ve Kök Neden Analizi</h2>
+                    <h3>Öğleden Sonra 14:00 - Kara Kutuya Bakış</h3>
+                    <p>Kara Tayfun'un Smart Teknoloji yazılımına nasıl sızdığına dair ilk bulgular ortaya çıkmaya başladı. İlk tersine mühendislik analizleri, kötü amaçlı kodun sadece bir arka kapı olmadığını, aynı zamanda belirli bir tedarik zinciri bileşenini hedef aldığını gösteriyor: <strong>SynapseTech'in açık kaynaklı kütüphanelerinden biri.</strong> Bu kütüphane, Smart Teknoloji'nin temel yazılım altyapısının bir parçası.</p>
+                    <p>Ayrıca, dark web'deki istihbarat kanallarınızda "SynapseTech" ve "tedarik zinciri zafiyeti" anahtar kelimeleriyle ilgili yeni, şifreli mesajlar dolaşmaya başladı. Bu mesajlar, başka siber suç gruplarının da bu zafiyeti kendi çıkarları için kullanmaya çalıştığına işaret ediyor olabilir.</p>
+                    <img src="images/synapse_tech_analysis.png" alt="SynapseTech analiz görseli" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>CTI Uzmanı olarak bir sonraki kritik adımın ne olacak?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="g2-o-synapsetech-arastirma" data-next-section="day3_morning_communication"><i class="fa-solid fa-search"></i><div class="btn-text">Seçenek A: SynapseTech Kütüphanesindeki Zafiyeti Derinlemesine Araştır ve Kötüye Kullanım Biçimlerini Belgele.<small>Bu, saldırganın tam giriş vektörünü anlamanı ve benzer saldırıları önlemeni sağlayacak.</small></div></button>
+                            <button class="btn critical" data-decision="g2-o-sucu-resmi-makamlara-bildir" data-next-section="day3_morning_communication"><i class="fa-solid fa-building-columns"></i><div class="btn-text">Seçenek B: Ulusal Siber Güvenlik Birimlerine (CERT/CSIRT) ve Kolluk Kuvvetlerine Resmi Bildirimde Bulun.<small>Saldırının ulusal güvenliği etkileyebileceğini vurgulayarak yasal süreci ve resmi soruşturmayı başlat.</small></div></button>
+                            <button class="btn" data-decision="g2-o-daha-fazla-istihbarat" data-next-section="day3_morning_communication"><i class="fa-solid fa-eye"></i><div class="btn-text">Seçenek C: Kara Tayfun ile İlgili Daha Fazla Tehdit İstihbaratı Topla.<small>Saldırının diğer tedarik zinciri bileşenlerine yayılma potansiyelini veya diğer hedefleri anlamaya odaklan.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Kök neden analizi, gelecekteki saldırıları önlemek için kritik öneme sahiptir. Aynı zamanda, yasal ve halkla ilişkiler boyutunda atılacak adımlar, krizin genel algısını etkiler.</div>
+                </div>
+
+                <div id="day3_morning_communication" class="section">
+                    <h2><i class="fa-solid fa-bullhorn"></i> Gün 3: Sabah - Hasar Kontrol ve İletişim</h2>
+                    <h3>Sabah 09:30 - Sıkışan Zaman</h3>
+                    <p>Temel yazılım altyapısındaki arka kapı ve SynapseTech zafiyeti nedeniyle, Kara Tayfun'un müşterilerinizin ağlarına derinlemesine sızdığı ve veri sızıntıları yaşandığı kesinleşti. Medyada haberler çığ gibi büyüyor: <strong>"ÇOLHAK Teknoloji ve Tedarikçisi Arasındaki Kriz Derinleşiyor!"</strong> Kamuoyu şirketinizden net bir açıklama bekliyor.</p>
+                    <img src="images/press_conference.png" alt="Basın toplantısı görseli" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Halka ve paydaşlara nasıl bir açıklama yapacaksın?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="g3-s-tam-seffaflık" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-check-double"></i><div class="btn-text">Seçenek A: Tam Şeffaflık.<small>Olayı tüm detaylarıyla, sızıntının nedenini, Kara Tayfun grubunu ve tedarik zinciri zafiyetini açıklayın.</small></div></button>
+                            <button class="btn" data-decision="g3-s-sınırlı-acıklama" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-file-contract"></i><div class="btn-text">Seçenek B: Sınırlı Açıklama.<small>Sadece 'teknik bir problem' olduğunu belirtin, detaylardan kaçının ve soruşturmanın devam ettiğini söyleyin.</small></div></button>
+                            <button class="btn critical" data-decision="g3-s-sucu-disari-atma" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-mask"></i><div class="btn-text">Seçenek C: Suçu Dışarıya Atma.<small>Saldırının tamamen tedarikçi Smart Teknoloji'nin sorumluluğunda olduğunu ve ÇOLHAK'ın mağdur olduğunu iddia edin.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz iletişimi, itibar yönetiminin bel kemiğidir. Şeffaflık, güven, sorumluluk ve yasal yükümlülükler arasında hassas bir denge kurmalısın.</div>
+                </div>
+
+                <div id="day3_afternoon_strategy" class="section">
+                    <h2><i class="fa-solid fa-shield-alt"></i> Gün 3: Öğleden Sonra - Uzun Vadeli Strateji ve İyileşme</h2>
+                    <h3>Öğleden Sonra 14:00 - Yaraları Sarma Zamanı</h3>
+                    <p>Saldırının nedenleri ve kapsamı artık büyük ölçüde netleşti. Şirketinizin gelecekteki siber dayanıklılığı için önemli kararlar almanız gerekiyor. CEO Elara Yılmaz ve CSO Can Demir, şirket içi güvenlik protokollerinin ve tedarikçi denetimlerinin acilen gözden geçirilmesi gerektiğini belirtiyor. Hukuk Müşaviri Zeynep Kaya ise potansiyel davalara karşı yasal savunma stratejileri üzerinde çalışıyor. Finansal kayıplar artmaya devam ediyor.</p>
+                    <img src="images/recovery_efforts.png" alt="Kurtarma ve iyileşme çabaları görseli" class="scenario-image">
+                    <div class="interactive-element">
+                        <h4>Şirketinizin gelecekteki siber dayanıklılığı için hangi uzun vadeli stratejiyi önerirsin?</h4>
+                        <div class="decision-buttons">
+                            <button class="btn" data-decision="g3-o-kapsamlı-guvenlik-programı" data-next-section="finalSection"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: Kapsamlı Tedarik Zinciri Güvenliği Programı Başlat.<small>Tüm tedarikçiler için zorunlu denetimler, SBOM (Software Bill of Materials) ve SCA (Software Composition Analysis) entegrasyonu talep et. CTI kaynaklarını artır.</small></div></button>
+                            <button class="btn" data-decision="g3-o-odaklı-iyilestirme" data-next-section="finalSection"><i class="fa-solid fa-screwdriver-wrench"></i><div class="btn-text">Seçenek B: Sadece Temel Yazılım Altyapısındaki Zafiyetleri Gider ve Acil Yama Uygula.<small>Hızlıca en kritik sorunları çöz, ancak daha geniş tedarik zinciri güvenliği konularını ertele.</small></div></button>
+                            <button class="btn critical" data-decision="g3-o-degerlendirmeyi-geciktir" data-next-section="finalSection"><i class="fa-solid fa-clock-rotate-left"></i><div class="btn-text">Seçenek C: Kriz Sonrası Kapsamlı Değerlendirmeyi ve Yatırımları Geciktir.<small>Bütçe kısıtlamaları ve personel yorgunluğunu gerekçe göstererek durumu stabilize etmeye odaklan ve uzun vadeli planları ertele.</small></div></button>
+                        </div>
+                    </div>
+                    <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir krizin ardından alınan uzun vadeli kararlar, şirketin sadece kısa vadeli iyileşmesini değil, aynı zamanda gelecekteki dayanıklılığını ve itibarını da belirler.</div>
+                </div>
+
+                <div id="finalSection" class="section centered-page" style="display: none;">
+                    <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
+                    <p>Simülasyon tamamlandı. Kriz yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+                    <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                    <div class="final-metrics" id="finalMetricsContainer"></div>
+                    <div class="post-crisis-layout">
+                        <div class="event-timeline">
+                            <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                            <ul id="decision-timeline-list"></ul>
+                        </div>
+                        <div class="strategic-debrief">
+                            <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme ve Dersler</h3>
+                            <div id="strategic-debrief-content"></div>
+                        </div>
+                    </div>
+                    <div class="recommendations">
+                        <h3><i class="fa-solid fa-tasks"></i> İleriye Yönelik Aksiyon Planı</h3>
+                        <ul id="recommendations-list"></ul>
+                    </div>
+                    <div class="decision-buttons" style="margin-top: 40px;">
+                        <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = {
+                score: { affectedSystems: 0, financialLoss: 0, dataLeak: 0, reputation: 100 },
+                state: {
+                    currentSectionId: 'start',
+                    synapseTechInfoGathered: false,
+                    blackTyphoonTTPsAnalyzed: false,
+                    legalReviewInitiated: false,
+                    techScanInitiated: false,
+                    supplierContacted: false,
+                    malwareAnalysisComplete: false,
+                    criticalModulesIsolated: false,
+                    motivationAnalyzed: false,
+                    synapseTechVulnerabilityAnalyzed: false,    
+                    officialReportMade: false,    
+                    pressConferenceHeld: false,    
+                    moreThreatIntelGathered: false, /* Yeni eklenen clue */
+                    decisionHistory: []
+                },
+                elements: {},
+                
+                decisionInfo: {
+                    // Gün 1 - Sabah: İlk Sinyaller
+                    'g1-s-bilgilendir-ust-yonetim': { 
+                        title: "Hızlı Üst Yönetim Bilgilendirmesi", 
+                        text: "Henüz kesin kanıt olmasa da, potansiyel tehdidi CEO ve CSO'ya ilettiniz. Bu, kriz ekibini erkenden harekete geçirdi ancak bazı soru işaretleri yarattı.", 
+                        strat: "Kritik güvenlik olaylarında üst yönetimi hızla bilgilendirmek, proaktif kriz yönetimi için esastır ancak bilgi doğruluğu kritik öneme sahiptir.", 
+                        changes: { financialLoss: 10000, reputation: -2 }, 
+                        impact: 'Neutral' 
+                    },
+                    'g1-s-istihbarat-dogrula': { 
+                        title: "Derinlemesine İstihbarat Doğrulama", 
+                        text: "Dark web fısıltısının güvenilirliğini teyit etmek için kapsamlı araştırma başlattınız. Bu, değerli bilgiler sağladı ancak zaman kaybına neden olma riski taşıdı.", 
+                        strat: "İstihbaratın doğruluğu hayati öneme sahiptir. Ancak kriz anında hız ile doğruluk arasında doğru dengeyi bulmak, en zor kararlardan biridir.", 
+                        changes: { financialLoss: 5000, reputation: -1 }, 
+                        clue: 'synapseTechInfoGathered', 
+                        impact: 'Positive' 
+                    },
+
+                    // Gün 1 - Öğleden Sonra: Onaylanmayan Şüpheler
+                    'g1-o-teknik-tarama': {
+                        title: "Acil Teknik Tarama Başlatıldı",
+                        text: "CSO Can Demir'in ekibine TAL raporundaki IOC/TTP'leri ilettiniz ve acil tarama talimatı verdiniz. Bu, olası zafiyetleri hızla tespit etmeyi hedefledi.",
+                        strat: "Erken ve teknik odaklı müdahale, hasarı sınırlamak için hayati öneme sahiptir. Doğru IOC'lerle yapılan taramalar, saldırının kapsamını hızla ortaya çıkarabilir.",
+                        changes: { financialLoss: 30000, reputation: -3, affectedSystems: 5 }, 
+                        clue: 'techScanInitiated',
+                        impact: 'Positive'
+                    },
+                    'g1-o-tedarikci-iletisim': {
+                        title: "Smart Teknoloji ile İletişim Kuruldu",
+                        text: "Tedarikçi İlişkileri Yöneticisi Dr. Aylin Güneş aracılığıyla Smart Teknoloji ile temasa geçildi. Ortak soruşturma talebiniz, tedarikçide bazı rahatsızlıklara neden oldu.",
+                        strat: "Tedarikçi iş birliği, tedarik zinciri saldırılarında kritik öneme sahiptir. Ancak ilişkilerin yönetimi ve bilgi paylaşımının hassasiyeti dikkatli bir yaklaşım gerektirir.",
+                        changes: { financialLoss: 15000, reputation: -7 }, 
+                        clue: 'supplierContacted',
+                        impact: 'Neutral'
+                    },
+                    'g1-o-hukuki-degerlendirme': {
+                        title: "Hukuki Değerlendirme ve İletişim Planı",
+                        text: "Hukuk Müşaviri Zeynep Kaya ile yasal yükümlülükler ve kriz iletişim stratejisi üzerine çalıştınız. Bu, kamuoyuyla iletişimde sağlam bir temel oluşturdu ancak teknik müdahaleyi geciktirme riski taşıdı.",
+                        strat: "Kriz iletişimi ve yasal uyumluluk önemlidir, ancak teknik soruşturma ve müdahale tamamlanmadan aceleci davranmak, durumu daha da karmaşık hale getirebilir.",
+                        changes: { financialLoss: 25000, dataLeak: 2 }, 
+                        clue: 'legalReviewInitiated',
+                        impact: 'Neutral'
+                    },
+
+                    // Gün 2 - Sabah: Krizin Patlak Vermesi
+                    'g2-s-tersine-muhendislik': {
+                        title: "Kötü Amaçlı Yazılım Tersine Mühendisliği",
+                        text: "Kötü amaçlı yazılımın yeteneklerini anlamak için tersine mühendislik ekibini acilen görevlendirdiniz. Bu, saldırganın tam kapasitesini ortaya çıkardı ancak analiz süresince hasar devam etti.",
+                        strat: "Saldırının derinlemesine anlaşılması, uzun vadeli savunma için hayati önem taşır. Ancak hızlı aksiyon ile kapsamlı analiz arasında denge kurmak, krizi yönetmek için esastır.",
+                        changes: { financialLoss: 50000, dataLeak: 5, reputation: -10 }, 
+                        clue: 'malwareAnalysisComplete',
+                        impact: 'Negative'
+                    },
+                    'g2-s-modul-yalıtma': {
+                        title: "Kritik Modüllerin Acil Yalıtılması",
+                        text: "Etkilenen tüm müşterilerin Temel yazılım altyapılarını acilen devre dışı bırakmayı veya yalıtmayı önerdiniz. Bu, saldırganın yayılmasını durdurdu ancak müşterilerin operasyonlarında büyük aksaklıklara yol açtı.",
+                        strat: "Hızlı ve radikal kararlar, anlık hasarı durdurabilir ancak uzun vadede büyük operasyonel ve finansal sonuçları olabilir.",
+                        changes: { financialLoss: 250000, affectedSystems: 20, reputation: -25 }, 
+                        clue: 'criticalModulesIsolated',
+                        impact: 'Negative'
+                    },
+                    'g2-s-motivasyon-analizi': {
+                        title: "Kara Tayfun Motivasyon Analizi",
+                        text: "Kara Tayfun grubunun motivasyonlarını ve hedeflerini analiz ederek kriz ekibine stratejik bir brifing verdiniz. Bu, olayın daha geniş bağlamını anlamayı sağladı ancak teknik müdahaleyi geciktirdi.",
+                        strat: "Tehdit aktörünün niyetini anlamak, uzun vadeli savunma ve karşı tedbirler için hayati öneme sahiptir. Ancak anlık krizde, teknik müdahalenin hızı çoğu zaman daha belirleyicidir.",
+                        changes: { financialLoss: 75000, dataLeak: 10, reputation: -15 }, 
+                        clue: 'motivationAnalyzed',
+                        impact: 'Negative'
+                    },
+
+                    // Gün 2 - Öğleden Sonra: Derinlemesine Soruşturma ve Kök Neden Analizi (Önceki Gün 3 Sabah)
+                    'g2-o-synapsetech-arastirma': { // ID güncellendi
+                        title: "SynapseTech Zafiyet Analizi",
+                        text: "SynapseTech kütüphanesindeki zafiyeti derinlemesine incelediniz ve kötüye kullanım biçimlerini belgelediniz. Bu, saldırının kök nedenini tam olarak anlamanızı ve gelecekte benzer saldırıları önlemek için stratejik bilgiler sağlamanızı sağladı.",
+                        strat: "Kök neden analizi, bir saldırının sadece semptomlarını değil, altında yatan güvenlik zafiyetlerini de ortadan kaldırmak için kritik öneme sahiptir.",
+                        changes: { financialLoss: 100000, reputation: +10, dataLeak: -5 }, 
+                        clue: 'synapseTechVulnerabilityAnalyzed', 
+                        impact: 'Positive'
+                    },
+                    'g2-o-sucu-resmi-makamlara-bildir': { // ID güncellendi
+                        title: "Resmi Makamlara Bildirim",
+                        text: "Saldırıyı ulusal siber güvenlik birimlerine ve kolluk kuvvetlerine resmen bildirdiniz. Bu, yasal süreci başlattı ve kamuoyu nezdinde şirketinizin sorumluluk sahibi olduğunu gösterdi, ancak soruşturma süreçleri iş yükünü artırdı.",
+                        strat: "Siber suçların resmi makamlara bildirilmesi, yasal uyumluluk ve ulusal siber güvenliğe katkı açısından önemlidir. Ancak, bu durum operasyonel ve hukuki ek yük getirebilir.",
+                        changes: { financialLoss: 50000, reputation: +5 }, 
+                        clue: 'officialReportMade',
+                        impact: 'Neutral'
+                    },
+                    'g2-o-daha-fazla-istihbarat': { // Yeni seçenek
+                        title: "Daha Fazla Tehdit İstihbaratı Topla",
+                        text: "Saldırının arkasındaki grubun diğer tedarik zinciri saldırılarını araştırdınız ve olası gelecek hedeflerini anlamaya çalıştınız. Bu, proaktif savunma için değerli bilgiler sağladı ancak mevcut olay yerindeki müdahaleyi biraz yavaşlattı.",
+                        strat: "Tehdit istihbaratını sürekli beslemek, sadece geçmiş saldırıları anlamakla kalmaz, aynı zamanda gelecekteki tehditleri öngörmek için de kritik öneme sahiptir.",
+                        changes: { financialLoss: 30000, reputation: -5, dataLeak: +3 }, 
+                        clue: 'moreThreatIntelGathered',
+                        impact: 'Neutral'
+                    },
+
+                    // Gün 3 - Sabah: Hasar Kontrol ve İletişim (Önceki Gün 2 Öğleden Sonra)
+                    'g3-s-tam-seffaflık': { // ID güncellendi
+                        title: "Tam Şeffaflık Politikası",
+                        text: "Saldırının detaylarını, Kara Tayfun grubunu ve tedarik zinciri zafiyetini kamuoyuna ve müşterilere detaylıca açıkladınız. Bu, başta şok yaratsa da, uzun vadede şirketinize olan güveni artırdı.",
+                        strat: "Kriz iletişiminde tam şeffaflık, riskli olsa da, dürüstlük algısı yaratarak uzun vadeli itibar kazanımı sağlayabilir ve sektörde örnek teşkil edebilir.",
+                        changes: { financialLoss: 200000, reputation: +20, dataLeak: -5 }, 
+                        impact: 'Positive'
+                    },
+                    'g3-s-sınırlı-acıklama': { // ID güncellendi
+                        title: "Sınırlı Kamuoyu Açıklaması",
+                        text: "Sadece 'teknik bir problem' olduğunu belirterek detaylardan kaçındınız. Bu, başlangıçta paniği önlese de, kamuoyunda şüphe uyandırdı ve güveni tam olarak sağlayamadı.",
+                        strat: "Sınırlı bilgi paylaşımı, kısa vadede durumu idare etse de, uzun vadede şirketin şeffaflık algısını zedeleyebilir ve daha fazla spekülasyona yol açabilir.",
+                        changes: { financialLoss: 500000, reputation: -15, dataLeak: 10 }, 
+                        impact: 'Negative'
+                    },
+                    'g3-s-sucu-disari-atma': { // ID güncellendi
+                        title: "Suçu Tedarikçiye Atma",
+                        text: "Sorumluluğu tamamen Smart Teknoloji'ye yüklediniz. Bu, şirket içi rahatlama sağlasa da, tedarikçi ilişkilerini zedeledi ve kamuoyu nezdinde kötü bir izlenim bıraktı. Yasal süreçler tetiklendi.",
+                        strat: "Suçu başkasına atmak, kısa vadede rahatlama sağlasa da, uzun vadede şirketler arası ilişkileri zehirler, yasal riskleri artırır ve kamuoyu nezdinde güveni kökten sarsar.",
+                        changes: { financialLoss: 750000, reputation: -30, affectedSystems: 10 }, 
+                        impact: 'Negative'
+                    },
+
+                    // Gün 3 - Öğleden Sonra: Uzun Vadeli Strateji ve İyileşme (Final kararları)
+                    'g3-o-kapsamlı-guvenlik-programı': { // ID güncellendi
+                        title: "Kapsamlı Tedarik Zinciri Güvenliği Programı",
+                        text: "Tüm tedarikçiler için zorunlu denetimler, SBOM, SCA ve TPRM entegrasyonu gibi kapsamlı bir program önerdiniz. CTI kaynaklarının artırılması talebiniz olumlu karşılandı. Şirket, siber dayanıklılığını önemli ölçüde artırdı.",
+                        strat: "Kriz sonrası güçlü bir güvenlik duruşu oluşturmak, gelecekteki saldırıları önlemenin ve itibar kazanmanın anahtarıdır. Bu, önemli kaynak ve yönetim desteği gerektirir ancak uzun vadede en iyi yatırım budur.",
+                        changes: { financialLoss: 500000, reputation: +30, dataLeak: -15, affectedSystems: -10 }, 
+                        impact: 'Positive'
+                    },
+                    'g3-o-odaklı-iyilestirme': { // ID güncellendi
+                        title: "Odaklı İyileştirme ve Acil Önlemler",
+                        text: "Sadece temel yazılım altyapısındaki zafiyetleri gidermeye odaklandınız. Kısa vadeli çözümler uygulandı ancak diğer potansiyel riskler göz ardı edildi. Şirket, kısa vadede toparlansa da, gelecekte benzer saldırılara karşı hala savunmasız.",
+                        strat: "Odaklı iyileştirme, anlık sorunları çözmek için etkili olabilir ancak siber güvenliğin sürekli evrilen doğasına karşı uzun vadeli bir çözüm sunmayabilir. Bu, gizli riskler yaratır.",
+                        changes: { financialLoss: 100000, reputation: +5, dataLeak: +5, affectedSystems: +5 }, 
+                        impact: 'Neutral'
+                    },
+                    'g3-o-degerlendirmeyi-geciktir': { // ID güncellendi
+                        title: "Kriz Sonrası Değerlendirmeyi Geciktirme",
+                        text: "Krizin yorgunluğu ve maliyetler nedeniyle kapsamlı değerlendirmeyi ve yatırımları ertelediniz. Şirket 'normale dönmeye' odaklansa da, gelecekte benzer bir kriz riski arttı ve itibar kaybı devam etti.",
+                        strat: "Krizlerden ders çıkarmamak, bir şirketin siber güvenlik olgunluğunu düşürür ve gelecekteki risklere karşı savunmasız bırakır. Bu en kötü senaryolardan biridir.",
+                        changes: { financialLoss: 1500000, reputation: -40, affectedSystems: 20, dataLeak: +15 }, 
+                        impact: 'Negative'
+                    }
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'), gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
+                        intermissionTitle: document.getElementById('intermissionTitle'), intermissionText: document.getElementById('intermissionText'),
+                        intermissionMetrics: document.getElementById('intermissionMetrics'), strategicText: document.getElementById('strategicText'),
+                        continueButton: document.getElementById('continueButton'),
+                        statusBar: { affectedSystems: document.getElementById('status-affectedSystems'), financialLoss: document.getElementById('status-financialLoss'), dataLeak: document.getElementById('status-dataLeak'), reputation: document.getElementById('status-reputation') }
+                    };
+                    this.loadGameHTML();
+                    this.attachListeners();
+                    this.elements.intro.style.display = 'flex';
+                    this.elements.game.style.display = 'none';
+                },
+
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.intro.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+                        this.showSection('day1_morning'); // Senaryonun ilk bölümü
+                    });
+                    
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button) return;
+                        
+                        const decisionId = button.dataset.decision;
+                        const nextSection = button.dataset.nextSection;
+
+                        this.handleDecision(decisionId, nextSection, button);
+                    });
+
+                    this.elements.continueButton.addEventListener('click', () => {
+                        const nextSectionId = this.elements.continueButton.dataset.nextSection;
+                        this.elements.intermission.style.display = 'none';
+                        
+                        if (nextSectionId === 'finalSection') {
+                            this.showFinalReport();
+                        } else {
+                            this.elements.game.style.display = 'block';
+                            this.showSection(nextSectionId);
+                        }
+                    });
+                },
+                
+                handleDecision(decisionId, nextSectionId, button) {
+                    button.closest('.decision-buttons').querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+                    const info = this.decisionInfo[decisionId];
+                    if (!info) { console.error("Karar bilgisi bulunamadı:", decisionId); return; }
+
+                    this.score.financialLoss += info.changes.financialLoss || 0;
+                    this.score.reputation += info.changes.reputation || 0;
+                    this.score.dataLeak += info.changes.dataLeak || 0;
+                    this.score.affectedSystems += info.changes.affectedSystems || 0;
+                    
+                    if (info.clue) {
+                        this.state[info.clue] = true;
+                    }
+                    
+                    this.state.decisionHistory.push({ id: decisionId, title: info.title, text: info.text, impactType: info.impact }); 
+                    this.updateState();
+                    this.showIntermission(info.title, info.text, info.strat, info.changes, nextSectionId);
+                },
+
+                showIntermission(title, text, strat, changes, nextSectionId) {
+                    this.elements.intermissionTitle.textContent = title;
+                    this.elements.intermissionText.textContent = text;
+                    this.elements.strategicText.textContent = strat;
+                    
+                    let metricsHTML = '';
+                    const formatChange = (label, value, unit, icon, isPositive) => {
+                        const arrow = value >= 0 ? 'up' : 'down';
+                        const sign = value >= 0 ? '+' : ''; 
+                        return `<div class="metric-change ${isPositive ? 'positive' : 'negative'}"><i class="fa-solid ${icon}"></i> ${label}: <i class="fa-solid fa-arrow-${arrow}-long"></i> ${sign}${Math.abs(value).toLocaleString('tr-TR')}${unit}</div>`;
+                    };
+
+                    if (changes.financialLoss) metricsHTML += formatChange('Finansal Zarar', changes.financialLoss, '₺', 'fa-sack-xmark', false);
+                    if (changes.dataLeak) metricsHTML += formatChange('Veri Sızıntısı', changes.dataLeak, '%', 'fa-database', false);
+                    if (changes.reputation !== undefined) metricsHTML += formatChange('İtibar Puanı', changes.reputation, '', 'fa-building-shield', changes.reputation > 0);
+                    if (changes.affectedSystems) metricsHTML += formatChange('Etkilenen Sistem', changes.affectedSystems, '', 'fa-triangle-exclamation', false);
+                    
+                    if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1em; opacity: 0.8;">Bu kararın metriklere doğrudan bir etkisi olmadı.</p>';
+
+                    this.elements.intermissionMetrics.innerHTML = metricsHTML;
+                    this.elements.continueButton.dataset.nextSection = nextSectionId;
+                    this.elements.game.style.display = 'none';
+                    this.elements.intermission.style.display = 'flex';
+                },
+
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.affectedSystems.textContent = s.affectedSystems;
+                    this.elements.statusBar.financialLoss.textContent = `₺${s.financialLoss.toLocaleString('tr-TR')}`;
+                    this.elements.statusBar.dataLeak.textContent = `${s.dataLeak}%`;
+                    this.elements.statusBar.reputation.textContent = Math.max(0, s.reputation);
+                },
+
+                showSection(sectionId) {
+                    this.elements.sections.forEach(section => { section.style.display = 'none'; });
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        this.state.currentSectionId = sectionId;
+                        this.updateDynamicContent(sectionId);
+                        // Buton durumlarını güncellemeyi burada çağırın
+                        this.updateButtonStates(sectionId);
+                    } else {
+                        console.error('Bölüm bulunamadı:', sectionId);
+                        this.showFinalReport();
+                    }
+                    this.updateState();
+                },
+                
+                updateButtonStates(sectionId) {
+                    const currentSectionElement = document.getElementById(sectionId);
+                    if (!currentSectionElement) return;
+
+                    const decisionButtonsContainer = currentSectionElement.querySelector('.decision-buttons');
+                    if (!decisionButtonsContainer) return;
+
+                    const buttons = decisionButtonsContainer.querySelectorAll('.btn[data-decision]');
+                    buttons.forEach(button => {
+                        button.disabled = false;
+                        button.style.backgroundColor = '';
+                        button.style.color = '';
+                        // Seçenek C'nin küçük yazısını orijinal haline döndür
+                        if (button.dataset.decision === 'g3-o-degerlendirmeyi-geciktir') {
+                             button.querySelector('small').textContent = 'Bütçe kısıtlamaları ve personel yorgunluğunu gerekçe göstererek durumu stabilize etmeye odaklan ve uzun vadeli planları ertele.';
+                        }
+                    });
+
+                    // Daha önce seçilmiş kararları devre dışı bırak
+                    this.state.decisionHistory.forEach(decision => {
+                        const historicalButton = currentSectionElement.querySelector(`.btn[data-decision="${decision.id}"]`);
+                        if (historicalButton) {
+                            historicalButton.disabled = true;
+                            historicalButton.style.backgroundColor = '#555';
+                            historicalButton.style.color = '#999';
+                        }
+                    });
+                },
+
+                showFinalReport() {
+                    this.elements.intro.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block'; 
+                    document.getElementById('statusBar').style.display = 'none';
+
+                    this.elements.sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    const finalSection = document.getElementById('finalSection');
+                    if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
+
+                    finalSection.style.display = 'flex';
+                    
+                    const badge = document.getElementById('performance-badge');
+                    const metricsContainer = document.getElementById('finalMetricsContainer');
+                    const timelineList = document.getElementById('decision-timeline-list');
+                    const debriefContent = document.getElementById('strategic-debrief-content');
+                    const recommendationsList = document.getElementById('recommendations-list');
+
+                    const finalRep = Math.max(0, this.score.reputation);
+                    let totalScore = finalRep - (this.score.dataLeak * 2) - (this.score.financialLoss / 50000);
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+
+                    let badgeInfo = {};
+                    if (totalScore >= 80) badgeInfo = { text: 'SİBER KAHRAMAN', color: 'var(--accent-green)' };
+                    else if (totalScore >= 50) badgeInfo = { text: 'KRİZİ YÖNETTİ', color: 'var(--accent-blue)' };
+                    else if (totalScore >= 20) badgeInfo = { text: 'AĞIR HASARLI', color: 'var(--accent-yellow)' };
+                    else badgeInfo = { text: 'FELAKET', color: 'var(--accent-red)' };
+
+                    badge.textContent = badgeInfo.text;
+                    badge.style.backgroundColor = badgeInfo.color;
+
+                    metricsContainer.innerHTML = `
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-building-shield"></i></div><div class="label">İtibar Puanı</div><div class="value">${finalRep}/100</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="label">Finansal Zarar</div><div class="value">₺${this.score.financialLoss.toLocaleString('tr-TR')}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-database"></i></div><div class="label">Veri Sızıntısı</div><div class="value">${this.score.dataLeak}%</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="label">Etkilenen Sistem</div><div class="value">${this.score.affectedSystems}</div></div>
+                    `;
+
+                    timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                        let liClass = decision.impactType === 'Positive' ? 'positive' : (decision.impactType === 'Negative' ? 'negative' : 'neutral');
+                        return `<li class="${liClass}"><span class="decision-title">${decision.title}</span><span class="decision-impact">${decision.text.split('.')[0]}.</span></li>`;
+                    }).join('');
+
+                    let debriefHTML = '';
+                    if (finalRep > 80 && this.score.dataLeak < 10 && this.score.financialLoss < 1500000) { 
+                        debriefHTML += `<p><strong>Kriz Yönetiminde Liderlik:</strong> Hızlı, doğru ve şeffaf kararlarınız sayesinde ÇOLHAK Teknoloji, bu küresel tedarik zinciri krizinden minimum hasarla çıktı. CTI uzmanlığınız, saldırganın motivasyonlarını ve yöntemlerini erkenden anlamamızı sağladı. İtibarımız güçlendi ve sektörde örnek teşkil ettik.</p>`;
+                    } else if (finalRep >= 50 && this.score.financialLoss < 2000000) { 
+                        debriefHTML += `<p><strong>Zorlu Bir Mücadele:</strong> Krizi yönetmekte başarılı oldunuz ancak bazı kararların uzun vadeli etkileri oldu. Öğrenilen derslerle gelecekteki güvenlik duruşumuzu daha da sağlamlaştırmalıyız. CTI faaliyetleri kritik bilgiler sağladı ancak bazı noktalarda daha hızlı aksiyon alabilirdik.</p>`;
+                    } else { 
+                        debriefHTML += `<p><strong>Ciddi Sonuçlar:</strong> Kriz yönetimi sürecinde alınan bazı kararlar, şirketin finansal zararlarını artırdı ve itibarını ciddi şekilde zedeledi. Veri sızıntısı ve sistem kesintileri, müşteri güvenini sarstı. Bu deneyimden acilen ders çıkararak güvenlik stratejilerimizi kökten değiştirmeliyiz.</p>`;
+                    }
+                    debriefContent.innerHTML = debriefHTML;
+
+                    let recommendationsHTML = new Set();
+                    recommendationsHTML.add(`<li><strong>Tedarikçi Risk Yönetimi:</strong> Tüm tedarikçiler için düzenli güvenlik denetimleri ve sözleşmelerde daha sıkı güvenlik maddeleri uygulanmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Yazılım Tedarik Zinciri Güvenliği:</strong> SBOM (Software Bill of Materials) kullanımı ve SCA (Software Composition Analysis) araçları zorunlu hale getirilmeli.</li>`);
+                    recommendationsHTML.add(`<li><strong>CTI Entegrasyonu:</strong> CTI ekibinin, tehdit istihbaratını operasyonel güvenlik (SOC) ve iş birimleri ile daha sıkı entegre etmesi için kaynakları artırılmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Tehdit Avcılığı (Threat Hunting):</strong> Proaktif tehdit avcılığı kapasitesi geliştirilerek, henüz tespit edilmemiş tehditler ağlarımızda aranmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Kriz İletişim Planı Güncellemesi:</strong> Tedarik zinciri saldırılarına özel senaryoları içeren güncel bir kriz iletişim planı oluşturulmalı ve düzenli tatbikatlar yapılmalı.</li>`);
+                    
+                    recommendationsHTML.add(`<li><strong>Siber Güvenlik Farkındalık Eğitimi:</strong> Tüm çalışanlar için düzenli ve güncel siber güvenlik farkındalık eğitimleri yapılmalı, özellikle sosyal mühendislik ve kimlik avı saldırılarına karşı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Olay Yanıt Planı Güncellemesi:</strong> Olay yanıt planı, tedarik zinciri saldırılarına ve yazılım tedarik zinciri zafiyetlerine özel senaryoları içerecek şekilde güncellenmeli ve düzenli olarak test edilmeli.</li>`);
+                    if (this.state.synapseTechVulnerabilityAnalyzed) {
+                        recommendationsHTML.add(`<li><strong>Açık Kaynak Kod Güvenliği:</strong> Kullanılan tüm açık kaynak kütüphaneler için otomatik güvenlik taramaları (SCA) ve lisans uyumluluğu denetimleri zorunlu hale getirilmeli.</li>`);
+                    }
+                    if (this.score.affectedSystems > 10) {
+                        recommendationsHTML.add(`<li><strong>İş Sürekliliği ve Felaket Kurtarma Geliştirme:</strong> Kritik iş fonksiyonları için kapsamlı iş sürekliliği ve felaket kurtarma planları yeniden gözden geçirilmeli ve tatbikatlar artırılmalı.</li>`);
+                    }
+                    if (this.score.financialLoss > 1000000) {
+                        recommendationsHTML.add(`<li><strong>Siber Sigorta Poliçesi Gözden Geçirme:</strong> Mevcut siber sigorta poliçesi, tedarik zinciri saldırılarını ve veri ihlallerini kapsayacak şekilde genişletilmeli.</li>`);
+                    }
+                    if (this.state.officialReportMade) {
+                        recommendationsHTML.add(`<li><strong>Yasal ve Regülatif Uyum Süreçleri:</strong> Siber güvenlik ihlallerinde yasal bildirim ve uyumluluk süreçleri güçlendirilmeli.</li>`);
+                    }
+
+
+                    recommendationsList.innerHTML = Array.from(recommendationsHTML).map(rec => `<li><i class="fa-solid fa-angle-right"></i> ${rec.substring(4)}</li>`).join(''); 
+
+                    document.getElementById('finalSection').insertAdjacentHTML('beforeend', `
+                        <p style="margin-top: 30px; font-size: 1.2em; color: var(--accent-yellow);">Bu simülasyon, siber güvenlik krizlerinde proaktif istihbaratın ve doğru kararların ne kadar hayati olduğunu gösterdi. ÇOLHAK Teknoloji olarak bu krizden güçlenerek çıkmak için çalışmaya devam etmeliyiz.</p>
+                    `);
+                },
+
+                updateState() { this.updateStatusBar(); this.updateSlackChat(this.state.currentSectionId); },
+
+                updateSlackChat(currentSection) {
+                    const chatViewer = document.getElementById('slackChat');
+                    if (!chatViewer) return; 
+
+                    let chat = '';
+                    if (currentSection === 'day1_afternoon' || currentSection === 'day2_morning' || currentSection === 'day2_afternoon_investigation') { /* day2_afternoon eklendi */
+                        chat = `
+                            <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> Durumu yakından takip ediyorum. Hisselerimiz düşüşe geçti, hızlı bir çözüm bekliyorum!</div>
+                            <div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Kaya:</span> Yasal sorumluluklarımızı dikkatle değerlendirmeliyiz. Aceleci açıklamalar, ileride sorun yaratabilir.</div>
+                            <div class="message"><span class="sender ops">Operasyon Direktörü Levent Akın:</span> Müşterilerimizden yoğun şikayetler alıyoruz. Sistemler ne zaman normale dönecek? İş sürekliliğimiz tehlikede!</div>
+                            <div class="message"><span class="sender cso">CSO Can Demir:</span> Ekiplerimiz 7/24 çalışıyor. CTI'dan gelen bilgiler, doğru adımları atmamız için hayati önem taşıyor.</div>
+                            <div class="message"><span class="sender">Siz (CTI Uzmanı):</span> Mevcut verileri hızla analiz ediyoruz. Kara Tayfun'un TTP'lerini anlamak, karşı önlemler için kritik.</div>
+                        `;
+                    } else if (currentSection === 'day3_morning_communication' || currentSection === 'day3_afternoon_strategy') { /* day3_afternoon eklendi */
+                        chat = `
+                                <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> İlk şoku atlattık. Şimdi geleceğe yönelik planlarımız ne olacak? Bu krizden nasıl ders çıkaracağız?</div>
+                                <div class="message"><span class="sender ops">Operasyon Direktörü Levent Akın:</span> Müşteri güvenini yeniden kazanmak için somut adımlara ihtiyacımız var. Kesintilerin telafisi önemli.</div>
+                                <div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Kaya:</span> Yaşanan olay, sözleşmelerimizdeki güvenlik maddelerinin gözden geçirilmesi gerektiğini gösterdi.</div>
+                                <div class="message"><span class="sender cso">CSO Can Demir:</span> Savunma mekanizmalarımızı daha da güçlendirmeliyiz. CTI ekibinin rolü bu süreçte anahtar olacak.</div>
+                                <div class="message"><span class="sender">Siz (CTI Uzmanı):</span> Kök neden analizi, gelecekteki saldırıları önlemek için bize ışık tutuyor. Topladığımız istihbarat çok değerli.</div>
+                            `;
+                    }
+                    chatViewer.innerHTML = chat;
+                },
+
+                loadGameHTML() {
+                    const gameHTMLContent = `
+                        <div id="day1_morning" class="section">
+                            <h2><i class="fa-solid fa-hourglass-start"></i> Gün 1: İlk Sinyaller ve Fısıltılar</h2>
+                            <h3>Sabah 08:30 - Kahve ve Kötü Bir His</h3>
+                            <p>Sabah rutinini yaparken, özel CTI kanallarından birinde ani bir hareketlilik fark ettiniz. Genellikle sızıntı istihbaratı paylaşan bir dark web forumunda, ÇOLHAK'ın kritik tedarikçilerinden <strong>Smart Teknoloji</strong> ile ilgili şifreli bir gönderi belirdi. Smart Teknoloji, Çolhak'a <strong>temel yazılım altyapısı</strong> sağlıyor.</p>
+                            <p>Gönderi, Temel yazılım altyapısının "gizli bir kapıya" sahip olabileceğine dair belirsiz ama endişe verici imalar içeriyor. Henüz bir kanıt yok, sadece bir fısıltı.</p>
+                            <img src="images/darkweb_forum.png" alt="Dark Web forumunda şifreli gönderi" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>CTI Uzmanı olarak ilk adımın ne olacak?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g1-s-bilgilendir-ust-yonetim" data-next-section="day1_afternoon"><i class="fa-solid fa-share-nodes"></i><div class="btn-text">Seçenek A: Hemen CEO Elara Yılmaz ve CSO Can Demir'i Bilgilendir.<small>Durumu anında en üst yönetime raporlayarak proaktif bir yaklaşım sergile.</small></div></button>
+                                    <button class="btn" data-decision="g1-s-istihbarat-dogrula" data-next-section="day1_afternoon"><i class="fa-solid fa-magnifying-glass"></i><div class="btn-text">Seçenek B: Önce Kendi İstihbaratını Doğrula ve Güvenilir Kaynaklardan Ek Bilgi Topla.<small>Dark web gönderisinin güvenilirliğini teyit etmek için daha fazla araştırma yap.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Siber krizin ilk anları kritik öneme sahiptir. İlk tepkiniz, krizin seyrini büyük ölçüde etkileyebilir. Bilgi paylaşımı ve doğrulama arasında denge kurmak önemlidir.</div>
+                        </div>
+
+                        <div id="day1_afternoon" class="section">
+                            <h2><i class="fa-solid fa-bell"></i> Gün 1: Öğleden Sonra - Onaylanmayan Şüpheler</h2>
+                            <h3>Öğleden Sonra 15:00 - Sektör Alarmı</h3>
+                            <p>Sektör lideri bir siber güvenlik araştırma firması olan "Tehdit Analiz Laboratuvarı" (TAL), "Kara Tayfun" grubunun tedarik zinciri saldırılarında yeni bir vektör kullandığına dair bir uyarı yayınladı. Uyarıda, spesifik olarak yazılım imzalama süreçlerine sızıldığı ve meşru yazılımlara gizlice kötü amaçlı kod eklendiği belirtiliyor. Henüz ÇOLHAK veya Smart Teknoloji'den bahsedilmiyor, ancak temel yazılım altyapısının yapısına dair teknik detaylarla şaşırtıcı benzerlikler var.</p>
+                            <img src="images/sector_alert.png" alt="Sektör uyarı ekran görüntüsü" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>CTI Uzmanı olarak hangi adımı atacaksın?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g1-o-teknik-tarama" data-next-section="day2_morning"><i class="fa-solid fa-bug-slash"></i><div class="btn-text">Seçenek A: CSO Can Demir'in Ekibine Detaylı IOC/TTP Listesi Sağla ve Acil Teknik Tarama Talep Et.<small>Olası zafiyetleri hızla tespit etmek için teknik ekibi yönlendir.</small></div></button>
+                                    <button class="btn" data-decision="g1-o-tedarikci-iletisim" data-next-section="day2_morning"><i class="fa-solid fa-handshake"></i><div class="btn-text">Seçenek B: Tedarikçi İlişkileri Yöneticisi Dr. Aylin Güneş Aracılığıyla Smart Teknoloji ile Derhal İletişime Geç.<small>Ortak soruşturma başlatmak için tedarikçiyle temasa geç.</small></div></button>
+                                    <button class="btn critical" data-decision="g1-o-hukuki-degerlendirme" data-next-section="day2_morning"><i class="fa-solid fa-gavel"></i><div class="btn-text">Seçenek C: Hukuk Müşaviri Zeynep Kaya'dan Yasal Değerlendirme Talep Et ve Kriz İletişim Planını Hazırla.<small>Potansiyel yasal yükümlülükleri ve kamuoyu açıklamasını değerlendir.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz anlarında doğru önceliklendirme, kaynakların verimli kullanılması için hayati öneme sahiptir. Teknik müdahale, iş birliği ve yasal hazırlık arasındaki dengeyi iyi kurmalısın.</div>
+                        </div>
+
+                        <div id="day2_morning" class="section">
+                            <h2><i class="fa-solid fa-burst"></i> Gün 2: Krizin Patlak Vermesi</h2>
+                            <h3>Sabah 09:30 - Felaket Senaryosu Gerçekleşiyor!</h3>
+                            <p>Birkaç kritik ÇOLHAK müşterisi (büyük bir finans kurumu ve bir enerji dağıtım şebekesi), temel yazılım altyapısının son güncellemesi sonrasında kimlik doğrulama sistemlerinde anormal davranışlar rapor etmeye başladı. Kullanıcı hesaplarında rastgele kilitlenmeler, yetkisiz erişim denemeleri ve beklenmedik log hareketleri tespit ediliyor.</p>
+                            <p>CSO Can Demir'den panik içinde bir çağrı aldınız: <em>"Smart Teknoloji'nin temel yazılım altyapısından gelen telemetri verilerinde, daha önce bahsettiğin yazılım imzalama anormallikleriyle eşleşen imzalar bulduk. Sanırım <strong>Kara Tayfun içeride!</strong>"</em></p>
+                            <img src="images/crisis_desk.png" alt="Acil durum kriz masası" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Kriz ekibine acil olarak hangi CTI temelli öneride bulunursun?</h4>
+                                <div class="slack-chat" id="slackChat"></div>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g2-s-tersine-muhendislik" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-code-branch"></i><div class="btn-text">Seçenek A: Kötü Amaçlı Yazılımın Yeteneklerini Anında Tersine Mühendislik Ekibine Sevk Et.<small>Saldırının kapsamını ve potansiyel etkilerini tam olarak anlamak için detaylı analiz yap.</small></div></button>
+                                    <button class="btn critical" data-decision="g2-s-modul-yalıtma" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-unlink"></i><div class="btn-text">Seçenek B: Etkilenen Tüm Müşterilerin Temel Yazılım Altyapısını Acilen Devre Dışı Bırakmayı veya Yalıtmayı Öner.<small>Saldırının yayılmasını durdurmak için radikal ve hızlı bir müdahale yap.</small></div></button>
+                                    <button class="btn" data-decision="g2-s-motivasyon-analizi" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-chart-network"></i><div class="btn-text">Seçenek C: Kara Tayfun Grubunun Motivasyonlarını ve Hedeflerini Analiz Et ve Kriz Ekibine İstihbarat Brifingi Ver.<small>Saldırının arkasındaki niyeti ve uzun vadeli hedefleri ortaya koy.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir saldırı kesinleştiğinde, hız ve doğru müdahale kritik öneme sahiptir. Kararlarının hem teknik hem de operasyonel sonuçları olacaktır.</div>
+                        </div>
+
+                        <div id="day2_afternoon_investigation" class="section">
+                            <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Gün 2: Öğleden Sonra - Derinlemesine Soruşturma ve Kök Neden Analizi</h2>
+                            <h3>Öğleden Sonra 14:00 - Kara Kutuya Bakış</h3>
+                            <p>Kara Tayfun'un Smart Teknoloji yazılımına nasıl sızdığına dair ilk bulgular ortaya çıkmaya başladı. İlk tersine mühendislik analizleri, kötü amaçlı kodun sadece bir arka kapı olmadığını, aynı zamanda belirli bir tedarik zinciri bileşenini hedef aldığını gösteriyor: <strong>SynapseTech'in açık kaynaklı kütüphanelerinden biri.</strong> Bu kütüphane, Smart Teknoloji'nin temel yazılım altyapısının bir parçası.</p>
+                            <p>Ayrıca, dark web'deki istihbarat kanallarınızda "SynapseTech" ve "tedarik zinciri zafiyeti" anahtar kelimeleriyle ilgili yeni, şifreli mesajlar dolaşmaya başladı. Bu mesajlar, başka siber suç gruplarının da bu zafiyeti kendi çıkarları için kullanmaya çalıştığına işaret ediyor olabilir.</p>
+                            <img src="images/synapse_tech_analysis.png" alt="SynapseTech analiz görseli" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>CTI Uzmanı olarak bir sonraki kritik adımın ne olacak?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g2-o-synapsetech-arastirma" data-next-section="day3_morning_communication"><i class="fa-solid fa-search"></i><div class="btn-text">Seçenek A: SynapseTech Kütüphanesindeki Zafiyeti Derinlemesine Araştır ve Kötüye Kullanım Biçimlerini Belgele.<small>Bu, saldırganın tam giriş vektörünü anlamanı ve benzer saldırıları önlemeni sağlayacak.</small></div></button>
+                                    <button class="btn critical" data-decision="g2-o-sucu-resmi-makamlara-bildir" data-next-section="day3_morning_communication"><i class="fa-solid fa-building-columns"></i><div class="btn-text">Seçenek B: Ulusal Siber Güvenlik Birimlerine (CERT/CSIRT) ve Kolluk Kuvvetlerine Resmi Bildirimde Bulun.<small>Saldırının ulusal güvenliği etkileyebileceğini vurgulayarak yasal süreci ve resmi soruşturmayı başlat.</small></div></button>
+                                    <button class="btn" data-decision="g2-o-daha-fazla-istihbarat" data-next-section="day3_morning_communication"><i class="fa-solid fa-eye"></i><div class="btn-text">Seçenek C: Kara Tayfun ile İlgili Daha Fazla Tehdit İstihbaratı Topla.<small>Saldırının diğer tedarik zinciri bileşenlerine yayılma potansiyelini veya diğer hedefleri anlamaya odaklan.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Kök neden analizi, gelecekteki saldırıları önlemek için kritik öneme sahiptir. Aynı zamanda, yasal ve halkla ilişkiler boyutunda atılacak adımlar, krizin genel algısını etkiler.</div>
+                        </div>
+
+                        <div id="day3_morning_communication" class="section">
+                            <h2><i class="fa-solid fa-bullhorn"></i> Gün 3: Sabah - Hasar Kontrol ve İletişim</h2>
+                            <h3>Sabah 09:30 - Sıkışan Zaman</h3>
+                            <p>Temel yazılım altyapısındaki arka kapı ve SynapseTech zafiyeti nedeniyle, Kara Tayfun'un müşterilerinizin ağlarına derinlemesine sızdığı ve veri sızıntıları yaşandığı kesinleşti. Medyada haberler çığ gibi büyüyor: <strong>"ÇOLHAK Teknoloji ve Tedarikçisi Arasındaki Kriz Derinleşiyor!"</strong> Kamuoyu şirketinizden net bir açıklama bekliyor.</p>
+                            <img src="images/press_conference.png" alt="Basın toplantısı görseli" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Halka ve paydaşlara nasıl bir açıklama yapacaksın?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g3-s-tam-seffaflık" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-check-double"></i><div class="btn-text">Seçenek A: Tam Şeffaflık.<small>Olayı tüm detaylarıyla, sızıntının nedenini, Kara Tayfun grubunu ve tedarik zinciri zafiyetini açıklayın.</small></div></button>
+                                    <button class="btn" data-decision="g3-s-sınırlı-acıklama" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-file-contract"></i><div class="btn-text">Seçenek B: Sınırlı Açıklama.<small>Sadece 'teknik bir problem' olduğunu belirtin, detaylardan kaçının ve soruşturmanın devam ettiğini söyleyin.</small></div></button>
+                                    <button class="btn critical" data-decision="g3-s-sucu-disari-atma" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-mask"></i><div class="btn-text">Seçenek C: Suçu Dışarıya Atma.<small>Saldırının tamamen tedarikçi Smart Teknoloji'nin sorumluluğunda olduğunu ve ÇOLHAK'ın mağdur olduğunu iddia edin.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz iletişimi, itibar yönetiminin bel kemiğidir. Şeffaflık, güven, sorumluluk ve yasal yükümlülükler arasında hassas bir denge kurmalısın.</div>
+                        </div>
+
+                        <div id="day3_afternoon_strategy" class="section">
+                            <h2><i class="fa-solid fa-shield-alt"></i> Gün 3: Öğleden Sonra - Uzun Vadeli Strateji ve İyileşme</h2>
+                            <h3>Öğleden Sonra 14:00 - Yaraları Sarma Zamanı</h3>
+                            <p>Saldırının nedenleri ve kapsamı artık büyük ölçüde netleşti. Şirketinizin gelecekteki siber dayanıklılığı için önemli kararlar almanız gerekiyor. CEO Elara Yılmaz ve CSO Can Demir, şirket içi güvenlik protokollerinin ve tedarikçi denetimlerinin acilen gözden geçirilmesi gerektiğini belirtiyor. Hukuk Müşaviri Zeynep Kaya ise potansiyel davalara karşı yasal savunma stratejileri üzerinde çalışıyor. Finansal kayıplar artmaya devam ediyor.</p>
+                            <img src="images/recovery_efforts.png" alt="Kurtarma ve iyileşme çabaları görseli" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Şirketinizin gelecekteki siber dayanıklılığı için hangi uzun vadeli stratejiyi önerirsin?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g3-o-kapsamlı-guvenlik-programı" data-next-section="finalSection"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: Kapsamlı Tedarik Zinciri Güvenliği Programı Başlat.<small>Tüm tedarikçiler için zorunlu denetimler, SBOM (Software Bill of Materials) ve SCA (Software Composition Analysis) entegrasyonu talep et. CTI kaynaklarını artır.</small></div></button>
+                                    <button class="btn" data-decision="g3-o-odaklı-iyilestirme" data-next-section="finalSection"><i class="fa-solid fa-screwdriver-wrench"></i><div class="btn-text">Seçenek B: Sadece Temel Yazılım Altyapısındaki Zafiyetleri Gider ve Acil Yama Uygula.<small>Hızlıca en kritik sorunları çöz, ancak daha geniş tedarik zinciri güvenliği konularını ertele.</small></div></button>
+                                    <button class="btn critical" data-decision="g3-o-degerlendirmeyi-geciktir" data-next-section="finalSection"><i class="fa-solid fa-clock-rotate-left"></i><div class="btn-text">Seçenek C: Kriz Sonrası Kapsamlı Değerlendirmeyi ve Yatırımları Geciktir.<small>Bütçe kısıtlamaları ve personel yorgunluğunu gerekçe göstererek durumu stabilize etmeye odaklan ve uzun vadeli planları ertele.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir krizin ardından alınan uzun vadeli kararlar, şirketin sadece kısa vadeli iyileşmesini değil, aynı zamanda gelecekteki dayanıklılığını ve itibarını da belirler.</div>
+                        </div>
+
+                        <div id="finalSection" class="section centered-page" style="display: none;">
+                            <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
+                            <p>Simülasyon tamamlandı. Kriz yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+                            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                            <div class="final-metrics" id="finalMetricsContainer"></div>
+                            <div class="post-crisis-layout">
+                                <div class="event-timeline">
+                                    <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                                    <ul id="decision-timeline-list"></ul>
+                                </div>
+                                <div class="strategic-debrief">
+                                    <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme ve Dersler</h3>
+                                    <div id="strategic-debrief-content"></div>
+                                </div>
+                            </div>
+                            <div class="recommendations">
+                                <h3><i class="fa-solid fa-tasks"></i> İleriye Yönelik Aksiyon Planı</h3>
+                                <ul id="recommendations-list"></ul>
+                            </div>
+                            <div class="decision-buttons" style="margin-top: 40px;">
+                                <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = {
+                score: { affectedSystems: 0, financialLoss: 0, dataLeak: 0, reputation: 100 },
+                state: {
+                    currentSectionId: 'start',
+                    synapseTechInfoGathered: false,
+                    blackTyphoonTTPsAnalyzed: false,
+                    legalReviewInitiated: false,
+                    techScanInitiated: false,
+                    supplierContacted: false,
+                    malwareAnalysisComplete: false,
+                    criticalModulesIsolated: false,
+                    motivationAnalyzed: false,
+                    synapseTechVulnerabilityAnalyzed: false,    
+                    officialReportMade: false,    
+                    pressConferenceHeld: false,    
+                    moreThreatIntelGathered: false, /* Yeni eklenen clue */
+                    decisionHistory: []
+                },
+                elements: {},
+                
+                decisionInfo: {
+                    // Gün 1 - Sabah: İlk Sinyaller
+                    'g1-s-bilgilendir-ust-yonetim': { 
+                        title: "Hızlı Üst Yönetim Bilgilendirmesi", 
+                        text: "Henüz kesin kanıt olmasa da, potansiyel tehdidi CEO ve CSO'ya ilettiniz. Bu, kriz ekibini erkenden harekete geçirdi ancak bazı soru işaretleri yarattı.", 
+                        strat: "Kritik güvenlik olaylarında üst yönetimi hızla bilgilendirmek, proaktif kriz yönetimi için esastır ancak bilgi doğruluğu kritik öneme sahiptir.", 
+                        changes: { financialLoss: 10000, reputation: -2 }, 
+                        impact: 'Neutral' 
+                    },
+                    'g1-s-istihbarat-dogrula': { 
+                        title: "Derinlemesine İstihbarat Doğrulama", 
+                        text: "Dark web fısıltısının güvenilirliğini teyit etmek için kapsamlı araştırma başlattınız. Bu, değerli bilgiler sağladı ancak zaman kaybına neden olma riski taşıdı.", 
+                        strat: "İstihbaratın doğruluğu hayati öneme sahiptir. Ancak kriz anında hız ile doğruluk arasında doğru dengeyi bulmak, en zor kararlardan biridir.", 
+                        changes: { financialLoss: 5000, reputation: -1 }, 
+                        clue: 'synapseTechInfoGathered', 
+                        impact: 'Positive' 
+                    },
+
+                    // Gün 1 - Öğleden Sonra: Onaylanmayan Şüpheler
+                    'g1-o-teknik-tarama': {
+                        title: "Acil Teknik Tarama Başlatıldı",
+                        text: "CSO Can Demir'in ekibine TAL raporundaki IOC/TTP'leri ilettiniz ve acil tarama talimatı verdiniz. Bu, olası zafiyetleri hızla tespit etmeyi hedefledi.",
+                        strat: "Erken ve teknik odaklı müdahale, hasarı sınırlamak için hayati öneme sahiptir. Doğru IOC'lerle yapılan taramalar, saldırının kapsamını hızla ortaya çıkarabilir.",
+                        changes: { financialLoss: 30000, reputation: -3, affectedSystems: 5 }, 
+                        clue: 'techScanInitiated',
+                        impact: 'Positive'
+                    },
+                    'g1-o-tedarikci-iletisim': {
+                        title: "Smart Teknoloji ile İletişim Kuruldu",
+                        text: "Tedarikçi İlişkileri Yöneticisi Dr. Aylin Güneş aracılığıyla Smart Teknoloji ile temasa geçildi. Ortak soruşturma talebiniz, tedarikçide bazı rahatsızlıklara neden oldu.",
+                        strat: "Tedarikçi iş birliği, tedarik zinciri saldırılarında kritik öneme sahiptir. Ancak ilişkilerin yönetimi ve bilgi paylaşımının hassasiyeti dikkatli bir yaklaşım gerektirir.",
+                        changes: { financialLoss: 15000, reputation: -7 }, 
+                        clue: 'supplierContacted',
+                        impact: 'Neutral'
+                    },
+                    'g1-o-hukuki-degerlendirme': {
+                        title: "Hukuki Değerlendirme ve İletişim Planı",
+                        text: "Hukuk Müşaviri Zeynep Kaya ile yasal yükümlülükler ve kriz iletişim stratejisi üzerine çalıştınız. Bu, kamuoyuyla iletişimde sağlam bir temel oluşturdu ancak teknik müdahaleyi geciktirme riski taşıdı.",
+                        strat: "Kriz iletişimi ve yasal uyumluluk önemlidir, ancak teknik soruşturma ve müdahale tamamlanmadan aceleci davranmak, durumu daha da karmaşık hale getirebilir.",
+                        changes: { financialLoss: 25000, dataLeak: 2 }, 
+                        clue: 'legalReviewInitiated',
+                        impact: 'Neutral'
+                    },
+
+                    // Gün 2 - Sabah: Krizin Patlak Vermesi
+                    'g2-s-tersine-muhendislik': {
+                        title: "Kötü Amaçlı Yazılım Tersine Mühendisliği",
+                        text: "Kötü amaçlı yazılımın yeteneklerini anlamak için tersine mühendislik ekibini acilen görevlendirdiniz. Bu, saldırganın tam kapasitesini ortaya çıkardı ancak analiz süresince hasar devam etti.",
+                        strat: "Saldırının derinlemesine anlaşılması, uzun vadeli savunma için hayati önem taşır. Ancak hızlı aksiyon ile kapsamlı analiz arasında denge kurmak, krizi yönetmek için esastır.",
+                        changes: { financialLoss: 50000, dataLeak: 5, reputation: -10 }, 
+                        clue: 'malwareAnalysisComplete',
+                        impact: 'Negative'
+                    },
+                    'g2-s-modul-yalıtma': {
+                        title: "Kritik Modüllerin Acil Yalıtılması",
+                        text: "Etkilenen tüm müşterilerin Temel yazılım altyapılarını acilen devre dışı bırakmayı veya yalıtmayı önerdiniz. Bu, saldırganın yayılmasını durdurdu ancak müşterilerin operasyonlarında büyük aksaklıklara yol açtı.",
+                        strat: "Hızlı ve radikal kararlar, anlık hasarı durdurabilir ancak uzun vadede büyük operasyonel ve finansal sonuçları olabilir.",
+                        changes: { financialLoss: 250000, affectedSystems: 20, reputation: -25 }, 
+                        clue: 'criticalModulesIsolated',
+                        impact: 'Negative'
+                    },
+                    'g2-s-motivasyon-analizi': {
+                        title: "Kara Tayfun Motivasyon Analizi",
+                        text: "Kara Tayfun grubunun motivasyonlarını ve hedeflerini analiz ederek kriz ekibine stratejik bir brifing verdiniz. Bu, olayın daha geniş bağlamını anlamayı sağladı ancak teknik müdahaleyi geciktirdi.",
+                        strat: "Tehdit aktörünün niyetini anlamak, uzun vadeli savunma ve karşı tedbirler için hayati öneme sahiptir. Ancak anlık krizde, teknik müdahalenin hızı çoğu zaman daha belirleyicidir.",
+                        changes: { financialLoss: 75000, dataLeak: 10, reputation: -15 }, 
+                        clue: 'motivationAnalyzed',
+                        impact: 'Negative'
+                    },
+
+                    // Gün 2 - Öğleden Sonra: Derinlemesine Soruşturma ve Kök Neden Analizi (Önceki Gün 3 Sabah)
+                    'g2-o-synapsetech-arastirma': { 
+                        title: "SynapseTech Zafiyet Analizi",
+                        text: "SynapseTech kütüphanesindeki zafiyeti derinlemesine incelediniz ve kötüye kullanım biçimlerini belgelediniz. Bu, saldırının kök nedenini tam olarak anlamanızı ve gelecekte benzer saldırıları önlemek için stratejik bilgiler sağlamanızı sağladı.",
+                        strat: "Kök neden analizi, bir saldırının sadece semptomlarını değil, altında yatan güvenlik zafiyetlerini de ortadan kaldırmak için kritik öneme sahiptir.",
+                        changes: { financialLoss: 100000, reputation: +10, dataLeak: -5 }, 
+                        clue: 'synapseTechVulnerabilityAnalyzed', 
+                        impact: 'Positive'
+                    },
+                    'g2-o-sucu-resmi-makamlara-bildir': { 
+                        title: "Resmi Makamlara Bildirim",
+                        text: "Saldırıyı ulusal siber güvenlik birimlerine ve kolluk kuvvetlerine resmen bildirdiniz. Bu, yasal süreci başlattı ve kamuoyu nezdinde şirketinizin sorumluluk sahibi olduğunu gösterdi, ancak soruşturma süreçleri iş yükünü artırdı.",
+                        strat: "Siber suçların resmi makamlara bildirilmesi, yasal uyumluluk ve ulusal siber güvenliğe katkı açısından önemlidir. Ancak, bu durum operasyonel ve hukuki ek yük getirebilir.",
+                        changes: { financialLoss: 50000, reputation: +5 }, 
+                        clue: 'officialReportMade',
+                        impact: 'Neutral'
+                    },
+                    'g2-o-daha-fazla-istihbarat': { 
+                        title: "Daha Fazla Tehdit İstihbaratı Topla",
+                        text: "Saldırının arkasındaki grubun diğer tedarik zinciri saldırılarını araştırdınız ve olası gelecek hedeflerini anlamaya çalıştınız. Bu, proaktif savunma için değerli bilgiler sağladı ancak mevcut olay yerindeki müdahaleyi biraz yavaşlattı.",
+                        strat: "Tehdit istihbaratını sürekli beslemek, sadece geçmiş saldırıları anlamakla kalmaz, aynı zamanda gelecekteki tehditleri öngörmek için de kritik öneme sahiptir.",
+                        changes: { financialLoss: 30000, reputation: -5, dataLeak: +3 }, 
+                        clue: 'moreThreatIntelGathered',
+                        impact: 'Neutral'
+                    },
+
+                    // Gün 3 - Sabah: Hasar Kontrol ve İletişim (Önceki Gün 2 Öğleden Sonra)
+                    'g3-s-tam-seffaflık': { 
+                        title: "Tam Şeffaflık Politikası",
+                        text: "Saldırının detaylarını, Kara Tayfun grubunu ve tedarik zinciri zafiyetini kamuoyuna ve müşterilere detaylıca açıkladınız. Bu, başta şok yaratsa da, uzun vadede şirketinize olan güveni artırdı.",
+                        strat: "Kriz iletişiminde tam şeffaflık, riskli olsa da, dürüstlük algısı yaratarak uzun vadeli itibar kazanımı sağlayabilir ve sektörde örnek teşkil edebilir.",
+                        changes: { financialLoss: 200000, reputation: +20, dataLeak: -5 }, 
+                        impact: 'Positive'
+                    },
+                    'g3-s-sınırlı-acıklama': { 
+                        title: "Sınırlı Kamuoyu Açıklaması",
+                        text: "Sadece 'teknik bir problem' olduğunu belirterek detaylardan kaçındınız. Bu, başlangıçta paniği önlese de, kamuoyunda şüphe uyandırdı ve güveni tam olarak sağlayamadı.",
+                        strat: "Sınırlı bilgi paylaşımı, kısa vadede durumu idare etse de, uzun vadede şirketin şeffaflık algısını zedeleyebilir ve daha fazla spekülasyona yol açabilir.",
+                        changes: { financialLoss: 500000, reputation: -15, dataLeak: 10 }, 
+                        impact: 'Negative'
+                    },
+                    'g3-s-sucu-disari-atma': { 
+                        title: "Suçu Tedarikçiye Atma",
+                        text: "Sorumluluğu tamamen Smart Teknoloji'ye yüklediniz. Bu, şirket içi rahatlama sağlasa da, tedarikçi ilişkilerini zedeledi ve kamuoyu nezdinde kötü bir izlenim bıraktı. Yasal süreçler tetiklendi.",
+                        strat: "Suçu başkasına atmak, kısa vadede rahatlama sağlasa da, uzun vadede şirketler arası ilişkileri zehirler, yasal riskleri artırır ve kamuoyu nezdinde güveni kökten sarsar.",
+                        changes: { financialLoss: 750000, reputation: -30, affectedSystems: 10 }, 
+                        impact: 'Negative'
+                    },
+
+                    // Gün 3 - Öğleden Sonra: Uzun Vadeli Strateji ve İyileşme (Final kararları)
+                    'g3-o-kapsamlı-guvenlik-programı': { 
+                        title: "Kapsamlı Tedarik Zinciri Güvenliği Programı",
+                        text: "Tüm tedarikçiler için zorunlu denetimler, SBOM, SCA ve TPRM entegrasyonu gibi kapsamlı bir program önerdiniz. CTI kaynaklarının artırılması talebiniz olumlu karşılandı. Şirket, siber dayanıklılığını önemli ölçüde artırdı.",
+                        strat: "Kriz sonrası güçlü bir güvenlik duruşu oluşturmak, gelecekteki saldırıları önlemenin ve itibar kazanmanın anahtarıdır. Bu, önemli kaynak ve yönetim desteği gerektirir ancak uzun vadede en iyi yatırım budur.",
+                        changes: { financialLoss: 500000, reputation: +30, dataLeak: -15, affectedSystems: -10 }, 
+                        impact: 'Positive'
+                    },
+                    'g3-o-odaklı-iyilestirme': { 
+                        title: "Odaklı İyileştirme ve Acil Önlemler",
+                        text: "Sadece temel yazılım altyapısındaki zafiyetleri gidermeye odaklandınız. Kısa vadeli çözümler uygulandı ancak diğer potansiyel riskler göz ardı edildi. Şirket, kısa vadede toparlansa da, gelecekte benzer saldırılara karşı hala savunmasız.",
+                        strat: "Odaklı iyileştirme, anlık sorunları çözmek için etkili olabilir ancak siber güvenliğin sürekli evrilen doğasına karşı uzun vadeli bir çözüm sunmayabilir. Bu, gizli riskler yaratır.",
+                        changes: { financialLoss: 100000, reputation: +5, dataLeak: +5, affectedSystems: +5 }, 
+                        impact: 'Neutral'
+                    },
+                    'g3-o-degerlendirmeyi-geciktir': { 
+                        title: "Kriz Sonrası Değerlendirmeyi Geciktirme",
+                        text: "Krizin yorgunluğu ve maliyetler nedeniyle kapsamlı değerlendirmeyi ve yatırımları ertelediniz. Şirket 'normale dönmeye' odaklansa da, gelecekte benzer bir kriz riski arttı ve itibar kaybı devam etti.",
+                        strat: "Krizlerden ders çıkarmamak, bir şirketin siber güvenlik olgunluğunu düşürür ve gelecekteki risklere karşı savunmasız bırakır. Bu en kötü senaryolardan biridir.",
+                        changes: { financialLoss: 1500000, reputation: -40, affectedSystems: 20, dataLeak: +15 }, 
+                        impact: 'Negative'
+                    }
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'), gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
+                        intermissionTitle: document.getElementById('intermissionTitle'), intermissionText: document.getElementById('intermissionText'),
+                        intermissionMetrics: document.getElementById('intermissionMetrics'), strategicText: document.getElementById('strategicText'),
+                        continueButton: document.getElementById('continueButton'),
+                        statusBar: { affectedSystems: document.getElementById('status-affectedSystems'), financialLoss: document.getElementById('status-financialLoss'), dataLeak: document.getElementById('status-dataLeak'), reputation: document.getElementById('status-reputation') }
+                    };
+                    this.loadGameHTML();
+                    this.attachListeners();
+                    this.elements.intro.style.display = 'flex';
+                    this.elements.game.style.display = 'none';
+                },
+
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.intro.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+                        this.showSection('day1_morning'); // Senaryonun ilk bölümü
+                    });
+                    
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button) return;
+                        
+                        const decisionId = button.dataset.decision;
+                        const nextSection = button.dataset.nextSection;
+
+                        this.handleDecision(decisionId, nextSection, button);
+                    });
+
+                    this.elements.continueButton.addEventListener('click', () => {
+                        const nextSectionId = this.elements.continueButton.dataset.nextSection;
+                        this.elements.intermission.style.display = 'none';
+                        
+                        if (nextSectionId === 'finalSection') {
+                            this.showFinalReport();
+                        } else {
+                            this.elements.game.style.display = 'block';
+                            this.showSection(nextSectionId);
+                        }
+                    });
+                },
+                
+                handleDecision(decisionId, nextSectionId, button) {
+                    button.closest('.decision-buttons').querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+                    const info = this.decisionInfo[decisionId];
+                    if (!info) { console.error("Karar bilgisi bulunamadı:", decisionId); return; }
+
+                    this.score.financialLoss += info.changes.financialLoss || 0;
+                    this.score.reputation += info.changes.reputation || 0;
+                    this.score.dataLeak += info.changes.dataLeak || 0;
+                    this.score.affectedSystems += info.changes.affectedSystems || 0;
+                    
+                    if (info.clue) {
+                        this.state[info.clue] = true;
+                    }
+                    
+                    this.state.decisionHistory.push({ id: decisionId, title: info.title, text: info.text, impactType: info.impact }); 
+                    this.updateState();
+                    this.showIntermission(info.title, info.text, info.strat, info.changes, nextSectionId);
+                },
+
+                showIntermission(title, text, strat, changes, nextSectionId) {
+                    this.elements.intermissionTitle.textContent = title;
+                    this.elements.intermissionText.textContent = text;
+                    this.elements.strategicText.textContent = strat;
+                    
+                    let metricsHTML = '';
+                    const formatChange = (label, value, unit, icon, isPositive) => {
+                        const arrow = value >= 0 ? 'up' : 'down';
+                        const sign = value >= 0 ? '+' : ''; 
+                        return `<div class="metric-change ${isPositive ? 'positive' : 'negative'}"><i class="fa-solid ${icon}"></i> ${label}: <i class="fa-solid fa-arrow-${arrow}-long"></i> ${sign}${Math.abs(value).toLocaleString('tr-TR')}${unit}</div>`;
+                    };
+
+                    if (changes.financialLoss) metricsHTML += formatChange('Finansal Zarar', changes.financialLoss, '₺', 'fa-sack-xmark', false);
+                    if (changes.dataLeak) metricsHTML += formatChange('Veri Sızıntısı', changes.dataLeak, '%', 'fa-database', false);
+                    if (changes.reputation !== undefined) metricsHTML += formatChange('İtibar Puanı', changes.reputation, '', 'fa-building-shield', changes.reputation > 0);
+                    if (changes.affectedSystems) metricsHTML += formatChange('Etkilenen Sistem', changes.affectedSystems, '', 'fa-triangle-exclamation', false);
+                    
+                    if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1em; opacity: 0.8;">Bu kararın metriklere doğrudan bir etkisi olmadı.</p>';
+
+                    this.elements.intermissionMetrics.innerHTML = metricsHTML;
+                    this.elements.continueButton.dataset.nextSection = nextSectionId;
+                    this.elements.game.style.display = 'none';
+                    this.elements.intermission.style.display = 'flex';
+                },
+
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.affectedSystems.textContent = s.affectedSystems;
+                    this.elements.statusBar.financialLoss.textContent = `₺${s.financialLoss.toLocaleString('tr-TR')}`;
+                    this.elements.statusBar.dataLeak.textContent = `${s.dataLeak}%`;
+                    this.elements.statusBar.reputation.textContent = Math.max(0, s.reputation);
+                },
+
+                showSection(sectionId) {
+                    this.elements.sections.forEach(section => { section.style.display = 'none'; });
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        this.state.currentSectionId = sectionId;
+                        this.updateDynamicContent(sectionId);
+                        this.updateButtonStates(sectionId);
+                    } else {
+                        console.error('Bölüm bulunamadı:', sectionId);
+                        this.showFinalReport();
+                    }
+                    this.updateState();
+                },
+                
+                updateButtonStates(sectionId) {
+                    const currentSectionElement = document.getElementById(sectionId);
+                    if (!currentSectionElement) return;
+
+                    const decisionButtonsContainer = currentSectionElement.querySelector('.decision-buttons');
+                    if (!decisionButtonsContainer) return;
+
+                    const buttons = decisionButtonsContainer.querySelectorAll('.btn[data-decision]');
+                    buttons.forEach(button => {
+                        button.disabled = false;
+                        button.style.backgroundColor = '';
+                        button.style.color = '';
+                        // Seçenek C'nin küçük yazısını orijinal haline döndür
+                        if (button.dataset.decision === 'g3-o-degerlendirmeyi-geciktir') {
+                             button.querySelector('small').textContent = 'Bütçe kısıtlamaları ve personel yorgunluğunu gerekçe göstererek durumu stabilize etmeye odaklan ve uzun vadeli planları ertele.';
+                        }
+                    });
+
+                    // Daha önce seçilmiş kararları devre dışı bırak
+                    this.state.decisionHistory.forEach(decision => {
+                        const historicalButton = currentSectionElement.querySelector(`.btn[data-decision="${decision.id}"]`);
+                        if (historicalButton) {
+                            historicalButton.disabled = true;
+                            historicalButton.style.backgroundColor = '#555';
+                            historicalButton.style.color = '#999';
+                        }
+                    });
+                },
+
+                showFinalReport() {
+                    this.elements.intro.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block'; 
+                    document.getElementById('statusBar').style.display = 'none';
+
+                    this.elements.sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    const finalSection = document.getElementById('finalSection');
+                    if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
+
+                    finalSection.style.display = 'flex';
+                    
+                    const badge = document.getElementById('performance-badge');
+                    const metricsContainer = document.getElementById('finalMetricsContainer');
+                    const timelineList = document.getElementById('decision-timeline-list');
+                    const debriefContent = document.getElementById('strategic-debrief-content');
+                    const recommendationsList = document.getElementById('recommendations-list');
+
+                    const finalRep = Math.max(0, this.score.reputation);
+                    let totalScore = finalRep - (this.score.dataLeak * 2) - (this.score.financialLoss / 50000);
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+
+                    let badgeInfo = {};
+                    if (totalScore >= 80) badgeInfo = { text: 'SİBER KAHRAMAN', color: 'var(--accent-green)' };
+                    else if (totalScore >= 50) badgeInfo = { text: 'KRİZİ YÖNETTİ', color: 'var(--accent-blue)' };
+                    else if (totalScore >= 20) badgeInfo = { text: 'AĞIR HASARLI', color: 'var(--accent-yellow)' };
+                    else badgeInfo = { text: 'FELAKET', color: 'var(--accent-red)' };
+
+                    badge.textContent = badgeInfo.text;
+                    badge.style.backgroundColor = badgeInfo.color;
+
+                    metricsContainer.innerHTML = `
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-building-shield"></i></div><div class="label">İtibar Puanı</div><div class="value">${finalRep}/100</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="label">Finansal Zarar</div><div class="value">₺${this.score.financialLoss.toLocaleString('tr-TR')}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-database"></i></div><div class="label">Veri Sızıntısı</div><div class="value">${this.score.dataLeak}%</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="label">Etkilenen Sistem</div><div class="value">${this.score.affectedSystems}</div></div>
+                    `;
+
+                    timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                        let liClass = decision.impactType === 'Positive' ? 'positive' : (decision.impactType === 'Negative' ? 'negative' : 'neutral');
+                        return `<li class="${liClass}"><span class="decision-title">${decision.title}</span><span class="decision-impact">${decision.text.split('.')[0]}.</span></li>`;
+                    }).join('');
+
+                    let debriefHTML = '';
+                    if (finalRep > 80 && this.score.dataLeak < 10 && this.score.financialLoss < 1500000) { 
+                        debriefHTML += `<p><strong>Kriz Yönetiminde Liderlik:</strong> Hızlı, doğru ve şeffaf kararlarınız sayesinde ÇOLHAK Teknoloji, bu küresel tedarik zinciri krizinden minimum hasarla çıktı. CTI uzmanlığınız, saldırganın motivasyonlarını ve yöntemlerini erkenden anlamamızı sağladı. İtibarımız güçlendi ve sektörde örnek teşkil ettik.</p>`;
+                    } else if (finalRep >= 50 && this.score.financialLoss < 2000000) { 
+                        debriefHTML += `<p><strong>Zorlu Bir Mücadele:</strong> Krizi yönetmekte başarılı oldunuz ancak bazı kararların uzun vadeli etkileri oldu. Öğrenilen derslerle gelecekteki güvenlik duruşumuzu daha da sağlamlaştırmalıyız. CTI faaliyetleri kritik bilgiler sağladı ancak bazı noktalarda daha hızlı aksiyon alabilirdik.</p>`;
+                    } else { 
+                        debriefHTML += `<p><strong>Ciddi Sonuçlar:</strong> Kriz yönetimi sürecinde alınan bazı kararlar, şirketin finansal zararlarını artırdı ve itibarını ciddi şekilde zedeledi. Veri sızıntısı ve sistem kesintileri, müşteri güvenini sarstı. Bu deneyimden acilen ders çıkararak güvenlik stratejilerimizi kökten değiştirmeliyiz.</p>`;
+                    }
+                    debriefContent.innerHTML = debriefHTML;
+
+                    let recommendationsHTML = new Set();
+                    recommendationsHTML.add(`<li><strong>Tedarikçi Risk Yönetimi:</strong> Tüm tedarikçiler için düzenli güvenlik denetimleri ve sözleşmelerde daha sıkı güvenlik maddeleri uygulanmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Yazılım Tedarik Zinciri Güvenliği:</strong> SBOM (Software Bill of Materials) kullanımı ve SCA (Software Composition Analysis) araçları zorunlu hale getirilmeli.</li>`);
+                    recommendationsHTML.add(`<li><strong>CTI Entegrasyonu:</strong> CTI ekibinin, tehdit istihbaratını operasyonel güvenlik (SOC) ve iş birimleri ile daha sıkı entegre etmesi için kaynakları artırılmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Tehdit Avcılığı (Threat Hunting):</strong> Proaktif tehdit avcılığı kapasitesi geliştirilerek, henüz tespit edilmemiş tehditler ağlarımızda aranmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Kriz İletişim Planı Güncellemesi:</strong> Tedarik zinciri saldırılarına özel senaryoları içeren güncel bir kriz iletişim planı oluşturulmalı ve düzenli tatbikatlar yapılmalı.</li>`);
+                    
+                    recommendationsHTML.add(`<li><strong>Siber Güvenlik Farkındalık Eğitimi:</strong> Tüm çalışanlar için düzenli ve güncel siber güvenlik farkındalık eğitimleri yapılmalı, özellikle sosyal mühendislik ve kimlik avı saldırılarına karşı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Olay Yanıt Planı Güncellemesi:</strong> Olay yanıt planı, tedarik zinciri saldırılarına ve yazılım tedarik zinciri zafiyetlerine özel senaryoları içerecek şekilde güncellenmeli ve düzenli olarak test edilmeli.</li>`);
+                    if (this.state.synapseTechVulnerabilityAnalyzed) {
+                        recommendationsHTML.add(`<li><strong>Açık Kaynak Kod Güvenliği:</strong> Kullanılan tüm açık kaynak kütüphaneler için otomatik güvenlik taramaları (SCA) ve lisans uyumluluğu denetimleri zorunlu hale getirilmeli.</li>`);
+                    }
+                    if (this.score.affectedSystems > 10) {
+                        recommendationsHTML.add(`<li><strong>İş Sürekliliği ve Felaket Kurtarma Geliştirme:</strong> Kritik iş fonksiyonları için kapsamlı iş sürekliliği ve felaket kurtarma planları yeniden gözden geçirilmeli ve tatbikatlar artırılmalı.</li>`);
+                    }
+                    if (this.score.financialLoss > 1000000) {
+                        recommendationsHTML.add(`<li><strong>Siber Sigorta Poliçesi Gözden Geçirme:</strong> Mevcut siber sigorta poliçesi, tedarik zinciri saldırılarını ve veri ihlallerini kapsayacak şekilde genişletilmeli.</li>`);
+                    }
+                    if (this.state.officialReportMade) {
+                        recommendationsHTML.add(`<li><strong>Yasal ve Regülatif Uyum Süreçleri:</strong> Siber güvenlik ihlallerinde yasal bildirim ve uyumluluk süreçleri güçlendirilmeli.</li>`);
+                    }
+
+
+                    recommendationsList.innerHTML = Array.from(recommendationsHTML).map(rec => `<li><i class="fa-solid fa-angle-right"></i> ${rec.substring(4)}</li>`).join(''); 
+
+                    document.getElementById('finalSection').insertAdjacentHTML('beforeend', `
+                        <p style="margin-top: 30px; font-size: 1.2em; color: var(--accent-yellow);">Bu simülasyon, siber güvenlik krizlerinde proaktif istihbaratın ve doğru kararların ne kadar hayati olduğunu gösterdi. ÇOLHAK Teknoloji olarak bu krizden güçlenerek çıkmak için çalışmaya devam etmeliyiz.</p>
+                    `);
+                },
+
+                updateState() { this.updateStatusBar(); this.updateSlackChat(this.state.currentSectionId); },
+
+                updateSlackChat(currentSection) {
+                    const chatViewer = document.getElementById('slackChat');
+                    if (!chatViewer) return; 
+
+                    let chat = '';
+                    if (currentSection === 'day1_afternoon' || currentSection === 'day2_morning' || currentSection === 'day2_afternoon_investigation') { 
+                        chat = `
+                            <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> Durumu yakından takip ediyorum. Hisselerimiz düşüşe geçti, hızlı bir çözüm bekliyorum!</div>
+                            <div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Kaya:</span> Yasal sorumluluklarımızı dikkatle değerlendirmeliyiz. Aceleci açıklamalar, ileride sorun yaratabilir.</div>
+                            <div class="message"><span class="sender ops">Operasyon Direktörü Levent Akın:</span> Müşterilerimizden yoğun şikayetler alıyoruz. Sistemler ne zaman normale dönecek? İş sürekliliğimiz tehlikede!</div>
+                            <div class="message"><span class="sender cso">CSO Can Demir:</span> Ekiplerimiz 7/24 çalışıyor. CTI'dan gelen bilgiler, doğru adımları atmamız için hayati önem taşıyor.</div>
+                            <div class="message"><span class="sender">Siz (CTI Uzmanı):</span> Mevcut verileri hızla analiz ediyoruz. Kara Tayfun'un TTP'lerini anlamak, karşı önlemler için kritik.</div>
+                        `;
+                    } else if (currentSection === 'day3_morning_communication' || currentSection === 'day3_afternoon_strategy') { 
+                        chat = `
+                                <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> İlk şoku atlattık. Şimdi geleceğe yönelik planlarımız ne olacak? Bu krizden nasıl ders çıkaracağız?</div>
+                                <div class="message"><span class="sender ops">Operasyon Direktörü Levent Akın:</span> Müşteri güvenini yeniden kazanmak için somut adımlara ihtiyacımız var. Kesintilerin telafisi önemli.</div>
+                                <div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Kaya:</span> Yaşanan olay, sözleşmelerimizdeki güvenlik maddelerinin gözden geçirilmesi gerektiğini gösterdi.</div>
+                                <div class="message"><span class="sender cso">CSO Can Demir:</span> Savunma mekanizmalarımızı daha da güçlendirmeliyiz. CTI ekibinin rolü bu süreçte anahtar olacak.</div>
+                                <div class="message"><span class="sender">Siz (CTI Uzmanı):</span> Kök neden analizi, gelecekteki saldırıları önlemek için bize ışık tutuyor. Topladığımız istihbarat çok değerli.</div>
+                            `;
+                    }
+                    chatViewer.innerHTML = chat;
+                },
+
+                loadGameHTML() {
+                    const gameHTMLContent = `
+                        <div id="day1_morning" class="section">
+                            <h2><i class="fa-solid fa-hourglass-start"></i> Gün 1: İlk Sinyaller ve Fısıltılar</h2>
+                            <h3>Sabah 08:30 - Kahve ve Kötü Bir His</h3>
+                            <p>Sabah rutinini yaparken, özel CTI kanallarından birinde ani bir hareketlilik fark ettiniz. Genellikle sızıntı istihbaratı paylaşan bir dark web forumunda, ÇOLHAK'ın kritik tedarikçilerinden <strong>Smart Teknoloji</strong> ile ilgili şifreli bir gönderi belirdi. Smart Teknoloji, Çolhak'a <strong>temel yazılım altyapısı</strong> sağlıyor.</p>
+                            <p>Gönderi, Temel yazılım altyapısının "gizli bir kapıya" sahip olabileceğine dair belirsiz ama endişe verici imalar içeriyor. Henüz bir kanıt yok, sadece bir fısıltı.</p>
+                            <img src="images/darkweb_forum.png" alt="Dark Web forumunda şifreli gönderi" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>CTI Uzmanı olarak ilk adımın ne olacak?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g1-s-bilgilendir-ust-yonetim" data-next-section="day1_afternoon"><i class="fa-solid fa-share-nodes"></i><div class="btn-text">Seçenek A: Hemen CEO Elara Yılmaz ve CSO Can Demir'i Bilgilendir.<small>Durumu anında en üst yönetime raporlayarak proaktif bir yaklaşım sergile.</small></div></button>
+                                    <button class="btn" data-decision="g1-s-istihbarat-dogrula" data-next-section="day1_afternoon"><i class="fa-solid fa-magnifying-glass"></i><div class="btn-text">Seçenek B: Önce Kendi İstihbaratını Doğrula ve Güvenilir Kaynaklardan Ek Bilgi Topla.<small>Dark web gönderisinin güvenilirliğini teyit etmek için daha fazla araştırma yap.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Siber krizin ilk anları kritik öneme sahiptir. İlk tepkiniz, krizin seyrini büyük ölçüde etkileyebilir. Bilgi paylaşımı ve doğrulama arasında denge kurmak önemlidir.</div>
+                        </div>
+
+                        <div id="day1_afternoon" class="section">
+                            <h2><i class="fa-solid fa-bell"></i> Gün 1: Öğleden Sonra - Onaylanmayan Şüpheler</h2>
+                            <h3>Öğleden Sonra 15:00 - Sektör Alarmı</h3>
+                            <p>Sektör lideri bir siber güvenlik araştırma firması olan "Tehdit Analiz Laboratuvarı" (TAL), "Kara Tayfun" grubunun tedarik zinciri saldırılarında yeni bir vektör kullandığına dair bir uyarı yayınladı. Uyarıda, spesifik olarak yazılım imzalama süreçlerine sızıldığı ve meşru yazılımlara gizlice kötü amaçlı kod eklendiği belirtiliyor. Henüz ÇOLHAK veya Smart Teknoloji'den bahsedilmiyor, ancak temel yazılım altyapısının yapısına dair teknik detaylarla şaşırtıcı benzerlikler var.</p>
+                            <img src="images/sector_alert.png" alt="Sektör uyarı ekran görüntüsü" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>CTI Uzmanı olarak hangi adımı atacaksın?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g1-o-teknik-tarama" data-next-section="day2_morning"><i class="fa-solid fa-bug-slash"></i><div class="btn-text">Seçenek A: CSO Can Demir'in Ekibine Detaylı IOC/TTP Listesi Sağla ve Acil Teknik Tarama Talep Et.<small>Olası zafiyetleri hızla tespit etmek için teknik ekibi yönlendir.</small></div></button>
+                                    <button class="btn" data-decision="g1-o-tedarikci-iletisim" data-next-section="day2_morning"><i class="fa-solid fa-handshake"></i><div class="btn-text">Seçenek B: Tedarikçi İlişkileri Yöneticisi Dr. Aylin Güneş Aracılığıyla Smart Teknoloji ile Derhal İletişime Geç.<small>Ortak soruşturma başlatmak için tedarikçiyle temasa geç.</small></div></button>
+                                    <button class="btn critical" data-decision="g1-o-hukuki-degerlendirme" data-next-section="day2_morning"><i class="fa-solid fa-gavel"></i><div class="btn-text">Seçenek C: Hukuk Müşaviri Zeynep Kaya'dan Yasal Değerlendirme Talep Et ve Kriz İletişim Planını Hazırla.<small>Potansiyel yasal yükümlülükleri ve kamuoyu açıklamasını değerlendir.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz anlarında doğru önceliklendirme, kaynakların verimli kullanılması için hayati öneme sahiptir. Teknik müdahale, iş birliği ve yasal hazırlık arasındaki dengeyi iyi kurmalısın.</div>
+                        </div>
+
+                        <div id="day2_morning" class="section">
+                            <h2><i class="fa-solid fa-burst"></i> Gün 2: Krizin Patlak Vermesi</h2>
+                            <h3>Sabah 09:30 - Felaket Senaryosu Gerçekleşiyor!</h3>
+                            <p>Birkaç kritik ÇOLHAK müşterisi (büyük bir finans kurumu ve bir enerji dağıtım şebekesi), temel yazılım altyapısının son güncellemesi sonrasında kimlik doğrulama sistemlerinde anormal davranışlar rapor etmeye başladı. Kullanıcı hesaplarında rastgele kilitlenmeler, yetkisiz erişim denemeleri ve beklenmedik log hareketleri tespit ediliyor.</p>
+                            <p>CSO Can Demir'den panik içinde bir çağrı aldınız: <em>"Smart Teknoloji'nin temel yazılım altyapısından gelen telemetri verilerinde, daha önce bahsettiğin yazılım imzalama anormallikleriyle eşleşen imzalar bulduk. Sanırım <strong>Kara Tayfun içeride!</strong>"</em></p>
+                            <img src="images/crisis_desk.png" alt="Acil durum kriz masası" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Kriz ekibine acil olarak hangi CTI temelli öneride bulunursun?</h4>
+                                <div class="slack-chat" id="slackChat"></div>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g2-s-tersine-muhendislik" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-code-branch"></i><div class="btn-text">Seçenek A: Kötü Amaçlı Yazılımın Yeteneklerini Anında Tersine Mühendislik Ekibine Sevk Et.<small>Saldırının kapsamını ve potansiyel etkilerini tam olarak anlamak için detaylı analiz yap.</small></div></button>
+                                    <button class="btn critical" data-decision="g2-s-modul-yalıtma" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-unlink"></i><div class="btn-text">Seçenek B: Etkilenen Tüm Müşterilerin Temel Yazılım Altyapısını Acilen Devre Dışı Bırakmayı veya Yalıtmayı Öner.<small>Saldırının yayılmasını durdurmak için radikal ve hızlı bir müdahale yap.</small></div></button>
+                                    <button class="btn" data-decision="g2-s-motivasyon-analizi" data-next-section="day2_afternoon_investigation"><i class="fa-solid fa-chart-network"></i><div class="btn-text">Seçenek C: Kara Tayfun Grubunun Motivasyonlarını ve Hedeflerini Analiz Et ve Kriz Ekibine İstihbarat Brifingi Ver.<small>Saldırının arkasındaki niyeti ve uzun vadeli hedefleri ortaya koy.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir saldırı kesinleştiğinde, hız ve doğru müdahale kritik öneme sahiptir. Kararlarının hem teknik hem de operasyonel sonuçları olacaktır.</div>
+                        </div>
+
+                        <div id="day2_afternoon_investigation" class="section">
+                            <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Gün 2: Öğleden Sonra - Derinlemesine Soruşturma ve Kök Neden Analizi</h2>
+                            <h3>Öğleden Sonra 14:00 - Kara Kutuya Bakış</h3>
+                            <p>Kara Tayfun'un Smart Teknoloji yazılımına nasıl sızdığına dair ilk bulgular ortaya çıkmaya başladı. İlk tersine mühendislik analizleri, kötü amaçlı kodun sadece bir arka kapı olmadığını, aynı zamanda belirli bir tedarik zinciri bileşenini hedef aldığını gösteriyor: <strong>SynapseTech'in açık kaynaklı kütüphanelerinden biri.</strong> Bu kütüphane, Smart Teknoloji'nin temel yazılım altyapısının bir parçası.</p>
+                            <p>Ayrıca, dark web'deki istihbarat kanallarınızda "SynapseTech" ve "tedarik zinciri zafiyeti" anahtar kelimeleriyle ilgili yeni, şifreli mesajlar dolaşmaya başladı. Bu mesajlar, başka siber suç gruplarının da bu zafiyeti kendi çıkarları için kullanmaya çalıştığına işaret ediyor olabilir.</p>
+                            <img src="images/synapse_tech_analysis.png" alt="SynapseTech analiz görseli" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>CTI Uzmanı olarak bir sonraki kritik adımın ne olacak?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g2-o-synapsetech-arastirma" data-next-section="day3_morning_communication"><i class="fa-solid fa-search"></i><div class="btn-text">Seçenek A: SynapseTech Kütüphanesindeki Zafiyeti Derinlemesine Araştır ve Kötüye Kullanım Biçimlerini Belgele.<small>Bu, saldırganın tam giriş vektörünü anlamanı ve benzer saldırıları önlemeni sağlayacak.</small></div></button>
+                                    <button class="btn critical" data-decision="g2-o-sucu-resmi-makamlara-bildir" data-next-section="day3_morning_communication"><i class="fa-solid fa-building-columns"></i><div class="btn-text">Seçenek B: Ulusal Siber Güvenlik Birimlerine (CERT/CSIRT) ve Kolluk Kuvvetlerine Resmi Bildirimde Bulun.<small>Saldırının ulusal güvenliği etkileyebileceğini vurgulayarak yasal süreci ve resmi soruşturmayı başlat.</small></div></button>
+                                    <button class="btn" data-decision="g2-o-daha-fazla-istihbarat" data-next-section="day3_morning_communication"><i class="fa-solid fa-eye"></i><div class="btn-text">Seçenek C: Kara Tayfun ile İlgili Daha Fazla Tehdit İstihbaratı Topla.<small>Saldırının diğer tedarik zinciri bileşenlerine yayılma potansiyelini veya diğer hedefleri anlamaya odaklan.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Kök neden analizi, gelecekteki saldırıları önlemek için kritik öneme sahiptir. Aynı zamanda, yasal ve halkla ilişkiler boyutunda atılacak adımlar, krizin genel algısını etkiler.</div>
+                        </div>
+
+                        <div id="day3_morning_communication" class="section">
+                            <h2><i class="fa-solid fa-bullhorn"></i> Gün 3: Sabah - Hasar Kontrol ve İletişim</h2>
+                            <h3>Sabah 09:30 - Sıkışan Zaman</h3>
+                            <p>Temel yazılım altyapısındaki arka kapı ve SynapseTech zafiyeti nedeniyle, Kara Tayfun'un müşterilerinizin ağlarına derinlemesine sızdığı ve veri sızıntıları yaşandığı kesinleşti. Medyada haberler çığ gibi büyüyor: <strong>"ÇOLHAK Teknoloji ve Tedarikçisi Arasındaki Kriz Derinleşiyor!"</strong> Kamuoyu şirketinizden net bir açıklama bekliyor.</p>
+                            <img src="images/press_conference.png" alt="Basın toplantısı görseli" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Halka ve paydaşlara nasıl bir açıklama yapacaksın?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g3-s-tam-seffaflık" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-check-double"></i><div class="btn-text">Seçenek A: Tam Şeffaflık.<small>Olayı tüm detaylarıyla, sızıntının nedenini, Kara Tayfun grubunu ve tedarik zinciri zafiyetini açıklayın.</small></div></button>
+                                    <button class="btn" data-decision="g3-s-sınırlı-acıklama" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-file-contract"></i><div class="btn-text">Seçenek B: Sınırlı Açıklama.<small>Sadece 'teknik bir problem' olduğunu belirtin, detaylardan kaçının ve soruşturmanın devam ettiğini söyleyin.</small></div></button>
+                                    <button class="btn critical" data-decision="g3-s-sucu-disari-atma" data-next-section="day3_afternoon_strategy"><i class="fa-solid fa-mask"></i><div class="btn-text">Seçenek C: Suçu Dışarıya Atma.<small>Saldırının tamamen tedarikçi Smart Teknoloji'nin sorumluluğunda olduğunu ve ÇOLHAK'ın mağdur olduğunu iddia edin.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz iletişimi, itibar yönetiminin bel kemiğidir. Şeffaflık, güven, sorumluluk ve yasal yükümlülükler arasında hassas bir denge kurmalısın.</div>
+                        </div>
+
+                        <div id="day3_afternoon_strategy" class="section">
+                            <h2><i class="fa-solid fa-shield-alt"></i> Gün 3: Öğleden Sonra - Uzun Vadeli Strateji ve İyileşme</h2>
+                            <h3>Öğleden Sonra 14:00 - Yaraları Sarma Zamanı</h3>
+                            <p>Saldırının nedenleri ve kapsamı artık büyük ölçüde netleşti. Şirketinizin gelecekteki siber dayanıklılığı için önemli kararlar almanız gerekiyor. CEO Elara Yılmaz ve CSO Can Demir, şirket içi güvenlik protokollerinin ve tedarikçi denetimlerinin acilen gözden geçirilmesi gerektiğini belirtiyor. Hukuk Müşaviri Zeynep Kaya ise potansiyel davalara karşı yasal savunma stratejileri üzerinde çalışıyor. Finansal kayıplar artmaya devam ediyor.</p>
+                            <img src="images/recovery_efforts.png" alt="Kurtarma ve iyileşme çabaları görseli" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Şirketinizin gelecekteki siber dayanıklılığı için hangi uzun vadeli stratejiyi önerirsin?</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="g3-o-kapsamlı-guvenlik-programı" data-next-section="finalSection"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: Kapsamlı Tedarik Zinciri Güvenliği Programı Başlat.<small>Tüm tedarikçiler için zorunlu denetimler, SBOM (Software Bill of Materials) ve SCA (Software Composition Analysis) entegrasyonu talep et. CTI kaynaklarını artır.</small></div></button>
+                                    <button class="btn" data-decision="g3-o-odaklı-iyilestirme" data-next-section="finalSection"><i class="fa-solid fa-screwdriver-wrench"></i><div class="btn-text">Seçenek B: Sadece Temel Yazılım Altyapısındaki Zafiyetleri Gider ve Acil Yama Uygula.<small>Hızlıca en kritik sorunları çöz, ancak daha geniş tedarik zinciri güvenliği konularını ertele.</small></div></button>
+                                    <button class="btn critical" data-decision="g3-o-degerlendirmeyi-geciktir" data-next-section="finalSection"><i class="fa-solid fa-clock-rotate-left"></i><div class="btn-text">Seçenek C: Kriz Sonrası Kapsamlı Değerlendirmeyi ve Yatırımları Geciktir.<small>Bütçe kısıtlamaları ve personel yorgunluğunu gerekçe göstererek durumu stabilize etmeye odaklan ve uzun vadeli planları ertele.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir krizin ardından alınan uzun vadeli kararlar, şirketin sadece kısa vadeli iyileşmesini değil, aynı zamanda gelecekteki dayanıklılığını ve itibarını da belirler.</div>
+                        </div>
+
+                        <div id="finalSection" class="section centered-page" style="display: none;">
+                            <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
+                            <p>Simülasyon tamamlandı. Kriz yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+                            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                            <div class="final-metrics" id="finalMetricsContainer"></div>
+                            <div class="post-crisis-layout">
+                                <div class="event-timeline">
+                                    <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                                    <ul id="decision-timeline-list"></ul>
+                                </div>
+                                <div class="strategic-debrief">
+                                    <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme ve Dersler</h3>
+                                    <div id="strategic-debrief-content"></div>
+                                </div>
+                            </div>
+                            <div class="recommendations">
+                                <h3><i class="fa-solid fa-tasks"></i> İleriye Yönelik Aksiyon Planı</h3>
+                                <ul id="recommendations-list"></ul>
+                            </div>
+                            <div class="decision-buttons" style="margin-top: 40px;">
+                                <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </body>
+</html>

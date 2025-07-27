@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Simülasyonu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-size:0.90em;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-dark);
+            padding: 20px;
+            max-width: 950px;
+            width: 100%;
+            margin: 40px 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .container { padding: 40px; }
+        }
+
+        .centered-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 60vh;
+        }
+
+        h1 {
+            font-size: 2.4em;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 5px var(--shadow-dark);
+        }
+
+        h2 {
+            font-size: 1.9em;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--interactive-bg);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: var(--accent-purple);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            color: var(--accent-yellow);
+            text-align: left;
+            margin-top: 0;
+            border-bottom: 1px solid var(--interactive-bg);
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .section {
+            display: none;
+            padding: 20px;
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            margin-top: 25px;
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .section { padding: 30px; }
+        }
+
+        .interactive-element {
+            background-color: var(--interactive-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .decision-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background-color: #6272a4;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .btn:hover {
+            background-color: #7a8ab9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow-dark);
+        }
+
+        .btn:disabled {
+            background-color: #555 !important;
+            color: #999 !important;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .btn .btn-text {
+            flex-grow: 1;
+        }
+
+        .btn small {
+            display: block;
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-weight: 400;
+            color: var(--accent-blue);
+        }
+
+        .btn-start, .btn-continue {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            background-color: var(--accent-green);
+            color: var(--text-dark);
+            justify-content: center;
+            margin-top: 40px;
+            padding: 18px 30px;
+        }
+
+        .btn.critical {
+            background-color: var(--accent-pink);
+        }
+
+        .btn.critical:hover {
+            background-color: #ff6e87;
+        }
+
+        #intermissionSection .metric-change-summary-container {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 0; /* Adjusted for direct placement after h2 */
+            box-shadow: 0 5px 15px var(--shadow-light);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #intermissionSection .metric-change-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #intermissionSection .metric-change {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--interactive-bg); /* Use interactive-bg for metric changes within summary */
+            box-shadow: inset 0 1px 5px rgba(0,0,0,0.2);
+            justify-content: center;
+        }
+
+        .metric-change .positive { color: var(--accent-green); }
+        .metric-change .negative { color: var(--accent-red); }
+        .metric-change .neutral { color: var(--accent-blue); }
+
+        /* Start Section New Styles */
+        .intro-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        @media (min-width: 768px) {
+            .intro-info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .intro-roles-container, .intro-metrics-container {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border: 1px solid var(--interactive-bg);
+        }
+
+        .intro-roles-container h3, .intro-metrics-container h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple);
+            text-align: center;
+        }
+
+        .intro-roles-container ul, .intro-metrics-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .intro-roles-container li, .intro-metrics-container li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--interactive-bg);
+            font-size: 1.05em;
+        }
+
+        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .intro-roles-container li .icon, .intro-metrics-container li .icon {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            width: 35px;
+            text-align: center;
+        }
+        
+        .intro-roles-container li strong {
+            color: var(--accent-yellow);
+        }
+
+        .intro-roles-container li small {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-light);
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+        /* End Start Section New Styles */
+
+        #statusBar {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            background-color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #6272a4;
+            box-shadow: 0 4px 12px var(--shadow-dark);
+        }
+
+        #statusBar .metric {
+            text-align: center;
+            font-size: 0.9em;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        #statusBar .metric .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+            margin-top: 5px;
+        }
+
+        .final-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .metric-card {
+            background-color: var(--section-bg);
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--interactive-bg);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 160px;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent-blue);
+            box-shadow: 0 6px 20px var(--shadow-dark);
+        }
+
+        .metric-card .icon {
+            font-size: 2.8em;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .metric-card .label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .metric-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .code-block, .slack-chat {
+            background-color: var(--text-dark);
+            border: 1px solid #6272a4;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Consolas', monospace;
+            font-size: 0.95em;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .learning-note {
+            background-color: var(--text-dark);
+            border-left: 5px solid var(--accent-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .scenario-image {
+            width: 100%;
+            max-width: 600px;
+            margin: 25px auto;
+            display: block;
+            border-radius: 8px;
+            border: 1px solid var(--interactive-bg);
+            box-shadow: 0 4px 15px var(--shadow-dark);
+        }
+
+        .slack-chat .message {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 7px;
+            background-color: #3f3f5a;
+            border: 1px solid #555577;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .slack-chat .sender {
+            font-weight: bold;
+            color: var(--accent-pink);
+            margin-right: 8px;
+        }
+
+        .slack-chat .sender.cso { color: var(--accent-green); }
+        .slack-chat .sender.ops { color: var(--accent-yellow); }
+        .slack-chat .sender.hr { color: var(--accent-blue); }
+        .slack-chat .sender.finance { color: var(--accent-red); }
+        .slack-chat .sender.ceo { color: var(--accent-purple); }
+        .slack-chat .sender.bt { color: var(--accent-blue); }
+
+        .suspect-card {
+            background-color: var(--interactive-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 5px solid var(--accent-purple);
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .suspect-card h4 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            border-bottom: none;
+            color: var(--accent-purple);
+        }
+
+        /* Final Section specific styles */
+        #finalSection {
+            text-align: center;
+        }
+
+        #performance-badge-container {
+            margin: 25px 0;
+        }
+
+        #performance-badge {
+            padding: 15px 35px;
+            font-size: 2em;
+            font-weight: bold;
+            border-radius: 50px;
+            display: inline-block;
+            color: var(--text-dark);
+            box-shadow: 0 5px 20px var(--shadow-dark);
+            transition: transform 0.3s ease;
+        }
+
+        #performance-badge:hover {
+            transform: scale(1.08);
+        }
+
+        .post-crisis-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: left;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        @media (min-width: 800px) {
+            .post-crisis-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .event-timeline, .strategic-debrief {
+            background-color: var(--interactive-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--section-bg);
+            margin-top: 20px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+        }
+
+        .event-timeline h3, .strategic-debrief h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--section-bg);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-timeline ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 15px 0 0 0;
+        }
+
+        .event-timeline li {
+            position: relative;
+            padding: 5px 0 15px 35px;
+            border-left: 2px solid var(--section-bg);
+            font-size: 0.95em;
+        }
+
+        .event-timeline li:last-child {
+            border-left: none;
+        }
+
+        .event-timeline li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-green);
+            position: absolute;
+            left: -12px;
+            top: 5px;
+            background-color: var(--dark-bg);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 0.8em;
+            border: 2px solid var(--section-bg);
+        }
+
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+
+        .event-timeline li .decision-title {
+            font-weight: bold;
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .event-timeline li .decision-impact {
+            font-style: italic;
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        #strategic-debrief-content p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-envelope-open-text"></i> Phishing Kriz Simülasyonu</h1>
+            <p style="max-width: 600px;">Hoş geldiniz, ÇOLHAK Teknoloji’nin yeni Siber İstihbarat Şefi! Şirketiniz, ses getiren yapay zeka tabanlı bir ürün geliştiriyor. Ancak rakip bir grup, fikri mülkiyeti çalmak için çok katmanlı bir spear phishing saldırısı başlatıyor. Bu saldırı sadece e-postalarla sınırlı değil — LinkedIn, WhatsApp ve telefon görüşmeleri ile destekleniyor. Görevin: Anormal davranışları tespit edip şirketi bu sinsi saldırıya karşı korumak!</p>
+            <img src="intro.png" alt="Siber güvenlik temalı bir giriş görseli" class="scenario-image">
+
+            <div class="intro-info-grid">
+                <div class="intro-roles-container">
+                    <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+                    <ul>
+                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span><div><strong>Sizin Rolünüz: Siber İstihbarat Şefi</strong> <small>Çok kanallı oltalama saldırılarını tespit etmek, analiz etmek ve krizi yönetmekle sorumlusunuz.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span><div><strong>CEO Elara Yılmaz</strong> <small>Şirketin itibarına ve lansmanına odaklı.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span><div><strong>CSO Can Demir</strong> <small>Siber güvenliğe odaklı sorumlu.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-user-group"></i></span><div><strong>İK Direktörü Ayşe Erdem</strong> <small>Çalışan morale ve verimliliğine odaklı.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-money-bill-transfer"></i></span><div><strong>Finans Direktörü Burak Mert</strong> <small>Bütçe ve finans sorumlusu.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-microchip"></i></span><div><strong>Ar-Ge Direktörü Deniz Akın</strong> <small>Yapay zeka ürününün baş geliştiricisi.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-server"></i></span><div><strong>BT Sistem Yöneticisi Mert Can</strong> <small>Ağın ve sistemin sağlığından sorumlu.</small></div></li>
+                    </ul>
+                </div>
+                <div class="intro-metrics-container">
+                    <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+                    <ul>
+                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-square-check"></i></span><div><strong>Fikri Mülkiyet Bütünlüğü</strong> <small>AI projesi verilerinin güvenliği. (Başlangıç: %100)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-hand-holding-dollar"></i></span><div><strong>Finansal Zarar</strong> <small>Krizin şirkete maliyeti. (Başlangıç: ₺0)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-users"></i></span><div><strong>Çalışan Güveni</strong> <small>Personelin şirkete ve yönetime olan inancı. (Başlangıç: 100)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-building-shield"></i></span><div><strong>İtibar Puanı</strong> <small>Şirketinizin kamuoyu ve sektördeki imajı. (Başlangıç: 100)</small></div></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <div id="intermissionDetails">
+            </div>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-lock"></i> Fikri Mülkiyet</span><div class="value" id="status-ipIntegrity">100%</div></div>
+                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-users"></i> Çalışan Güveni</span><div class="value" id="status-employeeTrust">100</div></div>
+                <div class="metric"><span><i class="fa-solid fa-building-shield"></i> İtibar Puanı</span><div class="value" id="status-reputation">100</div></div>
+            </div>
+            <div id="game-content">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = {
+                score: { ipIntegrity: 100, financialLoss: 0, employeeTrust: 100, reputation: 100 },
+                state: {
+                    currentSectionId: 'start',
+                    emailAnalyzed: false, linkedinProfileAnalyzed: false, awarenessTrainingInitiated: false, threatHuntingStarted: false,
+                    whatsappForensicallyExamined: false, vishingAnalyzed: false, personnelInterviewed: false, internalNetworkMonitored: false,
+                    malwareAnalyzed: false, systemsIsolated: false, cemilConfronted: false, insiderThreatReported: false, usomCollaboration: false,
+                    crisisMeetingHeld: false, publicStatementPrepared: false, externalForensicHired: false, cemilManaged: false,
+                    protocolsRevised: false, ipSecurityEnhanced: false, reputationCampaignLaunched: false, employeeSupportInitiated: false, insiderThreatProgramStarted: false,
+                    decisionHistory: [],
+                    currentTurnDecisions: [], // Store full decision info for the current turn
+                },
+
+                elements: {},
+                
+                decisionInfo: {
+                    // Day 1 Morning
+                    'd1-m-email-analysis': {
+                        title: "CEO Maili Detaylı Analizi",
+                        text: "CEO'dan gelen e-postayı teknik analize aldınız. Kötü amaçlı bağlantı/ek dosya tespitiyle saldırının birincil vektörünü anladınız. Dosya bir dropper içeriyordu.",
+                        strat: "Oltalama saldırılarında erken teknik analiz, zinciri kırmak için esastır. Hız, zararı minimize eder.",
+                        changes: { financialLoss: 5000, ipIntegrity: -2, employeeTrust: -1 },
+                        clue: 'emailAnalyzed',
+                        impact: 'Positive',
+                    },
+                    'd1-m-linkedin-analysis': {
+                        title: "LinkedIn Profil Analizi ve OSINT",
+                        text: "LinkedIn profilini ve mesajı analiz ettiniz. Sahte profil ve kimlik avı portalı URL'si tespit edildi. Saldırganın sosyal mühendislik yeteneklerini anladınız.",
+                        strat: "Sosyal mühendislikte OSINT, saldırganın hazırlığını anlamak için değerlidir. Yönlendirmeleri takip etmek kritik.",
+                        changes: { financialLoss: 2000, ipIntegrity: -1, employeeTrust: -1, reputation: -1 },
+                        clue: 'linkedinProfileAnalyzed',
+                        impact: 'Neutral',
+                    },
+                    'd1-m-awareness-training': {
+                        title: "Acil Siber Farkındalık Eğitimi",
+                        text: "İK ile acil oltalama ve sosyal mühendislik farkındalık eğitimi talep ettiniz. Duyuru yapıldı, program planlandı. Uzun vadede çalışan direncini artırabilir.",
+                        strat: "Çalışan farkındalığı, insan zafiyetini hedef alan saldırılara karşı en güçlü savunmadır. Eğitimin etkisi anında olmayabilir.",
+                        changes: { financialLoss: 10000, employeeTrust: +5, reputation: -2 },
+                        clue: 'awarenessTrainingInitiated',
+                        impact: 'Neutral',
+                    },
+                    'd1-m-threat-hunting': {
+                        title: "Acil Tehdit Avcılığı",
+                        text: "CSO'ya raporlayıp kapsamlı tehdit avcılığı başlattınız. Potansiyel sızıntıları erken tespit etme şansı doğdu, ancak yoğun kaynak kullanımı gerektirdi.",
+                        strat: "Proaktif tehdit avcılığı, bilinmeyen saldırıları tespit etmede etkilidir, ancak maliyetli olabilir ve planlama gerektirir.",
+                        changes: { financialLoss: 25000, ipIntegrity: -3, reputation: -3 },
+                        clue: 'threatHuntingStarted',
+                        impact: 'Negative',
+                    },
+
+                    // Day 1 Evening - New Section
+                    'd1-a-whatsapp-forensics': {
+                        title: "WhatsApp Hesabı Adli İncelemesi",
+                        text: "WhatsApp hesabını adli incelemeye aldınız. Saldırganın iç terimler ve spesifik proje bilgileri kullandığını tespit ettiniz, bu da içeriden bilgi alındığını işaret etti.",
+                        strat: "Mesajlaşma uygulamaları incelemesi, saldırganın yöntemlerini anlamak için esastır. İçeriden bilgi sızıntısı şüphesi güçlenir.",
+                        changes: { financialLoss: 15000, ipIntegrity: -3 },
+                        clue: 'whatsappForensicallyExamined',
+                        impact: 'Negative',
+                    },
+                    'd1-a-vishing-analysis': {
+                        title: "Telefon Görüşmesi Kayıt Analiz (Vishing)",
+                        text: "Telefon görüşmesi kayıtlarını analiz ettiniz. Saldırganın vishing taktiklerini ve proje hakkında hassas bilgiler sorguladığını deşifre ettiniz. İçeriden bilgi kaynağı şüphesi doğdu.",
+                        strat: "Vishing analizleri, gelecekteki saldırılara karşı savunmayı geliştirir. İç tehdit işaretlerini gözden kaçırmamak kritik.",
+                        changes: { financialLoss: 10000, ipIntegrity: -5 },
+                        clue: 'vishingAnalyzed',
+                        impact: 'Negative',
+                    },
+                    'd1-a-personnel-interviews': {
+                        title: "Hedeflenen Personel ile Güvenlik Görüşmeleri",
+                        text: "Kilit personelle birebir görüşmeler yaptınız. Saldırganın manipülasyon tekniklerini anladınız. Cemil Kaan adlı çalışanın tedirginliği ve finansal sıkıntıları dikkat çekti; içeriden sızıntı ihtimalini güçlendirdi.",
+                        strat: "İnsan istihbaratı (HUMINT), siber krizleri çalışan gözünden anlamak için hayati önem taşır. Dikkatli ve empatik yaklaşım gerekir.",
+                        changes: { employeeTrust: -5, reputation: -3, financialLoss: 3000 },
+                        clue: 'personnelInterviewed',
+                        impact: 'Neutral',
+                    },
+                    'd1-a-network-monitoring': {
+                        title: "İç Ağ Trafiği ve Log İzleme",
+                        text: "Ağ trafiği ve logları anlık izlemeye aldınız. Cemil Kaan'ın kritik 'Proje Yapay Zeka' klasörüne anormal sayıda erişim denemesi yaptığı tespit edildi. Bu ciddi bir ihlal işaretiydi.",
+                        strat: "Ağ izleme ve log analizi, gelişmiş saldırılarda içerideki hareketleri tespit etmek için temeldir. Kritik varlıklara yönelik anormal erişimleri gözlemlemek hayati.",
+                        changes: { financialLoss: 40000, ipIntegrity: -8, reputation: -2 },
+                        clue: 'internalNetworkMonitored',
+                        impact: 'Negative',
+                    },
+
+                    // Day 2 Morning
+                    'd2-m-malware-full-analysis': {
+                        title: "Zararlı Yazılım Tersine Mühendisliği ve C2 Tespiti",
+                        text: "Zararlı yazılımı tersine mühendislik ekibine sevk ettiniz. Yazılımın arka kapı oluşturduğunu, 'Proje Yapay Zeka'ya eriştiğini ve verileri harici C2 sunucusuna aktardığını belirlediniz. Saldırganın hedefi ve altyapısı açığa çıktı, iç tehdit şüphesi güçlendi.",
+                        strat: "Zararlı yazılım analizi ve C2 tespiti, saldırının teknik mekanizmasını anlamak için kritiktir. Etkili karşı önlemler için temel bilgi sağlar.",
+                        changes: { financialLoss: 30000, ipIntegrity: -10, reputation: -5 },
+                        clue: 'malwareAnalyzed',
+                        impact: 'Negative',
+                    },
+                    'd2-m-system-isolation': {
+                        title: "Kritik Sistemlerin Acil İzolasyonu",
+                        text: "'Proje Yapay Zeka' klasörüne dış erişimi derhal kestiniz ve kritik geliştirme ortamlarını izole ettiniz. Veri sızıntısını büyük ölçüde engellediniz, ancak geliştirme süreci aksadı ve operasyonel maliyetler arttı.",
+                        strat: "Kritik verinin korunması önceliktir. Şüpheli sistemler hızla izole edilmeli; bu, iş sürekliliğini etkileyebilir ama varlıkları korur.",
+                        changes: { financialLoss: 50000, ipIntegrity: +15, reputation: -8, employeeTrust: -5 },
+                        clue: 'systemsIsolated',
+                        impact: 'Positive',
+                    },
+                    'd2-m-confront-cemil': {
+                        title: "Cemil Kaan ile Yüzleşme ve İtiraf",
+                        text: "Cemil Kaan ile gizli görüşmede yüzleştiniz. Manipüle edildiğini ve 'Proje Yapay Zeka' klasörüne zararlı yazılım yüklemeye ikna edildiğini itiraf etti. Olay aydınlandı ama çalışan güveni sarsıldı.",
+                        strat: "İç tehditlerle yüzleşmek riskli ama bilgi için önemlidir. Yaklaşım, bilgi toplamaya odaklanmalı ve itibar/güven etkisi düşünülmelidir.",
+                        changes: { financialLoss: 5000, employeeTrust: -15, reputation: -10, ipIntegrity: +8 },
+                        clue: 'cemilConfronted',
+                        impact: 'Negative',
+                    },
+                    'd2-m-report-insider-threat': {
+                        title: "İç Tehdit Şüphesini Üst Yönetim ve Hukuka Bildirme",
+                        text: "Tüm iç tehdit bulgularını Hukuk departmanına ve CEO'ya raporladınız. Yasal danışmanlık talep ederek süreci hızlandırdınız, ancak iç gerilim arttı.",
+                        strat: "İç tehditlerde hukuki ve yönetimsel süreçleri devreye sokmak, riskleri minimize eder. Şeffaflık ve gizlilik dengesi önemlidir.",
+                        changes: { financialLoss: 10000, employeeTrust: -7, reputation: -4 },
+                        clue: 'insiderThreatReported',
+                        impact: 'Neutral',
+                    },
+                    'd2-m-usom-collaboration': {
+                        title: "Ulusal Siber Olaylara Müdahale Merkezine Bilgi Verme",
+                        text: "Saldırının ulus-devlet destekli olabileceği şüphesiyle USOM'a bilgi verdiniz. USOM destek olacağını belirtti. Ulusal düzeyde yardım aldınız, ancak imaj üzerinde kısa vadeli olumsuz etki oluştu.",
+                        strat: "Ulus-devlet destekli saldırılarda ulusal birimlerle işbirliği ek kaynak sağlar. Bilgi paylaşımının potansiyel etkileri değerlendirilmelidir.",
+                        changes: { financialLoss: 5000, reputation: -7, ipIntegrity: +3 },
+                        clue: 'usomCollaboration',
+                        impact: 'Neutral',
+                    },
+
+                    // Day 2 Afternoon
+                    'd2-a-crisis-team-meeting': {
+                        title: "Kapsamlı Kriz Ekibi Toplantısı",
+                        text: "Tüm kilit paydaşları acil bir kriz toplantısında topladınız. Saldırının yapısı, Cemil'in durumu ve fikri mülkiyet tehdidi aktarıldı. Koordinasyon arttı, panik azaldı.",
+                        strat: "Siber krizlerde etkili iletişim ve işbirliği, krizin hızlı ve etkin yönetilmesini sağlar. Gerçekler ne kadar acı olsa da, şeffaflık önemlidir.",
+                        changes: { financialLoss: 5000, reputation: +5, employeeTrust: +2 },
+                        clue: 'crisisMeetingHeld',
+                        impact: 'Positive',
+                    },
+                    'd2-a-public-statement-draft': {
+                        title: "Proaktif Kamuoyu Açıklaması Taslağı",
+                        text: "Halkla İlişkiler ve Hukuk birimleriyle proaktif ve detaylı bir kamuoyu açıklama taslağı hazırladınız. Şirketin itibarını korumak için saldırının sofistike yapısı ve proaktif adımlar vurgulandı. Kamuoyunda kısa süreli şok riski var.",
+                        strat: "Krizde kamuoyu iletişimi şirket itibarını doğrudan etkiler. Dengeli, şeffaf açıklama kritik öneme sahiptir. Kontrollü bilgi yayılımı esastır.",
+                        changes: { financialLoss: 10000, reputation: +2, employeeTrust: -3 },
+                        clue: 'publicStatementPrepared',
+                        impact: 'Neutral',
+                    },
+                    'd2-a-external-forensic-legal': {
+                        title: "Harici Siber Adli Tıp ve Hukuk Desteği",
+                        text: "Saldırının karmaşıklığı nedeniyle bağımsız bir siber adli tıp ve hukuk firmasından acil yardım istediniz. Soruşturmayı hızlandı, bulgular tarafsızlaştı, ancak maliyeti çok yüksek oldu.",
+                        strat: "Kapsamlı saldırılarda harici uzmanlık, kriz yönetimi kapasitesini artırır ve yasal süreçler için kanıt sağlar. Maliyetler iyi yönetilmelidir.",
+                        changes: { financialLoss: 150000, reputation: +3, ipIntegrity: +5 },
+                        clue: 'externalForensicHired',
+                        impact: 'Positive',
+                    },
+                    'd2-a-cemil-management': {
+                        title: "Cemil Kaan Durumu Yönetimi",
+                        text: "Cemil Kaan'ın itirafını takiben, İK ve Hukuk ile işbirliği yaparak, Cemil'e psikolojik destek sağladınız ve ondan gizlilik anlaşması imzalamasını talep ettiniz. Çalışanın itibarını koruyarak ve bilgi edinerek durumu yönettiniz. İnsani yaklaşım şirket kültürüne olumlu yansıdı.",
+                        strat: "İç tehdit kaynaklarının insani yönünü yönetmek etik ve kurumsal kültür açısından önemlidir. Destek ve gizlilik, uzun vadede şirket bağlılığını ve güvenliğini artırabilir.",
+                        changes: { financialLoss: 8000, employeeTrust: +4, reputation: -2 },
+                        clue: 'cemilManaged',
+                        impact: 'Positive',
+                    },
+
+                    // Day 3 Morning (Final Decisions)
+                    'd3-m-protocol-revision-ai-training': {
+                        title: "Çok Kanallı Güvenlik Protokolleri ve Yapay Zeka Destekli Farkındalık Eğitimleri",
+                        text: "Tüm iletişim kanallarında güvenlik protokollerini sıkılaştırdınız. Yapay zeka destekli oltalama simülasyonları ve davranışsal analiz tabanlı farkındalık eğitimleri ile çalışanları daha dirençli hale getirdiniz. Şirketin genel güvenlik duruşu güçlendi.",
+                        strat: "Çok kanallı saldırılara karşı savunma, teknik ve insan davranışlarını dikkate alır. AI destekli eğitimler adaptasyonu artırır.",
+                        changes: { financialLoss: 70000, reputation: +10, employeeTrust: +7, ipIntegrity: +5 },
+                        clue: 'protocolsRevised',
+                    },
+                    'd3-m-ip-security-enhancement': {
+                        title: "AI Projesi Fikri Mülkiyet Güvenliğinin Kapsamlı Artırılması",
+                        text: "AI projesinin kod tabanı, algoritmaları ve veri setleri için ek güvenlik katmanları (DAC, MAC, DLP, IRM) uyguladınız. Kritik verilere erişimi sürekli izleyen otomatik sistemler kurdunuz. En değerli varlığınızı korudunuz.",
+                        strat: "Kritik fikri mülkiyetin korunması, en önemli varlığı güvence altına alır. Sürekli, katmanlı ve teknoloji destekli bir güvenlik yaklaşımı gerektirir.",
+                        changes: { financialLoss: 100000, ipIntegrity: +20, reputation: +5, financialLoss: -5000 }, 
+                        clue: 'ipSecurityEnhanced',
+                        impact: 'Positive',
+                    },
+                    'd3-m-reputation-campaign': {
+                        title: "Proaktif İtibar Yönetimi ve Şeffaflık Kampanyası",
+                        text: "Kamuoyuna tam şeffaflık içeren, saldırının sektörün ortak problemi olduğunu vurgulayan, proaktif bir itibar yönetimi kampanyası başlattınız. Şirket itibarını önemli ölçüde güçlendirdiniz ve siber güvenlik alanındaki liderliğinizi pekiştirdiniz.",
+                        strat: "Krizde kamuoyu iletişimi şirket itibarını doğrudan etkiler. Dengeli, şeffaf açıklama kritik öneme sahiptir. Krizleri fırsata çevirmek stratejiktir.",
+                        changes: { financialLoss: 120000, reputation: +15, employeeTrust: +5, financialLoss: -10000 },
+                        clue: 'reputationCampaignLaunched',
+                        impact: 'Positive',
+                    },
+                    'd3-m-employee-support': {
+                        title: "Çalışan Psikolojik Destek ve Güven Yeniden Yapılandırma Programları",
+                        text: "Çalışanlar üzerindeki olumsuz etkileri azaltmak için psikolojik destek ve moral artırıcı etkinlikler başlattınız. Çalışanların güvenini yeniden kazanmalarına ve bağlılıklarını artırmalarına yardımcı oldunuz. İç dayanıklılığı güçlendi.",
+                        strat: "Çalışanların refahı ve güvenliği, şirket dayanıklılığının temelidir. Kriz sonrası moral ve güvenin yeniden inşası hayati öneme sahiptir. İnsan odaklı yaklaşım kritik.",
+                        changes: { financialLoss: 30000, employeeTrust: +10, reputation: +2, financialLoss: -2000 },
+                        clue: 'employeeSupportInitiated',
+                        impact: 'Positive',
+                    },
+                    'd3-m-insider-threat-program': {
+                        title: "İç Tehdit İstihbarat Programının Kurulması ve Güvenlik Kültürü Entegrasyonu",
+                        text: "İç tehditleri proaktif olarak tespit etmek için davranışsal analiz araçları, risk değerlendirmeleri ve etik çerçevede izleme politikaları geliştirdiniz. Güçlü güvenlik kültürü ile entegre ettiniz. Uzun vadede içeriden kaynaklanabilecek zafiyetleri minimuma indirdiniz.",
+                        strat: "İç tehdit programları, en zorlu siber risklerden birini yönetmek için hayati öneme sahiptir. Etik ve şeffaf yürütme, çalışan güvenini korur. Güvenlik kültürü entegrasyonu başarıyı garanti eder.",
+                        changes: { financialLoss: 80000, employeeTrust: -5, ipIntegrity: +15, reputation: +7 },
+                        clue: 'insiderThreatProgramStarted',
+                        impact: 'Positive',
+                    }
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'), gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
+                        intermissionTitle: document.getElementById('intermissionTitle'), intermissionDetails: document.getElementById('intermissionDetails'),
+                        continueButton: document.getElementById('continueButton'),
+                        statusBar: { ipIntegrity: document.getElementById('status-ipIntegrity'), financialLoss: document.getElementById('status-financialLoss'), employeeTrust: document.getElementById('status-employeeTrust'), reputation: document.getElementById('status-reputation') }
+                    };
+                    this.loadGameHTML();
+                    
+                    // Attach event listener for start button
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.intro.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+                        this.showSection('day1_morning_phishing');
+                    });
+                    
+                    // Attach event listener for decision buttons in game content
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button || button.disabled) return;
+                        
+                        const sectionElement = button.closest('.section');
+                        const decisionId = button.dataset.decision;
+                        const info = this.decisionInfo[decisionId];
+
+                        // Disable the clicked button immediately
+                        button.disabled = true;
+
+                        // Add decision to current turn's list
+                        this.state.currentTurnDecisions.push(info);
+                        
+                        // Apply score changes (these are applied on each click, not just at intermission)
+                        this.score.financialLoss += info.changes.financialLoss || 0;
+                        this.score.reputation = Math.max(0, Math.min(100, this.score.reputation + (info.changes.reputation || 0)));
+                        this.score.ipIntegrity = Math.max(0, Math.min(100, this.score.ipIntegrity + (info.changes.ipIntegrity || 0)));
+                        this.score.employeeTrust = Math.max(0, Math.min(100, this.score.employeeTrust + (info.changes.employeeTrust || 0)));
+                        this.state[info.clue] = true; // Set clue state
+                        this.updateStatusBar(); // Update status bar immediately
+
+                        const maxSelections = parseInt(sectionElement.dataset.maxSelections || 1, 10);
+                        
+                        // If it's the "Day 1 Afternoon" section, we skip intermission and go directly to evening
+                        if (this.state.currentSectionId === 'day1_afternoon_phishing') {
+                            this.elements.game.style.display = 'none';
+                            // This part ensures that the decisions are logged before proceeding
+                            this.state.currentTurnDecisions.forEach(decision => {
+                                this.state.decisionHistory.push({ 
+                                    id: decision.clue, 
+                                    title: decision.title, 
+                                    text: decision.text, 
+                                    impactType: decision.impact 
+                                });
+                            });
+                            this.state.currentTurnDecisions = []; // Clear for next turn
+                            this.showSection('day1_evening_phishing'); // Directly proceed
+                        } else if (this.state.currentTurnDecisions.length >= maxSelections) {
+                            this.elements.game.style.display = 'none';
+                            this.showFullIntermission();
+                        } else {
+                            // If not all decisions made for the turn, just update button states and wait for next click
+                            this.updateButtonStates(this.state.currentSectionId); 
+                        }
+                    });
+
+                    // Attach event listener for the general continue button in intermission (for Day 1 Morning decisions)
+                    this.elements.continueButton.addEventListener('click', () => {
+                        // Add decisions from the current turn to the historical decision history *after* intermission is shown
+                        this.state.currentTurnDecisions.forEach(decision => {
+                            this.state.decisionHistory.push({ 
+                                id: decision.clue, // Using clue as ID for history
+                                title: decision.title, 
+                                text: decision.text, 
+                                impactType: decision.impact 
+                            });
+                        });
+
+                        const nextPath = this.elements.continueButton.dataset.nextPath;
+                        this.elements.intermission.style.display = 'none';
+                        this.elements.continueButton.style.display = 'none'; // Hide continue button for next section setup
+
+                        // Clear decisions for the next turn
+                        this.state.currentTurnDecisions = [];
+                        
+                        if (nextPath === 'finalSection') {
+                            this.showFinalReport();
+                        } else {
+                            this.elements.game.style.display = 'block';
+                            this.showSection(nextPath);
+                        }
+                    });
+
+                    this.updateStatusBar();
+                },
+                
+                showFullIntermission() {
+                    this.elements.intermissionDetails.innerHTML = ''; // Clear previous details
+
+                    // Sum up all changes from decisions made in this turn
+                    let totalChanges = { financialLoss: 0, ipIntegrity: 0, employeeTrust: 0, reputation: 0 };
+                    let combinedDecisionTitles = [];
+                    let combinedDecisionTexts = [];
+                    let combinedStrategicNotes = [];
+
+                    this.state.currentTurnDecisions.forEach((info) => {
+                        totalChanges.financialLoss += info.changes.financialLoss || 0;
+                        totalChanges.ipIntegrity += info.changes.ipIntegrity || 0;
+                        totalChanges.employeeTrust += info.changes.employeeTrust || 0;
+                        totalChanges.reputation += info.changes.reputation || 0;
+                        
+                        combinedDecisionTitles.push(info.title);
+                        combinedDecisionTexts.push(info.text);
+                        combinedStrategicNotes.push(info.strat);
+                    });
+
+                    // Set intermission title directly to "Bu Seçimlerin Toplam Etkileri"
+                    this.elements.intermissionTitle.textContent = "Bu Seçimlerin Toplam Etkileri"; 
+                    
+                    // Add the combined metrics summary container (directly after the title)
+                    this.elements.intermissionDetails.insertAdjacentHTML('afterbegin', `
+                        <div class="metric-change-summary-container">
+                            <div class="metric-change-summary">
+                                ${this.getMetricsHtml(totalChanges)}
+                            </div>
+                        </div>
+                    `);
+
+                    // Add the combined decision details below the total impacts
+                    this.elements.intermissionDetails.insertAdjacentHTML('beforeend', `
+                        <div class="interactive-element" style="width: 100%; max-width: 600px; margin-top: 30px;">
+                            <h4><i class="fa-solid fa-check-circle"></i> Seçimlerinizin Detayları: ${combinedDecisionTitles.join(' & ')}</h4>
+                            <p>${combinedDecisionTexts.join('<br><br>')}</p>
+                            <div class="interactive-element" style="border-left-color: var(--accent-blue); margin-top: 20px;">
+                                <h4>Stratejik Değerlendirme</h4>
+                                <p>${combinedStrategicNotes.join('<br><br>')}</p>
+                            </div>
+                        </div>
+                    `);
+
+
+                    let nextSectionToGo;
+                    // Corrected navigation logic for all sections
+                    switch(this.state.currentSectionId) {
+                        case 'day1_morning_phishing': nextSectionToGo = 'day1_afternoon_phishing'; break;
+                        // Day1_afternoon_phishing'den sonra direkt evening'e geçmek için burada zaten özel bir buton var, bu kısmı atlıyoruz
+                        case 'day1_evening_phishing': nextSectionToGo = 'day2_morning_ipthreat'; break;
+                        case 'day2_morning_ipthreat': nextSectionToGo = 'day2_afternoon_crisis_mgmt'; break;
+                        case 'day2_afternoon_crisis_mgmt': nextSectionToGo = 'day3_morning_resolution'; break;
+                        case 'day3_morning_resolution': nextSectionToGo = 'finalSection'; break; 
+                        default: nextSectionToGo = 'finalSection'; break;
+                    }
+
+                    this.elements.continueButton.dataset.nextPath = nextSectionToGo;
+                    this.elements.intermission.style.display = 'flex';
+                    this.elements.continueButton.style.display = 'flex'; // Show continue button
+                },
+
+                getMetricsHtml(changes) {
+                    let metricsHTML = '';
+                    const formatChange = (label, value, unit) => {
+                        const arrow = value >= 0 ? (value > 0 ? 'up' : 'right') : 'down'; 
+                        const sign = value >= 0 ? '+' : ''; 
+                        let colorClass = 'neutral'; 
+
+                        if (label === 'Finansal Zarar') {
+                            colorClass = value > 0 ? 'negative' : (value < 0 ? 'positive' : 'neutral');
+                        } else {
+                            colorClass = value > 0 ? 'positive' : (value < 0 ? 'negative' : 'neutral');
+                        }
+                        
+                        let icon = '';
+                        if (label === 'Finansal Zarar') icon = 'fa-sack-xmark';
+                        else if (label === 'Fikri Mülkiyet') icon = 'fa-lock';
+                        else if (label === 'Çalışan Güveni') icon = 'fa-users';
+                        else if (label === 'İtibar Puanı') icon = 'fa-building-shield';
+
+
+                        return `<div class="metric-change ${colorClass}"><i class="fa-solid ${icon}"></i> ${label}: <i class="fa-solid fa-arrow-${arrow}-long"></i> ${sign}${Math.abs(value).toLocaleString('tr-TR')}${unit}</div>`;
+                    };
+
+                    if (changes.financialLoss !== undefined && changes.financialLoss !== 0) metricsHTML += formatChange('Finansal Zarar', changes.financialLoss, '₺');
+                    if (changes.ipIntegrity !== undefined && changes.ipIntegrity !== 0) metricsHTML += formatChange('Fikri Mülkiyet', changes.ipIntegrity, '%');
+                    if (changes.employeeTrust !== undefined && changes.employeeTrust !== 0) metricsHTML += formatChange('Çalışan Güveni', changes.employeeTrust, '');
+                    if (changes.reputation !== undefined && changes.reputation !== 0) metricsHTML += formatChange('İtibar Puanı', changes.reputation, '');
+                    
+                    if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1.1em; opacity: 0.8;">Bu kararların metriklere doğrudan bir etkisi olmadı.</p>';
+                    return metricsHTML;
+                },
+
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.ipIntegrity.textContent = `${Math.max(0, s.ipIntegrity)}%`;
+                    this.elements.statusBar.financialLoss.textContent = `₺${s.financialLoss.toLocaleString('tr-TR')}`;
+                    this.elements.statusBar.employeeTrust.textContent = Math.max(0, s.employeeTrust);
+                    this.elements.statusBar.reputation.textContent = Math.max(0, s.reputation);
+                },
+
+                showSection(sectionId) {
+                    this.elements.sections.forEach(section => { section.style.display = 'none'; });
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        this.state.currentSectionId = sectionId;
+                        this.updateDynamicContent(sectionId);
+                        this.updateButtonStates(sectionId);
+                        this.state.currentTurnDecisions = []; // Reset for new section
+                        
+                        // Handle the specific "Devam Et" button for day1_afternoon_phishing
+                        const day1AfternoonContinueBtn = document.querySelector('#day1_afternoon_phishing .btn-continue');
+                        if (day1AfternoonContinueBtn) {
+                            day1AfternoonContinueBtn.style.display = (sectionId === 'day1_afternoon_phishing') ? 'flex' : 'none';
+                        }
+
+                        // Hide the general intermission continue button when a new game section is shown
+                        this.elements.continueButton.style.display = 'none'; 
+
+                    } else {
+                        console.error('Bölüm bulunamadı:', sectionId);
+                        this.showFinalReport();
+                    }
+                    this.updateSlackChat(sectionId);
+                },
+
+                updateButtonStates(sectionId) {
+                    const currentSectionElement = document.getElementById(sectionId);
+                    if (!currentSectionElement) return;
+
+                    const decisionButtonsContainer = currentSectionElement.querySelector('.decision-buttons');
+                    // If the current section does not have decision buttons (like day1_afternoon_phishing), skip this logic.
+                    if (!decisionButtonsContainer) {
+                        return; 
+                    }
+
+                    const buttons = decisionButtonsContainer.querySelectorAll('.btn[data-decision]');
+                    buttons.forEach(button => {
+                        const decisionId = button.dataset.decision;
+                        const info = this.decisionInfo[decisionId];
+
+                        // Disable button if its clue is already set or it's part of current turn's selections
+                        const alreadySelectedInCurrentTurn = this.state.currentTurnDecisions.some(d => d.clue === info.clue);
+
+                        if (info && (this.state[info.clue] || alreadySelectedInCurrentTurn)) {
+                            button.disabled = true;
+                            button.style.backgroundColor = '#555';
+                            button.style.color = '#999';
+                        } else {
+                            button.disabled = false;
+                            button.style.backgroundColor = ''; 
+                            button.style.color = ''; 
+                        }
+
+                        // Special case: Cemil Kaan management button
+                        if (decisionId === 'd2-a-cemil-management') {
+                            if (!this.state.cemilConfronted) {
+                                button.disabled = true;
+                                button.style.backgroundColor = '#555';
+                                button.style.color = '#999';
+                                button.querySelector('small').textContent = 'Bu seçenek, sadece Cemil Kaan ile yüzleşip itirafını aldıysanız geçerlidir.';
+                                button.style.cursor = 'not-allowed';
+                            } else if (!alreadySelectedInCurrentTurn) { // Re-enable if Cemil confronted and not yet selected in this turn
+                                button.disabled = false;
+                                button.style.backgroundColor = '';
+                                button.style.color = '';
+                                button.querySelector('small').textContent = 'Cemil Kaan\'ın durumunu İnsan Kaynakları ve Hukuk departmanları ile birlikte yönetmek için acil bir gizlilik anlaşması ve psikolojik destek süreci başlat.';
+                                button.style.cursor = 'pointer';
+                            }
+                        }
+                    });
+                },
+                
+                showFinalReport() {
+                    this.elements.intro.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block'; 
+                    document.getElementById('statusBar').style.display = 'none';
+
+                    this.elements.sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    const finalSection = document.getElementById('finalSection');
+                    if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
+
+                    finalSection.style.display = 'flex';
+                    
+                    const badge = document.getElementById('performance-badge');
+                    const metricsContainer = document.getElementById('finalMetricsContainer');
+                    const timelineList = document.getElementById('decision-timeline-list');
+                    const debriefContent = document.getElementById('strategic-debrief-content');
+                    const recommendationsList = document.getElementById('recommendations-list');
+
+                    const finalIP = Math.max(0, this.score.ipIntegrity);
+                    const finalRep = Math.max(0, this.score.reputation);
+                    const finalTrust = Math.max(0, this.score.employeeTrust);
+
+                    let totalScore = (finalRep * 0.35) + (finalIP * 0.3) + (finalTrust * 0.15) - (this.score.financialLoss / 100000); 
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+
+                    let badgeInfo = {};
+                    
+                    const totalPossibleDecisions = 2 * 5; 
+                    let decisionsMadeCount = this.state.decisionHistory.length; 
+                    const percentDecisionsMade = (decisionsMadeCount / totalPossibleDecisions) * 100; 
+
+                    if (totalScore >= 90 && percentDecisionsMade >= 75) {
+                        badgeInfo = { text: 'SİBER KAHRAMAN', color: 'var(--accent-green)' };
+                    } else if (totalScore >= 85 && finalIP >=70 ) {
+                        badgeInfo = { text: 'UZMAN KRİZ YÖNETİCİSİ', color: 'var(--accent-blue)' };
+                    } else if (totalScore >= 60) {
+                        badgeInfo = { text: 'ZORLU BİR MÜCADELE', color: 'var(--accent-yellow)' };
+                    } else {
+                        badgeInfo = { text: 'CİDDİ HASAR', color: '#ff5555' };
+                    }
+
+                    badge.textContent = badgeInfo.text;
+                    badge.style.backgroundColor = badgeInfo.color;
+
+                    metricsContainer.innerHTML = `
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-building-shield"></i></div><div class="label">İtibar Puanı</div><div class="value">${finalRep}/100</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="label">Finansal Zarar</div><div class="value">₺${this.score.financialLoss.toLocaleString('tr-TR')}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-lock"></i></div><div class="label">Fikri Mülkiyet</div><div class="value">${finalIP}%</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-users"></i></div><div class="label">Çalışan Güveni</div><div class="value">${finalTrust}/100</div></div>
+                    `;
+
+                    // Only show title in timeline
+                    timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                        let liClass = decision.impactType === 'Positive' ? 'positive' : (decision.impactType === 'Negative' ? 'negative' : 'neutral');
+                        // Sadece başlığı göster
+                        return `<li class="${liClass}"><span class="decision-title">${decision.title}</span></li>`;
+                    }).join('');
+
+                    let debriefHTML = '';
+                    if (badgeInfo.text === 'SİBER KAHRAMAN') { 
+                        debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir Siber İstihbarat Şefi olarak, çok kanallı ve sofistike bu saldırıyı tüm katmanlarında tespit ederek şirketinizi büyük bir felaketten kurtardınız. Stratejik ve hızlı kararlarınızla sadece fikri mülkiyetimizi korumakla kalmadınız, aynı zamanda şirketimizin itibarını ve çalışan güvenini zirveye taşıdınız. Bu kriz, sizin liderliğiniz sayesinde ÇOLHAK Teknoloji'yi daha da güçlendirdi.</p>`;
+                    } else if (badgeInfo.text === 'UZMAN KRİZ YÖNETİCİSİ') { 
+                        debriefHTML += `<p><strong>Başarılı Bir Müdahale!</strong> Çok karmaşık bir saldırıyla karşı karşıya kalmanıza rağmen, etkili müdahalelerle krizi kontrol altına almayı başardınız. Bazı küçük kayıplar yaşansa da, genel olarak şirketinizin fikri mülkiyetini, itibarını ve çalışan güvenini önemli ölçüde korudunuz. Aldığınız kararlar, ÇOLHAK Teknoloji'nin bu zorlu süreçten ders çıkararak daha dirençli hale gelmesini sağladı.</p>`;
+                    } else if (badgeInfo.text === 'ZORLU BİR MÜCADELE') { 
+                        debriefHTML += `<p><strong>Öğrenilen Büyük Dersler:</strong> Krizle başa çıktınız ve en kötü senaryonun önüne geçtiniz, ancak saldırının bazı etkilerini tamamen engellemeyi başaramadınız. Fikri mülkiyetimizde kısmi kayıplar yaşandı, finansal zararlar oluştu ve şirketin itibarı bir miktar zedelendi. Bu deneyim, gelecekteki siber güvenlik stratejilerimizi geliştirmemiz için önemli dersler çıkardı.</p>`;
+                    } else { 
+                        debriefHTML += `<p><strong>Ciddi Sonuçlar:</strong> Çok kanallı oltalama saldırısı, ÇOLHAK Teknoloji'ye ciddi zararlar verdi. Fikri mülkiyetimizde büyük sızıntılar yaşandı, finansal kayıplar çok yüksek ve şirket itibarımız ciddi şekilde zedelendi. Çalışanların güveni sarsıldı. Bu deneyimden acilen ders çıkararak güvenlik stratejilerimizi kökten değiştirmeli ve daha güçlü savunma mekanizmaları inşa etmeliyiz.</p>`;
+                    }
+                    debriefContent.innerHTML = debriefHTML;
+
+                    let recommendationsHTML = new Set();
+                    recommendationsHTML.add(`<li><strong>Kapsamlı Oltalama Farkındalık Eğitimi:</strong> Tüm çalışanlar için düzenli ve simülasyon tabanlı oltalama, vishing ve smishing farkındalık eğitimleri yapılmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Çok Faktörlü Kimlik Doğrulama (MFA) Zorunluluğu:</strong> Tüm kurumsal hesaplar ve kritik sistemler için MFA zorunlu hale getirilmeli.</li>`);
+                    recommendationsHTML.add(`<li><strong>Sosyal Medya Güvenliği Politikası:</strong> Çalışanların profesyonel sosyal medya kullanımı için net politikalar ve eğitimler sağlanmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>İnsan İstihbaratı (HUMINT) Geliştirme:</strong> Siber İstihbarat ekibinin, şirket içi anormal davranışları ve "fısıltıları" tespit etme yeteneği artırılmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Kriz İletişim Planı Güncellemesi:</strong> Çok kanallı sosyal mühendislik saldırılarına özel senaryoları içeren güncel bir kriz iletişim planı oluşturulmalı ve düzenli tatbikatlar yapılmalı.</li>`);
+                    recommendationsHTML.add(`<li><strong>Fikri Mülkiyet Koruma Stratejisi:</strong> Kritik AI projesi verileri için daha sıkı erişim kontrolleri, şifreleme ve DLP (Data Loss Prevention) çözümleri uygulanmalı.</li>`);
+                    
+                    if (!this.state.emailAnalyzed || !this.state.linkedinProfileAnalyzed || !this.state.whatsappForensicallyExamined || !this.state.vishingAnalyzed) {
+                        recommendationsHTML.add(`<li><strong>Saldırı Vektörü Analizi Geliştirme:</strong> Gelecekteki çok kanallı saldırıları daha hızlı tespit edebilmek için email, sosyal medya, mesajlaşma ve telefon kanallarındaki tehdit analizi süreçleri güçlendirilmeli.</li>`);
+                    }
+                    if (this.score.employeeTrust < 80) {
+                        recommendationsHTML.add(`<li><strong>Çalışan Psikolojik Destek ve Güven Yeniden Yapılandırma:</strong> Krizin çalışanlar üzerindeki etkisini gidermek ve moral yükseltmek için psikolojik destek ve ekip etkinlikleri düzenlenmeli.</li>`);
+                    }
+                    if (this.score.financialLoss > 200000) {
+                        recommendationsHTML.add(`<li><strong>Siber Sigorta Poliçesi Gözden Geçirme:</strong> Mevcut siber sigorta poliçesi, kimlik avı ve fikri mülkiyet hırsızlığını kapsayacak şekilde genişletilmeli.</li>`);
+                    }
+                    if (!this.state.malwareAnalyzed || !this.state.systemsIsolated) {
+                        recommendationsHTML.add(`<li><strong>Olay Müdahale ve İzolasyon Hızlandırma:</strong> Zararlı yazılım analizi ve sistem izolasyonu süreçleri otomatize edilerek müdahale süreleri kısaltılmalı.</li>`);
+                    }
+                    if (!this.state.insiderThreatProgramStarted) { 
+                            recommendationsHTML.add(`<li><strong>İç Tehdit Programı Oluşturma:</strong> İç tehditleri proaktif olarak tespit etmek için davranışsal analiz araçları ve süreçleri geliştirilmeli.</li>`);
+                    }
+                    if (!this.state.crisisMeetingHeld || !this.state.publicStatementPrepared || !this.state.externalForensicHired) { 
+                        recommendationsHTML.add(`<li><strong>Kapsamlı Kriz Yönetimi Tatbikatları:</strong> Tüm paydaşların katılımıyla gerçekçi kriz yönetimi tatbikatları düzenlenerek koordinasyon ve iletişim becerileri geliştirilmeli.</li>`);
+                    }
+                    if (!this.state.threatHuntingStarted) {
+                        recommendationsHTML.add(`<li><strong>Proaktif Tehdit Avcılığı (Threat Hunting) Kapasitesi:</strong> Şirket içi siber tehdit avcılığı yetenekleri geliştirilerek gelişmiş ve bilinmeyen tehditler proaktif olarak tespit edilmeli.</li>`);
+                    }
+
+
+                    recommendationsList.innerHTML = Array.from(recommendationsHTML).map(rec => `<li><i class="fa-solid fa-angle-right"></i> ${rec.substring(4)}</li>`).join('');
+
+                    document.getElementById('finalSection').insertAdjacentHTML('beforeend', `
+                        <p style="margin-top: 30px; font-size: 1.2em; color: var(--accent-yellow);">Bu simülasyon, modern siber saldırıların karmaşıklığını ve siber güvenlik uzmanlarının sadece teknik değil, aynı zamanda sosyal ve analitik becerilerinin ne kadar hayati olduğunu gösterdi. ÇOLHAK Teknoloji olarak bu krizden güçlenerek çıkmak için çalışmaya devam etmeliyiz.</p>
+                    `);
+                },
+
+                updateSlackChat(currentSection) {
+                    const chatViewer = document.getElementById('slackChat');
+                    if (!chatViewer) return; 
+
+                    let chat = '';
+                    if (currentSection === 'day1_afternoon_phishing') {
+                        chat = `
+                            <div class="message"><span class="sender hr">İK Direktörü Ayşe Erdem:</span> Çalışanlar arasında huzursuzluklar artıyor. WhatsApp ve telefon mesajları hakkında çok soru alıyoruz. Moral düşüyor.</div>
+                            <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> Bu kabul edilemez! AI projesiyle ilgili sızıntılar olmamalı! Ne tür bilgilerden bahsediyoruz?</div>
+                            <div class="message"><span class="sender finance">Finans Direktörü Burak Mert:</span> Bütçe detaylarımız sızarsa, finansmanımız ciddi zarar görür. Durdurmalıyız!</div>
+                            <div class="message"><span class="sender cso">CSO Can Demir:</span> Ekiplerimiz tehditleri inceliyor. Siber İstihbarat Şefi'nin bulguları değerli. Anomali tespiti için ek loglar topluyoruz.</div>
+                            <div class="message"><span class="sender">Siz (Siber İstihbarat Şefi):</span> Çok kanallı bir saldırı ve içeriden bilgi alıyor gibiler. Her bilgi kritik, odaklanmalıyız.</div>
+                        `;
+                    } else if (currentSection === 'day2_morning_ipthreat') {
+                        chat = `
+                            <div class="message"><span class="sender ops">Ar-Ge Direktörü Deniz Akın:</span> Kod tabanımızda anomali alarmları artıyor! Veri transferleri kritik seviyede! Acil müdahale!</div>
+                            <div class="message"><span class="sender cso">CSO Can Demir:</span> Cemil Kaan'ın aktiviteleri şüpheli. Onu izliyoruz ama hızlı olmalıyız. Sızıntıyı engelleyin!</div>
+                            <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> İç tehdit mi?! İmajımıza büyük zarar verir. Ne pahasına olursa olsun durdurmalıyız!</div>
+                            <div class="message"><span class="sender finance">Finans Direktörü Burak Mert:</span> Proje bütçemiz hassas, aksaklık büyük kayıplara yol açar. Verilerimiz güvende mi?</div>
+                            <div class="message"><span class="sender bt">BT Sistem Yöneticisi Mert Can:</span> İzolasyon için hazırız ama üretim ortamını kapatmak ciddi kesintilere yol açacak.</div>
+                            <div class="message"><span class="sender">Siz (Siber İstihbarat Şefi):</span> Hedef fikri mülkiyetimiz! Anında aksiyon almalıyız! Cemil'in durumu da öncelik.</div>
+                        `;
+                    } else if (currentSection === 'day2_afternoon_crisis_mgmt') { 
+                        chat = `
+                            <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> Cemil'in itirafı şok edici. Şimdi ne olacak? Kamuoyuna nasıl açıklama yapacağız? Fikri mülkiyet kurtarıldı mı?</div>
+                            <div class="message"><span class="sender hr">İK Direktörü Ayşe Erdem:</span> Çalışanlarımızın morali düşük. Cemil'in durumu belirsizlik yaratıyor. İç huzuru sağlamalıyız.</div>
+                            <div class="message"><span class="sender finance">Finans Direktörü Burak Mert:</span> Bu krizin yasal ve finansal sonuçları korkunç olabilir. Dış uzman desteği şart mı?</div>
+                            <div class="message"><span class="sender cso">CSO Can Demir:</span> Teknik müdahaleler devam ediyor. İletişim ve kriz yönetimi de teknik müdahale kadar önemli.</div>
+                            <div class="message"><span class="sender ops">Ar-Ge Direktörü Deniz Akın:</span> Veri sızıntısını izole ettik ama ne kadar bilgi çıktı emin değiliz. Proje lansmanı risk altında.</div>
+                            <div class="message"><span class="sender">Siz (Siber İstihbarat Şefi):</span> Koordinasyon çok önemli. Her departmanın katkısıyla bu krizden en az zararla çıkacağız. Doğru kararlar alma zamanı.</div>
+                        `;
+                    } else if (currentSection === 'day3_morning_resolution') { 
+                        chat = `
+                            <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> Korkutucuydu ama ayakta kaldık. Şimdi nasıl ileri gideceğiz? Bu krizi fırsata çevirmeliyiz.</div>
+                            <div class="message"><span class="sender hr">İK Direktörü Ayşe Erdem:</span> Çalışanlarımız çok yıprandı. Moral yüksek tutmak ve güvenlerini sağlamak önceliğimiz. Eğitim ve destek şart.</div>
+                            <div class="message"><span class="sender finance">Finans Direktörü Burak Mert:</span> Finansal toparlanma ve yatırımlar için net yol haritası lazım. Siber güvenlik bütçesi ne olacak?</div>
+                            <div class="message"><span class="sender cso">CSO Can Demir:</span> Savunma mekanizmalarımızı tamamen yeniden inşa etmeliyiz. Siber İstihbarat kilit rol oynayacak. Proaktif savunma vazgeçilmez.</div>
+                            <div class="message"><span class="sender ops">Ar-Ge Direktörü Deniz Akın:</span> AI projemizin güvenliği her şeyden önemli. Fikri mülkiyetimizi güçlendirmeliyiz. Bu saldırı zafiyetlerimizi gösterdi.</div>
+                            <div class="message"><span class="sender">Siz (Siber İstihbarat Şefi):</span> Topladığımız istihbarat, gelecekteki stratejimizi belirleyecek. Bu krizden ders çıkararak daha güçlü bir ÇOLHAK Teknoloji inşa etmeliyiz.</div>
+                        `;
+                    }
+                    chatViewer.innerHTML = chat;
+                },
+
+                updateDynamicContent(sectionId) {
+                    const section = document.getElementById(sectionId);
+                    if (!section) return;
+
+                    // Dynamically update Cemil's status in day2_afternoon_crisis_mgmt
+                    if (sectionId === 'day2_afternoon_crisis_mgmt') {
+                        const cemilStatusSpan = section.querySelector('#cemil-status');
+                        if (cemilStatusSpan) {
+                            if (game.state.cemilConfronted) {
+                                cemilStatusSpan.innerHTML = '<strong>Cemil Kaan\'ın manipüle edildiği veya içeriden bilgi sızdırdığı itirafı alındı.</strong>';
+                            } else {
+                                cemilStatusSpan.innerHTML = 'içeriden bir "köstebek" veya manipüle edilmiş bir çalışan şüphesi var.';
+                            }
+                        }
+                    }
+                },
+
+                loadGameHTML() {
+                    const gameHTMLContent = `
+                        <div id="day1_morning_phishing" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-hourglass-start"></i> Gün 1: Sabah - Çok Kanallı Tehdit Başlıyor</h2>
+                            <h3>Sabah 09:00 - İlk Sinyaller</h3>
+                            <p>CTI Şefi olarak yeni haftaya başlarken, birden fazla kaynaktan gelen rahatsız edici sinyaller **alarm zillerini** çaldırıyor.</p>
+                            <p><strong>Olay 1: CEO'dan Tuhaf E-posta</strong><br>CEO Elara Yılmaz'dan, ekinde 'Proje_AI_Optimizasyon_V3.pdf' bulunan şüpheli bir e-posta aldınız. Dilbilgisi hataları ve gönderen adresindeki küçük bir yazım hatası (<code>.co</code> yerine <code>.com</code>) dikkat çekiyor. Bir hedefli oltalama mı?</p>
+                            <p><strong>Olay 2: LinkedIn'den Tuhaf İş Teklifi</strong><br>Ar-Ge mühendisi Ozan Demirci, LinkedIn'den "çok cazip" bir iş teklifi aldığını belirtti. Teklifin rakip bir firmanın "Global Ar-Ge Direktörü"nden geldiği iddia ediliyor. Profil profesyonel görünse de, bazı detaylar Ozan'a tuhaf geliyor ve özel bir portala yönlendiriliyor.</p>
+                            <img src="linkedin.png" alt="Şüpheli e-posta ve LinkedIn mesajı" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Siber İstihbarat Şefi olarak ilk adımlarınız ne olacak? Bu iki farklı vektörü nasıl ele alacaksınız? (2 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d1-m-email-analysis"><i class="fa-solid fa-envelope-open-text"></i><div class="btn-text">Seçenek A: Şüpheli CEO e-postasını teknik analize al.<small>Kötü amaçlı bağlantı ve ek dosya tespiti için derinlemesine incele.</small></div></button>
+                                    <button class="btn" data-decision="d1-m-linkedin-analysis"><i class="fa-brands fa-linkedin"></i><div class="btn-text">Seçenek B: LinkedIn profilini ve mühendise gelen mesajı analiz et.<small>Sahte olup olmadığını belirlemek için OSINT araçlarıyla incele ve yönlendirme linkini analiz et.</small></div></button>
+                                    <button class="btn" data-decision="d1-m-awareness-training"><i class="fa-solid fa-user-graduate"></i><div class="btn-text">Seçenek C: İK ile acil siber farkındalık eğitimi ve duyurusu talep et.<small>Personele oltalama ve sosyal mühendislik saldırılarına karşı bilinçlendirme eğitimi başlat.</small></div></button>
+                                    <button class="btn" data-decision="d1-m-threat-hunting"><i class="fa-solid fa-magnifying-glass"></i><div class="btn-text">Seçenek D: CSO'ya raporla ve acil "Tehdit Avcılığı" operasyonu başlatılmasını öner.<small>Ağ, e-posta sistemleri ve uç noktalarda benzer tehdit avcılığı faaliyetleri başlat.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Çok kanallı saldırılarda, her vektör farklı bir zafiyetten faydalanır. İlk tepki, yayılmayı engellemek ve kapsamı anlamak için kritiktir.</div>
+                        </div>
+
+                        <div id="day1_afternoon_phishing" class="section" data-max-selections="0">
+                            <h2><i class="fa-solid fa-comments"></i> Gün 1: Öğleden Sonra - Derinleşen Tehdit</h2>
+                            <h3>Öğleden Sonra 14:30 - Yeni Vektörler</h3>
+                            <p>Sabahki müdahalelerinizin sonuçları gelirken, saldırganların sadece e-posta ve LinkedIn ile sınırlı olmadığını anlıyorsunuz.</p>
+                            <p><strong>Olay 1: WhatsApp Üzerinden Kritik Veri Talebi</strong><br>Finans çalışanından, WhatsApp'ta eski bir iş arkadaşı kılığındaki birinden 'Proje Yapay Zeka Bütçesi Detayları' isteği geldi. Mesajda, şirket içi spesifik terimler kullanılması **içerden bilgi alındığına** dair güçlü bir işaret.</p>
+                            <p><strong>Olay 2: Vishing (Sesli Oltalama) Girişimi</strong><br>Ar-Ge Direktörü Deniz Akın, 'teknik destek' olduğunu iddia eden birinden tuhaf bir telefon görüşmesi aldığını bildirdi. Görüşmede, yapay zeka projesinin teknik detayları sorgulandı, bu da **içeriden bir bilgi kaynağı** şüphesini güçlendirdi.</p>
+                            <div class="slack-chat" id="slackChat"></div>
+                            <button class="btn btn-continue" onclick="game.showSection('day1_evening_phishing')" style="margin-top: 30px;">Devam Et</button>
+                        </div>
+
+                        <div id="day1_evening_phishing" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-cloud-moon"></i> Gün 1: Akşam - İstihbarat Toplama ve Müdahale Stratejisi</h2>
+                            <h3>Akşam 18:00 - İçeriden Şüpheler ve Kararlar</h3>
+                            <img src="tespit.png" alt="WhatsApp ve telefon görüşmesi ekran görüntüleri" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Bu yeni ve derinleşen saldırı vektörlerine karşı nasıl bir istihbarat toplama ve müdahale stratejisi izleyeceksiniz? (2 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d1-a-whatsapp-forensics"><i class="fa-brands fa-whatsapp"></i><div class="btn-text">Seçenek A: WhatsApp hesabının adli incelemesini başlat.<small>Saldırganın bilgi toplama ve güven kazanma taktiklerini belirle.</small></div></button>
+                                    <button class="btn" data-decision="d1-a-vishing-analysis"><i class="fa-solid fa-phone-volume"></i><div class="btn-text">Seçenek B: Telefon görüşmesi kayıtlarını analiz et.<small>Vishing taktiklerini deşifre et ve içeriden bilgi kaynağı şüphesini araştır.</small></div></button>
+                                    <button class="btn critical" data-decision="d1-a-personnel-interviews"><i class="fa-solid fa-user-tie"></i><div class="btn-text">Seçenek C: Hedeflenen kilit personel ile birebir güvenlik görüşmeleri yap.<small>Saldırganın manipülasyon tekniklerini anla ve içeriden sızıntı işaretlerini ara.</small></div></button>
+                                    <button class="btn" data-decision="d1-a-network-monitoring"><i class="fa-solid fa-chart-network"></i><div class="btn-text">Seçenek D: İç ağ trafiğini ve logları izlemeye al.<small>Kritik klasörlere yönelik anormal erişimleri proaktif olarak tespit et.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Saldırganlar farklı kanallar kullanarak güven kazanır ve bilgi toplar. İçeriden bilgi sızıntısı en büyük tehditlerden biridir; her kanalın kendine özgü tespit yöntemi vardır.</div>
+                        </div>
+
+                        <div id="day2_morning_ipthreat" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-fingerprint"></i> Gün 2: Sabah - Fikri Mülkiyet Tehdidi ve İç Tehdit Alarmı</h2>
+                            <h3>Sabah 10:00 - AI Projesi Tehlikede! Cemil Kaan Şüphesi!</h3>
+                            <p>E-posta analizi yapıldıysa, CEO'ya gelen e-postadaki zararlı yazılımın analizi tamamlandı. Yazılımın **'Proje Yapay Zeka' klasörüne erişmeye çalıştığı** tespit edildi. Bu, fikri mülkiyetin hedef alındığını gösteriyor. LinkedIn, WhatsApp ve telefon görüşmeleri, bu erişim için personel güvenini kazanma çabalarıydı.</p>
+                            <p>En endişe verici gelişme: Eğer personel görüşmeleri veya iç ağ izlemesi yaptıysanız, **Finans Departmanından Cemil Kaan'ın, kriz başında normalde erişimi olmayan kritik klasöre anormal erişim denemeleri yaptığı** ortaya çıktı. Cemil'in finansal sıkıntıları ve rakip teklif dedikoduları da mevcut.</p>
+                            <img src="risk.png" alt="AI projesi veri sızıntısı riski" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Fikri mülkiyeti korumak, saldırıyı durdurmak ve iç tehdidi yönetmek için en kritik eylemleriniz ne olacak? (2 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d2-m-malware-full-analysis"><i class="fa-solid fa-bug-slash"></i><div class="btn-text">Seçenek A: Zararlı yazılımın tüm yeteneklerini ve C2 sunucularını detaylı analiz et.<small>Saldırganın altyapısını ve niyetini tam olarak anla.</small></div></button>
+                                    <button class="btn critical" data-decision="d2-m-system-isolation"><i class="fa-solid fa-lock-open"></i><div class="btn-text">Seçenek B: 'Proje Yapay Zeka' klasörüne tüm dış erişimi kes ve ilgili sistemleri derhal izole et.<small>Veri sızıntısını durdurmak için anında, radikal bir müdahalede bulun.</small></div></button>
+                                    <button class="btn critical" data-decision="d2-m-confront-cemil"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek C: Cemil Kaan ile gizli bir görüşme ayarla ve şüpheli aktiviteleri hakkında yüzleştir.<small>Ona doğrudan sorular sorarak bilgi topla.</small></div></button>
+                                    <button class="btn" data-decision="d2-m-report-insider-threat"><i class="fa-solid fa-gavel"></i><div class="btn-text">Seçenek D: Hukuk departmanına ve üst yönetime iç sızma şüphesiyle rapor sun.<small>Hukuki danışmanlık talep et ve olası adli süreçler hakkında görüş al.</small></div></button>
+                                    <button class="btn" data-decision="d2-m-usom-collaboration"><i class="fa-solid fa-shield-halved"></i><div class="btn-text">Seçenek E: Ulusal Siber Olaylara Müdahale Merkezine (USOM) bilgi ver.<small>Ulus-devlet destekli şüphesiyle durumu raporla ve işbirliği talep et.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Fikri mülkiyet hırsızlığı ve iç tehditler yıkıcı olabilir. Hızlı ve doğru müdahale anahtardır. İç tehditlerde etik ve yasal sınırlar önemlidir.</div>
+                        </div>
+
+                        <div id="day2_afternoon_crisis_mgmt" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-lightbulb"></i> Gün 2: Öğleden Sonra - Kriz Yönetimi ve Karar Alma (Yüksek Baskı)</h2>
+                            <h3>Öğleden Sonora 15:30 - Kriz Ekibi Baskı Altında</h3>
+                            <p>Saldırı detayları netleşti: Yapay zeka projenizin fikri mülkiyeti ciddi tehdit altında ve <span id="cemil-status">${game.state.cemilConfronted ? '<strong>Cemil Kaan\'ın manipüle edildiği veya içeriden bilgi sızdırdığı itirafı alındı.</strong>' : 'içeriden bir "köstebek" veya manipüle edilmiş bir çalışan şüphesi var.'}</span> CEO hızla aksiyon ve net mesaj istiyor. Finans Direktörü hukuki süreçler ve kayıplar konusunda endişeli. İK Direktörü çalışan moralini ve güvenini vurguluyor.</p>
+                            <img src="team.png" alt="Kriz yönetim ekibi" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Krizin bu aşamasında, hangi stratejik kararları alacaksınız? (2 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d2-a-crisis-team-meeting"><i class="fa-solid fa-people-group"></i><div class="btn-text">Seçenek A: Tüm kilit paydaşları acil bir kriz toplantısında topla.<small>Saldırının çok kanallı yapısını ve iç tehdit durumunu (varsa) aktar, koordinasyonu güçlendir.</small></div></button>
+                                    <button class="btn critical" data-decision="d2-a-public-statement-draft"><i class="fa-solid fa-bullhorn"></i><div class="btn-text">Seçenek B: Halkla İlişkiler ve Hukuk birimleriyle kamuoyu açıklama taslağı hazırla.<small>İtibarı korumak için saldırının sofistike yapısını ve proaktif adımları vurgulayan şeffaf bir açıklama hazırla.</small></div></button>
+                                    <button class="btn" data-decision="d2-a-external-forensic-legal"><i class="fa-solid fa-gavel"></i><div class="btn-text">Seçenek C: Harici siber adli tıp ve hukuk firmalarından acil yardım iste.<small>Soruşturmayı hızlandır, yasal sürece hazırla ve bulguların tarafsızlığını temin et (maliyeti yüksek).</small></div></button>
+                                    <button class="btn" data-decision="d2-a-cemil-management" ${game.state.cemilConfronted ? '' : 'disabled'}><i class="fa-solid fa-user-shield"></i><div class="btn-text">Seçenek D: Cemil Kaan'ın durumunu İK ve Hukuk ile yönet.<small>Cemil ile gizlilik anlaşması ve psikolojik destek süreci başlat. (Sadece Cemil Kaan ile yüzleştiyseniz geçerli).</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz yönetimi sadece teknik çözümlerden ibaret değildir. İletişim, yasal uyumluluk ve paydaş yönetimi, krizin genel sonucunu belirler.</div>
+                        </div>
+
+                        <div id="day3_morning_resolution" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-check-circle"></i> Gün 3: Sabah - Toparlanma ve Gelecek Stratejileri</h2>
+                            <h3>Sabah 11:00 - Kriz Sonrası Toparlanma</h3>
+                            <p>Olayın en yoğun dönemi geride kaldı. Saldırının kapsamı ve etkileri anlaşıldı ${game.state.cemilConfronted ? 've Cemil Kaan\'ın durumu ele alındı.' : '.'} ÇOLHAK Teknoloji'nin bu deneyimden ders çıkarıp gelecekteki siber tehditlere karşı daha dirençli hale gelmesi gerekiyor. Fikri mülkiyetin korunması, çalışan güveninin yeniden sağlanması ve şirketin itibarının onarılması öncelikler arasında. Siber İstihbarat Şefi olarak, dersleri somut eylem planlarına dönüştürme ve uzun vadeli bir güvenlik stratejisi önerme göreviniz var.</p>
+                            <img src="kurtarma.png" alt="Kurtarma ve iyileşme çabaları görseli" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Şirketinizin gelecekteki siber dayanıklılığı için hangi uzun vadeli stratejileri önereceksiniz? (2 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d3-m-protocol-revision-ai-training"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: Çok Kanallı Güvenlik Protokolleri ve Yapay Zeka Destekli Farkındalık Eğitimleri.<small>İletişim kanallarında güvenlik protokollerini sıkılaştır ve AI destekli oltalama simülasyonları ile çalışanları dirençli hale getir.</small></div></button>
+                                    <button class="btn" data-decision="d3-m-ip-security-enhancement"><i class="fa-solid fa-shield-alt"></i><div class="btn-text">Seçenek B: AI Projesi Fikri Mülkiyet Güvenliğinin Kapsamlı Artırılması.<small>Kritik AI projesi verileri için ek güvenlik katmanları (DAC, MAC, DLP, IRM) uygula ve sürekli izleyen otomatik sistemler kur.</small></div></button>
+                                    <button class="btn critical" data-decision="d3-m-reputation-campaign"><i class="fa-solid fa-handshake-angle"></i><div class="btn-text">Seçenek C: Proaktif İtibar Yönetimi ve Şeffaflık Kampanyası.<small>Kamuoyuna tam şeffaflık içeren ve saldırının sektörel bir sorun olduğunu vurgulayan proaktif bir itibar yönetimi kampanyası başlat.</small></div></button>
+                                    <button class="btn" data-decision="d3-m-employee-support"><i class="fa-solid fa-people-robotic"></i><div class="btn-text">Seçenek D: Çalışan Psikolojik Destek, Güven Yeniden Yapılandırma ve İç İletişim Programları.<small>Krizin çalışanlar üzerindeki olumsuz etkisini azaltmak için kapsamlı psikolojik destek ve iç iletişim programları başlat.</small></div></button>
+                                    <button class="btn" data-decision="d3-m-insider-threat-program"><i class="fa-solid fa-user-check"></i><div class="btn-text">Seçenek E: İç Tehdit İstihbarat Programının Kurulması ve Güvenlik Kültürü Entegrasyonu.<small>Gelişmiş davranışsal analiz araçları, risk değerlendirmeleri ve etik çerçevede çalışan izleme politikaları geliştirerek İç Tehdit İstihbarat Programı kur.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz sonrası iyileşme sadece teknik yamalarla bitmez. Kurumsal güvenliği artırmak, çalışan moralini yükseltmek ve kamuoyu itibarını yönetmek uzun vadeli başarı için hayati önem taşır.</div>
+                        </div>
+
+                        <div id="finalSection" class="section centered-page" style="display: none;">
+                            <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
+                            <p>Simülasyon tamamlandı. Kriz yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+                            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                            <div class="final-metrics" id="finalMetricsContainer"></div>
+                            <div class="post-crisis-layout">
+                                <div class="event-timeline">
+                                    <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                                    <ul id="decision-timeline-list"></ul>
+                                </div>
+                                <div class="strategic-debrief">
+                                    <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme ve Dersler</h3>
+                                    <div id="strategic-debrief-content"></div>
+                                </div>
+                            </div>
+                            <div class="decision-buttons" style="margin-top: 40px;">
+                                <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                            </div>
+                        </div>
+                    `;
+                    this.elements.gameContent.innerHTML = gameHTMLContent;
+                    this.elements.sections = this.elements.gameContent.querySelectorAll('.section');
+                    hljs.highlightAll();
+                }
+            };
+            window.game.setup();
+        });
+    </script>
+</body>
+</html>

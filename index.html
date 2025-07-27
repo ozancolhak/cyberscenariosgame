@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Siber Güvenlik Simülasyonları</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+    :root {
+        --dark-blue-bg: #0A0A1E;
+        --main-accent: #00E6FF;
+        --text-color-light: #E0E0E0;
+        --text-color-medium: #A0A0A0;
+        --card-bg: rgba(20, 20, 40, 0.85);
+        --border-glow: rgba(0, 230, 255, 0.5);
+        --button-hover: #00B3CC;
+        --shadow-light: rgba(0, 230, 255, 0.2);
+        --shadow-strong: rgba(0, 230, 255, 0.4);
+        --title-glow-color: rgba(0, 230, 255, 0.4);
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: var(--dark-blue-bg);
+        color: var(--text-color-light);
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Animated grid background */
+    .grid-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+    }
+    .grid-bg::before {
+        content: '';
+        position: absolute;
+        width: 200vw;
+        height: 200vh;
+        background-image: 
+            linear-gradient(0deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%),
+            linear-gradient(90deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%);
+        background-size: 50px 50px;
+        animation: grid-move 60s linear infinite;
+        transform-origin: 0 0;
+        opacity: 0.2;
+    }
+
+    @keyframes grid-move {
+        from { transform: translate(0, 0); }
+        to { transform: translate(-50px, -50px); }
+    }
+
+    .container {
+        background-color: var(--card-bg);
+        padding: 50px 70px;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px var(--shadow-strong);
+        max-width: 900px;
+        width: 100%;
+        z-index: 1;
+        border: 1px solid var(--border-glow);
+        backdrop-filter: blur(8px);
+        animation: fadeInScale 1s ease-out forwards;
+        position: relative;
+    }
+
+    @keyframes fadeInScale {
+        from { opacity: 0; transform: scale(0.95) translateY(20px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    h1 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 3.5em;
+        margin-bottom: 25px;
+        color: var(--main-accent);
+        text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color);
+        letter-spacing: 2px;
+        animation: textGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes textGlow {
+        from { text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color); }
+        to { text-shadow: 0 0 8px var(--title-glow-color), 0 0 15px var(--title-glow-color); }
+    }
+
+    p {
+        font-size: 1.3em;
+        line-height: 1.8;
+        margin-bottom: 40px;
+        color: var(--text-color-medium);
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .start-button {
+        display: inline-block;
+        padding: 18px 45px;
+        font-size: 1.6em;
+        font-weight: bold;
+        color: var(--dark-blue-bg);
+        background-color: var(--main-accent);
+        border: none;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        box-shadow: 0 8px 25px var(--shadow-strong);
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        z-index: 1;
+        position: relative;
+    }
+
+    .start-button:hover {
+        background-color: var(--button-hover);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px var(--shadow-strong);
+    }
+
+    .start-button:active {
+        transform: translateY(0);
+        box-shadow: 0 5px 15px var(--shadow-light);
+    }
+
+    /* Küçük sağ alt köşede link */
+    .info-link {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        background: var(--card-bg);
+        color: var(--main-accent);
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        font-size: 0.9em;
+        padding: 8px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--border-glow);
+        box-shadow: 0 6px 20px var(--shadow-strong);
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        z-index: 1000;
+        user-select: none;
+    }
+    .info-link:hover {
+        background-color: var(--main-accent);
+        color: var(--dark-blue-bg);
+    }
+</style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <div class="container">
+        <h1>Siber Güvenlik Simülasyonları</h1>
+        <p>Dijital dünyanın derinliklerinde, siber tehditler her an pusuda bekliyor. Bu simülasyon serisinde, 8 farklı senaryoda uzman bir rol üstlenerek en karmaşık siber krizleri yönetecek, stratejik kararlar alacak ve dijital güvenliği sağlayacaksın. Her seçimin, krizin kaderini belirleyecek!</p>
+        <a href="krizler.html" class="start-button">Simülasyona Başla</a>
+    </div>
+
+    <a href="hakkinda.html" class="info-link" title="Proje Hakkında & Geliştirici">
+        Proje Hakkında &amp; Geliştirici
+    </a>
+</body>
+</html>

