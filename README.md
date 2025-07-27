@@ -1,1 +1,1 @@
-🚨 Etkileşimli bir siber kriz simülasyonu: CyberScenario Türkçe 📌 Canlı demo: https://ozancolhak.github.io/cyberscenarios/
+🚨 Etkileşimli bir siber kriz simülasyonu: CyberScenario Türkçe 📌 Canlı demo: https://ozancolhak.github.io/cyberscenariosgame/
