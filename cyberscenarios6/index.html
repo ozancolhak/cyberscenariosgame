@@ -293,7 +293,7 @@
     <div class="container">
         <div id="introSection" class="centered-page">
             <h1><i class="fa-solid fa-cloud-bolt"></i> Bulut Güvenliği Krizi Simülasyonu</h1>
-            <p style="max-width: 600px;">Hoş geldiniz, **ÇOLHAK Teknoloji**'nin **Kıdemli Bulut Güvenliği Uzmanı**! Şirketiniz, finans sektörüne yönelik risk analiz ürününü bulut ortamında barındırıyor ve lansmana sadece 72 saat kaldı. Ancak, güvenlik ekibimiz dışarıdan gelen olağandışı veri çekme talepleri ve sızıntı raporlarıyla alarma geçmiş durumda. Bir saldırganın, korumasız bırakılmış bir veri deposu, yanlış yapılandırılmış erişim izni veya devre dışı kalmış bir güvenlik adımı üzerinden sızdığı düşünülüyor. Görevin: Bu gizli veri sızıntısını durdurmak, hasarı kontrol altına almak ve bulut altyapınızın gelecekteki dayanıklılığını sağlamak!</p>
+            <p style="max-width: 600px;">Hoş geldiniz, **ÇOLHAK Teknoloji**'nin **Siber Güvenlik Mühendisi**! Şirketiniz, finans sektörüne yönelik risk analiz ürününü bulut ortamında barındırıyor ve lansmana sadece 72 saat kaldı. Ancak, güvenlik ekibimiz dışarıdan gelen olağandışı veri çekme talepleri ve sızıntı raporlarıyla alarma geçmiş durumda. Bir saldırganın, korumasız bırakılmış bir veri deposu, yanlış yapılandırılmış erişim izni veya devre dışı kalmış bir güvenlik adımı üzerinden sızdığı düşünülüyor. Görevin: Bu gizli veri sızıntısını durdurmak, hasarı kontrol altına almak ve bulut altyapınızın gelecekteki dayanıklılığını sağlamak!</p>
             <img src="images/intro.png" alt="Cloud security themed intro image" class="scenario-image">
 
             <div class="intro-info-grid">
@@ -303,7 +303,7 @@
                         <li class="your-role">
                             <span class="icon"><i class="fa-solid fa-cloud-bolt"></i></span>
                             <div>
-                                <strong>Sizin Rolünüz: Kıdemli Bulut Güvenliği Uzmanı</strong> 
+                                <strong>Sizin Rolünüz: Siber Güvenlik Mühendisi</strong> 
                                 <small>Bulut altyapısının güvenliğinden sorumlusun. Teknik analizler, yanlış yapılandırmaların tespiti ve erişim izinleri gibi alanlarda aktif rol alıyorsun. Seçimlerin sonucu doğrudan etkileyecek.</small>
                             </div>
                         </li>
@@ -368,7 +368,7 @@
                     </ul>
                     <img src="images/alarm.png" alt="Veri sızıntısı alarmı görseli" class="scenario-image">
                     <div class="interactive-element">
-                        <h4>Kıdemli Bulut Güvenliği Uzmanı olarak ilk tepkin ne olacak?</h4>
+                        <h4>Siber Güvenlik Mühendisi olarak ilk tepkin ne olacak?</h4>
                         <div class="decision-buttons">
                             <button class="btn" data-decision="d1-a-cut-connection" data-next-section="day1_s3_scan"><i class="fa-solid fa-cut"></i><div class="btn-text">Seçenek A: `Analiz-Verileri-Uretim` deposu ile tüm dış bağlantıları derhal kes.<small>Sızıntıyı anında durdurmak için hızlı ve radikal bir müdahale yap.</small></div></button>
                             <button class="btn" data-decision="d1-a-monitor-attacker" data-next-section="day1_s3_scan"><i class="fa-solid fa-eye"></i><div class="btn-text">Seçenek B: Sistemleri izlemeye devam ederek saldırganın yöntemlerini analiz et.<small>Saldırının doğasını, hedeflerini ve kullanılan zafiyetleri anlamak için gizli gözlem yap.</small></div></button>
@@ -446,7 +446,7 @@
                     <p>Medya krizinin ortasında, yönetim kurulu acil bir toplantı için bir araya gelir. Herkesin farklı bir önceliği vardır ve tansiyon yüksektir. Karar anı gelmiştir ve herkes sana bakıyor. Ve toplantının sonunda sana 2 seçenek sundular:</p>
                     <img src="images/board.png" alt="Yönetim kurulu toplantısı görseli" class="scenario-image">
                     <div class="interactive-element">
-                        <h4>Kıdemli Bulut Güvenliği Uzmanı olarak, tüm bu baskılar altında, şirketin kaderini belirleyecek son büyük teknik ve stratejik kararı nasıl vereceksin?</h4>
+                        <h4>Siber Güvenlik Mühendisi olarak, tüm bu baskılar altında, şirketin kaderini belirleyecek son büyük teknik ve stratejik kararı nasıl vereceksin?</h4>
                         <div class="decision-buttons">
                             <button class="btn critical" data-decision="d3-m-take-offline" data-next-section="day3_regulatory_threat"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek A: Tüm kritik sistemleri derhal kapat ve kapsamlı bir güvenlik denetimi ve temizliği yap.<small>En güvenli yolu seç, ancak lansmanı süresiz ertele ve büyük finansal kayıplara yol aç.</small></div></button>
                             <button class="btn" data-decision="d3-m-patch-continue" data-next-section="day3_regulatory_threat"><i class="fa-solid fa-wrench"></i><div class="btn-text">Seçenek B: Hızlı güvenlik yamaları uygula ve ürün lansmanına devam et.<small>Riski kabul et, lansmanı kurtar, ancak gizli zafiyetler veya kalan saldırganlar için risk altında ol.</small></div></button>
@@ -841,13 +841,13 @@
 
                     let debriefHTML = '';
                     if (badgeInfo.text === 'BULUT KAHRAMANI') { 
-                        debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir Kıdemli Bulut Güvenliği Uzmanı olarak, bulut ortamınızdaki sinsi zafiyetleri ustalıkla tespit ettiniz ve en hassas müşteri verilerinin sızıntısını minimuma indirdiniz. Hızlı teknik müdahaleleriniz, doğru iletişim stratejileriniz ve yasal uyumdaki liderliğiniz sayesinde ÇOLHAK Teknoloji, bu büyük krizden güçlenerek çıktı. Bulut güvenliğinde sektör lideri olduğunuzu kanıtladınız!</p>`;
+                        debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir Siber Güvenlik Mühendisi olarak, bulut ortamınızdaki sinsi zafiyetleri ustalıkla tespit ettiniz ve en hassas müşteri verilerinin sızıntısını minimuma indirdiniz. Hızlı teknik müdahaleleriniz, doğru iletişim stratejileriniz ve yasal uyumdaki liderliğiniz sayesinde ÇOLHAK Teknoloji, bu büyük krizden güçlenerek çıktı. Bulut güvenliğinde sektör lideri olduğunuzu kanıtladınız!</p>`;
                     } else if (badgeInfo.text === 'DİRENÇLİ BULUT UZMANI') { 
                         debriefHTML += `<p><strong>Başarılı Bir Müdahale!</strong> Oldukça karmaşık bir bulut güvenliği kriziyle karşı karşıya kalmanıza rağmen, etkili teknik müdahalelerle ve stratejik kararlarla krizi kontrol altına almayı başardınız. Bazı veri sızıntıları ve finansal kayıplar yaşansa da, genel olarak müşteri güvenini ve şirket itibarını önemli ölçüde korudunuz. Aldığınız derslerle gelecekteki bulut güvenliği duruşunuzu daha da sağlamlaştıracaksınız.</p>`;
                     } else if (badgeInfo.text === 'BULUTTA ZORLU DENEYİM') { 
                         debriefHTML += `<p><strong>Öğrenilen Büyük Dersler:</strong> Bulut güvenliği krizini yönetmekte zorlandınız ve kritik müşteri verilerinin sızmasıyla sonuçlanan önemli kayıplar yaşadınız. Finansal zararlar arttı ve şirketin itibarı ciddi şekilde zedelendi. Ancak bu deneyim, bulut güvenliği stratejilerinizi kökten değiştirmek ve altyapınızı daha sağlam hale getirmek için paha biçilmez dersler sağladı. Acil eylem planlarına ihtiyacınız var.</p>`;
                     } else { 
-                        debriefHTML += `<p><strong>BULUT FELAKETİ:</strong> Kıdemli Bulut Güvenliği Uzmanı olarak bu krizi yönetmekte ciddi zorluklar yaşadınız. Büyük miktarda hassas müşteri verisi sızdırıldı, finansal kayıplar devasa boyutlara ulaştı ve şirketin itibarı ile müşteri güveni tamamen çöktü. Yasal soruşturmalar ve yüksek para cezaları kaçınılmaz görünüyor. Bu durum, ÇOLHAK Teknoloji için bulut güvenliği stratejilerinde köklü bir değişim gerektiren acı bir ders oldu.</p>`;
+                        debriefHTML += `<p><strong>BULUT FELAKETİ:</strong> Siber Güvenlik Mühendisi olarak bu krizi yönetmekte ciddi zorluklar yaşadınız. Büyük miktarda hassas müşteri verisi sızdırıldı, finansal kayıplar devasa boyutlara ulaştı ve şirketin itibarı ile müşteri güveni tamamen çöktü. Yasal soruşturmalar ve yüksek para cezaları kaçınılmaz görünüyor. Bu durum, ÇOLHAK Teknoloji için bulut güvenliği stratejilerinde köklü bir değişim gerektiren acı bir ders oldu.</p>`;
                     }
                     document.getElementById('strategic-debrief-content').innerHTML = debriefHTML;
                     
