@@ -129,13 +129,13 @@
     <div class="container">
         <div id="introSection" class="centered-page">
             <h1><i class="fa-solid fa-user-secret"></i> Tedarik Zinciri Saldırı Simülasyonu</h1>
-            <p style="max-width: 600px;">Hoş geldiniz, Siber Tehdit İstihbaratı (CTI) Uzmanı! Bugün şirketiniz **ÇOLHAK Teknoloji**'yi saran, küresel bir tedarik zinciri felaketiyle yüzleşeceksiniz. Gizli kapılar, sızan veriler ve sarsılan müşteri güveni... Bu simülasyonda, sadece teknik sorunları çözmekle kalmayacak, aynı zamanda stratejik istihbaratın gücünü kullanarak karmaşık bir siber savaşı yönetecek ve şirketin kaderini belirleyeceksiniz. Hazır mısınız?</p>
+            <p style="max-width: 600px;">Hoş geldiniz, Siber Güvenlik Yöneticisi! Bugün şirketiniz **ÇOLHAK Teknoloji**'yi saran, küresel bir tedarik zinciri felaketiyle yüzleşeceksiniz. Gizli kapılar, sızan veriler ve sarsılan müşteri güveni... Bu simülasyonda, sadece teknik sorunları çözmekle kalmayacak, aynı zamanda stratejik istihbaratın gücünü kullanarak karmaşık bir siber savaşı yönetecek ve şirketin kaderini belirleyeceksiniz. Hazır mısınız?</p>
             <img src="images/intro_cyber.png" alt="Siber güvenlik temalı bir giriş görseli" class="scenario-image">
 
             <div id="rolesInfo">
                 <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
                 <ul>
-                    <li class="your-role"><strong>Sizin Rolünüz: CTI Uzmanı</strong> - Siber tehdit istihbaratını toplamak, analiz etmek, yorumlamak ve kriz ekibine rehberlik etmekle sorumlusunuz. Seçimleriniz sonucu doğrudan etkileyecektir.</li>
+                    <li class="your-role"><strong>Sizin Rolünüz: Siber Güvenlik Yöneticisi</strong> - Siber tehdit istihbaratını toplamak, analiz etmek, yorumlamak ve kriz ekibine rehberlik etmekle sorumlusunuz. Seçimleriniz sonucu doğrudan etkileyecektir.</li>
                     <li><strong>CEO Elara Yılmaz</strong> - Şirketin en üst düzey yöneticisi, genel iş sürekliliği ve kamuoyu algısına odaklanmış durumda.</li>
                     <li><strong>CSO Can Demir</strong> - Siber güvenlik operasyonlarından ve savunma stratejilerinden sorumlu.</li>
                     <li><strong>Hukuk Müşaviri Zeynep Kaya</strong> - Hukuki uyumluluğu denetler ve yasal riskleri azaltmak için kamuoyu açıklamaları konusunda danışmanlık yapar.</li>
@@ -615,7 +615,7 @@
                             <div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Kaya:</span> Yasal sorumluluklarımızı dikkatle değerlendirmeliyiz. Aceleci açıklamalar, ileride sorun yaratabilir.</div>
                             <div class="message"><span class="sender ops">Operasyon Direktörü Levent Akın:</span> Müşterilerimizden yoğun şikayetler alıyoruz. Sistemler ne zaman normale dönecek? İş sürekliliğimiz tehlikede!</div>
                             <div class="message"><span class="sender cso">CSO Can Demir:</span> Ekiplerimiz 7/24 çalışıyor. CTI'dan gelen bilgiler, doğru adımları atmamız için hayati önem taşıyor.</div>
-                            <div class="message"><span class="sender">Siz (CTI Uzmanı):</span> Mevcut verileri hızla analiz ediyoruz. Kara Tayfun'un TTP'lerini anlamak, karşı önlemler için kritik.</div>
+                            <div class="message"><span class="sender">Siz (Siber Güvenlik Yöneticisi):</span> Mevcut verileri hızla analiz ediyoruz. Kara Tayfun'un TTP'lerini anlamak, karşı önlemler için kritik.</div>
                         `;
                     } else if (currentSection === 'day3_morning_communication' || currentSection === 'day3_afternoon_strategy') { 
                         chat = `
@@ -623,7 +623,7 @@
                             <div class="message"><span class="sender ops">Operasyon Direktörü Levent Akın:</span> Müşteri güvenini yeniden kazanmak için somut adımlara ihtiyacımız var. Kesintilerin telafisi önemli.</div>
                             <div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Kaya:</span> Yaşanan olay, sözleşmelerimizdeki güvenlik maddelerinin gözden geçirilmesi gerektiğini gösterdi.</div>
                             <div class="message"><span class="sender cso">CSO Can Demir:</span> Savunma mekanizmalarımızı daha da güçlendirmeliyiz. CTI ekibinin rolü bu süreçte anahtar olacak.</div>
-                            <div class="message"><span class="sender">Siz (CTI Uzmanı):</span> Kök neden analizi, gelecekteki saldırıları önlemek için bize ışık tutuyor. Topladığımız istihbarat çok değerli.</div>
+                            <div class="message"><span class="sender">Siz (Siber Güvenlik Yöneticisi):</span> Kök neden analizi, gelecekteki saldırıları önlemek için bize ışık tutuyor. Topladığımız istihbarat çok değerli.</div>
                         `;
                     }
                     chatViewer.innerHTML = chat;
@@ -639,7 +639,7 @@
                             <p>Gönderi, Temel yazılım altyapısının "gizli bir kapıya" sahip olabileceğine dair belirsiz ama endişe verici imalar içeriyor. Henüz bir kanıt yok, sadece bir fısıltı.</p>
                             <img src="images/darkweb_forum.png" alt="Dark Web forumunda şifreli gönderi" class="scenario-image">
                             <div class="interactive-element">
-                                <h4>CTI Uzmanı olarak ilk adımın ne olacak?</h4>
+                                <h4>Siber Güvenlik Yöneticisi olarak ilk adımın ne olacak?</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="g1-s-bilgilendir-ust-yonetim" data-next-section="day1_afternoon"><i class="fa-solid fa-share-nodes"></i><div class="btn-text">Seçenek A: Hemen CEO Elara Yılmaz ve CSO Can Demir'i Bilgilendir.<small>Durumu anında en üst yönetime raporlayarak proaktif bir yaklaşım sergile.</small></div></button>
                                     <button class="btn" data-decision="g1-s-istihbarat-dogrula" data-next-section="day1_afternoon"><i class="fa-solid fa-magnifying-glass"></i><div class="btn-text">Seçenek B: Önce Kendi İstihbaratını Doğrula ve Güvenilir Kaynaklardan Ek Bilgi Topla.<small>Dark web gönderisinin güvenilirliğini teyit etmek için daha fazla araştırma yap.</small></div></button>
@@ -654,7 +654,7 @@
                             <p>Sektör lideri bir siber güvenlik araştırma firması olan "Tehdit Analiz Laboratuvarı" (TAL), "Kara Tayfun" grubunun tedarik zinciri saldırılarında yeni bir vektör kullandığına dair bir uyarı yayınladı. Uyarıda, spesifik olarak yazılım imzalama süreçlerine sızıldığı ve meşru yazılımlara gizlice kötü amaçlı kod eklendiği belirtiliyor. Henüz ÇOLHAK veya Smart Teknoloji'den bahsedilmiyor, ancak temel yazılım altyapısının yapısına dair teknik detaylarla şaşırtıcı benzerlikler var.</p>
                             <img src="images/sector_alert.png" alt="Sektör uyarı ekran görüntüsü" class="scenario-image">
                             <div class="interactive-element">
-                                <h4>CTI Uzmanı olarak hangi adımı atacaksın?</h4>
+                                <h4>Siber Güvenlik Yöneticisi olarak hangi adımı atacaksın?</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="g1-o-teknik-tarama" data-next-section="day2_morning"><i class="fa-solid fa-bug-slash"></i><div class="btn-text">Seçenek A: CSO Can Demir'in Ekibine Detaylı IOC/TTP Listesi Sağla ve Acil Teknik Tarama Talep Et.<small>Olası zafiyetleri hızla tespit etmek için teknik ekibi yönlendir.</small></div></button>
                                     <button class="btn" data-decision="g1-o-tedarikci-iletisim" data-next-section="day2_morning"><i class="fa-solid fa-handshake"></i><div class="btn-text">Seçenek B: Tedarikçi İlişkileri Yöneticisi Dr. Aylin Güneş Aracılığıyla Smart Teknoloji ile Derhal İletişime Geç.<small>Ortak soruşturma başlatmak için tedarikçiyle temasa geç.</small></div></button>
@@ -689,7 +689,7 @@
                             <p>Ayrıca, dark web'deki istihbarat kanallarınızda "SynapseTech" ve "tedarik zinciri zafiyeti" anahtar kelimeleriyle ilgili yeni, şifreli mesajlar dolaşmaya başladı. Bu mesajlar, başka siber suç gruplarının da bu zafiyeti kendi çıkarları için kullanmaya çalıştığına işaret ediyor olabilir.</p>
                             <img src="images/synapse_tech_analysis.png" alt="SynapseTech analiz görseli" class="scenario-image">
                             <div class="interactive-element">
-                                <h4>CTI Uzmanı olarak bir sonraki kritik adımın ne olacak?</h4>
+                                <h4>Siber Güvenlik Yöneticisi olarak bir sonraki kritik adımın ne olacak?</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="g2-o-synapsetech-arastirma" data-next-section="day3_morning_communication"><i class="fa-solid fa-search"></i><div class="btn-text">Seçenek A: SynapseTech Kütüphanesindeki Zafiyeti Derinlemesine Araştır ve Kötüye Kullanım Biçimlerini Belgele.<small>Bu, saldırganın tam giriş vektörünü anlamanı ve benzer saldırıları önlemeni sağlayacak.</small></div></button>
                                     <button class="btn" data-decision="g2-o-sucu-resmi-makamlara-bildir" data-next-section="day3_morning_communication"><i class="fa-solid fa-building-columns"></i><div class="btn-text">Seçenek B: Ulusal Siber Güvenlik Birimlerine (CERT/CSIRT) ve Kolluk Kuvvetlerine Resmi Bildirimde Bulun.<small>Saldırının ulusal güvenliği etkileyebileceğini vurgulayarak yasal süreci ve resmi soruşturmayı başlat.</small></div></button>
