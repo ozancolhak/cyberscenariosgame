@@ -454,9 +454,9 @@
                     };
 
                     if (changes.financialLoss) metricsHTML += formatChange('Finansal Zarar', changes.financialLoss, '₺', 'fa-sack-xmark', false);
-                    if (changes.dataLeak) metricsHTML += formatChange('Veri Sızıntısı', changes.dataLeak, '%', 'fa-database', false);
+                    if (changes.dataLeak) metricsHTML += formatChange('Veri Sızıntısı', changes.dataLeak, '%', 'fa-database', changes.dataLeak < 0);
                     if (changes.reputation !== undefined) metricsHTML += formatChange('İtibar Puanı', changes.reputation, '', 'fa-building-shield', changes.reputation > 0);
-                    if (changes.affectedSystems) metricsHTML += formatChange('Etkilenen Sistem', changes.affectedSystems, '', 'fa-triangle-exclamation', false);
+                    if (changes.affectedSystems) metricsHTML += formatChange('Etkilenen Sistem', changes.affectedSystems, '', 'fa-triangle-exclamation', changes.affectedSystems < 0);
                     
                     if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1.1em; opacity: 0.8;">Bu kararın metriklere doğrudan bir etkisi olmadı.</p>';
 
@@ -802,8 +802,6 @@
 
                 async saveLeaderboard(finalScore) {
                     const name = localStorage.getItem('playerName') || 'Anonim';
-                    }
-                    
                     const payload = {
                         scenario: 'v4-supplychain',
                         name: name.toString().slice(0, 40),
