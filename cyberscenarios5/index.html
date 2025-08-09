@@ -202,7 +202,7 @@
             background-color: var(--section-bg);
             border-radius: 8px;
             padding: 25px;
-            margin-top: 0; /* Adjusted for direct placement after h2 */
+            margin-top: 0;
             box-shadow: 0 5px 15px var(--shadow-light);
             width: 100%;
             max-width: 600px;
@@ -222,7 +222,7 @@
             gap: 8px;
             padding: 8px 15px;
             border-radius: 5px;
-            background-color: var(--interactive-bg); /* Use interactive-bg for metric changes within summary */
+            background-color: var(--interactive-bg);
             box-shadow: inset 0 1px 5px rgba(0,0,0,0.2);
             justify-content: center;
         }
@@ -231,7 +231,6 @@
         .metric-change .negative { color: var(--accent-red); }
         .metric-change .neutral { color: var(--accent-blue); }
 
-        /* Start Section New Styles */
         .intro-info-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -304,7 +303,6 @@
             opacity: 0.8;
             margin-top: 3px;
         }
-        /* End Start Section New Styles */
 
         #statusBar {
             display: flex;
@@ -452,14 +450,9 @@
             color: var(--accent-purple);
         }
 
-        /* Final Section specific styles */
-        #finalSection {
-            text-align: center;
-        }
+        #finalSection { text-align: center; }
 
-        #performance-badge-container {
-            margin: 25px 0;
-        }
+        #performance-badge-container { margin: 25px 0; }
 
         #performance-badge {
             padding: 15px 35px;
@@ -472,9 +465,7 @@
             transition: transform 0.3s ease;
         }
 
-        #performance-badge:hover {
-            transform: scale(1.08);
-        }
+        #performance-badge:hover { transform: scale(1.08); }
 
         .post-crisis-layout {
             display: grid;
@@ -555,18 +546,11 @@
             margin-bottom: 4px;
         }
 
-        .event-timeline li .decision-impact {
-            font-style: italic;
-            opacity: 0.8;
-            font-size: 0.9em;
-        }
-
         #strategic-debrief-content p {
             font-size: 1.1em;
             margin-bottom: 15px;
         }
 
-        /* YENİ EKLENEN STİLLER */
         #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
         #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
         #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
@@ -639,14 +623,14 @@
     <div class="container">
         <div id="introSection" class="centered-page">
             <h1><i class="fa-solid fa-envelope-open-text"></i> Phishing Kriz Simülasyonu</h1>
-            <p style="max-width: 600px;">Hoş geldiniz, ÇOLHAK Teknoloji’nin yeni Siber İstihbarat Şefi! Şirketiniz, ses getiren yapay zeka tabanlı bir ürün geliştiriyor. Ancak rakip bir grup, fikri mülkiyeti çalmak için çok katmanlı bir spear phishing saldırısı başlatıyor. Bu saldırı sadece e-postalarla sınırlı değil — LinkedIn, WhatsApp ve telefon görüşmeleri ile destekleniyor. Görevin: Anormal davranışları tespit edip şirketi bu sinsi saldırıya karşı korumak!</p>
+            <p style="max-width: 600px;">Hoş geldiniz, ÇOLHAK Teknoloji’nin yeni SOC Analisti! Şirketiniz, ses getiren yapay zeka tabanlı bir ürün geliştiriyor. Ancak rakip bir grup, fikri mülkiyeti çalmak için çok katmanlı bir spear phishing saldırısı başlatıyor. Bu saldırı sadece e-postalarla sınırlı değil — LinkedIn, WhatsApp ve telefon görüşmeleri ile destekleniyor. Görevin: Anormal davranışları tespit edip şirketi bu sinsi saldırıya karşı korumak!</p>
             <img src="intro.png" alt="Siber güvenlik temalı bir giriş görseli" class="scenario-image">
 
             <div class="intro-info-grid">
                 <div class="intro-roles-container">
                     <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
                     <ul>
-                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span><div><strong>Sizin Rolünüz: Siber İstihbarat Şefi</strong> <small>Çok kanallı oltalama saldırılarını tespit etmek, analiz etmek ve krizi yönetmekle sorumlusunuz.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span><div><strong>Sizin Rolünüz: SOC Analisti</strong> <small>Çok kanallı oltalama saldırılarını tespit etmek, analiz etmek ve krizi yönetmekle sorumlusunuz.</small></div></li>
                         <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span><div><strong>CEO Elara Yılmaz</strong> <small>Şirketin itibarına ve lansmanına odaklı.</small></div></li>
                         <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span><div><strong>CSO Can Demir</strong> <small>Siber güvenliğe odaklı sorumlu.</small></div></li>
                         <li><span class="icon"><i class="fa-solid fa-user-group"></i></span><div><strong>İK Direktörü Ayşe Erdem</strong> <small>Çalışan morale ve verimliliğine odaklı.</small></div></li>
@@ -724,204 +708,42 @@
                     crisisMeetingHeld: false, publicStatementPrepared: false, externalForensicHired: false, cemilManaged: false,
                     protocolsRevised: false, ipSecurityEnhanced: false, reputationCampaignLaunched: false, employeeSupportInitiated: false, insiderThreatProgramStarted: false,
                     decisionHistory: [],
-                    currentTurnDecisions: [], // Store full decision info for the current turn
+                    currentTurnDecisions: [],
                     totalScore: null,
                 },
 
                 elements: {},
                 
                 timer: {
-                    total: 300, // 5 dakika
+                    total: 300,
                     remaining: 300,
                     intervalId: null,
                     running: false
                 },
                 
                 decisionInfo: {
-                    // Day 1 Morning
-                    'd1-m-email-analysis': {
-                        title: "CEO Maili Detaylı Analizi",
-                        text: "CEO'dan gelen e-postayı teknik analize aldınız. Kötü amaçlı bağlantı/ek dosya tespitiyle saldırının birincil vektörünü anladınız. Dosya bir dropper içeriyordu.",
-                        strat: "Oltalama saldırılarında erken teknik analiz, zinciri kırmak için esastır. Hız, zararı minimize eder.",
-                        changes: { financialLoss: 5000, ipIntegrity: -2, employeeTrust: -1 },
-                        clue: 'emailAnalyzed',
-                        impact: 'Positive',
-                    },
-                    'd1-m-linkedin-analysis': {
-                        title: "LinkedIn Profil Analizi ve OSINT",
-                        text: "LinkedIn profilini ve mesajı analiz ettiniz. Sahte profil ve kimlik avı portalı URL'si tespit edildi. Saldırganın sosyal mühendislik yeteneklerini anladınız.",
-                        strat: "Sosyal mühendislikte OSINT, saldırganın hazırlığını anlamak için değerlidir. Yönlendirmeleri takip etmek kritik.",
-                        changes: { financialLoss: 2000, ipIntegrity: -1, employeeTrust: -1, reputation: -1 },
-                        clue: 'linkedinProfileAnalyzed',
-                        impact: 'Neutral',
-                    },
-                    'd1-m-awareness-training': {
-                        title: "Acil Siber Farkındalık Eğitimi",
-                        text: "İK ile acil oltalama ve sosyal mühendislik farkındalık eğitimi talep ettiniz. Duyuru yapıldı, program planlandı. Uzun vadede çalışan direncini artırabilir.",
-                        strat: "Çalışan farkındalığı, insan zafiyetini hedef alan saldırılara karşı en güçlü savunmadır. Eğitimin etkisi anında olmayabilir.",
-                        changes: { financialLoss: 10000, employeeTrust: +5, reputation: -2 },
-                        clue: 'awarenessTrainingInitiated',
-                        impact: 'Neutral',
-                    },
-                    'd1-m-threat-hunting': {
-                        title: "Acil Tehdit Avcılığı",
-                        text: "CSO'ya raporlayıp kapsamlı tehdit avcılığı başlattınız. Potansiyel sızıntıları erken tespit etme şansı doğdu, ancak yoğun kaynak kullanımı gerektirdi.",
-                        strat: "Proaktif tehdit avcılığı, bilinmeyen saldırıları tespit etmede etkilidir, ancak maliyetli olabilir ve planlama gerektirir.",
-                        changes: { financialLoss: 25000, ipIntegrity: -3, reputation: -3 },
-                        clue: 'threatHuntingStarted',
-                        impact: 'Negative',
-                    },
-
-                    // Day 1 Evening - New Section
-                    'd1-a-whatsapp-forensics': {
-                        title: "WhatsApp Hesabı Adli İncelemesi",
-                        text: "WhatsApp hesabını adli incelemeye aldınız. Saldırganın iç terimler ve spesifik proje bilgileri kullandığını tespit ettiniz, bu da içeriden bilgi alındığını işaret etti.",
-                        strat: "Mesajlaşma uygulamaları incelemesi, saldırganın yöntemlerini anlamak için esastır. İçeriden bilgi sızıntısı şüphesi güçlenir.",
-                        changes: { financialLoss: 15000, ipIntegrity: -3 },
-                        clue: 'whatsappForensicallyExamined',
-                        impact: 'Negative',
-                    },
-                    'd1-a-vishing-analysis': {
-                        title: "Telefon Görüşmesi Kayıt Analiz (Vishing)",
-                        text: "Telefon görüşmesi kayıtlarını analiz ettiniz. Saldırganın vishing taktiklerini ve proje hakkında hassas bilgiler sorguladığını deşifre ettiniz. İçeriden bilgi kaynağı şüphesi doğdu.",
-                        strat: "Vishing analizleri, gelecekteki saldırılara karşı savunmayı geliştirir. İç tehdit işaretlerini gözden kaçırmamak kritik.",
-                        changes: { financialLoss: 10000, ipIntegrity: -5 },
-                        clue: 'vishingAnalyzed',
-                        impact: 'Negative',
-                    },
-                    'd1-a-personnel-interviews': {
-                        title: "Hedeflenen Personel ile Güvenlik Görüşmeleri",
-                        text: "Kilit personelle birebir görüşmeler yaptınız. Saldırganın manipülasyon tekniklerini anladınız. Cemil Kaan adlı çalışanın tedirginliği ve finansal sıkıntıları dikkat çekti; içeriden sızıntı ihtimalini güçlendirdi.",
-                        strat: "İnsan istihbaratı (HUMINT), siber krizleri çalışan gözünden anlamak için hayati önem taşır. Dikkatli ve empatik yaklaşım gerekir.",
-                        changes: { employeeTrust: -5, reputation: -3, financialLoss: 3000 },
-                        clue: 'personnelInterviewed',
-                        impact: 'Neutral',
-                    },
-                    'd1-a-network-monitoring': {
-                        title: "İç Ağ Trafiği ve Log İzleme",
-                        text: "Ağ trafiği ve logları anlık izlemeye aldınız. Cemil Kaan'ın kritik 'Proje Yapay Zeka' klasörüne anormal sayıda erişim denemesi yaptığı tespit edildi. Bu ciddi bir ihlal işaretiydi.",
-                        strat: "Ağ izleme ve log analizi, gelişmiş saldırılarda içerideki hareketleri tespit etmek için temeldir. Kritik varlıklara yönelik anormal erişimleri gözlemlemek hayati.",
-                        changes: { financialLoss: 40000, ipIntegrity: -8, reputation: -2 },
-                        clue: 'internalNetworkMonitored',
-                        impact: 'Negative',
-                    },
-
-                    // Day 2 Morning
-                    'd2-m-malware-full-analysis': {
-                        title: "Zararlı Yazılım Tersine Mühendisliği ve C2 Tespiti",
-                        text: "Zararlı yazılımı tersine mühendislik ekibine sevk ettiniz. Yazılımın arka kapı oluşturduğunu, 'Proje Yapay Zeka'ya eriştiğini ve verileri harici C2 sunucusuna aktardığını belirlediniz. Saldırganın hedefi ve altyapısı açığa çıktı, iç tehdit şüphesi güçlendi.",
-                        strat: "Zararlı yazılım analizi ve C2 tespiti, saldırının teknik mekanizmasını anlamak için kritiktir. Etkili karşı önlemler için temel bilgi sağlar.",
-                        changes: { financialLoss: 30000, ipIntegrity: -10, reputation: -5 },
-                        clue: 'malwareAnalyzed',
-                        impact: 'Negative',
-                    },
-                    'd2-m-system-isolation': {
-                        title: "Kritik Sistemlerin Acil İzolasyonu",
-                        text: "'Proje Yapay Zeka' klasörüne dış erişimi derhal kestiniz ve kritik geliştirme ortamlarını izole ettiniz. Veri sızıntısını büyük ölçüde engellediniz, ancak geliştirme süreci aksadı ve operasyonel maliyetler arttı.",
-                        strat: "Kritik verinin korunması önceliktir. Şüpheli sistemler hızla izole edilmeli; bu, iş sürekliliğini etkileyebilir ama varlıkları korur.",
-                        changes: { financialLoss: 50000, ipIntegrity: +15, reputation: -8, employeeTrust: -5 },
-                        clue: 'systemsIsolated',
-                        impact: 'Positive',
-                    },
-                    'd2-m-confront-cemil': {
-                        title: "Cemil Kaan ile Yüzleşme ve İtiraf",
-                        text: "Cemil Kaan ile gizli görüşmede yüzleştiniz. Manipüle edildiğini ve 'Proje Yapay Zeka' klasörüne zararlı yazılım yüklemeye ikna edildiğini itiraf etti. Olay aydınlandı ama çalışan güveni sarsıldı.",
-                        strat: "İç tehditlerle yüzleşmek riskli ama bilgi için önemlidir. Yaklaşım, bilgi toplamaya odaklanmalı ve itibar/güven etkisi düşünülmelidir.",
-                        changes: { financialLoss: 5000, employeeTrust: -15, reputation: -10, ipIntegrity: +8 },
-                        clue: 'cemilConfronted',
-                        impact: 'Negative',
-                    },
-                    'd2-m-report-insider-threat': {
-                        title: "İç Tehdit Şüphesini Üst Yönetim ve Hukuka Bildirme",
-                        text: "Tüm iç tehdit bulgularını Hukuk departmanına ve CEO'ya raporladınız. Yasal danışmanlık talep ederek süreci hızlandırdınız, ancak iç gerilim arttı.",
-                        strat: "İç tehditlerde hukuki ve yönetimsel süreçleri devreye sokmak, riskleri minimize eder. Şeffaflık ve gizlilik dengesi önemlidir.",
-                        changes: { financialLoss: 10000, employeeTrust: -7, reputation: -4 },
-                        clue: 'insiderThreatReported',
-                        impact: 'Neutral',
-                    },
-                    'd2-m-usom-collaboration': {
-                        title: "Ulusal Siber Olaylara Müdahale Merkezine Bilgi Verme",
-                        text: "Saldırının ulus-devlet destekli olabileceği şüphesiyle USOM'a bilgi verdiniz. USOM destek olacağını belirtti. Ulusal düzeyde yardım aldınız, ancak imaj üzerinde kısa vadeli olumsuz etki oluştu.",
-                        strat: "Ulus-devlet destekli saldırılarda ulusal birimlerle işbirliği ek kaynak sağlar. Bilgi paylaşımının potansiyel etkileri değerlendirilmelidir.",
-                        changes: { financialLoss: 5000, reputation: -7, ipIntegrity: +3 },
-                        clue: 'usomCollaboration',
-                        impact: 'Neutral',
-                    },
-
-                    // Day 2 Afternoon
-                    'd2-a-crisis-team-meeting': {
-                        title: "Kapsamlı Kriz Ekibi Toplantısı",
-                        text: "Tüm kilit paydaşları acil bir kriz toplantısında topladınız. Saldırının yapısı, Cemil'in durumu ve fikri mülkiyet tehdidi aktarıldı. Koordinasyon arttı, panik azaldı.",
-                        strat: "Siber krizlerde etkili iletişim ve işbirliği, krizin hızlı ve etkin yönetilmesini sağlar. Gerçekler ne kadar acı olsa da, şeffaflık önemlidir.",
-                        changes: { financialLoss: 5000, reputation: +5, employeeTrust: +2 },
-                        clue: 'crisisMeetingHeld',
-                        impact: 'Positive',
-                    },
-                    'd2-a-public-statement-draft': {
-                        title: "Proaktif Kamuoyu Açıklaması Taslağı",
-                        text: "Halkla İlişkiler ve Hukuk birimleriyle proaktif ve detaylı bir kamuoyu açıklama taslağı hazırladınız. Şirketin itibarını korumak için saldırının sofistike yapısı ve proaktif adımlar vurgulandı. Kamuoyunda kısa süreli şok riski var.",
-                        strat: "Krizde kamuoyu iletişimi şirket itibarını doğrudan etkiler. Dengeli, şeffaf açıklama kritik öneme sahiptir. Kontrollü bilgi yayılımı esastır.",
-                        changes: { financialLoss: 10000, reputation: +2, employeeTrust: -3 },
-                        clue: 'publicStatementPrepared',
-                        impact: 'Neutral',
-                    },
-                    'd2-a-external-forensic-legal': {
-                        title: "Harici Siber Adli Tıp ve Hukuk Desteği",
-                        text: "Saldırının karmaşıklığı nedeniyle bağımsız bir siber adli tıp ve hukuk firmasından acil yardım istediniz. Soruşturmayı hızlandı, bulgular tarafsızlaştı, ancak maliyeti çok yüksek oldu.",
-                        strat: "Kapsamlı saldırılarda harici uzmanlık, kriz yönetimi kapasitesini artırır ve yasal süreçler için kanıt sağlar. Maliyetler iyi yönetilmelidir.",
-                        changes: { financialLoss: 150000, reputation: +3, ipIntegrity: +5 },
-                        clue: 'externalForensicHired',
-                        impact: 'Positive',
-                    },
-                    'd2-a-cemil-management': {
-                        title: "Cemil Kaan Durumu Yönetimi",
-                        text: "Cemil Kaan'ın itirafını takiben, İK ve Hukuk ile işbirliği yaparak, Cemil'e psikolojik destek sağladınız ve ondan gizlilik anlaşması imzalamasını talep ettiniz. Çalışanın itibarını koruyarak ve bilgi edinerek durumu yönettiniz. İnsani yaklaşım şirket kültürüne olumlu yansıdı.",
-                        strat: "İç tehdit kaynaklarının insani yönünü yönetmek etik ve kurumsal kültür açısından önemlidir. Destek ve gizlilik, uzun vadede şirket bağlılığını ve güvenliğini artırabilir.",
-                        changes: { financialLoss: 8000, employeeTrust: +4, reputation: -2 },
-                        clue: 'cemilManaged',
-                        impact: 'Positive',
-                    },
-
-                    // Day 3 Morning (Final Decisions)
-                    'd3-m-protocol-revision-ai-training': {
-                        title: "Çok Kanallı Güvenlik Protokolleri ve Yapay Zeka Destekli Farkındalık Eğitimleri",
-                        text: "Tüm iletişim kanallarında güvenlik protokollerini sıkılaştırdınız. Yapay zeka destekli oltalama simülasyonları ve davranışsal analiz tabanlı farkındalık eğitimleri ile çalışanları daha dirençli hale getirdiniz. Şirketin genel güvenlik duruşu güçlendi.",
-                        strat: "Çok kanallı saldırılara karşı savunma, teknik ve insan davranışlarını dikkate alır. AI destekli eğitimler adaptasyonu artırır.",
-                        changes: { financialLoss: 70000, reputation: +10, employeeTrust: +7, ipIntegrity: +5 },
-                        clue: 'protocolsRevised',
-                    },
-                    'd3-m-ip-security-enhancement': {
-                        title: "AI Projesi Fikri Mülkiyet Güvenliğinin Kapsamlı Artırılması",
-                        text: "AI projesinin kod tabanı, algoritmaları ve veri setleri için ek güvenlik katmanları (DAC, MAC, DLP, IRM) uyguladınız. Kritik verilere erişimi sürekli izleyen otomatik sistemler kurdunuz. En değerli varlığınızı korudunuz.",
-                        strat: "Kritik fikri mülkiyetin korunması, en önemli varlığı güvence altına alır. Sürekli, katmanlı ve teknoloji destekli bir güvenlik yaklaşımı gerektirir.",
-                        changes: { financialLoss: 100000, ipIntegrity: +20, reputation: +5 },
-                        clue: 'ipSecurityEnhanced',
-                        impact: 'Positive',
-                    },
-                    'd3-m-reputation-campaign': {
-                        title: "Proaktif İtibar Yönetimi ve Şeffaflık Kampanyası",
-                        text: "Kamuoyuna tam şeffaflık içeren, saldırının sektörün ortak problemi olduğunu vurgulayan, proaktif bir itibar yönetimi kampanyası başlattınız. Şirket itibarını önemli ölçüde güçlendirdiniz ve siber güvenlik alanındaki liderliğinizi pekiştirdiniz.",
-                        strat: "Krizde kamuoyu iletişimi şirket itibarını doğrudan etkiler. Dengeli, şeffaf açıklama kritik öneme sahiptir. Krizleri fırsata çevirmek stratejiktir.",
-                        changes: { financialLoss: 120000, reputation: +15, employeeTrust: +5},
-                        clue: 'reputationCampaignLaunched',
-                        impact: 'Positive',
-                    },
-                    'd3-m-employee-support': {
-                        title: "Çalışan Psikolojik Destek ve Güven Yeniden Yapılandırma Programları",
-                        text: "Çalışanlar üzerindeki olumsuz etkileri azaltmak için psikolojik destek ve moral artırıcı etkinlikler başlattınız. Çalışanların güvenini yeniden kazanmalarına ve bağlılıklarını artırmalarına yardımcı oldunuz. İç dayanıklılığı güçlendi.",
-                        strat: "Çalışanların refahı ve güvenliği, şirket dayanıklılığının temelidir. Kriz sonrası moral ve güvenin yeniden inşası hayati öneme sahiptir. İnsan odaklı yaklaşım kritik.",
-                        changes: { financialLoss: 30000, employeeTrust: +10, reputation: +2},
-                        clue: 'employeeSupportInitiated',
-                        impact: 'Positive',
-                    },
-                    'd3-m-insider-threat-program': {
-                        title: "İç Tehdit İstihbarat Programının Kurulması ve Güvenlik Kültürü Entegrasyonu",
-                        text: "İç tehditleri proaktif olarak tespit etmek için davranışsal analiz araçları, risk değerlendirmeleri ve etik çerçevede izleme politikaları geliştirdiniz. Güçlü güvenlik kültürü ile entegre ettiniz. Uzun vadede içeriden kaynaklanabilecek zafiyetleri minimuma indirdiniz.",
-                        strat: "İç tehdit programları, en zorlu siber risklerden birini yönetmek için hayati öneme sahiptir. Etik ve şeffaf yürütme, çalışan güvenini korur. Güvenlik kültürü entegrasyonu başarıyı garanti eder.",
-                        changes: { financialLoss: 80000, employeeTrust: -5, ipIntegrity: +15, reputation: +7 },
-                        clue: 'insiderThreatProgramStarted',
-                        impact: 'Positive',
-                    }
+                    'd1-m-email-analysis': { title: "CEO Maili Detaylı Analizi", text: "CEO'dan gelen e-postayı teknik analize aldınız. Kötü amaçlı bağlantı/ek dosya tespitiyle saldırının birincil vektörünü anladınız. Dosya bir dropper içeriyordu.", strat: "Oltalama saldırılarında erken teknik analiz, zinciri kırmak için esastır. Hız, zararı minimize eder.", changes: { financialLoss: 5000, ipIntegrity: -2, employeeTrust: -1 }, clue: 'emailAnalyzed', impact: 'Positive' },
+                    'd1-m-linkedin-analysis': { title: "LinkedIn Profil Analizi ve OSINT", text: "LinkedIn profilini ve mesajı analiz ettiniz. Sahte profil ve kimlik avı portalı URL'si tespit edildi. Saldırganın sosyal mühendislik yeteneklerini anladınız.", strat: "Sosyal mühendislikte OSINT, saldırganın hazırlığını anlamak için değerlidir. Yönlendirmeleri takip etmek kritik.", changes: { financialLoss: 2000, ipIntegrity: -1, employeeTrust: -1, reputation: -1 }, clue: 'linkedinProfileAnalyzed', impact: 'Neutral' },
+                    'd1-m-awareness-training': { title: "Acil Siber Farkındalık Eğitimi", text: "İK ile acil oltalama ve sosyal mühendislik farkındalık eğitimi talep ettiniz. Duyuru yapıldı, program planlandı. Uzun vadede çalışan direncini artırabilir.", strat: "Çalışan farkındalığı, insan zafiyetini hedef alan saldırılara karşı en güçlü savunmadır. Eğitimin etkisi anında olmayabilir.", changes: { financialLoss: 10000, employeeTrust: +5, reputation: -2 }, clue: 'awarenessTrainingInitiated', impact: 'Neutral' },
+                    'd1-m-threat-hunting': { title: "Acil Tehdit Avcılığı", text: "CSO'ya raporlayıp kapsamlı tehdit avcılığı başlattınız. Potansiyel sızıntıları erken tespit etme şansı doğdu, ancak yoğun kaynak kullanımı gerektirdi.", strat: "Proaktif tehdit avcılığı, bilinmeyen saldırıları tespit etmede etkilidir, ancak maliyetli olabilir ve planlama gerektirir.", changes: { financialLoss: 25000, ipIntegrity: -3, reputation: -3 }, clue: 'threatHuntingStarted', impact: 'Negative' },
+                    'd1-a-whatsapp-forensics': { title: "WhatsApp Hesabı Adli İncelemesi", text: "WhatsApp hesabını adli incelemeye aldınız. Saldırganın iç terimler ve spesifik proje bilgileri kullandığını tespit ettiniz, bu da içeriden bilgi alındığını işaret etti.", strat: "Mesajlaşma uygulamaları incelemesi, saldırganın yöntemlerini anlamak için esastır. İçeriden bilgi sızıntısı şüphesi güçlenir.", changes: { financialLoss: 15000, ipIntegrity: -3 }, clue: 'whatsappForensicallyExamined', impact: 'Negative' },
+                    'd1-a-vishing-analysis': { title: "Telefon Görüşmesi Kayıt Analiz (Vishing)", text: "Telefon görüşmesi kayıtlarını analiz ettiniz. Saldırganın vishing taktiklerini ve proje hakkında hassas bilgiler sorguladığını deşifre ettiniz. İçeriden bilgi kaynağı şüphesi doğdu.", strat: "Vishing analizleri, gelecekteki saldırılara karşı savunmayı geliştirir. İç tehdit işaretlerini gözden kaçırmamak kritik.", changes: { financialLoss: 10000, ipIntegrity: -5 }, clue: 'vishingAnalyzed', impact: 'Negative' },
+                    'd1-a-personnel-interviews': { title: "Hedeflenen Personel ile Güvenlik Görüşmeleri", text: "Kilit personelle birebir görüşmeler yaptınız. Saldırganın manipülasyon tekniklerini anladınız. Cemil Kaan adlı çalışanın tedirginliği ve finansal sıkıntıları dikkat çekti; içeriden sızıntı ihtimalini güçlendirdi.", strat: "İnsan istihbaratı (HUMINT), siber krizleri çalışan gözünden anlamak için hayati önem taşır. Dikkatli ve empatik yaklaşım gerekir.", changes: { employeeTrust: -5, reputation: -3, financialLoss: 3000 }, clue: 'personnelInterviewed', impact: 'Neutral' },
+                    'd1-a-network-monitoring': { title: "İç Ağ Trafiği ve Log İzleme", text: "Ağ trafiği ve logları anlık izlemeye aldınız. Cemil Kaan'ın kritik 'Proje Yapay Zeka' klasörüne anormal sayıda erişim denemesi yaptığı tespit edildi. Bu ciddi bir ihlal işaretiydi.", strat: "Ağ izleme ve log analizi, gelişmiş saldırılarda içerideki hareketleri tespit etmek için temeldir. Kritik varlıklara yönelik anormal erişimleri gözlemlemek hayati.", changes: { financialLoss: 40000, ipIntegrity: -8, reputation: -2 }, clue: 'internalNetworkMonitored', impact: 'Negative' },
+                    'd2-m-malware-full-analysis': { title: "Zararlı Yazılım Tersine Mühendisliği ve C2 Tespiti", text: "Zararlı yazılımı tersine mühendislik ekibine sevk ettiniz. Yazılımın arka kapı oluşturduğunu, 'Proje Yapay Zeka'ya eriştiğini ve verileri harici C2 sunucusuna aktardığını belirlediniz. Saldırganın hedefi ve altyapısı açığa çıktı, iç tehdit şüphesi güçlendi.", strat: "Zararlı yazılım analizi ve C2 tespiti, saldırının teknik mekanizmasını anlamak için kritiktir. Etkili karşı önlemler için temel bilgi sağlar.", changes: { financialLoss: 30000, ipIntegrity: -10, reputation: -5 }, clue: 'malwareAnalyzed', impact: 'Negative' },
+                    'd2-m-system-isolation': { title: "Kritik Sistemlerin Acil İzolasyonu", text: "'Proje Yapay Zeka' klasörüne dış erişimi derhal kestiniz ve kritik geliştirme ortamlarını izole ettiniz. Veri sızıntısını büyük ölçüde engellediniz, ancak geliştirme süreci aksadı ve operasyonel maliyetler arttı.", strat: "Kritik verinin korunması önceliktir. Şüpheli sistemler hızla izole edilmeli; bu, iş sürekliliğini etkileyebilir ama varlıkları korur.", changes: { financialLoss: 50000, ipIntegrity: +15, reputation: -8, employeeTrust: -5 }, clue: 'systemsIsolated', impact: 'Positive' },
+                    'd2-m-confront-cemil': { title: "Cemil Kaan ile Yüzleşme ve İtiraf", text: "Cemil Kaan ile gizli görüşmede yüzleştiniz. Manipüle edildiğini ve 'Proje Yapay Zeka' klasörüne zararlı yazılım yüklemeye ikna edildiğini itiraf etti. Olay aydınlandı ama çalışan güveni sarsıldı.", strat: "İç tehditlerle yüzleşmek riskli ama bilgi için önemlidir. Yaklaşım, bilgi toplamaya odaklanmalı ve itibar/güven etkisi düşünülmelidir.", changes: { financialLoss: 5000, employeeTrust: -15, reputation: -10, ipIntegrity: +8 }, clue: 'cemilConfronted', impact: 'Negative' },
+                    'd2-m-report-insider-threat': { title: "İç Tehdit Şüphesini Üst Yönetim ve Hukuka Bildirme", text: "Tüm iç tehdit bulgularını Hukuk departmanına ve CEO'ya raporladınız. Yasal danışmanlık talep ederek süreci hızlandırdınız, ancak iç gerilim arttı.", strat: "İç tehditlerde hukuki ve yönetimsel süreçleri devreye sokmak, riskleri minimize eder. Şeffaflık ve gizlilik dengesi önemlidir.", changes: { financialLoss: 10000, employeeTrust: -7, reputation: -4 }, clue: 'insiderThreatReported', impact: 'Neutral' },
+                    'd2-m-usom-collaboration': { title: "Ulusal Siber Olaylara Müdahale Merkezine Bilgi Verme", text: "Saldırının ulus-devlet destekli olabileceği şüphesiyle USOM'a bilgi verdiniz. USOM destek olacağını belirtti. Ulusal düzeyde yardım aldınız, ancak imaj üzerinde kısa vadeli olumsuz etki oluştu.", strat: "Ulus-devlet destekli saldırılarda ulusal birimlerle işbirliği ek kaynak sağlar. Bilgi paylaşımının potansiyel etkileri değerlendirilmelidir.", changes: { financialLoss: 5000, reputation: -7, ipIntegrity: +3 }, clue: 'usomCollaboration', impact: 'Neutral' },
+                    'd2-a-crisis-team-meeting': { title: "Kapsamlı Kriz Ekibi Toplantısı", text: "Tüm kilit paydaşları acil bir kriz toplantısında topladınız. Saldırının yapısı, Cemil'in durumu ve fikri mülkiyet tehdidi aktarıldı. Koordinasyon arttı, panik azaldı.", strat: "Siber krizlerde etkili iletişim ve işbirliği, krizin hızlı ve etkin yönetilmesini sağlar. Gerçekler ne kadar acı olsa da, şeffaflık önemlidir.", changes: { financialLoss: 5000, reputation: +5, employeeTrust: +2 }, clue: 'crisisMeetingHeld', impact: 'Positive' },
+                    'd2-a-public-statement-draft': { title: "Proaktif Kamuoyu Açıklaması Taslağı", text: "Halkla İlişkiler ve Hukuk birimleriyle proaktif ve detaylı bir kamuoyu açıklama taslağı hazırladınız. Şirketin itibarını korumak için saldırının sofistike yapısı ve proaktif adımlar vurgulandı. Kamuoyunda kısa süreli şok riski var.", strat: "Krizde kamuoyu iletişimi şirket itibarını doğrudan etkiler. Dengeli, şeffaf açıklama kritik öneme sahiptir. Kontrollü bilgi yayılımı esastır.", changes: { financialLoss: 10000, reputation: +2, employeeTrust: -3 }, clue: 'publicStatementPrepared', impact: 'Neutral' },
+                    'd2-a-external-forensic-legal': { title: "Harici Siber Adli Tıp ve Hukuk Desteği", text: "Saldırının karmaşıklığı nedeniyle bağımsız bir siber adli tıp ve hukuk firmasından acil yardım istediniz. Soruşturmayı hızlandı, bulgular tarafsızlaştı, ancak maliyeti çok yüksek oldu.", strat: "Kapsamlı saldırılarda harici uzmanlık, kriz yönetimi kapasitesini artırır ve yasal süreçler için kanıt sağlar. Maliyetler iyi yönetilmelidir.", changes: { financialLoss: 150000, reputation: +3, ipIntegrity: +5 }, clue: 'externalForensicHired', impact: 'Positive' },
+                    'd2-a-cemil-management': { title: "Cemil Kaan Durumu Yönetimi", text: "Cemil Kaan'ın itirafını takiben, İK ve Hukuk ile işbirliği yaparak, Cemil'e psikolojik destek sağladınız ve ondan gizlilik anlaşması imzalamasını talep ettiniz. Çalışanın itibarını koruyarak ve bilgi edinerek durumu yönettiniz. İnsani yaklaşım şirket kültürüne olumlu yansıdı.", strat: "İç tehdit kaynaklarının insani yönünü yönetmek etik ve kurumsal kültür açısından önemlidir. Destek ve gizlilik, uzun vadede şirket bağlılığını ve güvenliğini artırabilir.", changes: { financialLoss: 8000, employeeTrust: +4, reputation: -2 }, clue: 'cemilManaged', impact: 'Positive' },
+                    'd3-m-protocol-revision-ai-training': { title: "Çok Kanallı Güvenlik Protokolleri ve Yapay Zeka Destekli Farkındalık Eğitimleri", text: "Tüm iletişim kanallarında güvenlik protokollerini sıkılaştırdınız. Yapay zeka destekli oltalama simülasyonları ve davranışsal analiz tabanlı farkındalık eğitimleri ile çalışanları daha dirençli hale getirdiniz. Şirketin genel güvenlik duruşu güçlendi.", strat: "Çok kanallı saldırılara karşı savunma, teknik ve insan davranışlarını dikkate alır. AI destekli eğitimler adaptasyonu artırır.", changes: { financialLoss: 70000, reputation: +10, employeeTrust: +7, ipIntegrity: +5 }, clue: 'protocolsRevised', impact: 'Positive' },
+                    'd3-m-ip-security-enhancement': { title: "AI Projesi Fikri Mülkiyet Güvenliğinin Kapsamlı Artırılması", text: "AI projesinin kod tabanı, algoritmaları ve veri setleri için ek güvenlik katmanları (DAC, MAC, DLP, IRM) uyguladınız. Kritik verilere erişimi sürekli izleyen otomatik sistemler kurdunuz. En değerli varlığınızı korudunuz.", strat: "Kritik fikri mülkiyetin korunması, en önemli varlığı güvence altına alır. Sürekli, katmanlı ve teknoloji destekli bir güvenlik yaklaşımı gerektirir.", changes: { financialLoss: 100000, ipIntegrity: +20, reputation: +5 }, clue: 'ipSecurityEnhanced', impact: 'Positive' },
+                    'd3-m-reputation-campaign': { title: "Proaktif İtibar Yönetimi ve Şeffaflık Kampanyası", text: "Kamuoyuna tam şeffaflık içeren, saldırının sektörün ortak problemi olduğunu vurgulayan, proaktif bir itibar yönetimi kampanyası başlattınız. Şirket itibarını önemli ölçüde güçlendirdiniz ve siber güvenlik alanındaki liderliğinizi pekiştirdiniz.", strat: "Krizde kamuoyu iletişimi şirket itibarını doğrudan etkiler. Dengeli, şeffaf açıklama kritik öneme sahiptir. Krizleri fırsata çevirmek stratejiktir.", changes: { financialLoss: 120000, reputation: +15, employeeTrust: +5}, clue: 'reputationCampaignLaunched', impact: 'Positive' },
+                    'd3-m-employee-support': { title: "Çalışan Psikolojik Destek ve Güven Yeniden Yapılandırma Programları", text: "Çalışanlar üzerindeki olumsuz etkileri azaltmak için psikolojik destek ve moral artırıcı etkinlikler başlattınız. Çalışanların güvenini yeniden kazanmalarına ve bağlılıklarını artırmalarına yardımcı oldunuz. İç dayanıklılığı güçlendi.", strat: "Çalışanların refahı ve güvenliği, şirket dayanıklılığının temelidir. Kriz sonrası moral ve güvenin yeniden inşası hayati öneme sahiptir. İnsan odaklı yaklaşım kritik.", changes: { financialLoss: 30000, employeeTrust: +10, reputation: +2}, clue: 'employeeSupportInitiated', impact: 'Positive' },
+                    'd3-m-insider-threat-program': { title: "İç Tehdit İstihbarat Programının Kurulması ve Güvenlik Kültürü Entegrasyonu", text: "İç tehditleri proaktif olarak tespit etmek için davranışsal analiz araçları, risk değerlendirmeleri ve etik çerçevede izleme politikaları geliştirdiniz. Güçlü güvenlik kültürü ile entegre ettiniz. Uzun vadede içeriden kaynaklanabilecek zafiyetleri minimuma indirdiniz.", strat: "İç tehdit programları, en zorlu siber risklerden birini yönetmek için hayati öneme sahiptir. Etik ve şeffaf yürütme, çalışan güvenini korur. Güvenlik kültürü entegrasyonu başarıyı garanti eder.", changes: { financialLoss: 80000, employeeTrust: -5, ipIntegrity: +15, reputation: +7 }, clue: 'insiderThreatProgramStarted', impact: 'Positive' }
                 },
 
                 setup() {
@@ -950,7 +772,6 @@
                 },
                 
                 attachListeners() {
-                     // Start button
                     this.elements.startButton.addEventListener('click', () => {
                         this.elements.intro.style.display = 'none';
                         this.elements.game.style.display = 'block';
@@ -958,7 +779,6 @@
                         this.showSection('day1_morning_phishing');
                     });
                     
-                    // Decision buttons in game content
                     this.elements.gameContent.addEventListener('click', (e) => {
                         const button = e.target.closest('.btn[data-decision]');
                         if (!button || button.disabled) return;
@@ -980,7 +800,7 @@
                         const maxSelections = parseInt(sectionElement.dataset.maxSelections || 1, 10);
                         
                         if (this.state.currentSectionId === 'day1_afternoon_phishing') {
-                            this.elements.game.style.display = 'none';
+                            this.elements.game.style.display = 'block';
                             this.state.currentTurnDecisions.forEach(decision => {
                                 this.state.decisionHistory.push({ id: decision.clue, title: decision.title, text: decision.text, impactType: decision.impact });
                             });
@@ -994,7 +814,6 @@
                         }
                     });
 
-                    // General continue button
                     this.elements.continueButton.addEventListener('click', () => {
                         this.state.currentTurnDecisions.forEach(decision => {
                             this.state.decisionHistory.push({ id: decision.clue, title: decision.title, text: decision.text, impactType: decision.impact });
@@ -1013,9 +832,7 @@
                             this.showSection(nextPath);
                         }
                     });
-
-                    // Leaderboard listeners
-                    this.elements.leaderboard.btnOpen?.addEventListener('click', () => this.openLeaderboard());
+                    
                     this.elements.leaderboard.btnClose?.addEventListener('click', () => this.closeLeaderboard());
                     this.elements.leaderboard.btnRefresh?.addEventListener('click', () => this.loadLeaderboard());
                     this.elements.leaderboard.overlay.addEventListener('click', (e) => {
@@ -1026,7 +843,7 @@
                 },
 
                 showFullIntermission() {
-                    this.elements.intermissionDetails.innerHTML = ''; // Clear previous details
+                    this.elements.intermissionDetails.innerHTML = ''; 
 
                     let totalChanges = { financialLoss: 0, ipIntegrity: 0, employeeTrust: 0, reputation: 0 };
                     let combinedDecisionTitles = [];
@@ -1200,92 +1017,84 @@
                     const debriefContent = document.getElementById('strategic-debrief-content');
                     const scoreBreakdownList = document.getElementById('score-breakdown');
 
-                  // --- YENİ VE ZORLAŞTIRILMIŞ PUANLAMA SİSTEMİ ---
-let scoreBreakdown = {};
-let totalScore = 40; // DEĞİŞTİ: Baz puan daha da düşürüldü.
-scoreBreakdown['Başlangıç Puanı'] = { value: 40, class: 'score-neutral' };
+                  // --- PUANLAMA SİSTEMİ ---
+                  let scoreBreakdown = {};
+                  let totalScore = 40; 
+                  scoreBreakdown['Başlangıç Puanı'] = { value: 40, class: 'score-neutral' };
 
-// YENİ: Karar Kalitesine Göre Ceza/Ödül Puanlaması (ÖNCEKİ CEVAPTAN)
-// Bu kısım oyuncunun kötü seçimlerini doğrudan cezalandırdığı için çok önemlidir.
-let decisionQualityScore = 0;
-this.state.decisionHistory.forEach(decision => {
-    if (decision.impactType === 'Negative') {
-        decisionQualityScore -= 8; // Her kötü karar için ceza
-    } else if (decision.impactType === 'Positive') {
-        decisionQualityScore += 2; // Her iyi karar için küçük bir ödül
-    }
-});
-if (decisionQualityScore !== 0) {
-    totalScore += decisionQualityScore;
-    scoreBreakdown['Karar Kalitesi (Ceza/Ödül)'] = { value: decisionQualityScore, class: decisionQualityScore >= 0 ? 'score-plus' : 'score-minus' };
-}
+                  let decisionQualityScore = 0;
+                  this.state.decisionHistory.forEach(decision => {
+                      if (decision.impactType === 'Negative') {
+                          decisionQualityScore -= 8; 
+                      } else if (decision.impactType === 'Positive') {
+                          decisionQualityScore += 2; 
+                      }
+                  });
+                  if (decisionQualityScore !== 0) {
+                      totalScore += decisionQualityScore;
+                      scoreBreakdown['Karar Kalitesi (Ceza/Ödül)'] = { value: decisionQualityScore, class: decisionQualityScore >= 0 ? 'score-plus' : 'score-minus' };
+                  }
 
-const finalIP = Math.max(0, this.score.ipIntegrity);
-const finalRep = Math.max(0, this.score.reputation);
-const finalTrust = Math.max(0, this.score.employeeTrust);
-const avgRepTrust = (finalRep + finalTrust) / 2;
+                  const finalIP = Math.max(0, this.score.ipIntegrity);
+                  const finalRep = Math.max(0, this.score.reputation);
+                  const finalTrust = Math.max(0, this.score.employeeTrust);
+                  const avgRepTrust = (finalRep + finalTrust) / 2;
 
-// DEĞİŞTİ: Puanlar tutarlı ve daha dengeli hale getirildi.
-// IP Integrity
-if (finalIP >= 90) { 
-    totalScore += 15; 
-    scoreBreakdown['Fikri Mülkiyet Koruması (Mükemmel)'] = { value: 15, class: 'score-plus' }; 
-} else if (finalIP >= 75) { 
-    totalScore += 8; // HATA DÜZELTİLDİ ve değer düşürüldü
-    scoreBreakdown['Fikri Mülkiyet Koruması (İyi)'] = { value: 8, class: 'score-plus' }; 
-} else if (finalIP < 50) { 
-    totalScore -= 15; 
-    scoreBreakdown['Fikri Mülkiyet Kaybı (Ciddi)'] = { value: -15, class: 'score-minus' }; 
-}
+                  if (finalIP >= 90) { 
+                      totalScore += 15; 
+                      scoreBreakdown['Fikri Mülkiyet Koruması (Mükemmel)'] = { value: 15, class: 'score-plus' }; 
+                  } else if (finalIP >= 75) { 
+                      totalScore += 8;
+                      scoreBreakdown['Fikri Mülkiyet Koruması (İyi)'] = { value: 8, class: 'score-plus' }; 
+                  } else if (finalIP < 50) { 
+                      totalScore -= 15; 
+                      scoreBreakdown['Fikri Mülkiyet Kaybı (Ciddi)'] = { value: -15, class: 'score-minus' }; 
+                  }
         
-// Financial Loss
-if (this.score.financialLoss <= 150000) { 
-    totalScore += 10; 
-    scoreBreakdown['Finansal Yönetim (Etkili)'] = { value: 10, class: 'score-plus' }; 
-} else if (this.score.financialLoss <= 300000) { 
-    totalScore += 5; 
-    scoreBreakdown['Finansal Yönetim (Orta)'] = { value: 5, class: 'score-plus' }; 
-} else if (this.score.financialLoss > 500000) { 
-    totalScore -= 15; // Ceza artırıldı
-    scoreBreakdown['Finansal Kayıp (Yüksek)'] = { value: -15, class: 'score-minus' }; 
-}
+                  if (this.score.financialLoss <= 150000) { 
+                      totalScore += 10; 
+                      scoreBreakdown['Finansal Yönetim (Etkili)'] = { value: 10, class: 'score-plus' }; 
+                  } else if (this.score.financialLoss <= 300000) { 
+                      totalScore += 5; 
+                      scoreBreakdown['Finansal Yönetim (Orta)'] = { value: 5, class: 'score-plus' }; 
+                  } else if (this.score.financialLoss > 500000) { 
+                      totalScore -= 15;
+                      scoreBreakdown['Finansal Kayıp (Yüksek)'] = { value: -15, class: 'score-minus' }; 
+                  }
 
-// Reputation & Trust
-if (avgRepTrust >= 85) { // Baraj yükseltildi
-    totalScore += 10; 
-    scoreBreakdown['İtibar & Güven Yönetimi (Güçlü)'] = { value: 10, class: 'score-plus' }; 
-} else if (avgRepTrust < 50) { // Baraj yükseltildi
-    totalScore -= 15; 
-    scoreBreakdown['İtibar & Güven Kaybı (Yüksek)'] = { value: -15, class: 'score-minus' }; 
-}
+                  if (avgRepTrust >= 85) {
+                      totalScore += 10; 
+                      scoreBreakdown['İtibar & Güven Yönetimi (Güçlü)'] = { value: 10, class: 'score-plus' }; 
+                  } else if (avgRepTrust < 50) {
+                      totalScore -= 15; 
+                      scoreBreakdown['İtibar & Güven Kaybı (Yüksek)'] = { value: -15, class: 'score-minus' }; 
+                  }
 
-// Critical Decisions Bonus (DEĞİŞTİ: Bonuslar düşürüldü)
-if(this.state.systemsIsolated) { 
-    totalScore += 7; 
-    scoreBreakdown['Kritik Karar: Sistem İzolasyonu'] = { value: 7, class: 'score-plus' }; 
-}
-if(this.state.cemilConfronted && this.state.cemilManaged) { 
-    totalScore += 7; 
-    scoreBreakdown['Kritik Karar: İç Tehdit Yönetimi'] = { value: 7, class: 'score-plus' }; 
-}
-if(this.state.usomCollaboration) { 
-    totalScore += 3; 
-    scoreBreakdown['Stratejik Karar: USOM İşbirliği'] = { value: 3, class: 'score-plus' }; 
-}
-if(this.state.reputationCampaignLaunched) { 
-    totalScore += 3; 
-    scoreBreakdown['Stratejik Karar: İtibar Kampanyası'] = { value: 3, class: 'score-plus' }; 
-}
+                  if(this.state.systemsIsolated) { 
+                      totalScore += 7; 
+                      scoreBreakdown['Kritik Karar: Sistem İzolasyonu'] = { value: 7, class: 'score-plus' }; 
+                  }
+                  if(this.state.cemilConfronted && this.state.cemilManaged) { 
+                      totalScore += 7; 
+                      scoreBreakdown['Kritik Karar: İç Tehdit Yönetimi'] = { value: 7, class: 'score-plus' }; 
+                  }
+                  if(this.state.usomCollaboration) { 
+                      totalScore += 3; 
+                      scoreBreakdown['Stratejik Karar: USOM İşbirliği'] = { value: 3, class: 'score-plus' }; 
+                  }
+                  if(this.state.reputationCampaignLaunched) { 
+                      totalScore += 3; 
+                      scoreBreakdown['Stratejik Karar: İtibar Kampanyası'] = { value: 3, class: 'score-plus' }; 
+                  }
 
-// Time Bonus (DEĞİŞTİ: Bonuslar düşürüldü)
-if (this.timer.remaining >= 180) { // 3 dakika
-    totalScore += 5; 
-    scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' }; 
-} 
+                  if (this.timer.remaining >= 180) {
+                      totalScore += 5; 
+                      scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' }; 
+                  } 
 
-totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
-this.state.totalScore = totalScore;
-// --- PUANLAMA SİSTEMİ SONU ---
+                  totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+                  this.state.totalScore = totalScore;
+                  // --- PUANLAMA SİSTEMİ SONU ---
 
                     let badgeInfo = {};
                     if (totalScore >= 90) { badgeInfo = { text: 'SİBER KAHRAMAN', color: 'var(--accent-green)' }; } 
@@ -1316,7 +1125,7 @@ this.state.totalScore = totalScore;
 
                     let debriefHTML = '';
                     if (badgeInfo.text === 'SİBER KAHRAMAN') { 
-                        debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir Siber İstihbarat Şefi olarak, çok kanallı ve sofistike bu saldırıyı tüm katmanlarında tespit ederek şirketinizi büyük bir felaketten kurtardınız. Stratejik ve hızlı kararlarınızla sadece fikri mülkiyetimizi korumakla kalmadınız, aynı zamanda şirketimizin itibarını ve çalışan güvenini zirveye taşıdınız. Bu kriz, sizin liderliğiniz sayesinde ÇOLHAK Teknoloji'yi daha da güçlendirdi.</p>`;
+                        debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir SOC Analisti olarak, çok kanallı ve sofistike bu saldırıyı tüm katmanlarında tespit ederek şirketinizi büyük bir felaketten kurtardınız. Stratejik ve hızlı kararlarınızla sadece fikri mülkiyetimizi korumakla kalmadınız, aynı zamanda şirketimizin itibarını ve çalışan güvenini zirveye taşıdınız. Bu kriz, sizin liderliğiniz sayesinde ÇOLHAK Teknoloji'yi daha da güçlendirdi.</p>`;
                     } else if (badgeInfo.text === 'UZMAN KRİZ YÖNETİCİSİ') { 
                         debriefHTML += `<p><strong>Başarılı Bir Müdahale!</strong> Çok karmaşık bir saldırıyla karşı karşıya kalmanıza rağmen, etkili müdahalelerle krizi kontrol altına almayı başardınız. Bazı küçük kayıplar yaşansa da, genel olarak şirketinizin fikri mülkiyetini, itibarını ve çalışan güvenini önemli ölçüde korudunuz. Aldığınız kararlar, ÇOLHAK Teknoloji'nin bu zorlu süreçten ders çıkararak daha dirençli hale gelmesini sağladı.</p>`;
                     } else if (badgeInfo.text === 'ZORLU BİR MÜCADELE') { 
@@ -1331,15 +1140,14 @@ this.state.totalScore = totalScore;
                 updateSlackChat(currentSection) {
                     const chatViewer = document.getElementById('slackChat');
                     if (!chatViewer) return; 
-
                     let chat = '';
                     if (currentSection === 'day1_afternoon_phishing') {
                         chat = `
                             <div class="message"><span class="sender hr">İK Direktörü Ayşe Erdem:</span> Çalışanlar arasında huzursuzluklar artıyor. WhatsApp ve telefon mesajları hakkında çok soru alıyoruz. Moral düşüyor.</div>
                             <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> Bu kabul edilemez! AI projesiyle ilgili sızıntılar olmamalı! Ne tür bilgilerden bahsediyoruz?</div>
                             <div class="message"><span class="sender finance">Finans Direktörü Burak Mert:</span> Bütçe detaylarımız sızarsa, finansmanımız ciddi zarar görür. Durdurmalıyız!</div>
-                            <div class="message"><span class="sender cso">CSO Can Demir:</span> Ekiplerimiz tehditleri inceliyor. Siber İstihbarat Şefi'nin bulguları değerli. Anomali tespiti için ek loglar topluyoruz.</div>
-                            <div class="message"><span class="sender">Siz (Siber İstihbarat Şefi):</span> Çok kanallı bir saldırı ve içeriden bilgi alıyor gibiler. Her bilgi kritik, odaklanmalıyız.</div>
+                            <div class="message"><span class="sender cso">CSO Can Demir:</span> Ekiplerimiz tehditleri inceliyor. SOC Analisti'nin bulguları değerli. Anomali tespiti için ek loglar topluyoruz.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> Çok kanallı bir saldırı ve içeriden bilgi alıyor gibiler. Her bilgi kritik, odaklanmalıyız.</div>
                         `;
                     } else if (currentSection === 'day2_morning_ipthreat') {
                         chat = `
@@ -1348,7 +1156,7 @@ this.state.totalScore = totalScore;
                             <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> İç tehdit mi?! İmajımıza büyük zarar verir. Ne pahasına olursa olsun durdurmalıyız!</div>
                             <div class="message"><span class="sender finance">Finans Direktörü Burak Mert:</span> Proje bütçemiz hassas, aksaklık büyük kayıplara yol açar. Verilerimiz güvende mi?</div>
                             <div class="message"><span class="sender bt">BT Sistem Yöneticisi Mert Can:</span> İzolasyon için hazırız ama üretim ortamını kapatmak ciddi kesintilere yol açacak.</div>
-                            <div class="message"><span class="sender">Siz (Siber İstihbarat Şefi):</span> Hedef fikri mülkiyetimiz! Anında aksiyon almalıyız! Cemil'in durumu da öncelik.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> Hedef fikri mülkiyetimiz! Anında aksiyon almalıyız! Cemil'in durumu da öncelik.</div>
                         `;
                     } else if (currentSection === 'day2_afternoon_crisis_mgmt') { 
                         chat = `
@@ -1357,7 +1165,7 @@ this.state.totalScore = totalScore;
                             <div class="message"><span class="sender finance">Finans Direktörü Burak Mert:</span> Bu krizin yasal ve finansal sonuçları korkunç olabilir. Dış uzman desteği şart mı?</div>
                             <div class="message"><span class="sender cso">CSO Can Demir:</span> Teknik müdahaleler devam ediyor. İletişim ve kriz yönetimi de teknik müdahale kadar önemli.</div>
                             <div class="message"><span class="sender ops">Ar-Ge Direktörü Deniz Akın:</span> Veri sızıntısını izole ettik ama ne kadar bilgi çıktı emin değiliz. Proje lansmanı risk altında.</div>
-                            <div class="message"><span class="sender">Siz (Siber İstihbarat Şefi):</span> Koordinasyon çok önemli. Her departmanın katkısıyla bu krizden en az zararla çıkacağız. Doğru kararlar alma zamanı.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> Koordinasyon çok önemli. Her departmanın katkısıyla bu krizden en az zararla çıkacağız. Doğru kararlar alma zamanı.</div>
                         `;
                     } else if (currentSection === 'day3_morning_resolution') { 
                         chat = `
@@ -1366,7 +1174,7 @@ this.state.totalScore = totalScore;
                             <div class="message"><span class="sender finance">Finans Direktörü Burak Mert:</span> Finansal toparlanma ve yatırımlar için net yol haritası lazım. Siber güvenlik bütçesi ne olacak?</div>
                             <div class="message"><span class="sender cso">CSO Can Demir:</span> Savunma mekanizmalarımızı tamamen yeniden inşa etmeliyiz. Siber İstihbarat kilit rol oynayacak. Proaktif savunma vazgeçilmez.</div>
                             <div class="message"><span class="sender ops">Ar-Ge Direktörü Deniz Akın:</span> AI projemizin güvenliği her şeyden önemli. Fikri mülkiyetimizi güçlendirmeliyiz. Bu saldırı zafiyetlerimizi gösterdi.</div>
-                            <div class="message"><span class="sender">Siz (Siber İstihbarat Şefi):</span> Topladığımız istihbarat, gelecekteki stratejimizi belirleyecek. Bu krizden ders çıkararak daha güçlü bir ÇOLHAK Teknoloji inşa etmeliyiz.</div>
+                            <div class="message"><span class="sender">Siz (SOC Analisti):</span> Topladığımız istihbarat, gelecekteki stratejimizi belirleyecek. Bu krizden ders çıkararak daha güçlü bir ÇOLHAK Teknoloji inşa etmeliyiz.</div>
                         `;
                     }
                     chatViewer.innerHTML = chat;
@@ -1398,7 +1206,7 @@ this.state.totalScore = totalScore;
                             <p><strong>Olay 2: LinkedIn'den Tuhaf İş Teklifi</strong><br>Ar-Ge mühendisi Ozan Demirci, LinkedIn'den "çok cazip" bir iş teklifi aldığını belirtti. Teklifin rakip bir firmanın "Global Ar-Ge Direktörü"nden geldiği iddia ediliyor. Profil profesyonel görünse de, bazı detaylar Ozan'a tuhaf geliyor ve özel bir portala yönlendiriliyor.</p>
                             <img src="linkedin.png" alt="Şüpheli e-posta ve LinkedIn mesajı" class="scenario-image">
                             <div class="interactive-element">
-                                <h4>Siber İstihbarat Şefi olarak ilk adımlarınız ne olacak? Bu iki farklı vektörü nasıl ele alacaksınız? (2 Seçim Yapın)</h4>
+                                <h4>SOC Analisti olarak ilk adımlarınız ne olacak? Bu iki farklı vektörü nasıl ele alacaksınız? (2 Seçim Yapın)</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="d1-m-email-analysis"><i class="fa-solid fa-envelope-open-text"></i><div class="btn-text">Seçenek A: Şüpheli CEO e-postasını teknik analize al.<small>Kötü amaçlı bağlantı ve ek dosya tespiti için derinlemesine incele.</small></div></button>
                                     <button class="btn" data-decision="d1-m-linkedin-analysis"><i class="fa-brands fa-linkedin"></i><div class="btn-text">Seçenek B: LinkedIn profilini ve mühendise gelen mesajı analiz et.<small>Sahte olup olmadığını belirlemek için OSINT araçlarıyla incele ve yönlendirme linkini analiz et.</small></div></button>
@@ -1457,7 +1265,7 @@ this.state.totalScore = totalScore;
                         <div id="day2_afternoon_crisis_mgmt" class="section" data-max-selections="2">
                             <h2><i class="fa-solid fa-lightbulb"></i> Gün 2: Öğleden Sonra - Kriz Yönetimi ve Karar Alma (Yüksek Baskı)</h2>
                             <h3>Öğleden Sonora 15:30 - Kriz Ekibi Baskı Altında</h3>
-                            <p>Saldırı detayları netleşti: Yapay zeka projenizin fikri mülkiyeti ciddi tehdit altında ve <span id="cemil-status">${game.state.cemilConfronted ? '<strong>Cemil Kaan\'ın manipüle edildiği veya içeriden bilgi sızdırdığı itirafı alındı.</strong>' : 'içeriden bir "köstebek" veya manipüle edilmiş bir çalışan şüphesi var.'}</span> CEO hızla aksiyon ve net mesaj istiyor. Finans Direktörü hukuki süreçler ve kayıplar konusunda endişeli. İK Direktörü çalışan moralini ve güvenini vurguluyor.</p>
+                            <p>Saldırı detayları netleşti: Yapay zeka projenizin fikri mülkiyeti ciddi tehdit altında ve <span id="cemil-status">içeriden bir "köstebek" veya manipüle edilmiş bir çalışan şüphesi var.</span> CEO hızla aksiyon ve net mesaj istiyor. Finans Direktörü hukuki süreçler ve kayıplar konusunda endişeli. İK Direktörü çalışan moralini ve güvenini vurguluyor.</p>
                             <img src="team.png" alt="Kriz yönetim ekibi" class="scenario-image">
                             <div class="interactive-element">
                                 <h4>Krizin bu aşamasında, hangi stratejik kararları alacaksınız? (2 Seçim Yapın)</h4>
@@ -1465,7 +1273,7 @@ this.state.totalScore = totalScore;
                                     <button class="btn" data-decision="d2-a-crisis-team-meeting"><i class="fa-solid fa-people-group"></i><div class="btn-text">Seçenek A: Tüm kilit paydaşları acil bir kriz toplantısında topla.<small>Saldırının çok kanallı yapısını ve iç tehdit durumunu (varsa) aktar, koordinasyonu güçlendir.</small></div></button>
                                     <button class="btn critical" data-decision="d2-a-public-statement-draft"><i class="fa-solid fa-bullhorn"></i><div class="btn-text">Seçenek B: Halkla İlişkiler ve Hukuk birimleriyle kamuoyu açıklama taslağı hazırla.<small>İtibarı korumak için saldırının sofistike yapısını ve proaktif adımları vurgulayan şeffaf bir açıklama hazırla.</small></div></button>
                                     <button class="btn" data-decision="d2-a-external-forensic-legal"><i class="fa-solid fa-gavel"></i><div class="btn-text">Seçenek C: Harici siber adli tıp ve hukuk firmalarından acil yardım iste.<small>Soruşturmayı hızlandır, yasal sürece hazırla ve bulguların tarafsızlığını temin et (maliyeti yüksek).</small></div></button>
-                                    <button class="btn" data-decision="d2-a-cemil-management" ${game.state.cemilConfronted ? '' : 'disabled'}><i class="fa-solid fa-user-shield"></i><div class="btn-text">Seçenek D: Cemil Kaan'ın durumunu İK ve Hukuk ile yönet.<small>Cemil ile gizlilik anlaşması ve psikolojik destek süreci başlat. (Sadece Cemil Kaan ile yüzleştiyseniz geçerli).</small></div></button>
+                                    <button class="btn" data-decision="d2-a-cemil-management"><i class="fa-solid fa-user-shield"></i><div class="btn-text">Seçenek D: Cemil Kaan'ın durumunu İK ve Hukuk ile yönet.<small>Cemil ile gizlilik anlaşması ve psikolojik destek süreci başlat. (Sadece Cemil Kaan ile yüzleştiyseniz geçerli).</small></div></button>
                                 </div>
                             </div>
                             <div class="learning-note"><strong>Öğrenme Notu:</strong> Kriz yönetimi sadece teknik çözümlerden ibaret değildir. İletişim, yasal uyumluluk ve paydaş yönetimi, krizin genel sonucunu belirler.</div>
@@ -1474,7 +1282,7 @@ this.state.totalScore = totalScore;
                         <div id="day3_morning_resolution" class="section" data-max-selections="2">
                             <h2><i class="fa-solid fa-check-circle"></i> Gün 3: Sabah - Toparlanma ve Gelecek Stratejileri</h2>
                             <h3>Sabah 11:00 - Kriz Sonrası Toparlanma</h3>
-                            <p>Olayın en yoğun dönemi geride kaldı. Saldırının kapsamı ve etkileri anlaşıldı ${game.state.cemilConfronted ? 've Cemil Kaan\'ın durumu ele alındı.' : '.'} ÇOLHAK Teknoloji'nin bu deneyimden ders çıkarıp gelecekteki siber tehditlere karşı daha dirençli hale gelmesi gerekiyor. Fikri mülkiyetin korunması, çalışan güveninin yeniden sağlanması ve şirketin itibarının onarılması öncelikler arasında. Siber İstihbarat Şefi olarak, dersleri somut eylem planlarına dönüştürme ve uzun vadeli bir güvenlik stratejisi önerme göreviniz var.</p>
+                            <p>Olayın en yoğun dönemi geride kaldı. Saldırının kapsamı ve etkileri anlaşıldı ve ilgili durumlar ele alındı. ÇOLHAK Teknoloji'nin bu deneyimden ders çıkarıp gelecekteki siber tehditlere karşı daha dirençli hale gelmesi gerekiyor. Fikri mülkiyetin korunması, çalışan güveninin yeniden sağlanması ve şirketin itibarının onarılması öncelikler arasında. SOC Analisti olarak, dersleri somut eylem planlarına dönüştürme ve uzun vadeli bir güvenlik stratejisi önerme göreviniz var.</p>
                             <img src="kurtarma.png" alt="Kurtarma ve iyileşme çabaları görseli" class="scenario-image">
                             <div class="interactive-element">
                                 <h4>Şirketinizin gelecekteki siber dayanıklılığı için hangi uzun vadeli stratejileri önereceksiniz? (2 Seçim Yapın)</h4>
@@ -1514,14 +1322,12 @@ this.state.totalScore = totalScore;
                     `;
                     this.elements.gameContent.innerHTML = gameHTMLContent;
                     this.elements.sections = this.elements.gameContent.querySelectorAll('.section');
-                    // Re-bind leaderboard open button after dynamic HTML insertion
                     this.elements.leaderboard.btnOpen = document.getElementById('openLeaderboardBtn');
                     this.elements.leaderboard.btnOpen?.addEventListener('click', () => this.openLeaderboard());
 
                     hljs.highlightAll();
                 },
 
-                // YENİ FONKSİYONLAR: TIMER & LEADERBOARD
                 startGlobalTimer() {
                     if (this.timer.running) return;
                     this.timer.running = true;
@@ -1563,8 +1369,6 @@ this.state.totalScore = totalScore;
 
                 async saveLeaderboard(finalScore) {
                     const name = localStorage.getItem('playerName') || 'Anonim';
-
-                    }
                     
                     const payload = {
                         scenario: 'v5-phishing',
@@ -1582,8 +1386,6 @@ this.state.totalScore = totalScore;
                     };
 
                     try {
-                        // Bu kısım gerçek bir backend API'sine istek gönderir.
-                        // Örnek amaçlı olduğu için başarısız olacak ve localStorage'a yönelecektir.
                         const res = await fetch('/api/score', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -1637,4 +1439,3 @@ this.state.totalScore = totalScore;
     </script>
 </body>
 </html>
-
