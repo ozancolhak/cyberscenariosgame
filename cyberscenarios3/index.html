@@ -75,19 +75,10 @@
         .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); font-size: 0.95em; }
         .event-timeline li:last-child { border-left: none; }
         .event-timeline li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-green); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; border: 2px solid var(--section-bg); }
-        .event-timeline li.positive::before {
-            content: '\f00c'; /* Onay işareti */
-            color: var(--accent-green);
-        }
-        .event-timeline li.negative::before {
-            content: '\f00d'; /* Çarpı işareti */
-            color: var(--accent-red);
-        }        .event-timeline li.neutral::before {
-            content: '\f05a'; /* Bilgi işareti */
-            color: var(--accent-blue);
-        }
+        .event-timeline li.positive::before { content: '\f00c'; color: var(--accent-green); }
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
         .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
-        .event-timeline li .decision-impact { font-style: italic; opacity: 0.8; font-size: 0.9em; }
         #strategic-debrief-content p { font-size: 1em; margin-bottom: 15px; }
         #rolesInfo { background-color: var(--section-bg); border-radius: 8px; padding: 20px; margin-top: 30px; text-align: left; width: 100%; max-width: 600px; }
         #rolesInfo h3 { color: var(--accent-green); margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid var(--interactive-bg); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
@@ -217,7 +208,7 @@
                 },
                 elements: {},
                 timer: {
-                    total: 180, // DEĞİŞTİ: Süre 3 dakikaya (180 saniye) indirildi
+                    total: 180,
                     remaining: 180,
                     intervalId: null,
                     running: false
@@ -228,7 +219,7 @@
                     's1-gather-evidence': { title: "Gecikmeli Tepki", text: "Durumu gizlemeye çalışırken sızıntı kamuoyuna yayıldı. Kontrolü kaybettiniz ve CEO'dan sert tepki aldınız.", strat: "Siber güvenlik krizlerinde gizlilik, olayın kontrol dışına çıkmasına neden olabilir.", changes: { financialLoss: 150000, reputation: -20, dataLeak: 5 }, impact: 'Negative' },
                     's2-c-interrogate-elif': { title: "Elif'i Sorgulama", text: "Elif'i sorguladınız. Direnişine rağmen, son zamanlarda dışarıdan, 'iş arayan' birisiyle iletişim kurduğunu itiraf etti. Şirket içi bazı 'sorunları' dile getirdi.", strat: "Memnuniyetsiz çalışanlar, içeriden tehditler için potansiyel hedeflerdir.", changes: { reputation: -5, affectedPersonnel: 1 }, clue: 'elifClueFound', impact: 'Neutral' },
                     's2-d-investigate-can': { title: "Can'ı İnceleme", text: "Can'ın mali durumunu araştırdınız. Ciddi kumar borçları olduğu ve tefecilerle ilişkisi olduğu anlaşıldı. Bu, onu dış manipülasyona açık hale getiriyor.", strat: "Finansal zorluklar, çalışanların içeriden tehdit olma riskini artırabilir.", changes: { financialLoss: 10000, reputation: -5 }, clue: 'canClueFound', impact: 'Neutral' },
-                    's2-e-block-burak': { title: "Burak'ın Erişimlerini Kapatma", text: "Burak'ın eski erişimlerini kapattınız ve dijital ayak izini incelediniz. Aktif bir erişim bulunamadı ancak sistem loglarında, ayrıldıktan sonra bir kez VPN ile bağlandığı ve şirketin eski bir test sunucusuna erişmeye çalıştığı görüldü. Bu durum dikkat çekiciydi.", strat: "Çalışan ayrılış süreçlerinde tüm erişimlerin titizlikle sonlandırılması, potansiyel içeriden tehditleri önlemek için temel bir güvenlik uygulamasıdır.", changes: { reputation: -5 }, clue: 'burakClueFound', impact: 'Negative' }, // <-- DEĞİŞTİ: Pozitif'ten Neutral'e çevrildi
+                    's2-e-block-burak': { title: "Burak'ın Erişimlerini Kapatma", text: "Burak'ın eski erişimlerini kapattınız ve dijital ayak izini incelediniz. Aktif bir erişim bulunamadı ancak sistem loglarında, ayrıldıktan sonra bir kez VPN ile bağlandığı ve şirketin eski bir test sunucusuna erişmeye çalıştığı görüldü. Bu durum dikkat çekiciydi.", strat: "Çalışan ayrılış süreçlerinde tüm erişimlerin titizlikle sonlandırılması, potansiyel içeriden tehditleri önlemek için temel bir güvenlik uygulamasıdır.", changes: { reputation: -5 }, clue: 'burakClueFound', impact: 'Negative' },
                     's2-f-talk-ayse': { title: "Ayşe ile Güven Görüşmesi", text: "Ayşe ile samimi bir konuşma yaparak onun bir oltalama saldırısının kurbanı olduğunu anladınız. Yanlışlıkla şirket içi anket linkine tıklayıp, şifresini girdiğini itiraf etti. Krizin anahtarı bulundu!", strat: "Sosyal mühendislik saldırılarının kökenini anlamak için kurbanla empati kurmak ve güvenli bir ortam sağlamak hayati öneme sahiptir. İnsan faktörünü eğitmek, en iyi savunmadır.", changes: { reputation: 10, affectedPersonnel: 1 }, clue: 'ayseClueFound', impact: 'Positive' },
                     's3-f1-support-ayse': { title: "Mağdura Destek", text: "Ayşe'ye mağdur olarak destek verdiniz ve ona psikolojik yardım sağladınız. Bu, şirket içinde güveni artırdı ve diğer çalışanların da benzer durumları bildirmesi için cesaretlendirdi. Ancak olayın 'insan hatası' olduğu algısı kamuoyunda risk oluşturabilir.", strat: "Güven ortamı oluşturmak, içeriden gelen tehditlerin tespiti ve önlenmesinde hayati rol oynar. Çalışanların korkmadan bildirim yapabilmeleri sağlanmalıdır.", changes: { reputation: 5 }, impact: 'Positive' },
                     's3-f2-punish-ayse': { title: "Cezalandırma Kararı", text: "Ayşe'yi güvenlik protokollerini ihlal etmekle suçlayarak cezalandırdınız. Bu, şirketin 'sıfır tolerans' politikasını gösterdi ancak çalışanlar arasında korku ve güvensizlik yarattı.", strat: "Sert cezalar, uzun vadede çalışanların şüpheli durumları bildirme isteğini azaltabilir ve içeriden tehditleri gizli tutmaya itebilir.", changes: { reputation: -15, affectedPersonnel: 1 }, impact: 'Negative' },
@@ -330,37 +321,37 @@
                     button.closest('.decision-buttons').querySelectorAll('.btn').forEach(btn => btn.disabled = true);
                     let nextSection = 'finalSection', outcomeTitle, outcomeText, outcomeStrat, changes = {}, finalDecisionInfo = {};
 
-                     if (this.state.phishingVictimIdentified) {
-                        outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
-                        outcomeText = "Ayşe Sarı'nın bir oltalama saldırısının kurbanı olduğu ve bu yolla hassas verilerin sızdırıldığı tespit edildi.";
-                        outcomeStrat = "Bu durum, çalışan farkındalığı eğitimlerinin ne kadar hayati olduğunu bir kez daha gösterdi.";
-                        changes = { reputation: 10 }; nextSection = 'section4';
-                        finalDecisionInfo = { title: 'Kök Neden Tespiti: Oltalama', impactText: 'Doğru ipucunu takip ederek sızıntının kaynağını buldunuz.', impactType: 'Positive' };
-                    } else if (this.state.elifClueFound) {
-                        outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
-                        outcomeText = "Elif Demir'in şirket memnuniyetsizliği nedeniyle dışarıdan biriyle hassas bilgiler paylaştığı tespit edildi. Bu, içeriden gelen kötü niyetli bir tehdittir.";
-                        outcomeStrat = "Çalışan memnuniyetsizliğinin yönetimi ve etik kuralların önemi bu tür durumlarda ortaya çıkar.";
-                        changes = { reputation: -10, affectedPersonnel: 1 }; nextSection = 'section4';
-                        finalDecisionInfo = { title: 'Kök Neden Tespiti: Kötü Niyetli Çalışan', impactText: 'Memnuniyetsiz çalışanı tespit ettiniz ancak bu durum şirkete zarar verdi.', impactType: 'Neutral' };
-                    } else if (this.state.canClueFound) {
-                        outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
-                        outcomeText = "Can Yılmaz'ın finansal borçları nedeniyle dış güçler tarafından manipüle edildiği ve bilgi sızdırdığı ortaya çıktı. Bu bir 'içeriden manipüle edilmiş' tehdittir.";
-                        outcomeStrat = "Çalışanların kişisel sorunlarının, siber güvenlik risklerini nasıl artırabileceği anlaşıldı.";
-                        changes = { financialLoss: 50000, reputation: -15, affectedPersonnel: 1 }; nextSection = 'section4';
-                        finalDecisionInfo = { title: 'Kök Neden Tespiti: Manipüle Edilmiş Çalışan', impactText: 'Finansal baskı altındaki çalışanı buldunuz.', impactType: 'Neutral' };
-                    } else if (this.state.burakClueFound) {
-                        outcomeTitle = "Yanlış İz Üzerinde!";
-                        outcomeText = "Eski çalışan Burak Kara'nın eski erişimlerini kullanarak bilgi çalmaya çalıştığı ancak başarılı olamadığı anlaşıldı. Bu durum bir güvenlik açığı olsa da, asıl sızıntının kaynağı bu değildi.";
-                        outcomeStrat = "İşten ayrılma süreçlerindeki güvenlik protokollerinin ne kadar kritik olduğu anlaşıldı.";
-                        changes = { reputation: 5 }; nextSection = 'section4';
-                        finalDecisionInfo = { title: 'Güvenlik Açığı Tespiti', impactText: 'Eski çalışan açığını kapattınız, ancak sızıntının ana kaynağını kaçırdınız.', impactType: 'Neutral' };
-                    } else {
-                        outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlenemedi!";
-                        outcomeText = "Tüm çabalarınıza rağmen, sızıntının kesin nedeni ve kaynağı tam olarak tespit edilemedi. Bu durum, şirketin gelecekteki güvenlik duruşu için büyük bir belirsizlik yaratıyor.";
-                        outcomeStrat = "Siber güvenlikte, her zaman tüm cevapları bulamayabilirsiniz. Ancak eksik bilgilerin yönetimi ve gelecekteki güvenlik yatırımlarının planlanması kritik öneme sahiptir.";
-                        changes = { financialLoss: 100000, reputation: -25, dataLeak: 10 };
-                        finalDecisionInfo = { title: 'Sonuçlandırma: Başarısız Soruşturma', impactText: 'Kök neden bulunamadı, bu da belirsizliğe ve ek maliyetlere yol açtı.', impactType: 'Negative' };
-                    }
+                       if (this.state.phishingVictimIdentified) {
+                            outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
+                            outcomeText = "Ayşe Sarı'nın bir oltalama saldırısının kurbanı olduğu ve bu yolla hassas verilerin sızdırıldığı tespit edildi.";
+                            outcomeStrat = "Bu durum, çalışan farkındalığı eğitimlerinin ne kadar hayati olduğunu bir kez daha gösterdi.";
+                            changes = { reputation: 10 }; nextSection = 'section4';
+                            finalDecisionInfo = { title: 'Kök Neden Tespiti: Oltalama', impactText: 'Doğru ipucunu takip ederek sızıntının kaynağını buldunuz.', impactType: 'Positive' };
+                        } else if (this.state.elifClueFound) {
+                            outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
+                            outcomeText = "Elif Demir'in şirket memnuniyetsizliği nedeniyle dışarıdan biriyle hassas bilgiler paylaştığı tespit edildi. Bu, içeriden gelen kötü niyetli bir tehdittir.";
+                            outcomeStrat = "Çalışan memnuniyetsizliğinin yönetimi ve etik kuralların önemi bu tür durumlarda ortaya çıkar.";
+                            changes = { reputation: -10, affectedPersonnel: 1 }; nextSection = 'section4';
+                            finalDecisionInfo = { title: 'Kök Neden Tespiti: Kötü Niyetli Çalışan', impactText: 'Memnuniyetsiz çalışanı tespit ettiniz ancak bu durum şirkete zarar verdi.', impactType: 'Neutral' };
+                        } else if (this.state.canClueFound) {
+                            outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlendi!";
+                            outcomeText = "Can Yılmaz'ın finansal borçları nedeniyle dış güçler tarafından manipüle edildiği ve bilgi sızdırdığı ortaya çıktı. Bu bir 'içeriden manipüle edilmiş' tehdittir.";
+                            outcomeStrat = "Çalışanların kişisel sorunlarının, siber güvenlik risklerini nasıl artırabileceği anlaşıldı.";
+                            changes = { financialLoss: 50000, reputation: -15, affectedPersonnel: 1 }; nextSection = 'section4';
+                            finalDecisionInfo = { title: 'Kök Neden Tespiti: Manipüle Edilmiş Çalışan', impactText: 'Finansal baskı altındaki çalışanı buldunuz.', impactType: 'Neutral' };
+                        } else if (this.state.burakClueFound) {
+                            outcomeTitle = "Yanlış İz Üzerinde!";
+                            outcomeText = "Eski çalışan Burak Kara'nın eski erişimlerini kullanarak bilgi çalmaya çalıştığı ancak başarılı olamadığı anlaşıldı. Bu durum bir güvenlik açığı olsa da, asıl sızıntının kaynağı bu değildi.";
+                            outcomeStrat = "İşten ayrılma süreçlerindeki güvenlik protokollerinin ne kadar kritik olduğu anlaşıldı.";
+                            changes = { reputation: 5 }; nextSection = 'section4';
+                            finalDecisionInfo = { title: 'Güvenlik Açığı Tespiti', impactText: 'Eski çalışan açığını kapattınız, ancak sızıntının ana kaynağını kaçırdınız.', impactType: 'Neutral' };
+                        } else {
+                            outcomeTitle = "Soruşturma Sonucu: Kök Neden Belirlenemedi!";
+                            outcomeText = "Tüm çabalarınıza rağmen, sızıntının kesin nedeni ve kaynağı tam olarak tespit edilemedi. Bu durum, şirketin gelecekteki güvenlik duruşu için büyük bir belirsizlik yaratıyor.";
+                            outcomeStrat = "Siber güvenlikte, her zaman tüm cevapları bulamayabilirsiniz. Ancak eksik bilgilerin yönetimi ve gelecekteki güvenlik yatırımlarının planlanması kritik öneme sahiptir.";
+                            changes = { financialLoss: 100000, reputation: -25, dataLeak: 10 };
+                            finalDecisionInfo = { title: 'Sonuçlandırma: Başarısız Soruşturma', impactText: 'Kök neden bulunamadı, bu da belirsizliğe ve ek maliyetlere yol açtı.', impactType: 'Negative' };
+                        }
                     
                     this.state.decisionHistory.push(finalDecisionInfo);
                     this.score.financialLoss += changes.financialLoss || 0;
@@ -434,7 +425,6 @@
                     const metricsContainer = document.getElementById('finalMetricsContainer');
                     const timelineList = document.getElementById('decision-timeline-list');
                     const debriefContent = document.getElementById('strategic-debrief-content');
-                    // Bu senaryoda recommendationsList kullanılmıyor, hata almamak için kontrol ekleyelim.
                     const recommendationsList = document.getElementById('recommendations-list');
                     const scoreBreakdownList = document.getElementById('score-breakdown');
                     
@@ -535,7 +525,6 @@
                     }
                     debriefContent.innerHTML = debriefHTML;
                     
-                    // recommendationsList bu senaryoda kullanılmıyor, o yüzden bu kısmı kaldırabiliriz veya boş bırakabiliriz.
                     if (recommendationsList) {
                          recommendationsList.innerHTML = '';
                     }
@@ -552,7 +541,7 @@
                     if (!chatViewer) return;
                     let chat = '';
                     if (['section2', 'section2-1', 'section3', 'section3-ayse', 'section3-ayse-conclusion'].includes(currentSection)) {
-                         chat = `<div class="message"><span class="sender">CEO Hande Hanım:</span> Bu sızıntı kabul edilemez! Kim sorumlu? Hızlıca bulun!</div><div class="message"><span class="sender cfo">CFO Arda Bey:</span> Finansal riskleri değerlendiriyoruz. Olası yasal sonuçlar ne olur?</div><div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Hanım:</span> Durumu tam olarak anlamadan dışarıya açıklama yapmaktan kaçınalım.</div><div class="message"><span class="sender">Siz:</span> Ekibimle birlikte detaylı bir iç soruşturma başlattık.</div>`;
+                        chat = `<div class="message"><span class="sender">CEO Hande Hanım:</span> Bu sızıntı kabul edilemez! Kim sorumlu? Hızlıca bulun!</div><div class="message"><span class="sender cfo">CFO Arda Bey:</span> Finansal riskleri değerlendiriyoruz. Olası yasal sonuçlar ne olur?</div><div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Hanım:</span> Durumu tam olarak anlamadan dışarıya açıklama yapmaktan kaçınalım.</div><div class="message"><span class="sender">Siz:</span> Ekibimle birlikte detaylı bir iç soruşturma başlattık.</div>`;
                     } else if (currentSection === 'section4') {
                         chat = `<div class="message"><span class="sender">CEO Hande Hanım:</span> Kamuoyu açıklamasını hazırlıyoruz. Son bir kez teyit edelim. Ne kadarını paylaşacağız?</div><div class="message"><span class="sender legal">Hukuk Müşaviri Zeynep Hanım:</span> Yasal sorumluluklarımız var, ancak şirketin imajını da korumalıyız. Hassas dengeyi bulmalıyız.</div><div class="message"><span class="sender cfo">CFO Arda Bey:</span> Bu krizin maliyeti çok yüksek. Gelecekteki yatırımlarımız etkilenecek mi?</div>`;
                     }
@@ -730,7 +719,6 @@
 
                 async saveLeaderboard(finalScore) {
                     const name = localStorage.getItem('playerName') || 'Anonim';
-                    }
                     
                     const payload = {
                         scenario: 'v3-insiderthreat',
