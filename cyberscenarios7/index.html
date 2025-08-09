@@ -287,7 +287,7 @@
     <div class="container">
         <div id="introSection" class="centered-page">
             <h1><i class="fa-solid fa-cloud-bolt"></i> Zero-Day Saldırısı</h1>
-            <p style="max-width: 600px;">Hoş geldiniz, **ÇOLHAK Teknoloji**'nin **Siber Güvenlik Mühendisi**! Ekibinizde kritik bir rolünüz var. Şirketinizin web uygulamasına yönelik, henüz yamalanmamış bir **zero-day açığın aktif olarak sömürüldüğünü** fark ettiniz. Saldırganlar, sistemlere sızarak hassas verilere ulaşmaya çalışıyor. Göreviniz: Bu saldırıyı durdurmak, hasarı kontrol altına almak, vendor'dan acil mitigasyon talep etmek ve sistemleri izole etme kararlarıyla zamana karşı bir yarış başlatmak!</p>
+            <p style="max-width: 600px;">Hoş geldiniz, **ÇOLHAK Teknoloji**'nin **Siber Güvenlik Yöneticisi**! Ekibinizde kritik bir rolünüz var. Şirketinizin web uygulamasına yönelik, henüz yamalanmamış bir **zero-day açığın aktif olarak sömürüldüğünü** fark ettiniz. Saldırganlar, sistemlere sızarak hassas verilere ulaşmaya çalışıyor. Göreviniz: Bu saldırıyı durdurmak, hasarı kontrol altına almak, vendor'dan acil mitigasyon talep etmek ve sistemleri izole etme kararlarıyla zamana karşı bir yarış başlatmak!</p>
             <img src="intro.png" alt="Siber saldırı themed intro image" class="scenario-image">
 
             <div class="intro-info-grid">
@@ -297,7 +297,7 @@
                         <li class="your-role">
                             <span class="icon"><i class="fa-solid fa-user-secret"></i></span>
                             <div>
-                                <strong>Sizin Rolünüz: Siber Güvenlik Mühendisi</strong> 
+                                <strong>Sizin Rolünüz: Siber Güvenlik Yöneticisi</strong> 
                                 <small>Aktif saldırıyı tespit eden ve ilk müdahaleyi yapan ekibin liderisin. Teknik analizler, tehdit avcılığı ve mitigasyon adımlarında aktif rol alıyorsun. Seçimlerin sonucu doğrudan etkileyecek.</small>
                             </div>
                         </li>
@@ -355,7 +355,7 @@
                     <p>CISO Anıl Yılmaz'tan acil bir çağrı alıyorsunuz: *"Bu ne demek oluyor? Nasıl olur da farkında olmadığımız bir zafiyet sömürülür? Derhal durdurmalıyız! Ne yapıyoruz?!"*</p>
                     <img src="zero_day_detection.png" alt="Zero-day detection visual" class="scenario-image">
                     <div class="interactive-element">
-                        <h4>Siber Güvenlik Mühendisi olarak ilk acil müdahalen ne olacak?</h4>
+                        <h4>Siber Güvenlik Yöneticisi olarak ilk acil müdahalen ne olacak?</h4>
                         <div class="decision-buttons">
                             <button class="btn critical" data-decision="p1-isolate-app" data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-server"></i><div class="btn-text">Seçenek A: Riskli Web Uygulamasını Derhal Ağdan İzole Et.<small>Saldırının yayılmasını ve veri sızıntısını anında durdurmak için radikal bir adım at.</small></div></button>
                             <button class="btn" data-decision="p1-monitor-traffic" data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-eye"></i><div class="btn-text">Seçenek B: Saldırganın Davranışını İzle ve Zafiyeti Anlamaya Çalış.<small>Zero-day'in nasıl sömürüldüğünü ve saldırganın hedeflerini anlamak için gözlem yap.</small></div></button>
@@ -798,13 +798,13 @@
 
                     let debriefHTML = '';
                     if (badgeInfo.text === 'ZERO-DAY EFENDİSİ!') { 
-                        debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir Siber Güvenlik Mühendisi olarak, bir zero-day saldırısını ustalıkla yönettin. Hızlı tespit, akıllıca geçici mitigasyonlar ve etkin iletişim stratejileri sayesinde, şirketiniz bu kritik tehditten minimum hasarla kurtuldu. Uygulama güvenliğini tam olarak sağladın ve kullanıcı güvenini güçlendirdin. Siber güvenlikte gerçek bir lider olduğunu kanıtladın!</p>`;
+                        debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir Siber Güvenlik Yöneticisi olarak, bir zero-day saldırısını ustalıkla yönettin. Hızlı tespit, akıllıca geçici mitigasyonlar ve etkin iletişim stratejileri sayesinde, şirketiniz bu kritik tehditten minimum hasarla kurtuldu. Uygulama güvenliğini tam olarak sağladın ve kullanıcı güvenini güçlendirdin. Siber güvenlikte gerçek bir lider olduğunu kanıtladın!</p>`;
                     } else if (badgeInfo.text === 'DİRENÇLİ SOC ANALİSTİ') { 
                         debriefHTML += `<p><strong>Başarılı Bir Zero-Day Müdahalesi!</strong> Oldukça karmaşık bir zero-day kriziyle karşı karşıya kalmanıza rağmen, etkili teknik müdahalelerle ve stratejik kararlarla krizi kontrol altına almayı başardınız. Bazı finansal kayıplar ve kesintiler yaşansa da, genel olarak uygulama güvenliği ve kullanıcı güvenini önemli ölçüde korudunuz. Aldığınız derslerle gelecekteki zero-day savunmalarınızı daha da güçlendireceksiniz.</p>`;
                     } else if (badgeInfo.text === 'ZORLU ZERO-DAY DENEYİMİ') { 
                         debriefHTML += `<p><strong>Öğrenilen Büyük Dersler:</strong> Zero-day saldırısını yönetmekte zorlandınız ve uygulama güvenliği ile kullanıcı güveni açısından önemli kayıplar yaşadınız. Finansal zararlar arttı ve kriz süresi uzadı. Ancak bu deneyim, zero-day savunma stratejilerinizi kökten değiştirmek ve ekibinizi daha iyi hazırlamak için paha biçilmez dersler sağladı. Acil eylem planlarına ve eğitimlere ihtiyacınız var.</p>`;
                     } else { 
-                        debriefHTML += `<p><strong>ZERO-DAY FELAKETİ:</strong> Siber Güvenlik Mühendisi olarak bu zero-day krizini yönetmekte ciddi zorluklar yaşadınız. Uygulama güvenliği kritik seviyede kaldı, saldırgan sistemlerde geniş bir erişim sağladı, finansal kayıplar devasa boyutlara ulaştı ve kullanıcı güveni tamamen çöktü. Bu durum, ÇOLHAK Teknoloji için siber güvenlik stratejilerinde köklü bir değişim gerektiren acı bir ders oldu.</p>`;
+                        debriefHTML += `<p><strong>ZERO-DAY FELAKETİ:</strong> Siber Güvenlik Yöneticisi olarak bu zero-day krizini yönetmekte ciddi zorluklar yaşadınız. Uygulama güvenliği kritik seviyede kaldı, saldırgan sistemlerde geniş bir erişim sağladı, finansal kayıplar devasa boyutlara ulaştı ve kullanıcı güveni tamamen çöktü. Bu durum, ÇOLHAK Teknoloji için siber güvenlik stratejilerinde köklü bir değişim gerektiren acı bir ders oldu.</p>`;
                     }
                     debriefContent.innerHTML = debriefHTML;
                     
