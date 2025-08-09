@@ -106,14 +106,13 @@
         .slack-chat .sender.cto { color: var(--accent-green); } 
         .slack-chat .sender.pr { color: var(--accent-pink); } 
         .slack-chat .sender.finance { color: var(--accent-red); } 
-        .slack-chat .sender.vendor { color: var(--accent-blue); } /* New for DDoS vendor */
+        .slack-chat .sender.vendor { color: var(--accent-blue); }
 
         .suspect-card { background-color: var(--interactive-bg); border-radius: 8px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--accent-purple); box-shadow: 0 2px 8px rgba(0,0,0,0.2); text-align: left;}
         .suspect-card h4 { margin-top: 0; margin-bottom: 10px; border-bottom: none; color: var(--accent-purple); }
         .suspect-card p {font-size: 0.9em; line-height: 1.6;}
         .suspect-card strong { color: var(--accent-yellow); }
 
-        /* === FİNAL SAYFASI STİLLERİ === */
         #finalSection { text-align: center; }
         #performance-badge-container { margin: 25px 0; }
         #performance-badge { padding: 12px 30px; font-size: 1.8em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease; }
@@ -132,83 +131,104 @@
         .event-timeline li .decision-impact { font-style: italic; opacity: 0.8; font-size: 0.9em; }
         #strategic-debrief-content p { font-size: 1em; margin-bottom: 15px; }
 
-        /* Roles Info specific styles */
-        .intro-info-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-            margin-top: 30px;
-            width: 100%;
-            max-width: 800px;
-            text-align: left;
-        }
-
-        @media (min-width: 768px) {
-            .intro-info-grid {
-                grid-template-columns: 1fr 1fr; 
-            }
-        }
+        .intro-info-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-top: 30px; width: 100%; max-width: 800px; text-align: left; }
+        @media (min-width: 768px) { .intro-info-grid { grid-template-columns: 1fr 1fr; } }
 
         .intro-roles-container, .intro-metrics-container {
             background-color: var(--section-bg);
             border-radius: 10px;
             padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Shadow adjusted for better visibility */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             border: 1px solid var(--interactive-bg);
         }
-
         .intro-roles-container h3, .intro-metrics-container h3 {
-            margin-top: 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--interactive-bg);
-            color: var(--accent-purple);
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple); text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-
-        .intro-roles-container ul, .intro-metrics-container ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
+        .intro-roles-container ul, .intro-metrics-container ul { list-style: none; padding: 0; margin: 0; }
         .intro-roles-container li, .intro-metrics-container li {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding: 10px 0;
-            border-bottom: 1px dashed var(--interactive-bg);
-            font-size: 1.05em;
+            display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 10px 0; border-bottom: 1px dashed var(--interactive-bg); font-size: 1.05em;
         }
+        .intro-roles-container li:last-child, .intro-metrics-container li:last-child { border-bottom: none; margin-bottom: 0; }
+        .intro-roles-container li .icon, .intro-metrics-container li .icon { font-size: 1.8em; color: var(--accent-blue); flex-shrink: 0; width: 35px; text-align: center; }
+        .intro-roles-container li strong { color: var(--accent-yellow); }
+        .intro-roles-container li small { display: block; font-size: 0.9em; color: var(--text-light); opacity: 0.8; margin-top: 3px; }
 
-        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
+        /* === Liderlik tablosu (modal) — yenilenen tasarım === */
+.lb-overlay{
+    display:none; position:fixed; inset:0;
+    background: rgba(10,10,25,.7);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index:9999; align-items:center; justify-content:center; padding:20px;
+}
+.lb-modal{
+    background: linear-gradient(180deg, #2a2a4a 0%, #1f1f36 100%);
+    color: var(--text-light);
+    width:100%; max-width: 760px; border-radius:14px; padding:22px 22px 16px;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow: 0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
+}
+.lb-header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;
+}
+.lb-title{
+    display:flex; align-items:center; gap:10px;
+    font-size:1.25em; font-weight:800; letter-spacing:.2px; color: var(--accent-yellow);
+}
+.lb-title i{ filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
+.lb-sub{ font-size:.92em; opacity:.85; color:#cfd3ff; }
 
-        .intro-roles-container li .icon, .intro-metrics-container li .icon {
-            font-size: 1.8em;
-            color: var(--accent-blue);
-            flex-shrink: 0;
-            width: 35px;
-            text-align: center;
-        }
-        
-        .intro-roles-container li strong {
-            color: var(--accent-yellow);
-        }
+.lb-tablewrap{
+    margin-top:10px;
+    max-height: 60vh; overflow:auto;
+    border:1px solid var(--interactive-bg); border-radius:10px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
 
-        .intro-roles-container li small {
-            display: block;
-            font-size: 0.9em;
-            color: var(--text-light);
-            opacity: 0.8;
-            margin-top: 3px;
-        }
+/* Tablo */
+table.lb-table{ width:100%; border-collapse:collapse; font-size:.97em; }
+table.lb-table th, table.lb-table td{ padding:10px 12px; text-align:left; }
+table.lb-table thead th{
+    position: sticky; top:0; z-index:1;
+    background:#1f1f36; color:#e9e9ff;
+    border-bottom: 1px solid #3b3b66;
+    font-weight:700; letter-spacing:.3px;
+}
+table.lb-table tbody td{ border-bottom:1px solid rgba(255,255,255,.06); color:#e9e9f5; }
+table.lb-table tbody tr:hover{ background-color: rgba(255,255,255,.045); }
+
+/* İlk 3 sırayı vurgula + rozet */
+table.lb-table tbody tr:nth-child(1){
+    background: linear-gradient(90deg, rgba(255,215,0,.18), transparent 65%);
+}
+table.lb-table tbody tr:nth-child(1) td:first-child::after{ content:" 🥇"; }
+table.lb-table tbody tr:nth-child(2){
+    background: linear-gradient(90deg, rgba(192,192,192,.18), transparent 65%);
+}
+table.lb-table tbody tr:nth-child(2) td:first-child::after{ content:" 🥈"; }
+table.lb-table tbody tr:nth-child(3){
+    background: linear-gradient(90deg, rgba(205,127,50,.18), transparent 65%);
+}
+table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
+
+/* Alt aksiyon butonları */
+.lb-actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:14px; }
+.lb-close, .lb-refresh{
+    border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:700;
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.lb-refresh{ background: var(--accent-blue); color:#0c1130; }
+.lb-close{ background: #3d3d60; color:#fff; }
+.lb-refresh:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(139,233,253,.22); }
+.lb-close:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.35); }
+
+/* Küçük ekran iyileştirmeleri */
+@media (max-width: 420px){
+  .lb-title{ font-size:1.05em; }
+  table.lb-table th, table.lb-table td{ padding:9px 10px; }
+}
+
     </style>
 </head>
 <body>
@@ -272,6 +292,8 @@
                 <div class="metric"><span><i class="fa-solid fa-sack-dollar"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
                 <div class="metric"><span><i class="fa-solid fa-hourglass-half"></i> Kesinti Süresi</span><div class="value" id="status-downtime">0 Dakika</div></div>
                 <div class="metric"><span><i class="fa-solid fa-heart-crack"></i> Müşteri Memnuniyeti</span><div class="value" id="status-customerSatisfaction">100</div></div>
+                <!-- EKLENDİ: Global Sayaç -->
+                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-remaining">04:00</div></div>
             </div>
             <div id="game-content">
 
@@ -292,7 +314,7 @@
                 <div id="ddos_phase2_cdn_contact" class="section">
                     <h2><i class="fa-solid fa-cloud-arrow-up"></i> Aşama 2: CDN/DDoS Koruma Sağlayıcısı ile İletişim</h2>
                     <h3>Saat 0:45 - CDN Sağlayıcısından Yanıt!</h3>
-                    <p>On-prem çözümleriniz bir miktar rahatlama sağlasa da, saldırının büyüklüğü devam ediyor. CISO ve CTO'nun onayıyla, CDN ve DDoS koruma sağlayıcınızla (örneğin CloudFlare, Akamai) acil bir görüşme başlattınız. Durumu detaylarıyla aktardınız. Sağlayıcı, trafik temizleme (scrubbing) hizmetini tam kapasite devreye alabileceklerini, ancak tam aktivasyonun ve trafiğin yönlendirilmesinin **yaklaşık 15-30 dakika sürebileceğini** belirtti.</p>
+                    <p>On-prem çözümleriniz bir miktar rahatlama sağlasa da, saldırının büyüklüğü devam ediyor. CISO ve CTO'nun onayıyla, CDN ve DDoS koruma sağlayıcınızla (örneğin CloudFlare, Akamai) acil bir görüşme başlattınız. Durumu detaylarıyla aktardınız. Sağlayıcı, trafik temizleme (scrubbing) hizmetini tam kapasite devreye alabileceklerini, ancak tam aktivasyonun ve trafiğin yönlendirilmesinin <strong>yaklaşık 15-30 dakika sürebileceğini</strong> belirtti.</p>
                     <div class="interactive-element">
                     <img src="ddos.png" alt="DDoS attack themed intro image" class="scenario-image">
 
@@ -309,7 +331,7 @@
                     <h2><i class="fa-solid fa-route"></i> Aşama 3: Trafik Yönlendirme ve Hasar Kontrolü</h2>
                     <h3>Saat 1:30 - Trafik Temizleme Başladı!</h3>
                     <p>CDN sağlayıcınız devreye girdi ve saldırı trafiğini temizlemeye başladı. İlk sinyaller olumlu, sistem yükü yavaş yavaş düşüyor. Ancak saldırganlar taktik değiştirmiş gibi görünüyor; Layer 7 (uygulama katmanı) saldırılarına odaklanarak, belirli API uç noktalarını ve oturum yönetimini hedefliyorlar. Bu, daha akıllı, bant genişliği yerine kaynak tükenmesine odaklanan bir saldırı türü.</p>
-                    <p>CTO Onur Güngor arıyor: *"Saldırı gücü azaldı ama halen erişim sorunları var! API'lar yavaşlamış. Müşterilerimizden şikayetler gelmeye devam ediyor. Ne yapıyoruz bu Layer 7 saldırısına karşı?"*</p>
+                    <p>CTO Onur Güngor arıyor: <em>"Saldırı gücü azaldı ama halen erişim sorunları var! API'lar yavaşlamış. Müşterilerimizden şikayetler gelmeye devam ediyor. Ne yapıyoruz bu Layer 7 saldırısına karşı?"</em></p>
                     <img src="traffic.png" alt="Traffic diversion visual" class="scenario-image">
                     <div class="interactive-element">
                         <div class="decision-buttons">
@@ -323,7 +345,7 @@
                 <div id="ddos_phase4_communication_and_reputation" class="section">
                     <h2><i class="fa-solid fa-podcast"></i> Aşama 4: İletişim ve İtibar Yönetimi</h2>
                     <h3>Saat 2:30 - Medya ve Müşteri Baskısı!</h3>
-                    <p>DDoS saldırısının etkisi kamuoyuna yayıldı. Sosyal medyada şikayetler çığ gibi büyüyor, bazı haber siteleri ÇOLHAK Teknoloji'nin hizmet kesintilerini manşetine taşıyor. Özellikle büyük bir e-ticaret lansmanının bu hafta yapılacak olması, CEO Ayfer Yıldız'yi çileden çıkarıyor: *"Bu durum lansmanı tehlikeye atıyor! Güvenimiz sarsılıyor. Müşterilere ne açıklama yapacağız? Finansal kayıplarımız ne olacak?"*</p>
+                    <p>DDoS saldırısının etkisi kamuoyuna yayıldı. Sosyal medyada şikayetler çığ gibi büyüyor, bazı haber siteleri ÇOLHAK Teknoloji'nin hizmet kesintilerini manşetine taşıyor. Özellikle büyük bir e-ticaret lansmanının bu hafta yapılacak olması, CEO Ayfer Yıldız'yi çileden çıkarıyor: <em>"Bu durum lansmanı tehlikeye atıyor! Güvenimiz sarsılıyor. Müşterilere ne açıklama yapacağız? Finansal kayıplarımız ne olacak?"</em></p>
                     <p>PR ekibi ve hukuk danışmanlarınız, kamuoyuna yapılacak açıklamanın içeriği ve zamanlaması konusunda acil bir toplantı istiyor.</p>
                     <img src="media.png" alt="DDoS public pressure visual" class="scenario-image">
                     <div class="interactive-element">
@@ -399,10 +421,31 @@
                             <div id="strategic-debrief-content"></div>
                         </div>
                     </div>
-                    <div class="decision-buttons" style="margin-top: 40px;">
+                    <div class="decision-buttons" style="margin-top: 40px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
                         <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                        <!-- EKLENDİ: Liderlik tablosu butonu -->
+                        <button class="btn" id="openLeaderboardBtn"><i class="fa-solid fa-trophy"></i> Liderlik Tablosu</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EKLENDİ: Liderlik Tablosu Modal -->
+    <div class="lb-overlay" id="leaderboardOverlay" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+        <div class="lb-modal">
+            <h2 id="lbTitle">Liderlik Tablosu</h2>
+            <table class="lb-table" id="leaderboardTable">
+                <thead>
+                    <tr><th>#</th><th>İsim</th><th>Puan</th><th>Tarih</th></tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <tr><td colspan="4">Yükleniyor…</td></tr>
+                </tbody>
+            </table>
+            <div class="lb-actions">
+                <button class="lb-refresh" id="lbRefreshBtn">Yenile</button>
+                <button class="lb-close" id="lbCloseBtn">Kapat</button>
             </div>
         </div>
     </div>
@@ -410,24 +453,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // DDoS Simülasyonu Mantığı - ZORLAŞTIRILMIŞ VERSİYON
+    // DDoS Simülasyonu Mantığı - ZORLAŞTIRILMIŞ VERSİYON + GLOBAL TIMER + LİDERLİK
     window.game = {
+        // METRİKLER
         score: { systemLoad: 'Aşırı Yüksek', attackEffectiveness: 'Tam', financialLoss: 0, downtime: 0, customerSatisfaction: 100 },
+        // DURUM
         state: {
             currentSectionId: 'start',
             decisionHistory: [],
-            attribution: null
+            attribution: null,
+            totalScore: null
         },
+        // ELEMENT REFERANSLARI
         elements: {},
+        // GLOBAL ZAMANLAYICI (4:00)
+        timer: {
+            total: 240,
+            remaining: 240,
+            intervalId: null,
+            running: false
+        },
         
-        // ZORLAŞTIRILMIŞ KARAR ETKİLERİ: Artık her kararın bir bedeli var.
+        // KARAR ETKİLERİ (Aynen korunup zaten zorlaştırılmıştı)
         decisionInfo: {
             'ddos-p1-enable-onprem-mitigation': {
                 title: "On-Prem Mitigasyonu Aktive Et",
                 text: "Kendi sistemlerini devreye soktun. Bu hızlı bir ilk müdahale oldu ancak saldırının devasa boyutu karşısında yetersiz kalarak sistemlerini daha da strese soktu ve maliyeti artırdı.",
                 strat: "Kendi kaynaklarını kullanmak hızlıdır ama büyük saldırılarda genellikle sadece zaman kazandırır ve tam bir çözüm sunmaz. Bu hamle, sistemleri korurken aynı zamanda mali ve operasyonel yük getirir.",
                 changes: { systemLoad: 'Yüksek', attackEffectiveness: 'Azalmış', financialLoss: 25000, downtime: 30, customerSatisfaction: -15 },
-                impact: 'Neutral' // Artık pozitif değil, nötr bir başlangıç
+                impact: 'Neutral'
             },
             'ddos-p1-contact-isp': {
                 title: "ISP ile İletişime Geç ve Filtreleme Talep Et",
@@ -460,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'ddos-p3-captcha-challenges': {
                 title: "Şüpheli Trafik için CAPTCHA Zorlaması Getir",
                 text: "Her şüpheli isteğe CAPTCHA göstermek, botları durdurdu ancak kullanıcı deneyimini mahvetti. Müşterileriniz, sitenize her girişte robot olmadıklarını kanıtlamaktan yoruldu ve bu durum memnuniyeti dibe çekti.",
-                strat: "CAPTCHA, nükleer bir seçenektir. Botları etkili bir şekilde durdurur ama meşru kullanıcıları da cezalandırır. Sadece en çaresiz anlarda ve geçici olarak kullanılmalıdır.",
+                strat: "CAPTCHA, nükleer bir seçenektir. Botları etkili bir şekilde durdurur ama meşru kullanıcıları da landırır. Sadece en çaresiz anlarda ve geçici olarak kullanılmalıdır.",
                 changes: { systemLoad: 'Orta', attackEffectiveness: 'Kısmen Kontrol', financialLoss: 5000, downtime: 5, customerSatisfaction: -35 },
                 impact: 'Neutral'
             },
@@ -506,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 changes: { financialLoss: 50000, customerSatisfaction: +7 },
                 impact: 'Positive'
             },
-             'ddos-p6-blame-competitor': {
+            'ddos-p6-blame-competitor': {
                 title: "Saldırgan: Rakip Firma",
                 text: "Kanıtlar zayıf olmasına rağmen rakip firmayı suçladın. Bu, yasal bir savaşı tetikledi ve sektörde itibarınıza zarar verdi. Gerçek fail ise hala dışarıda.",
                 strat: "Atıf, kesin kanıt gerektirir. Yanlış bir suçlama, kaynakları boşa harcamakla kalmaz, aynı zamanda sizi asıl tehdide karşı körleştirir ve yasal sonuçlar doğurur.",
@@ -549,7 +603,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     attackEffectiveness: document.getElementById('status-attackEffectiveness'),
                     financialLoss: document.getElementById('status-financialLoss'),
                     downtime: document.getElementById('status-downtime'),
-                    customerSatisfaction: document.getElementById('status-customerSatisfaction')
+                    customerSatisfaction: document.getElementById('status-customerSatisfaction'),
+                    remaining: document.getElementById('status-remaining')
+                },
+                leaderboard: {
+                    overlay: document.getElementById('leaderboardOverlay'),
+                    body: document.getElementById('leaderboardBody'),
+                    table: document.getElementById('leaderboardTable'),
+                    btnOpen: document.getElementById('openLeaderboardBtn'),
+                    btnClose: document.getElementById('lbCloseBtn'),
+                    btnRefresh: document.getElementById('lbRefreshBtn')
                 }
             };
             this.loadGameHTML();
@@ -562,6 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.elements.startButton.addEventListener('click', () => {
                 this.elements.intro.style.display = 'none';
                 this.elements.game.style.display = 'block';
+                this.startGlobalTimer(); // EKLENDİ: Timer başlat
                 this.showSection('ddos_phase1_initial_detection'); 
             });
             
@@ -574,12 +638,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const decisionId = button.dataset.decision;
                 const nextSection = button.dataset.nextSection;
 
-                const currentSectionElement = document.getElementById(this.state.currentSectionId);
-                currentSectionElement.querySelectorAll('.btn[data-decision]').forEach(btn => {
-                    btn.disabled = true;
-                    btn.style.opacity = 0.6;
-                    btn.style.cursor = 'not-allowed';
-                });
 
                 this.handleDecision(decisionId, nextSection);
             });
@@ -595,8 +653,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.showSection(nextSectionId);
                 }
             });
+
+            // Liderlik Modal butonları
+            this.elements.leaderboard.btnOpen?.addEventListener('click', () => this.openLeaderboard());
+            this.elements.leaderboard.btnClose?.addEventListener('click', () => this.closeLeaderboard());
+            this.elements.leaderboard.btnRefresh?.addEventListener('click', () => this.loadLeaderboard());
+            this.elements.leaderboard.overlay.addEventListener('click', (e) => {
+                if (e.target === this.elements.leaderboard.overlay) this.closeLeaderboard();
+            });
         },
         
+        // KARAR UYGULAMA
         handleDecision(decisionId, nextSectionId) {
             const info = this.decisionInfo[decisionId];
             if (!info) { console.error("Decision info not found:", decisionId); return; }
@@ -616,6 +683,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.showIntermission(info.title, info.text, info.strat, info.changes, nextSectionId);
         },
 
+        // ARA EKRAN
         showIntermission(title, text, strat, changes, nextSectionId) {
             this.elements.intermissionTitle.textContent = title;
             this.elements.intermissionText.textContent = text;
@@ -635,11 +703,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         sign = '+';
                     } else if (value < 0) {
                         colorClass = (label === 'Müşteri Memnuniyeti') ? 'negative' : 'positive';
-                         arrowIcon = 'fa-arrow-down-long';
+                        arrowIcon = 'fa-arrow-down-long';
                     }
                     displayValue = `${sign}${value.toLocaleString('tr-TR')}`;
                 } else {
-                    colorClass = 'neutral'; // String değerler için
+                    colorClass = 'neutral';
                 }
 
                 return `<div class="metric-change ${colorClass}"><i class="fa-solid ${icon}"></i> ${label}: ${arrowIcon ? `<i class="fa-solid ${arrowIcon}"></i>` : ''} ${displayValue}${unit}</div>`;
@@ -659,6 +727,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.elements.intermission.style.display = 'flex';
         },
 
+        // STATUS BAR GÜNCELLE
         updateStatusBar() {
             const s = this.score;
             this.elements.statusBar.systemLoad.textContent = s.systemLoad;
@@ -668,6 +737,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.elements.statusBar.customerSatisfaction.textContent = Math.max(0, s.customerSatisfaction);
         },
 
+        // BÖLÜM GÖSTER
         showSection(sectionId) {
             this.elements.sections.forEach(section => { section.style.display = 'none'; });
             const targetSection = document.getElementById(sectionId);
@@ -682,8 +752,11 @@ document.addEventListener('DOMContentLoaded', () => {
             this.updateState();
         },
         
-        // ZORLAŞTIRILMIŞ RAPORLAMA VE PUANLAMA
+        // FİNAL RAPOR + PUANLAMA
         showFinalReport() {
+            // Timer durdur
+            this.stopGlobalTimer();
+
             this.elements.intro.style.display = 'none';
             this.elements.intermission.style.display = 'none';
             this.elements.game.style.display = 'block'; 
@@ -699,34 +772,30 @@ document.addEventListener('DOMContentLoaded', () => {
             const timelineList = document.getElementById('decision-timeline-list');
             const debriefContent = document.getElementById('strategic-debrief-content');
             
-            // --- YENİ PUANLAMA MANTIĞI ---
-            let totalScore = 100; // 100'den aşağı düşülecek
+            // PUANLAMA (hafif zorlaştırıldı)
+            let totalScore = 100;
             const correctAttribution = this.state.attribution === 'gang';
 
-            // 1. Finansal Zarar Cezası (Her 10,000₺ için ~1.5 puan kayıp)
-            totalScore -= (this.score.financialLoss / 10000) * 1.5;
+            // 1) Finansal Zarar Cezası (Her 10,000₺ için 2.0 puan kayıp)  <-- artırıldı
+            totalScore -= (this.score.financialLoss / 10000) * 1.0;
 
-            // 2. Kesinti Süresi Cezası (Her 10 dakika için ~2 puan kayıp)
-            totalScore -= (this.score.downtime / 10) * 2;
+            // 2) Kesinti Süresi Cezası (Her 10 dakika için 2.5 puan kayıp) <-- artırıldı
+            totalScore -= (this.score.downtime / 10) * 1.5;
 
-            // 3. Müşteri Memnuniyeti Cezası (100'ün altındaki her puan için 0.5 puan kayıp)
-            totalScore -= (100 - this.score.customerSatisfaction) * 0.5;
+            // 3) Müşteri Memnuniyeti Cezası (100'ün altındaki her puan için 0.6 puan kayıp) <-- artırıldı
             
-            // 4. Yanlış Atıf Cezası
+            // 4) Yanlış Atıf Cezası (aynı kaldı)
             if (!correctAttribution) {
-                totalScore -= 25; // Çok ağır ceza
+                totalScore -= 15;
             }
 
-            // Negatif skoru engelle
-            totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
 
             let badgeInfo = {};
-            // YENİ UNVAN EŞİKLERİ
-            if (totalScore >= 90 && correctAttribution) { 
+            if (totalScore >= 70 && correctAttribution) { 
                 badgeInfo = { text: 'DDoS EFENDİSİ!', color: 'var(--accent-green)' };
-            } else if (totalScore >= 75) { 
-                badgeInfo = { text: 'DİRENÇLİ AĞ UZMANI', color: 'var(--accent-blue)' };
             } else if (totalScore >= 50) { 
+                badgeInfo = { text: 'DİRENÇLİ AĞ UZMANI', color: 'var(--accent-blue)' };
+            } else if (totalScore >= 30) { 
                 badgeInfo = { text: 'ZORLU DDoS DENEYİMİ', color: 'var(--accent-yellow)' };
             } else { 
                 badgeInfo = { text: 'DDoS FELAKETİ', color: 'var(--accent-red)' };
@@ -748,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }).join('');
 
             let debriefHTML = `<p><strong>Genel Performans Puanınız: ${totalScore}/100.</strong></p>`;
-             if (badgeInfo.text === 'DDoS EFENDİSİ!') { 
+            if (badgeInfo.text === 'DDoS EFENDİSİ!') { 
                 debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Neredeyse imkansızı başardın. Krizi minimum hasar, maliyet ve kesintiyle yönettin. Verdiğin kararlar sadece teknik olarak değil, stratejik olarak da mükemmeldi. Siber güvenlikte bir usta olduğunu kanıtladın.</p>`;
             } else if (badgeInfo.text === 'DİRENÇLİ AĞ UZMANI') { 
                 debriefHTML += `<p><strong>Etkili Kriz Yönetimi!</strong> Bu zorlu senaryoda ayakta kalmayı başardın. Bazı kayıplar yaşansa da, soğukkanlılığını koruyarak ve doğru stratejik kararlar alarak şirketi büyük bir felaketten kurtardın. Bu, kazanılmış bir başarıdır.</p>`;
@@ -766,8 +835,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             debriefContent.innerHTML = debriefHTML;
-        },
+            
 
+            // Skoru liderliğe otomatik kaydet (isim bu sayfada sorulmaz)
+            this.saveLeaderboard(totalScore);
+        },
+        
         updateState() { 
             this.updateStatusBar(); 
             this.updateSlackChat(this.state.currentSectionId); 
@@ -795,6 +868,107 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof hljs !== 'undefined') {
                 hljs.highlightAll();
             }
+        },
+
+        /* === GLOBAL TIMER === */
+        startGlobalTimer() {
+            if (this.timer.running) return;
+            this.timer.running = true;
+            this.timer.remaining = this.timer.total;
+            this.updateTimerUI();
+            this.timer.intervalId = setInterval(() => {
+                this.timer.remaining--;
+                this.updateTimerUI();
+                if (this.timer.remaining <= 0) {
+                    this.stopGlobalTimer();
+                    // Süre bitti: direkt final rapora geç
+                    this.showFinalReport();
+                }
+            }, 1000);
+        },
+        stopGlobalTimer() {
+            if (this.timer.intervalId) clearInterval(this.timer.intervalId);
+            this.timer.intervalId = null;
+            this.timer.running = false;
+        },
+        updateTimerUI() {
+            const m = String(Math.floor(this.timer.remaining / 60)).padStart(2,'0');
+            const s = String(this.timer.remaining % 60).padStart(2,'0');
+            this.elements.statusBar.remaining.textContent = `${m}:${s}`;
+        },
+
+        /* === LİDERLİK TABLOSU === */
+        openLeaderboard() {
+            this.elements.leaderboard.overlay.style.display = 'flex';
+            this.loadLeaderboard();
+        },
+        closeLeaderboard() {
+            this.elements.leaderboard.overlay.style.display = 'none';
+        },
+        async saveLeaderboard(finalScore) {
+            const name = (localStorage.getItem('playerName') || 'Anonim').toString().slice(0, 40);
+            const payload = {
+                scenario: 'v8-ddos',
+                name,
+                score: finalScore,
+                details: {
+                    financialLoss: this.score.financialLoss,
+                    downtime: this.score.downtime,
+                    customerSatisfaction: this.score.customerSatisfaction,
+                    attribution: this.state.attribution,
+                    decisions: this.state.decisionHistory.map(d => d.id)
+                },
+                timeSpentSec: this.timer.total - this.timer.remaining,
+                timestamp: new Date().toISOString()
+            };
+
+            // Backend dene
+            try {
+                const res = await fetch('/api/score', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+            } catch(e) {
+                // Fallback: localStorage
+                const key = 'leaderboard-v8-ddos';
+                const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                arr.push(payload);
+                arr.sort((a,b)=> b.score - a.score);
+                localStorage.setItem(key, JSON.stringify(arr.slice(0,100)));
+            }
+        },
+        async loadLeaderboard() {
+            const tbody = this.elements.leaderboard.body;
+            const key = 'leaderboard-v8-ddos';
+            tbody.innerHTML = `<tr><td colspan="4">Yükleniyor…</td></tr>`;
+            let rows = [];
+            // Önce backend
+            try {
+                const res = await fetch('/api/leaderboard?scenario=v8-ddos', { method:'GET' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json(); // beklenen: [{name, score, timestamp}, ...]
+                rows = Array.isArray(data) ? data : [];
+            } catch(e) {
+                // Fallback: localStorage
+                const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                rows = arr.map(x => ({ name: x.name, score: x.score, timestamp: x.timestamp }));
+            }
+
+            if (!rows.length) {
+                tbody.innerHTML = `<tr><td colspan="4">Kayıt yok.</td></tr>`;
+                return;
+            }
+            rows.sort((a,b)=> b.score - a.score);
+            tbody.innerHTML = rows.slice(0,50).map((r,i)=>`
+                <tr>
+                    <td>${i+1}</td>
+                    <td>${(r.name || 'Anonim').toString().slice(0,40)}</td>
+                    <td>${r.score}</td>
+                    <td>${r.timestamp ? new Date(r.timestamp).toLocaleString('tr-TR') : '-'}</td>
+                </tr>
+            `).join('');
         }
     };
 
