@@ -450,7 +450,7 @@
                             <div id="s1-part1">
                                 <h2><i class="fa-solid fa-envelope-open-text"></i> Bölüm 1: Beklenmedik Misafir</h2>
                                 <p>İnsan Kaynakları departmanından Elif Hanım, "CV_Ozgecmis.docx" isimli bir e-posta ekini açar. Dosyanın zararsız göründüğünü ancak bilgisayarının yavaşladığını rapor eder.</p>
-                                <img src="elif_eposta.png" alt="E-posta açan çalışan" class="scenario-image">
+                                < src="elif_eposta.png" alt="E-posta açan çalışan" class="scenario-image">
                                 <button class="btn btn-continue" style="margin: 20px auto 0;" onclick="document.getElementById('s1-part1').style.display='none'; document.getElementById('s1-part2').style.display='block';"><i class="fa-solid fa-arrow-right"></i> Analize Başla</button>
                             </div>
                             <div id="s1-part2" style="display:none; animation: fadeIn 0.5s ease-out;">
@@ -472,10 +472,10 @@
                             <p>Zararlı yazılım, ağda yayılmaya başladı. Saldırganlar, ele geçirdikleri kimlik bilgileriyle sunucular arasında hareket ediyor.</p>
                             <div class="interactive-element">
                                 <h4><i class="fa-solid fa-map-location-dot"></i> Ağ Haritası</h4>
-                                <div id="network-map-container-2">
-                                    <img src="network_map_bg.png" alt="Ağ Haritası" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.4;">
-                                    </div>
-                             <div class="interactive-element"><h4><i class="fa-solid fa-terminal"></i> SIEM Logları</h4><div class="siem-log-viewer" id="siemLogs2"></div></div>
+                                <img src="network_map_bg.png" alt="Ağ Haritası" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.4;">
+                            </div>
+                            <div class="interactive-element">
+                            <h4><i class="fa-solid fa-terminal"></i> SIEM Logları</h4><div class="siem-log-viewer" id="siemLogs2"></div></div>
                             <div class="decision-buttons">
                                 <button class="btn" data-decision="s2-segment" data-next="3"><i class="fa-solid fa-diagram-project"></i><div class="btn-text">Seçenek A: Kritik sunucuları ağdan ayırarak izole et.<small>Hasarı sınırlar ama karmaşık bir işlemdir.</small></div></button>
                                 <button class="btn" data-decision="s2-shutdown" data-next="3"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek B: Yayılımı tamamen durdurmak için etkilenen tüm sunucuları kapat.<small>Etkili ama operasyonları tamamen durdurur.</small></div></button>
