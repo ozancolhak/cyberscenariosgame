@@ -234,7 +234,7 @@
                      this.elements.leaderboard.btnClose?.addEventListener('click', () => this.closeLeaderboard());
                      this.elements.leaderboard.btnRefresh?.addEventListener('click', () => this.loadLeaderboard());
                      this.elements.leaderboard.overlay.addEventListener('click', (e) => {
-                         if (e.target === this.elements.leaderboard.overlay) this.closeLeaderboard();
+                          if (e.target === this.elements.leaderboard.overlay) this.closeLeaderboard();
                      });
                 },
                 
@@ -450,7 +450,7 @@
                             <div id="s1-part1">
                                 <h2><i class="fa-solid fa-envelope-open-text"></i> Bölüm 1: Beklenmedik Misafir</h2>
                                 <p>İnsan Kaynakları departmanından Elif Hanım, "CV_Ozgecmis.docx" isimli bir e-posta ekini açar. Dosyanın zararsız göründüğünü ancak bilgisayarının yavaşladığını rapor eder.</p>
-                                < src="elif_eposta.png" alt="E-posta açan çalışan" class="scenario-image">
+                                <img src="elif_eposta.png" alt="E-posta açan çalışan" class="scenario-image">
                                 <button class="btn btn-continue" style="margin: 20px auto 0;" onclick="document.getElementById('s1-part1').style.display='none'; document.getElementById('s1-part2').style.display='block';"><i class="fa-solid fa-arrow-right"></i> Analize Başla</button>
                             </div>
                             <div id="s1-part2" style="display:none; animation: fadeIn 0.5s ease-out;">
@@ -470,12 +470,15 @@
                         <div id="section2" class="section">
                             <h2><i class="fa-solid fa-network-wired"></i> Bölüm 2: Zincirleme Reaksiyon</h2>
                             <p>Zararlı yazılım, ağda yayılmaya başladı. Saldırganlar, ele geçirdikleri kimlik bilgileriyle sunucular arasında hareket ediyor.</p>
-                            <div class="interactive-element">
+                            <div class="interactive-element" style="position: relative; min-height: 150px; overflow: hidden;">
                                 <h4><i class="fa-solid fa-map-location-dot"></i> Ağ Haritası</h4>
-                                <img src="network_map_bg.png" alt="Ağ Haritası" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.4;">
+                                <img src="network_map_bg.png" alt="Ağ Haritası Arka Planı" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; opacity: 0.3; object-fit: cover;">
+                                <p style="position: relative; z-index: 1; text-align: center; padding-top: 20px;">Ağdaki sistemler arası bağlantılar izleniyor...</p>
                             </div>
                             <div class="interactive-element">
-                            <h4><i class="fa-solid fa-terminal"></i> SIEM Logları</h4><div class="siem-log-viewer" id="siemLogs2"></div></div>
+                                <h4><i class="fa-solid fa-terminal"></i> SIEM Logları</h4>
+                                <div class="siem-log-viewer" id="siemLogs2"></div>
+                            </div>
                             <div class="decision-buttons">
                                 <button class="btn" data-decision="s2-segment" data-next="3"><i class="fa-solid fa-diagram-project"></i><div class="btn-text">Seçenek A: Kritik sunucuları ağdan ayırarak izole et.<small>Hasarı sınırlar ama karmaşık bir işlemdir.</small></div></button>
                                 <button class="btn" data-decision="s2-shutdown" data-next="3"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek B: Yayılımı tamamen durdurmak için etkilenen tüm sunucuları kapat.<small>Etkili ama operasyonları tamamen durdurur.</small></div></button>
