@@ -27,7 +27,7 @@
         background-size: 50px 50px; animation: grid-move 60s linear infinite; transform-origin: 0 0; opacity: 0.2;
     }
     @keyframes grid-move { from { transform: translate(0, 0); } to { transform: translate(-50px, -50px); } }
-    .container { width: 100%; max-width: 1000px; z-index: 1; animation: fadeIn 1s ease-out; }
+    .container { width: 100%; max-width: 1200px; z-index: 1; animation: fadeIn 1s ease-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     h1 {
         font-family: 'Orbitron', sans-serif; font-size: 2.8em; margin-bottom: 15px; color: var(--main-accent);
@@ -41,7 +41,7 @@
     
     @media (min-width: 768px) {
         .scenarios-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         }
     }
 
@@ -111,7 +111,26 @@
                     </div>
                 </div>
             </a>
-        </div>
+            
+            <a href="cyberscenarios_apt/index.html" class="scenario-card">
+                <img src="apt_card.png" alt="Devlet Destekli Siber Saldırı">
+                <div class="content">
+                    <h2>APT Kriz Simülasyonu</h2>
+                    <p>Şirketin, devlet destekli bir grubun çok katmanlı (fiziksel, siber, dezenformasyon) saldırısı altında. Teknik kurtarma, medya yönetimi ve jeopolitik baskılar arasında şirketi kurtarabilir misin?</p>
+
+                    <div class="card-info">
+                        <span class="difficulty-very-high">
+                            <i class="fas fa-signal"></i>
+                            Zorluk: Çok Yüksek
+                        </span>
+                        <span class="focus-color">
+                            <i class="fas fa-globe"></i>
+                            Odak: Kriz Yönetimi & Jeopolitik
+                        </span>
+                    </div>
+                </div>
+            </a>
+            </div>
     </div>
 </body>
 </html>
