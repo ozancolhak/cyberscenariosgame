@@ -1,181 +1,1252 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Siber Güvenlik Kriz Simülasyonları</title>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
-
-    :root {
-        --dark-blue-bg: #0A0A1E;
-        --main-accent: #00E6FF;
-        --text-color-light: #E0E0E0;
-        --text-color-medium: #A0A0A0;
-        --card-bg: rgba(20, 20, 40, 0.85);
-        --border-glow: rgba(0, 230, 255, 0.5);
-        --button-hover: #00B3CC;
-        --shadow-light: rgba(0, 230, 255, 0.2);
-        --shadow-strong: rgba(0, 230, 255, 0.4);
-        --title-glow-color: rgba(0, 230, 255, 0.4);
-        --error-color: #ff5555;
-    }
-
-    body {
-        font-family: 'Roboto', sans-serif; display: flex; justify-content: center; align-items: center;
-        min-height: 100vh; background: var(--dark-blue-bg); color: var(--text-color-light);
-        margin: 0; padding: 20px; box-sizing: border-box; text-align: center; overflow: hidden; position: relative;
-    }
-
-    /* Animated grid background */
-    .grid-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
-    .grid-bg::before {
-        content: ''; position: absolute; width: 200vw; height: 200vh;
-        background-image: linear-gradient(0deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%),
-                          linear-gradient(90deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%);
-        background-size: 50px 50px; animation: grid-move 60s linear infinite;
-        transform-origin: 0 0; opacity: 0.2;
-    }
-    @keyframes grid-move { from { transform: translate(0, 0); } to { transform: translate(-50px, -50px); } }
-
-    .container {
-        background-color: var(--card-bg); padding: 50px 70px; border-radius: 20px;
-        box-shadow: 0 15px 40px var(--shadow-strong); max-width: 900px; width: 100%; z-index: 1;
-        border: 1px solid var(--border-glow); backdrop-filter: blur(8px);
-        animation: fadeInScale 1s ease-out forwards; position: relative;
-    }
-    @keyframes fadeInScale {
-        from { opacity: 0; transform: scale(0.95) translateY(20px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    h1 {
-        font-family: 'Orbitron', sans-serif; font-size: 3.5em; margin-bottom: 25px; color: var(--main-accent);
-        text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color);
-        letter-spacing: 2px; animation: textGlow 4s ease-in-out infinite alternate;
-    }
-    @keyframes textGlow {
-        from { text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color); }
-        to { text-shadow: 0 0 8px var(--title-glow-color), 0 0 15px var(--title-glow-color); }
-    }
-
-    p {
-        font-size: 1.3em; line-height: 1.8; margin-bottom: 40px; color: var(--text-color-medium);
-        max-width: 700px; margin-left: auto; margin-right: auto;
-    }
-
-    /* YENİ EKLENEN STİLLER */
-    .input-container {
-        margin-bottom: 25px;
-    }
-    .name-input {
-        font-family: 'Roboto', sans-serif;
-        width: 100%;
-        max-width: 400px;
-        padding: 15px 20px;
-        font-size: 1.2em;
-        background-color: rgba(0,0,0,0.4);
-        border: 1px solid var(--border-glow);
-        border-radius: 10px;
-        color: var(--text-color-light);
-        text-align: center;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 10px var(--shadow-light);
-    }
-    .name-input::placeholder {
-        color: var(--text-color-medium);
-    }
-    .name-input:focus {
-        outline: none;
-        border-color: var(--main-accent);
-        box-shadow: 0 0 15px var(--shadow-strong);
-    }
-    
-    .error-message {
-        color: var(--error-color);
-        margin-top: 10px;
-        font-weight: bold;
-        height: 20px; /* Hata mesajı yokken boşluk bırakmaması için */
-        visibility: hidden;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    .error-message.visible {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    .start-button {
-        display: inline-block; padding: 18px 45px; font-size: 1.6em; font-weight: bold;
-        color: var(--dark-blue-bg); background-color: var(--main-accent); border: none;
-        border-radius: 10px; text-decoration: none;
-        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-        box-shadow: 0 8px 25px var(--shadow-strong); cursor: pointer; text-transform: uppercase;
-        letter-spacing: 1px; z-index: 1; position: relative;
-    }
-    .start-button:hover {
-        background-color: var(--button-hover); transform: translateY(-5px); box-shadow: 0 12px 30px var(--shadow-strong);
-    }
-    .start-button:active {
-        transform: translateY(0); box-shadow: 0 5px 15px var(--shadow-light);
-    }
-
-    .info-link {
-        position: fixed; bottom: 15px; right: 15px; background: var(--card-bg); color: var(--main-accent);
-        font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.9em; padding: 8px 14px;
-        border-radius: 12px; border: 1px solid var(--border-glow); box-shadow: 0 6px 20px var(--shadow-strong);
-        text-decoration: none; cursor: pointer; transition: background-color 0.3s ease, color 0.3s ease;
-        z-index: 1000; user-select: none;
-    }
-    .info-link:hover { background-color: var(--main-accent); color: var(--dark-blue-bg); }
-</style>
-</head>
-<body>
-    <div class="grid-bg"></div>
-
-    <div class="container">
-        <h1>Siber Güvenlik Simülasyonları</h1>
-        <p>Dijital dünyanın derinliklerinde, siber tehditler her an pusuda bekliyor. Liderlik tablosunda yer almak için bir kullanıcı adı belirle ve en karmaşık siber krizleri yönetmeye başla!</p>
-        
-        <div class="input-container">
-            <input type="text" id="nameInput" class="name-input" placeholder="Kullanıcı Adınızı Girin...">
-            <p id="errorMessage" class="error-message">Lütfen bir kullanıcı adı girin!</p>
-        </div>
-
-        <a href="krizler.html" id="startButton" class="start-button">Simülasyona Başla</a>
-    </div>
-
-    <a href="hakkinda.html" class="info-link" title="Proje Hakkında & Geliştirici">
-        Proje Hakkında &amp; Geliştirici
-    </a>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const nameInput = document.getElementById('nameInput');
-        const startButton = document.getElementById('startButton');
-        const errorMessage = document.getElementById('errorMessage');
-
-        // Sayfa yüklendiğinde, eğer daha önce bir isim kaydedilmişse input'a yazdır.
-        const savedName = localStorage.getItem('playerName');
-        if (savedName) {
-            nameInput.value = savedName;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberScenario v7.3: Şüpheli VPN Simülasyonu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.5);
         }
 
-        startButton.addEventListener('click', (event) => {
-            const playerName = nameInput.value.trim();
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-            if (playerName === '') {
-                // Eğer isim girilmemişse, linkin çalışmasını engelle
-                event.preventDefault(); 
-                errorMessage.classList.add('visible');
-            } else {
-                // İsim girilmişse, localStorage'a kaydet ve devam et
-                localStorage.setItem('playerName', playerName);
-                errorMessage.classList.remove('visible');
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-size:0.90em;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-dark);
+            padding: 20px;
+            max-width: 950px;
+            width: 100%;
+            margin: 40px 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .container { padding: 40px; }
+        }
+
+        .centered-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 60vh;
+        }
+
+        h1 {
+            font-size: 2.4em;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 5px var(--shadow-dark);
+        }
+
+        h2 {
+            font-size: 1.9em;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--interactive-bg);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: var(--accent-purple);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            color: var(--accent-yellow);
+            text-align: left;
+            margin-top: 0;
+            border-bottom: 1px solid var(--interactive-bg);
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .section {
+            display: none;
+            padding: 20px;
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            margin-top: 25px;
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .section { padding: 30px; }
+        }
+
+        .interactive-element {
+            background-color: var(--interactive-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .decision-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background-color: #6272a4;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .btn:hover {
+            background-color: #7a8ab9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow-dark);
+        }
+
+        .btn:disabled {
+            background-color: #555 !important;
+            color: #999 !important;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .btn .btn-text {
+            flex-grow: 1;
+        }
+
+        .btn small {
+            display: block;
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-weight: 400;
+            color: var(--accent-blue);
+        }
+
+        .btn-start, .btn-continue {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            background-color: var(--accent-green);
+            color: var(--text-dark);
+            justify-content: center;
+            margin-top: 40px;
+            padding: 18px 30px;
+        }
+
+        .btn.critical {
+            background-color: var(--accent-pink);
+        }
+
+        .btn.critical:hover {
+            background-color: #ff6e87;
+        }
+
+        #intermissionSection .metric-change-summary-container {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 0;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #intermissionSection .metric-change-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #intermissionSection .metric-change {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--interactive-bg);
+            box-shadow: inset 0 1px 5px rgba(0,0,0,0.2);
+            justify-content: center;
+        }
+
+        .metric-change .positive { color: var(--accent-green); }
+        .metric-change .negative { color: var(--accent-red); }
+        .metric-change .neutral { color: var(--accent-blue); }
+
+        .intro-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        @media (min-width: 768px) {
+            .intro-info-grid {
+                grid-template-columns: 1fr 1fr;
             }
-        });
-    });
-</script>
+        }
 
+        .intro-roles-container, .intro-metrics-container {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border: 1px solid var(--interactive-bg);
+        }
+
+        .intro-roles-container h3, .intro-metrics-container h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple);
+            text-align: center;
+        }
+
+        .intro-roles-container ul, .intro-metrics-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .intro-roles-container li, .intro-metrics-container li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--interactive-bg);
+            font-size: 1.05em;
+        }
+
+        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .intro-roles-container li .icon, .intro-metrics-container li .icon {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            width: 35px;
+            text-align: center;
+        }
+        
+        .intro-roles-container li strong {
+            color: var(--accent-yellow);
+        }
+
+        .intro-roles-container li small {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-light);
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        #statusBar {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            background-color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #6272a4;
+            box-shadow: 0 4px 12px var(--shadow-dark);
+        }
+
+        #statusBar .metric {
+            text-align: center;
+            font-size: 0.9em;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        #statusBar .metric .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+            margin-top: 5px;
+        }
+
+        .final-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .metric-card {
+            background-color: var(--section-bg);
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--interactive-bg);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 160px;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent-blue);
+            box-shadow: 0 6px 20px var(--shadow-dark);
+        }
+
+        .metric-card .icon {
+            font-size: 2.8em;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .metric-card .label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .metric-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .code-block, .slack-chat {
+            background-color: var(--text-dark);
+            border: 1px solid #6272a4;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Consolas', monospace;
+            font-size: 0.95em;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .code-block code {
+            color: var(--text-light);
+        }
+
+        .learning-note {
+            background-color: var(--text-dark);
+            border-left: 5px solid var(--accent-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .scenario-image {
+            width: 100%;
+            max-width: 600px;
+            margin: 25px auto;
+            display: block;
+            border-radius: 8px;
+            border: 1px solid var(--interactive-bg);
+            box-shadow: 0 4px 15px var(--shadow-dark);
+        }
+
+        .slack-chat .message {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 7px;
+            background-color: #3f3f5a;
+            border: 1px solid #555577;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .slack-chat .sender {
+            font-weight: bold;
+            color: var(--accent-pink);
+            margin-right: 8px;
+        }
+
+        .slack-chat .sender.cso { color: var(--accent-green); }
+        .slack-chat .sender.ops { color: var(--accent-yellow); }
+        .slack-chat .sender.hr { color: var(--accent-blue); }
+        .slack-chat .sender.finance { color: var(--accent-red); }
+        .slack-chat .sender.ceo { color: var(--accent-purple); }
+        .slack-chat .sender.siem { color: var(--accent-blue); }
+
+        .suspect-card {
+            background-color: var(--interactive-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 5px solid var(--accent-purple);
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .suspect-card h4 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            border-bottom: none;
+            color: var(--accent-purple);
+        }
+
+        #finalSection { text-align: center; }
+
+        #performance-badge-container { margin: 25px 0; }
+
+        #performance-badge {
+            padding: 15px 35px;
+            font-size: 2em;
+            font-weight: bold;
+            border-radius: 50px;
+            display: inline-block;
+            color: var(--text-dark);
+            box-shadow: 0 5px 20px var(--shadow-dark);
+            transition: transform 0.3s ease;
+        }
+
+        #performance-badge:hover { transform: scale(1.08); }
+
+        .post-crisis-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: left;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        @media (min-width: 800px) {
+            .post-crisis-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .event-timeline, .strategic-debrief {
+            background-color: var(--interactive-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--section-bg);
+            margin-top: 20px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+        }
+
+        .event-timeline h3, .strategic-debrief h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--section-bg);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-timeline ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 15px 0 0 0;
+        }
+
+        .event-timeline li {
+            position: relative;
+            padding: 5px 0 15px 35px;
+            border-left: 2px solid var(--section-bg);
+            font-size: 0.95em;
+        }
+
+        .event-timeline li:last-child {
+            border-left: none;
+        }
+
+        .event-timeline li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-green);
+            position: absolute;
+            left: -12px;
+            top: 5px;
+            background-color: var(--dark-bg);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 0.8em;
+            border: 2px solid var(--section-bg);
+        }
+
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+
+        .event-timeline li .decision-title {
+            font-weight: bold;
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #strategic-debrief-content p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
+        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
+        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
+        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
+        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
+        #score-breakdown .score-value { font-weight: bold; }
+
+        .lb-overlay{
+            display:none; position:fixed; inset:0;
+            background: rgba(10,10,25,.7);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            z-index:9999; align-items:center; justify-content:center; padding:20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .lb-modal{
+            background: linear-gradient(180deg, #2a2a4a 0%, #1f1f36 100%);
+            color: var(--text-light);
+            width:100%; max-width: 760px; border-radius:14px; padding:22px 22px 16px;
+            border:1px solid rgba(255,255,255,.08);
+            box-shadow: 0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
+        }
+        .lb-header{
+            display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;
+        }
+        .lb-title{
+            display:flex; align-items:center; gap:10px;
+            font-size:1.25em; font-weight:800; letter-spacing:.2px; color: var(--accent-yellow);
+        }
+        .lb-title i{ filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
+        .lb-tablewrap{
+            margin-top:10px;
+            max-height: 60vh; overflow:auto;
+            border:1px solid var(--interactive-bg); border-radius:10px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+        }
+        table.lb-table{ width:100%; border-collapse:collapse; font-size:.97em; }
+        table.lb-table th, table.lb-table td{ padding:10px 12px; text-align:left; }
+        table.lb-table thead th{
+            position: sticky; top:0; z-index:1;
+            background:#1f1f36; color:#e9e9ff;
+            border-bottom: 1px solid #3b3b66;
+            font-weight:700; letter-spacing:.3px;
+        }
+        table.lb-table tbody td{ border-bottom:1px solid rgba(255,255,255,.06); color:#e9e9f5; }
+        table.lb-table tbody tr:hover{ background-color: rgba(255,255,255,.045); }
+        table.lb-table tbody tr:nth-child(1){ background: linear-gradient(90deg, rgba(255,215,0,.18), transparent 65%); }
+        table.lb-table tbody tr:nth-child(1) td:first-child::after{ content:" 🥇"; }
+        table.lb-table tbody tr:nth-child(2){ background: linear-gradient(90deg, rgba(192,192,192,.18), transparent 65%); }
+        table.lb-table tbody tr:nth-child(2) td:first-child::after{ content:" 🥈"; }
+        table.lb-table tbody tr:nth-child(3){ background: linear-gradient(90deg, rgba(205,127,50,.18), transparent 65%); }
+        table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
+        .lb-actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:14px; }
+        .lb-close, .lb-refresh{
+            border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:700;
+            transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+        }
+        .lb-refresh{ background: var(--accent-blue); color:#0c1130; }
+        .lb-close{ background: #3d3d60; color:#fff; }
+        .lb-refresh:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(139,233,253,.22); }
+        .lb-close:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.35); }
+        @media (max-width: 420px){
+            .lb-title{ font-size:1.05em; }
+            table.lb-table th, table.lb-table td{ padding:9px 10px; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-server"></i> Şüpheli VPN Simülasyonu</h1>
+            <p style="max-width: 600px;">Hoş geldiniz, Finansal Teknolojiler (FinTech) sektöründe lider olan Zirve Holding'in yeni SOC Analisti. Göreviniz, bir yöneticinin hesabından gelen şüpheli bir VPN bağlantısını derinlemesine incelemek, riskleri analiz etmek ve doğru müdahale adımlarını atmak. Hızlı ve doğru kararlar, şirketi potansiyel bir veri sızıntısından kurtarabilir.</p>
+            <img src="intro.png" alt="Siber güvenlik temalı bir giriş görseli" class="scenario-image">
+
+            <div class="intro-info-grid">
+                <div class="intro-roles-container">
+                    <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
+                    <ul>
+                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span><div><strong>Sizin Rolünüz: SOC Analisti</strong> <small>VPN erişim uyarısını inceleyecek, logları analiz edecek ve tehdidi yönetecek kişisiniz.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-user-gear"></i></span><div><strong>Burak Mert</strong> <small>Finans Direktörü, hesabı üzerinden şüpheli erişim gerçekleşen kullanıcı.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-headset"></i></span><div><strong>Can Demir</strong> <small>SOC Ekip Lideri, olayları eskalasyon için size danışır ve kararlarınızı denetler.</small></div></li>
+                    </ul>
+                </div>
+                <div class="intro-metrics-container">
+                    <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+                    <ul>
+                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-database"></i></span><div><strong>Veri Güvenliği</strong> <small>Hassas finansal verilerin korunma durumu. (Başlangıç: 100%)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-hand-holding-dollar"></i></span><div><strong>Finansal Etki</strong> <small>Olayın şirkete getireceği mali yük. (Başlangıç: ₺0)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-business-time"></i></span><div><strong>Operasyonel Kesinti</strong> <small>İş süreçlerinin ne kadar etkilendiği. (Başlangıç: 100)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-building-shield"></i></span><div><strong>Şirket İtibarı</strong> <small>Şirketinizin kamuoyu ve sektördeki imajı. (Başlangıç: 100)</small></div></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <div id="intermissionDetails">
+            </div>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-database"></i> Veri Güvenliği</span><div class="value" id="status-dataSecurity">100%</div></div>
+                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Etki</span><div class="value" id="status-financialImpact">₺0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-business-time"></i> Operasyonel Kesinti</span><div class="value" id="status-operationalDisruption">100</div></div>
+                <div class="metric"><span><i class="fa-solid fa-building-shield"></i> Şirket İtibarı</span><div class="value" id="status-reputation">100</div></div>
+                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-remaining">04:00</div></div>
+            </div>
+            <div id="game-content">
+            </div>
+        </div>
+    </div>
+
+    <div class="lb-overlay" id="leaderboardOverlay" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+        <div class="lb-modal">
+            <div class="lb-header">
+                <h2 id="lbTitle" class="lb-title"><i class="fa-solid fa-trophy"></i> Liderlik Tablosu</h2>
+                <span class="lb-sub">VPN Simülasyonu En İyileri</span>
+            </div>
+            <div class="lb-tablewrap">
+                <table class="lb-table" id="leaderboardTable">
+                    <thead>
+                        <tr><th>#</th><th>İsim</th><th>Puan</th><th>Tarih</th></tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr><td colspan="4">Yükleniyor…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="lb-actions">
+                <button class="lb-refresh" id="lbRefreshBtn"><i class="fa-solid fa-arrows-rotate"></i> Yenile</button>
+                <button class="lb-close" id="lbCloseBtn">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = {
+                score: { dataSecurity: 100, financialImpact: 0, operationalDisruption: 100, reputation: 100 },
+                state: {
+                    currentSectionId: 'start',
+                    decisionHistory: [],
+                    currentTurnDecisions: [],
+                    totalScore: null,
+                    // Clues to track progress
+                    isInvestigating: false,
+                    isFalsePositive: false,
+                    vpnLogsAnalyzed: false,
+                    edrLogsAnalyzed: false,
+                    proxyLogsAnalyzed: false,
+                    userContacted: false,
+                    isMitreMapped: false,
+                    isIsolated: false,
+                    isEscalated: false,
+                    forensicsProposed: false,
+                    briefingDone: false,
+                    policiesRevised: false,
+                },
+
+                elements: {},
+                
+                timer: {
+                    total: 240, // 4 minutes
+                    remaining: 240,
+                    intervalId: null,
+                    running: false
+                },
+                
+                decisionInfo: {
+                    // Phase 1: Triage
+                    'd1-investigate': { title: "İnceleme Başlat", text: "Uyarının gerçek bir tehdit olabileceğini varsayarak derhal inceleme başlattınız. Bu proaktif adım, olası bir saldırının erken tespit edilmesini sağlayarak zaman kazandırdı.", strat: "Yüksek profilli bir yöneticiden gelen ve coğrafi olarak anormal bir uyarı her zaman ciddiye alınmalıdır. Hızlı triyaj, müdahale süresini (MTTR) kısaltır.", changes: { financialImpact: 1000, reputation: 0, operationalDisruption: -1 }, clue: 'isInvestigating', impact: 'Positive' },
+                    'd1-false-positive': { title: "Yanlış Pozitif Olarak Kapat", text: "Uyarıyı, yöneticinin olası bir seyahati olarak değerlendirip kapattınız. Bu karar, analist zamanından tasarruf sağladı ancak gerçek bir saldırıysa şirketi büyük bir riske attı.", strat: "Bir uyarıyı doğrulamadan kapatmak tehlikelidir. En azından kullanıcıyla veya İK ile hızlı bir teyit, bu riski ortadan kaldırabilirdi.", changes: { financialImpact: 25000, dataSecurity: -25, reputation: -20 }, clue: 'isFalsePositive', impact: 'Negative' },
+                    
+                    // Phase 2: Analysis (2 choices)
+                    'd2-vpn-logs': { title: "VPN Loglarını İncele", text: "VPN logları, 'Burak Mert' kullanıcısının Çin'den (211.95.8.12) bağlandığını, 15 dakika boyunca aktif kaldığını ve doğrudan Finans Sunucusu'na (192.168.10.5) eriştiğini doğruladı.", strat: "VPN logları, bir erişim olayının temelini oluşturur. Kaynak IP, oturum süresi ve erişilen iç kaynaklar, tehdidin ilk resmini çizer.", changes: { financialImpact: 2000, dataSecurity: -2 }, clue: 'vpnLogsAnalyzed', impact: 'Positive' },
+                    'd2-edr-logs': { title: "EDR Loglarını İncele", text: "Burak Mert'in makinesindeki EDR logları, VPN bağlantısıyla aynı zaman diliminde 'powershell.exe' kullanılarak 'Get-Credential' komutunun çalıştırıldığını ve kimlik bilgilerinin geçici bir dosyaya kaydedildiğini gösterdi.", strat: "EDR verileri, saldırganın cihaz üzerinde ne yaptığını ortaya koyar. Kimlik bilgisi hırsızlığı (Credential Dumping), genellikle yatay hareketin (Lateral Movement) bir öncüsüdür.", changes: { financialImpact: 5000, dataSecurity: -5 }, clue: 'edrLogsAnalyzed', impact: 'Positive' },
+                    'd2-proxy-logs': { title: "Proxy Loglarını İncele", text: "Proxy logları, Finans Sunucusu'ndan (192.168.10.5) kaynaklanan bir trafiğin, popüler bir bulut depolama sitesine 150 MB'lık bir veri yüklediğini ortaya çıkardı. Bu, veri sızıntısı için güçlü bir kanıttır.", strat: "Veri sızıntısını (Exfiltration) tespit etmek için giden trafik analizi kritiktir. Yüksek boyutlu veri transferleri ve hedef URL'ler önemli ipuçlarıdır.", changes: { financialImpact: 3000, dataSecurity: -15 }, clue: 'proxyLogsAnalyzed', impact: 'Negative' },
+                    'd2-contact-user': { title: "Kullanıcı Burak Mert ile İletişime Geç", text: "Burak Bey ile acil bir telefon görüşmesi yaptınız. Kendisi Çin'e seyahat etmediğini ve o saatlerde bilgisayarının başında olmadığını teyit etti. Bu, hesabının ele geçirildiğini (Account Takeover) kesinleştirdi.", strat: "Kullanıcıyla doğrudan iletişim, bir olayın bağlamını anlamak için en hızlı yoldur. Yanlış pozitifleri elemek ve gerçek tehditleri doğrulamak için paha biçilmezdir.", changes: { financialImpact: 500, operationalDisruption: -2 }, clue: 'userContacted', impact: 'Positive' },
+                    
+                    // Phase 3: Response (2 choices)
+                    'd3-mitre-map': { title: "Bulguları MITRE ATT&CK ile Eşleştir", text: "Topladığınız kanıtları MITRE ATT&CK çerçevesiyle eşleştirdiniz: T1133 (External Remote Services), T1059.001 (PowerShell), T1003 (OS Credential Dumping), T1567.002 (Exfiltration to Cloud Storage). Bu, saldırının yapısını netleştirdi ve raporlamayı güçlendirdi.", strat: "MITRE ATT&CK, dağınık teknik bulguları standart bir dilde ifade etmeyi sağlar. Bu, hem yönetime raporlama hem de savunma stratejileri geliştirme için temel bir adımdır.", changes: { financialImpact: 1000, reputation: +2 }, clue: 'isMitreMapped', impact: 'Positive' },
+                    'd3-isolate-account': { title: "Burak Mert'in Hesabını Derhal İzole Et", text: "Kanıtların ciddiyetini görerek Burak Mert'in Active Directory hesabını derhal devre dışı bıraktınız ve tüm aktif oturumlarını sonlandırdınız. Bu, saldırganın daha fazla zarar vermesini anında engelledi ancak Finans Direktörü'nün işlerini geçici olarak durdurdu.", strat: "Bir tehdidi kontrol altına almak (Containment) için en etkili yol, saldırganın erişimini kesmektir. Bu karar, operasyonel etki ile güvenlik riski arasında bir denge gerektirir.", changes: { financialImpact: 5000, dataSecurity: +20, operationalDisruption: -15 }, clue: 'isIsolated', impact: 'Positive' },
+                    'd3-block-ip': { title: "Saldırgan IP Adresini Güvenlik Duvarından Engelle", text: "Saldırganın kaynak IP adresi olan 211.95.8.12'yi güvenlik duvarından engellediniz. Bu, o adresten gelebilecek yeni saldırıları durdurur ancak saldırgan farklı bir IP kullanırsa etkisiz kalır.", strat: "IP engelleme, basit ve hızlı bir savunma yöntemidir ancak sofistike saldırganlar tarafından kolayca aşılabilir. Katmanlı bir savunmanın sadece bir parçasıdır.", changes: { financialImpact: 500, dataSecurity: +5 }, clue: 'ipBlocked', impact: 'Neutral' },
+                    'd3-escalate': { title: "Bulguları SOC Ekip Liderine Eskale Et", text: "Tüm bulgularınızı, kanıtları ve potansiyel etkiyi içeren bir ön raporla SOC Ekip Lideri Can Demir'e sundunuz. Bu, olayın daha üst seviyede yönetilmesi için süreci başlattı.", strat: "Zamanında ve doğru bilgiyle yapılan eskalasyon, bir SOC'un etkinliğinin temelidir. Analistin görevi, karar vericilere doğru veriyi sağlamaktır.", changes: { financialImpact: 1000, reputation: +5 }, clue: 'isEscalated', impact: 'Positive' },
+
+                    // Phase 4: Communication & Strategy (1 choice)
+                    'd4-forensic-report': { title: "Detaylı Adli Bilişim Raporu Öner", text: "Olayın kök nedenini bulmak ve saldırganın ağ içinde başka bir yerde olup olmadığını anlamak için derinlemesine bir adli bilişim analizi yapılmasını önerdiniz. Bu, gelecekteki güvenliği artırır ancak maliyetlidir.", strat: "Kök neden analizi (RCA), bir olayın 'nasıl' olduğunu anlamak ve gelecekte tekrarlanmasını önlemek için kritiktir. Kapsamlı bir müdahalenin önemli bir parçasıdır.", changes: { financialImpact: 15000, dataSecurity: +5, reputation: +2 }, clue: 'forensicsProposed', impact: 'Positive' },
+                    'd4-security-briefing': { title: "Şirket Genelinde Güvenlik Bilgilendirmesi Yap", text: "Tüm çalışanlara yönelik, olayın (detayları gizleyerek) bir örneğini içeren ve benzer sosyal mühendislik taktiklerine karşı uyaran bir güvenlik bülteni yayınlanmasını sağladınız. Bu, genel farkındalığı artırdı.", strat: "Bir kriz anı, aynı zamanda bir eğitim fırsatıdır. Çalışanları bilgilendirmek, onları en güçlü savunma hattınız haline getirebilir.", changes: { financialImpact: 2000, reputation: +5, operationalDisruption: -2 }, clue: 'briefingDone', impact: 'Positive' },
+                    'd4-revise-policies': { title: "VPN Erişim Politikalarını Gözden Geçir", text: "Bu olayı bir ders olarak kullanarak, VPN erişim politikalarının sıkılaştırılmasını önerdiniz. Coğrafi tabanlı erişim kısıtlamaları ve daha güçlü MFA yöntemleri gibi öneriler sundunuz.", strat: "Her olay, güvenlik politikalarınızı ve kontrollerinizi gözden geçirmek için bir fırsattır. Savunmayı güçlendirmek, sadece anlık müdahaleden ibaret değildir.", changes: { financialImpact: 7500, dataSecurity: +10 }, clue: 'policiesRevised', impact: 'Positive' }
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'), gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
+                        intermissionTitle: document.getElementById('intermissionTitle'), intermissionDetails: document.getElementById('intermissionDetails'),
+                        continueButton: document.getElementById('continueButton'),
+                        statusBar: { 
+                            dataSecurity: document.getElementById('status-dataSecurity'), 
+                            financialImpact: document.getElementById('status-financialImpact'), 
+                            operationalDisruption: document.getElementById('status-operationalDisruption'), 
+                            reputation: document.getElementById('status-reputation'),
+                            remaining: document.getElementById('status-remaining')
+                        },
+                        leaderboard: {
+                            overlay: document.getElementById('leaderboardOverlay'),
+                            body: document.getElementById('leaderboardBody'),
+                            btnClose: document.getElementById('lbCloseBtn'),
+                            btnRefresh: document.getElementById('lbRefreshBtn'),
+                            btnOpen: null
+                        }
+                    };
+                    this.loadGameHTML();
+                    this.attachListeners();
+                },
+                
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.intro.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+                        this.startGlobalTimer();
+                        this.showSection('phase1_triage');
+                    });
+                    
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button || button.disabled) return;
+                        
+                        const sectionElement = button.closest('.section');
+                        const decisionId = button.dataset.decision;
+                        const info = this.decisionInfo[decisionId];
+
+                        button.disabled = true;
+                        this.state.currentTurnDecisions.push(info);
+                        
+                        this.score.financialImpact += info.changes.financialImpact || 0;
+                        this.score.reputation = Math.max(0, Math.min(100, this.score.reputation + (info.changes.reputation || 0)));
+                        this.score.dataSecurity = Math.max(0, Math.min(100, this.score.dataSecurity + (info.changes.dataSecurity || 0)));
+                        this.score.operationalDisruption = Math.max(0, Math.min(100, this.score.operationalDisruption + (info.changes.operationalDisruption || 0)));
+                        this.state[info.clue] = true;
+                        this.updateStatusBar();
+
+                        const maxSelections = parseInt(sectionElement.dataset.maxSelections || 1, 10);
+                        
+                        if (this.state.currentTurnDecisions.length >= maxSelections) {
+                            this.elements.game.style.display = 'none';
+                            this.showFullIntermission();
+                        }
+                    });
+
+                    this.elements.continueButton.addEventListener('click', () => {
+                        this.state.currentTurnDecisions.forEach(decision => {
+                            this.state.decisionHistory.push({ id: decision.clue, title: decision.title, text: decision.text, impactType: decision.impact });
+                        });
+
+                        const nextPath = this.elements.continueButton.dataset.nextPath;
+                        this.elements.intermission.style.display = 'none';
+                        this.elements.continueButton.style.display = 'none';
+
+                        this.state.currentTurnDecisions = [];
+                        
+                        if (nextPath === 'finalSection') {
+                            this.showFinalReport();
+                        } else {
+                            this.elements.game.style.display = 'block';
+                            this.showSection(nextPath);
+                        }
+                    });
+                    
+                    this.elements.leaderboard.btnClose?.addEventListener('click', () => this.closeLeaderboard());
+                    this.elements.leaderboard.btnRefresh?.addEventListener('click', () => this.loadLeaderboard());
+                    this.elements.leaderboard.overlay.addEventListener('click', (e) => {
+                        if (e.target === this.elements.leaderboard.overlay) this.closeLeaderboard();
+                    });
+
+                    this.updateStatusBar();
+                },
+
+                showFullIntermission() {
+                    this.elements.intermissionDetails.innerHTML = ''; 
+
+                    let totalChanges = { financialImpact: 0, dataSecurity: 0, operationalDisruption: 0, reputation: 0 };
+                    let combinedDecisionTitles = [];
+                    let combinedDecisionTexts = [];
+                    let combinedStrategicNotes = [];
+
+                    this.state.currentTurnDecisions.forEach((info) => {
+                        totalChanges.financialImpact += info.changes.financialImpact || 0;
+                        totalChanges.dataSecurity += info.changes.dataSecurity || 0;
+                        totalChanges.operationalDisruption += info.changes.operationalDisruption || 0;
+                        totalChanges.reputation += info.changes.reputation || 0;
+                        
+                        combinedDecisionTitles.push(info.title);
+                        combinedDecisionTexts.push(info.text);
+                        combinedStrategicNotes.push(info.strat);
+                    });
+
+                    let nextSectionToGo;
+                    let intermissionTitle = "Bu Aşamanın Sonuçları";
+
+                    this.elements.intermissionDetails.insertAdjacentHTML('afterbegin', `
+                        <div class="metric-change-summary-container">
+                            <div class="metric-change-summary">
+                                ${this.getMetricsHtml(totalChanges)}
+                            </div>
+                        </div>
+                    `);
+
+                    if (this.state.currentSectionId === 'phase1_triage' && this.state.isFalsePositive) {
+                        intermissionTitle = "KRİTİK HATA: Yanlış Değerlendirme!";
+                        const errorDetailsHTML = `
+                            <div class="interactive-element" style="border-left: 5px solid var(--accent-red); margin-top: 30px;">
+                                <h4><i class="fa-solid fa-triangle-exclamation"></i> Sonuç</h4>
+                                <p>Uyarının yanlış pozitif olduğuna karar verdiniz ancak bu büyük bir hataydı. <strong>Siz olayı kapatırken, saldırganlar sistemde kalarak veri sızdırmaya devam etti.</strong></p>
+                                <p>Bu gecikme, şirkete ciddi zarar verdi. Sistem sizi otomatik olarak doğru yola, yani <strong>inceleme senaryosuna</strong> yönlendiriyor. Ancak unutmayın, bu hata hanenize yazıldı.</p>
+                            </div>
+                        `;
+                        this.elements.intermissionDetails.insertAdjacentHTML('beforeend', errorDetailsHTML);
+                    } else {
+                         this.elements.intermissionDetails.insertAdjacentHTML('beforeend', `
+                            <div class="interactive-element" style="width: 100%; max-width: 600px; margin-top: 30px;">
+                                <h4><i class="fa-solid fa-check-circle"></i> Seçimlerinizin Detayları: ${combinedDecisionTitles.join(' & ')}</h4>
+                                <p>${combinedDecisionTexts.join('<br><br>')}</p>
+                                <div class="interactive-element" style="border-left-color: var(--accent-blue); margin-top: 20px;">
+                                    <h4>Stratejik Değerlendirme</h4>
+                                    <p>${combinedStrategicNotes.join('<br><br>')}</p>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    switch(this.state.currentSectionId) {
+                        case 'phase1_triage': 
+                            nextSectionToGo = 'phase2_analysis';
+                            break;
+                        case 'phase2_analysis': nextSectionToGo = 'phase3_response'; break;
+                        case 'phase3_response': nextSectionToGo = 'phase4_communication_strategy'; break;
+                        case 'phase4_communication_strategy': nextSectionToGo = 'finalSection'; break;
+                        default: nextSectionToGo = 'finalSection'; break;
+                    }
+                    
+                    this.elements.intermissionTitle.textContent = intermissionTitle;
+                    this.elements.continueButton.dataset.nextPath = nextSectionToGo;
+                    this.elements.intermission.style.display = 'flex';
+                    this.elements.continueButton.style.display = 'flex';
+                },
+
+                getMetricsHtml(changes) {
+                    let metricsHTML = '';
+                    const formatChange = (label, value, unit, icon, isNegativeGood = false) => {
+                        if (value === 0 || value === undefined) return '';
+                        const arrow = value > 0 ? 'up' : 'down';
+                        const sign = value > 0 ? '+' : '';
+                        let colorClass = 'neutral';
+                        
+                        if (isNegativeGood) {
+                            colorClass = value < 0 ? 'positive' : 'negative';
+                        } else {
+                            colorClass = value > 0 ? 'positive' : 'negative';
+                        }
+
+                        return `<div class="metric-change ${colorClass}"><i class="fa-solid ${icon}"></i> ${label}: <i class="fa-solid fa-arrow-${arrow}-long"></i> ${sign}${Math.abs(value).toLocaleString('tr-TR')}${unit}</div>`;
+                    };
+
+                    metricsHTML += formatChange('Finansal Etki', changes.financialImpact, '₺', 'fa-sack-xmark', true);
+                    metricsHTML += formatChange('Veri Güvenliği', changes.dataSecurity, '%', 'fa-database');
+                    metricsHTML += formatChange('Operasyonel Kesinti', changes.operationalDisruption, '', 'fa-business-time');
+                    metricsHTML += formatChange('Şirket İtibarı', changes.reputation, '', 'fa-building-shield');
+                    
+                    if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1.1em; opacity: 0.8;">Bu kararların metriklere doğrudan bir etkisi olmadı.</p>';
+                    return metricsHTML;
+                },
+
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.dataSecurity.textContent = `${Math.max(0, s.dataSecurity)}%`;
+                    this.elements.statusBar.financialImpact.textContent = `₺${s.financialImpact.toLocaleString('tr-TR')}`;
+                    this.elements.statusBar.operationalDisruption.textContent = Math.max(0, s.operationalDisruption);
+                    this.elements.statusBar.reputation.textContent = Math.max(0, s.reputation);
+                },
+
+                showSection(sectionId) {
+                    this.elements.sections.forEach(section => { section.style.display = 'none'; });
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        this.state.currentSectionId = sectionId;
+                        this.updateButtonStates(sectionId);
+                        this.state.currentTurnDecisions = [];
+                    } else {
+                        console.error('Bölüm bulunamadı:', sectionId);
+                        this.showFinalReport();
+                    }
+                },
+
+                updateButtonStates(sectionId) {
+                    const currentSectionElement = document.getElementById(sectionId);
+                    if (!currentSectionElement) return;
+
+                    const buttons = currentSectionElement.querySelectorAll('.btn[data-decision]');
+                    buttons.forEach(button => {
+                        const decisionId = button.dataset.decision;
+                        const info = this.decisionInfo[decisionId];
+                        button.disabled = info && this.state[info.clue];
+                    });
+                },
+                
+                showFinalReport() {
+                    this.stopGlobalTimer();
+                    this.elements.intro.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block'; 
+                    document.getElementById('statusBar').style.display = 'none';
+
+                    this.elements.sections.forEach(section => section.style.display = 'none');
+                    
+                    const finalSection = document.getElementById('finalSection');
+                    if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
+                    finalSection.style.display = 'flex';
+                    
+                    const badge = document.getElementById('performance-badge');
+                    const metricsContainer = document.getElementById('finalMetricsContainer');
+                    const timelineList = document.getElementById('decision-timeline-list');
+                    const debriefContent = document.getElementById('strategic-debrief-content');
+                    const scoreBreakdownList = document.getElementById('score-breakdown');
+
+                    // --- SCORING SYSTEM ---
+                    let scoreBreakdown = {};
+                    let totalScore = 50; 
+                    scoreBreakdown['Başlangıç Puanı'] = { value: 50, class: 'score-neutral' };
+
+                    const finalDataSecurity = Math.max(0, this.score.dataSecurity);
+                    if (finalDataSecurity >= 95) { 
+                        totalScore += 25; 
+                        scoreBreakdown['Veri Güvenliği (Mükemmel)'] = { value: 25, class: 'score-plus' }; 
+                    } else if (finalDataSecurity >= 80) { 
+                        totalScore += 15;
+                        scoreBreakdown['Veri Güvenliği (İyi)'] = { value: 15, class: 'score-plus' }; 
+                    } else if (finalDataSecurity < 60) { 
+                        totalScore -= 25; 
+                        scoreBreakdown['Veri Güvenliği (Zayıf)'] = { value: -25, class: 'score-minus' }; 
+                    }
+                
+                    const finalReputation = Math.max(0, this.score.reputation);
+                    if (finalReputation >= 95) {
+                        totalScore += 10; 
+                        scoreBreakdown['İtibar Yönetimi (Güçlü)'] = { value: 10, class: 'score-plus' }; 
+                    } else if (finalReputation < 70) {
+                        totalScore -= 10; 
+                        scoreBreakdown['İtibar Kaybı (Yüksek)'] = { value: -10, class: 'score-minus' }; 
+                    }
+
+                    if (this.state.isFalsePositive) {
+                        totalScore -= 40;
+                        scoreBreakdown['Kritik Hata: Gerçek Tehdidi Göz Ardı Etme'] = { value: -40, class: 'score-minus' };
+                    } else {
+                        if (this.state.isIsolated) { totalScore += 15; scoreBreakdown['Kritik Karar: İzolasyon'] = { value: 15, class: 'score-plus' }; }
+                        if (this.state.isEscalated) { totalScore += 5; scoreBreakdown['Doğru Adım: Eskalasyon'] = { value: 5, class: 'score-plus' }; }
+                        if (this.state.isMitreMapped) { totalScore += 5; scoreBreakdown['Stratejik Adım: MITRE'] = { value: 5, class: 'score-plus' }; }
+                        if (this.state.policiesRevised) { totalScore += 10; scoreBreakdown['Stratejik Takip: Politikaları Güçlendirme'] = { value: 10, class: 'score-plus' }; }
+                    }
+
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+                    this.state.totalScore = totalScore;
+                    // --- SCORING SYSTEM END ---
+
+                    let badgeInfo = {};
+                    if (this.state.isFalsePositive) { badgeInfo = { text: 'KRİTİK HATA', color: 'var(--accent-red)' }; }
+                    else if (totalScore >= 90) { badgeInfo = { text: 'UZMAN ANALİST', color: 'var(--accent-green)' }; } 
+                    else if (totalScore >= 70) { badgeInfo = { text: 'ETKİN MÜDAHALE', color: 'var(--accent-blue)' }; } 
+                    else if (totalScore >= 50) { badgeInfo = { text: 'YETERLİ PERFORMANS', color: 'var(--accent-yellow)' }; } 
+                    else { badgeInfo = { text: 'GELİŞTİRİLMELİ', color: '#ff5555' }; }
+
+                    badge.textContent = badgeInfo.text;
+                    badge.style.backgroundColor = badgeInfo.color;
+
+                    metricsContainer.innerHTML = `
+                        <div class="metric-card"><div class="icon" style="color:var(--accent-yellow)"><i class="fa-solid fa-star"></i></div><div class="label">Nihai Puan</div><div class="value">${totalScore}/100</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-database"></i></div><div class="label">Veri Güvenliği</div><div class="value">${finalDataSecurity}%</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="label">Finansal Etki</div><div class="value">₺${this.score.financialImpact.toLocaleString('tr-TR')}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-building-shield"></i></div><div class="label">Şirket İtibarı</div><div class="value">${finalReputation}/100</div></div>
+                    `;
+
+                    timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                        let liClass = decision.impactType === 'Positive' ? 'positive' : (decision.impactType === 'Negative' ? 'negative' : 'neutral');
+                        return `<li class="${liClass}"><span class="decision-title">${decision.title}</span></li>`;
+                    }).join('');
+
+                    scoreBreakdownList.innerHTML = Object.entries(scoreBreakdown).map(([key, item]) => {
+                        const sign = item.value > 0 ? '+' : '';
+                        return `<li class="${item.class}"><span>${key}</span><span class="score-value">${sign}${item.value} Puan</span></li>`;
+                    }).join('');
+
+                    let debriefHTML = '';
+                    if (this.state.isFalsePositive) {
+                        debriefHTML = `<p><strong>Kritik Hata:</strong> Simülasyonun başında uyarıyı yanlış pozitif olarak değerlendirdiniz. Bu gecikme, saldırganlara değerli zaman kazandırdı ve olayın etkisini artırdı. Sonraki adımlarda doğru kararlar vermiş olsanız bile, bu başlangıç hatası şirketi ciddi bir riske attı ve nihai puanınızı önemli ölçüde düşürdü. Bu, şüpheli aktivitenin asla hafife alınmaması gerektiğini gösteren önemli bir derstir.</p>`;
+                    } else if (totalScore >= 90) { 
+                        debriefHTML = `<p><strong>Olağanüstü Başarı!</strong> Uyarının ciddiyetini hızla kavradınız, doğru log kaynaklarını analiz ettiniz, tehdidi etkili bir şekilde kontrol altına aldınız ve olayı stratejik bir bakış açısıyla sonlandırdınız. Özellikle kritik sistemleri zamanında izole etme ve geleceğe yönelik politika önerileri getirme kararınız, şirketi hem anlık bir felaketten kurtardı hem de gelecekteki güvenliğini artırdı.</p>`;
+                    } else if (totalScore >= 70) { 
+                        debriefHTML = `<p><strong>Etkin Müdahale:</strong> Doğru adımları atarak ve kanıtları toplayarak tehdidi başarılı bir şekilde yönettiniz. Bazı kararlarınız operasyonel kesintiye yol açsa da, veri güvenliğini önceliklendirerek doğru olanı yaptınız. Eskalasyon süreciniz ve tehdit analizi yeteneğiniz, olayın kontrol altında tutulmasını sağladı. Son aşamadaki stratejik kararlarınızla şirkete değer kattınız.</p>`;
+                    } else { 
+                        debriefHTML = `<p><strong>Öğrenim Fırsatı:</strong> Tehdidi tespit ettiniz ancak müdahale sürecinde daha hızlı veya etkili olabilecek bazı adımları atlamış olabilirsiniz. Belki de kanıtları toplarken harcanan zaman, saldırganın daha fazla ilerlemesine olanak tanıdı veya alınan önlemler yetersiz kaldı. Bu simülasyon, log korelasyonu ve hızlı müdahale kararlarının ne kadar kritik olduğunu gösteren önemli bir deneyim oldu.</p>`;
+                    }
+                    debriefContent.innerHTML = debriefHTML;
+                    this.saveLeaderboard(totalScore);
+                },
+
+                loadGameHTML() {
+                    const gameHTMLContent = `
+                        <div id="phase1_triage" class="section" data-max-selections="1">
+                            <h2><i class="fa-solid fa-bell"></i> Aşama 1: SIEM Uyarısı ve Triage</h2>
+                            <p>Bir SOC Analisti olarak, ekibinizin Slack kanalına düşen yüksek öncelikli bir uyarı ile güne başlıyorsunuz.</p>
+                            <div class="slack-chat">
+                                <div class="message"><span class="sender siem">SIEM-BOT:</span> @channel **[YÜKSEK ÖNCELİK] Şüpheli VPN Bağlantısı Tespit Edildi!**</div>
+                                <div class="message"><span class="sender siem">SIEM-BOT:</span> Kullanıcı: <strong>Burak Mert (Finans Direktörü)</strong><br>Kaynak IP: <code>211.95.8.12</code> (Coğrafi Konum: Çin)<br>Durum: Başarılı<br>Açıklama: Bilinen normal erişim lokasyonları dışında bir yerden VPN bağlantısı yapıldı.</div>
+                            </div>
+                            <div class="interactive-element">
+                                <h4>Bu kritik uyarıyı nasıl ele alacaksınız? (1 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d1-investigate"><i class="fa-solid fa-magnifying-glass"></i><div class="btn-text">İnceleme Başlat<small>Olayın gerçek bir tehdit olduğunu varsayarak derhal log toplamaya ve analize başla.</small></div></button>
+                                    <button class="btn critical" data-decision="d1-false-positive"><i class="fa-solid fa-ban"></i><div class="btn-text">Yanlış Pozitif Olarak Kapat<small>Muhtemelen bir iş seyahatidir. Kullanıcıyı rahatsız etmeden olayı kapat.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir C-seviye yöneticinin hesabından, coğrafi olarak imkansız bir yerden gelen başarılı bir bağlantı uyarısı, en yüksek öncelikli olaylardan biridir. İlk tepkiniz, tüm olayın seyrini belirleyebilir.</div>
+                        </div>
+
+                        <div id="phase2_analysis" class="section" data-max-selections="2">
+                             <h2><i class="fa-solid fa-search-plus"></i> Aşama 2: Kanıt Toplama ve Analiz</h2>
+                            <p>Uyarının peşine düşmeye karar verdiniz. Şimdi tehdidin doğasını ve kapsamını anlamak için elinizdeki araçları kullanarak kanıt toplamanız gerekiyor. Seçeceğiniz her analiz adımı zaman ve kaynak gerektirecek.</p>
+                            <img src="analiz.png" alt="Log analizi ve siber güvenlik araçları" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Kanıtları toplamak için hangi iki adımı atacaksınız? (2 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d2-vpn-logs"><i class="fa-solid fa-network-wired"></i><div class="btn-text">VPN Loglarını İncele<small>Bağlantının detaylarını, süresini ve erişilen iç ağ kaynaklarını doğrula.</small></div></button>
+                                    <button class="btn" data-decision="d2-edr-logs"><i class="fa-solid fa-desktop"></i><div class="btn-text">EDR Loglarını İncele<small>Burak Mert'in bilgisayarında bağlantı sırasında çalışan anormal işlemleri kontrol et.</small></div></button>
+                                    <button class="btn" data-decision="d2-proxy-logs"><i class="fa-solid fa-globe"></i><div class="btn-text">Proxy Loglarını İncele<small>VPN bağlantısı üzerinden giden şüpheli web trafiğini, özellikle veri sızıntısı olabilecek siteleri ara.</small></div></button>
+                                    <button class="btn critical" data-decision="d2-contact-user"><i class="fa-solid fa-phone"></i><div class="btn-text">Kullanıcı Burak Mert ile İletişime Geç<small>Durumu teyit etmek için Finans Direktörü'nü doğrudan ara.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Öğrenme Notu:</strong> Etkili bir olay müdahalesi için farklı veri kaynaklarını (ağ, uç nokta, kullanıcı) birleştirmek (korelasyon) hayati önem taşır. Tek bir log kaynağı nadiren tüm hikayeyi anlatır.</div>
+                        </div>
+                        
+                        <div id="phase3_response" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-fire-extinguisher"></i> Aşama 3: Müdahale ve Kontrol Altına Alma</h2>
+                            <p>Topladığınız kanıtlar durumu netleştirdi: Finans Direktörü'nün hesabı ele geçirilmiş ve hassas verilere erişilmiş. Saldırgan hala aktif olabilir. Şimdi hasarı sınırlamak ve tehdidi ortadan kaldırmak için kritik kararlar almalısınız.</p>
+                            <div class="interactive-element">
+                                <h4>Tehdidi kontrol altına almak ve raporlamak için hangi iki adımı atacaksınız? (2 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d3-mitre-map"><i class="fa-solid fa-sitemap"></i><div class="btn-text">Bulguları MITRE ATT&CK ile Eşleştir<small>Saldırganın kullandığı taktik ve teknikleri standart bir çerçeveye oturtarak raporlamayı güçlendir.</small></div></button>
+                                    <button class="btn critical" data-decision="d3-isolate-account"><i class="fa-solid fa-user-lock"></i><div class="btn-text">Burak Mert'in Hesabını Derhal İzole Et<small>Saldırganın daha fazla ilerlemesini önlemek için hesabın tüm erişimini anında kes.</small></div></button>
+                                    <button class="btn" data-decision="d3-block-ip"><i class="fa-solid fa-ban"></i><div class="btn-text">Saldırgan IP Adresini Engelle<small>Kaynak IP'yi güvenlik duvarından engelleyerek basit ama hızlı bir önlem al.</small></div></button>
+                                    <button class="btn" data-decision="d3-escalate"><i class="fa-solid fa-upload"></i><div class="btn-text">Bulguları SOC Ekip Liderine Eskale Et<small>Topladığın tüm kanıtları içeren kapsamlı bir raporla olayı bir üst seviyeye taşı.</small></div></button>
+                                </div>
+                            </div>
+                             <div class="learning-note"><strong>Öğrenme Notu:</strong> Müdahale aşaması, hız ve kararlılık gerektirir. Güvenlik riski ile operasyonel etki arasındaki dengeyi doğru kurmak, bir analistin en önemli yeteneklerinden biridir.</div>
+                        </div>
+
+                        <div id="phase4_communication_strategy" class="section" data-max-selections="1">
+                            <h2><i class="fa-solid fa-bullhorn"></i> Aşama 4: İletişim ve Stratejik Takip</h2>
+                            <p>Anlık tehdit kontrol altına alındı. SOC Ekip Lideriniz Can Demir, müdahalenizden memnun ancak şimdi olayın yankılarını yönetmek ve geleceğe yönelik adımları planlamak gerekiyor. Bu, sadece teknik bir olay değil, aynı zamanda bir iş riskidir.</p>
+                            <img src="strateji.png" alt="Strateji ve planlama toplantısı" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>Olay sonrası atılacak en önemli stratejik adım nedir? (1 Seçim Yapın)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d4-forensic-report"><i class="fa-solid fa-magnifying-glass-chart"></i><div class="btn-text">Detaylı Adli Bilişim Raporu Öner<small>Olayın kök nedenini bulmak ve başka sızıntı olup olmadığını kesinleştirmek için derinlemesine analiz talep et.</small></div></button>
+                                    <button class="btn" data-decision="d4-security-briefing"><i class="fa-solid fa-users-viewfinder"></i><div class="btn-text">Şirket Genelinde Güvenlik Bilgilendirmesi Yap<small>Tüm çalışanları benzer tehditlere karşı uyarmak ve farkındalığı artırmak için bir bülten yayınla.</small></div></button>
+                                    <button class="btn critical" data-decision="d4-revise-policies"><i class="fa-solid fa-file-signature"></i><div class="btn-text">VPN Erişim Politikalarını Gözden Geçir<small>Benzer olayları önlemek için coğrafi kısıtlamalar ve daha güçlü MFA gibi yeni politika önerileri sun.</small></div></button>
+                                </div>
+                            </div>
+                             <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir siber olayı kapatmak, sadece tehdidi durdurmakla bitmez. Olaydan ders çıkarmak ve güvenlik duruşunu güçlendirmek, proaktif bir siber güvenlik anlayışının temelidir.</div>
+                        </div>
+
+                        <div id="finalSection" class="section centered-page" style="display: none;">
+                            <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
+                            <p>Simülasyon tamamlandı. Kriz yönetimi performansınızın detaylı dökümü aşağıdadır.</p>
+                            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                            <div class="final-metrics" id="finalMetricsContainer"></div>
+                            <div class="post-crisis-layout">
+                                <div class="event-timeline">
+                                    <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                                    <ul id="decision-timeline-list"></ul>
+                                </div>
+                                <div class="strategic-debrief">
+                                    <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme</h3>
+                                    <div id="strategic-debrief-content"></div>
+                                    <h3 style="margin-top: 20px;"><i class="fa-solid fa-calculator"></i> Puan Dökümü</h3>
+                                    <ul id="score-breakdown"></ul>
+                                </div>
+                            </div>
+                            <div class="decision-buttons" style="margin-top: 40px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+                                <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+                                <button class="btn" id="openLeaderboardBtn"><i class="fa-solid fa-trophy"></i> Liderlik Tablosu</button>
+                            </div>
+                        </div>
+                    `;
+                    this.elements.gameContent.innerHTML = gameHTMLContent;
+                    this.elements.sections = this.elements.gameContent.querySelectorAll('.section');
+                    this.elements.leaderboard.btnOpen = document.getElementById('openLeaderboardBtn');
+                    this.elements.leaderboard.btnOpen?.addEventListener('click', () => this.openLeaderboard());
+                    hljs.highlightAll();
+                },
+
+                startGlobalTimer() {
+                    if (this.timer.running) return;
+                    this.timer.running = true;
+                    this.timer.remaining = this.timer.total;
+                    this.updateTimerUI();
+                    this.timer.intervalId = setInterval(() => {
+                        this.timer.remaining--;
+                        this.updateTimerUI();
+                        if (this.timer.remaining <= 0) {
+                            this.stopGlobalTimer();
+                            alert("Süre doldu! Rapor oluşturuluyor.");
+                            this.showFinalReport();
+                        }
+                    }, 1000);
+                },
+
+                stopGlobalTimer() {
+                    if (this.timer.intervalId) clearInterval(this.timer.intervalId);
+                    this.timer.intervalId = null;
+                    this.timer.running = false;
+                },
+
+                updateTimerUI() {
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2,'0');
+                    const s = String(this.timer.remaining % 60).padStart(2,'0');
+                    if (this.elements.statusBar.remaining) {
+                        this.elements.statusBar.remaining.textContent = `${m}:${s}`;
+                    }
+                },
+
+                openLeaderboard() {
+                    this.elements.leaderboard.overlay.style.display = 'flex';
+                    this.loadLeaderboard();
+                },
+
+                closeLeaderboard() {
+                    this.elements.leaderboard.overlay.style.display = 'none';
+                },
+
+                saveLeaderboard(finalScore) {
+                    const name = localStorage.getItem('playerName') || 'Anonim';
+                    const payload = {
+                        scenario: 'v7.3-vpn-revised',
+                        name: name.toString().slice(0, 40),
+                        score: finalScore,
+                        details: {
+                            dataSecurity: this.score.dataSecurity,
+                            financialImpact: this.score.financialImpact,
+                            reputation: this.score.reputation,
+                            decisions: this.state.decisionHistory.map(d => d.id)
+                        },
+                        timestamp: new Date().toISOString()
+                    };
+                    const key = 'leaderboard-v7-vpn-revised';
+                    const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                    arr.push(payload);
+                    arr.sort((a,b)=> b.score - a.score);
+                    localStorage.setItem(key, JSON.stringify(arr.slice(0,100)));
+                },
+
+                loadLeaderboard() {
+                    const tbody = this.elements.leaderboard.body;
+                    const key = 'leaderboard-v7-vpn-revised';
+                    tbody.innerHTML = `<tr><td colspan="4">Yükleniyor…</td></tr>`;
+                    
+                    const rows = JSON.parse(localStorage.getItem(key) || '[]');
+                    
+                    if (!rows.length) {
+                        tbody.innerHTML = `<tr><td colspan="4">Henüz kayıt bulunmuyor.</td></tr>`;
+                        return;
+                    }
+                    
+                    rows.sort((a,b)=> b.score - a.score);
+                    tbody.innerHTML = rows.slice(0,50).map((r,i)=>`
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>${(r.name || 'Anonim').toString().slice(0,40)}</td>
+                            <td>${r.score}</td>
+                            <td>${r.timestamp ? new Date(r.timestamp).toLocaleString('tr-TR') : '-'}</td>
+                        </tr>
+                    `).join('');
+                }
+            };
+            window.game.setup();
+        });
+    </script>
 </body>
 </html>
