@@ -19,6 +19,7 @@
         --card-hover-border: rgba(0, 230, 255, 0.8);
         --shadow-strong: rgba(0, 230, 255, 0.4);
         --title-glow-color: rgba(0, 230, 255, 0.4);
+        --difficulty-easy: #50fa7b;   /* Yeşil */
         --difficulty-medium: #f1fa8c; /* Sarı */
         --difficulty-high: #ff5555;   /* Kırmızı */
     }
@@ -52,7 +53,7 @@
 
     .container {
         width: 100%;
-        max-width: 1000px;
+        max-width: 1300px; /* 3 kart için genişletildi */
         z-index: 1;
         animation: fadeIn 1s ease-out;
     }
@@ -82,6 +83,12 @@
             grid-template-columns: repeat(2, 1fr);
         }
     }
+    
+    @media (min-width: 1200px) { /* 3 kartlı düzen için yeni media query */
+        .scenarios-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
 
     .scenario-card {
         background-color: var(--card-bg);
@@ -93,7 +100,7 @@
         backdrop-filter: blur(8px);
         display: flex;
         flex-direction: column;
-        overflow: hidden; /* Resmin kart köşelerini aşmasını engeller */
+        overflow: hidden;
     }
 
     .scenario-card:hover {
@@ -105,7 +112,7 @@
     .scenario-card img {
         width: 100%;
         height: 200px;
-        object-fit: cover; /* Resmin orantısını bozmadan kartı doldurur */
+        object-fit: cover;
         border-bottom: 1px solid var(--border-glow);
     }
 
@@ -132,12 +139,11 @@
         margin-bottom: 25px;
     }
     
-    /* YENİ EKLENEN KISIM */
     .card-info {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: auto; /* Bu sayede her zaman kartın en altında kalır */
+        margin-top: auto;
         padding-top: 15px;
         border-top: 1px solid rgba(0, 230, 255, 0.2);
     }
@@ -152,7 +158,8 @@
     .card-info span i {
         margin-right: 8px;
     }
-
+    
+    .difficulty-easy { color: var(--difficulty-easy); }
     .difficulty-medium { color: var(--difficulty-medium); }
     .difficulty-high { color: var(--difficulty-high); }
     .focus-color { color: var(--main-accent); }
@@ -166,6 +173,25 @@
         <p class="subtitle">SOC Analisti olarak savunmanın ilk hattındasın. Gelen uyarıları analiz edecek ve tehditleri erkenden tespit edeceksin. Becerilerini test etmek için bir senaryo seç.</p>
 
         <div class="scenarios-grid">
+            <a href="cyberscenarios7/index.html" class="scenario-card">
+                <img src="vpn.png" alt="Şüpheli VPN Bağlantısı Konsepti">
+                <div class="content">
+                    <h2>Şüpheli VPN Bağlantısı</h2>
+                    <p>Bir yöneticinin hesabından, beklenmedik bir konumdan başarılı bir VPN bağlantısı yapıldı. Bu bir iş seyahati mi, yoksa veri sızıntısı mı? Logları incele!</p>
+                    
+                    <div class="card-info">
+                        <span class="difficulty-easy">
+                            <i class="fas fa-signal"></i>
+                            Zorluk: Kolay
+                        </span>
+                        <span class="focus-color">
+                            <i class="fas fa-search"></i>
+                            Odak: Log Analizi
+                        </span>
+                    </div>
+                </div>
+            </a>
+
             <a href="cyberscenarios5/index.html" class="scenario-card">
                 <img src="phishing_card.png" alt="Oltalama Saldırısı Konsepti">
                 <div class="content">
@@ -178,13 +204,13 @@
                             Zorluk: Orta
                         </span>
                         <span class="focus-color">
-                            <i class="fas fa-search"></i>
-                            Odak: Analiz
+                            <i class="fas fa-envelope-open-text"></i>
+                            Odak: E-posta Analizi
                         </span>
                     </div>
                 </div>
             </a>
-
+            
             <a href="cyberscenarios8/index.html" class="scenario-card">
                 <img src="ddos_card.png" alt="DDoS Saldırısı Konsepti">
                 <div class="content">
@@ -198,7 +224,7 @@
                         </span>
                         <span class="focus-color">
                             <i class="fas fa-shield-alt"></i>
-                            Odak: Savunma
+                            Odak: Ağ Savunması
                         </span>
                     </div>
                 </div>
