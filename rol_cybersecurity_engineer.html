@@ -8,7 +8,7 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
     :root {
-        --dark-blue-bg: #0A0A1E; --main-accent: #00E6FF; --text-color-light: #E0E0E0; --text-color-medium: #A0A0E0;
+        --dark-blue-bg: #0A0A1E; --main-accent: #00E6FF; --text-color-light: #E0E0E0; --text-color-medium: #A0A0A0;
         --card-bg: rgba(20, 20, 40, 0.85); --border-glow: rgba(0, 230, 255, 0.5); --card-hover-bg: rgba(30, 30, 60, 0.95);
         --card-hover-border: rgba(0, 230, 255, 0.8); --shadow-strong: rgba(0, 230, 255, 0.4); --title-glow-color: rgba(0, 230, 255, 0.4);
         --difficulty-medium: #f1fa8c; /* Sarı */
@@ -27,7 +27,7 @@
         background-size: 50px 50px; animation: grid-move 60s linear infinite; transform-origin: 0 0; opacity: 0.2;
     }
     @keyframes grid-move { from { transform: translate(0, 0); } to { transform: translate(-50px, -50px); } }
-    .container { width: 100%; max-width: 1000px; z-index: 1; animation: fadeIn 1s ease-out; }
+    .container { width: 100%; max-width: 1300px; z-index: 1; animation: fadeIn 1s ease-out; } /* Genişletildi */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     h1 {
         font-family: 'Orbitron', sans-serif; font-size: 2.8em; margin-bottom: 15px; color: var(--main-accent);
@@ -42,6 +42,12 @@
     @media (min-width: 768px) {
         .scenarios-grid {
             grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (min-width: 1200px) { /* 3 kart için düzenleme */
+        .scenarios-grid {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
@@ -97,7 +103,7 @@
                 <img src="cloud_card.png" alt="Bulut Altyapısı">
                 <div class="content">
                     <h2>Bulut Güvenliği Krizi</h2>
-                    <p>Kritik müşteri verilerini barındıran bulut altyapısında bir veri sızıntısı tespit edildi. Sorun bir hacker mı, yoksa basit bir yapılandırma hatası mı? Kök nedeni bul ve sızıntıyı kapat.</p>
+                    <p>Kritik müşteri verilerini barındıran bulut altyapısında bir veri sızıntısı tespit edildi. Sorun bir hacker mı, yoksa basit bir yapılandırma hatası mı? Kök nedeni bul.</p>
 
                     <div class="card-info">
                         <span class="difficulty-high">
@@ -107,6 +113,25 @@
                         <span class="focus-color">
                             <i class="fas fa-cloud"></i>
                             Odak: Altyapı Güvenliği
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="cyberscenarios10/index.html" class="scenario-card">
+                <img src="iam_card.png" alt="Kimlik ve Erişim Krizi">
+                <div class="content">
+                    <h2>Kimlik ve Erişim Krizi</h2>
+                    <p>Yeni SSO entegrasyonu sonrası, kullanıcılar beklenmedik yetkilere sahip oluyor. Yanlış yapılandırılmış OIDC/OAuth akışını analiz et ve kimlik sistemini güçlendir.</p>
+
+                    <div class="card-info">
+                        <span class="difficulty-high">
+                            <i class="fas fa-signal"></i>
+                            Zorluk: Yüksek
+                        </span>
+                        <span class="focus-color">
+                            <i class="fas fa-id-card"></i>
+                            Odak: Mimari Güvenlik
                         </span>
                     </div>
                 </div>
