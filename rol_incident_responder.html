@@ -11,6 +11,7 @@
         --dark-blue-bg: #0A0A1E; --main-accent: #00E6FF; --text-color-light: #E0E0E0; --text-color-medium: #A0A0A0;
         --card-bg: rgba(20, 20, 40, 0.85); --border-glow: rgba(0, 230, 255, 0.5); --card-hover-bg: rgba(30, 30, 60, 0.95);
         --card-hover-border: rgba(0, 230, 255, 0.8); --shadow-strong: rgba(0, 230, 255, 0.4); --title-glow-color: rgba(0, 230, 255, 0.4);
+        --difficulty-easy: #50fa7b;   /* Yeşil - YENİ */
         --difficulty-high: #ff5555;   /* Kırmızı */
         --difficulty-very-high: #ff79c6; /* Pembe */
         --focus-color: var(--main-accent);
@@ -27,7 +28,7 @@
         background-size: 50px 50px; animation: grid-move 60s linear infinite; transform-origin: 0 0; opacity: 0.2;
     }
     @keyframes grid-move { from { transform: translate(0, 0); } to { transform: translate(-50px, -50px); } }
-    .container { width: 100%; max-width: 1000px; z-index: 1; animation: fadeIn 1s ease-out; }
+    .container { width: 100%; max-width: 1300px; z-index: 1; animation: fadeIn 1s ease-out; } /* Genişletildi */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     h1 {
         font-family: 'Orbitron', sans-serif; font-size: 2.8em; margin-bottom: 15px; color: var(--main-accent);
@@ -42,6 +43,11 @@
     @media (min-width: 768px) {
         .scenarios-grid {
             grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (min-width: 1200px) { /* 3 kart için düzenleme */
+        .scenarios-grid {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
@@ -61,6 +67,7 @@
     }
     .card-info span { display: flex; align-items: center; font-size: 0.9em; font-weight: bold; }
     .card-info span i { margin-right: 8px; }
+    .difficulty-easy { color: var(--difficulty-easy); } /* YENİ */
     .difficulty-high { color: var(--difficulty-high); }
     .difficulty-very-high { color: var(--difficulty-very-high); }
     .focus-color { color: var(--focus-color); }
@@ -74,6 +81,25 @@
         <p class="subtitle">Olay Müdahale Uzmanı olarak, aktif bir krizin kalbine ineceksin. Baskı altında doğru kararları ver, kanıtları topla ve şirketi felaketten kurtar.</p>
 
         <div class="scenarios-grid">
+            <a href="cyberscenarios10/index.html" class="scenario-card">
+                <img src="physical_breach_card.png" alt="Fiziksel Güvenlik İhlali">
+                <div class="content">
+                    <h2>Fiziksel Güvenlik İhlali</h2>
+                    <p>Veri merkezine zorla girildi, kameralar çevrimdışı ve diskler çalındı. Kanıtları yok etmeden servisleri geri getirme baskısı altındasın.</p>
+                    
+                    <div class="card-info">
+                        <span class="difficulty-easy">
+                            <i class="fas fa-signal"></i>
+                            Zorluk: Kolay
+                        </span>
+                        <span class="focus-color">
+                            <i class="fas fa-fire-extinguisher"></i>
+                            Odak: Kriz Yönetimi
+                        </span>
+                    </div>
+                </div>
+            </a>
+
             <a href="cyberscenarios2/index.html" class="scenario-card">
                 <img src="ransomware_card.png" alt="Fidye Yazılımı Saldırısı">
                 <div class="content">
