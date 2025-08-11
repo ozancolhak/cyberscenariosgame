@@ -1161,7 +1161,7 @@
                                 <h4>Saldırının tipini ve kaynağını kesinleştirmek için hangi adımları atacaksınız? (1 Seçim Yapın)</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="d3-threat-analysis-pcap"><i class="fa-solid fa-file-waveform"></i><div class="btn-text">Seçenek A: Paket İçeriği Analizi<small>Wireshark'ta filtreler (<code>tcp.flags.syn==1</code>, <code>arp.isannouncement</code>) kullanarak anormal paketleri tespit edin.</small></div></button>
-                                    <button class="btn critical" data-decision="d3-threat-analysis-source"><i class="fa-solid fa-magnifying-glass-location"></i><div class="btn-text">Seçenek B: Kaynak Tespiti<small>Anormal trafiği üreten kaynak IP ve MAC adresini kesin olarak belirleyin ve ilgili VM'i bulun.</small></div></button>
+                                    <button class="btn" data-decision="d3-threat-analysis-source"><i class="fa-solid fa-magnifying-glass-location"></i><div class="btn-text">Seçenek B: Kaynak Tespiti<small>Anormal trafiği üreten kaynak IP ve MAC adresini kesin olarak belirleyin ve ilgili VM'i bulun.</small></div></button>
                                     <button class="btn" data-decision="d3-threat-analysis-logs"><i class="fa-solid fa-chart-line"></i><div class="btn-text">Seçenek C: Log Korelasyonu<small>Tespit ettiğiniz kaynak IP'sini SIEM sisteminizde aratarak, bu IP'ye ait bir cihazın yakın zamanda bir güvenlik uyarısı tetikleyip tetiklemediğini kontrol edin.</small></div></button>
                                 </div>
                             </div>
@@ -1176,7 +1176,7 @@
                             <div class="interactive-element">
                                 <h4>Ağ performansını hızla normale döndürmek ve zararı sınırlamak için en etkili acil müdahale hangisidir? (1 Seçim Yapın)</h4>
                                 <div class="decision-buttons">
-                                    <button class="btn critical" data-decision="d4-mitigation-isolate-vm"><i class="fa-solid fa-link-slash"></i><div class="btn-text">Seçenek A: Sanal İzolasyon<small>Anormal trafiği üreten sanal makineyi, sanal anahtarda bir kural yazarak diğer tüm sanal makinelere erişimini engelleyin.</small></div></button>
+                                    <button class="btn" data-decision="d4-mitigation-isolate-vm"><i class="fa-solid fa-link-slash"></i><div class="btn-text">Seçenek A: Sanal İzolasyon<small>Anormal trafiği üreten sanal makineyi, sanal anahtarda bir kural yazarak diğer tüm sanal makinelere erişimini engelleyin.</small></div></button>
                                     <button class="btn" data-decision="d4-mitigation-traffic-shape"><i class="fa-solid fa-traffic-light"></i><div class="btn-text">Seçenek B: Trafik Hız Sınırlaması (Traffic Shaping)<small>Sorunlu VM'nin vNIC'ine acil durum hız sınırlaması uygulayarak, ağ kaynaklarını tekeline almasını engelleyin.</small></div></button>
                                     <button class="btn" data-decision="d4-mitigation-firewall"><i class="fa-solid fa-firewall"></i><div class="btn-text">Seçenek C: Dış Güvenlik Duvarı Kuralı Yazma<small>Kaynak IP adresinden çıkan tüm trafiği dış güvenlik duvarında engelleyin.</small></div></button>
                                 </div>
@@ -1209,7 +1209,7 @@
                                 <h4>Yönetime sunmak üzere hangi stratejik iyileştirme ve eğitim önerilerinde bulunacaksınız? (2 Seçim Yapın)</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="d6-reporting-report"><i class="fa-solid fa-file-lines"></i><div class="btn-text">Seçenek A: Kapsamlı Olay Sonrası Rapor (Post-Incident Report) Hazırlamak<small>Olayın detaylarını, kullanılan araçları, çözümü ve maliyet etkilerini kapsayan kapsamlı bir rapor hazırlayın.</small></div></button>
-                                    <button class="btn critical" data-decision="d6-reporting-dvs"><i class="fa-solid fa-diagram-project"></i><div class="btn-text">Seçenek B: Dağıtık Sanal Anahtara (DVS) Geçiş Önerisi<small>Daha gelişmiş yönetim ve özellikler sunan Dağıtık Sanal Anahtar (DVS) gibi bir çözüme geçiş için yönetime bir öneri sunun.</small></div></button>
+                                    <button class="btn" data-decision="d6-reporting-dvs"><i class="fa-solid fa-diagram-project"></i><div class="btn-text">Seçenek B: Dağıtık Sanal Anahtara (DVS) Geçiş Önerisi<small>Daha gelişmiş yönetim ve özellikler sunan Dağıtık Sanal Anahtar (DVS) gibi bir çözüme geçiş için yönetime bir öneri sunun.</small></div></button>
                                     <button class="btn" data-decision="d6-reporting-training"><i class="fa-solid fa-chalkboard-user"></i><div class="btn-text">Seçenek C: Personel Eğitimi Planı Hazırlamak<small>Ağ ve sanallaştırma ekiplerinin, sanal ağ yönetimi ve paket analizi gibi konularda eğitim alması için bir plan hazırlayın.</small></div></button>
                                 </div>
                             </div>
@@ -1356,4 +1356,5 @@
         });
     </script>
 </body>
+
 </html>
