@@ -25,7 +25,7 @@
         font-family: 'Roboto', sans-serif;
         display: flex;
         justify-content: center;
-        align-items: flex-start; /* Üstten başlaması için */
+        align-items: flex-start;
         min-height: 100vh;
         background: var(--dark-blue-bg);
         color: var(--text-color-light);
@@ -71,29 +71,30 @@
     .roles-grid {
         display: grid;
         gap: 30px;
-        /* Mobil için varsayılan tek sütun */
+        /* Default: 1 sütun */
         grid-template-columns: repeat(1, 1fr);
+        align-items: stretch; /* Kartların aynı yüksekliğe sahip olmasını sağlar */
     }
-    
-    /* Orta boy ekranlar (tablet) için 2 sütun */
-    @media (min-width: 640px) {
+
+    @media (min-width: 768px) {
         .roles-grid {
+            /* Tablet ve üzeri: 2 sütun */
             grid-template-columns: repeat(2, 1fr);
         }
     }
-    
-    /* Geniş ekranlar (desktop) için 4 sütun */
-    @media (min-width: 1524px) {
+
+    @media (min-width: 1024px) {
         .roles-grid {
-            grid-template-columns: repeat(4, 1fr);
+            /* Masaüstü ve üzeri: 3 sütun */
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
     .role-card {
         background-color: var(--card-bg);
         border: 1px solid var(--border-glow);
-        border-radius: 50px;
-        padding: 40px 40px;
+        border-radius: 20px;
+        padding: 30px;
         text-align: left;
         text-decoration: none;
         color: var(--text-color-light);
@@ -130,7 +131,7 @@
         color: var(--text-color-medium);
         line-height: 1.6;
         flex-grow: 1;
-        margin-bottom: 0; /* Simülasyon listesi kalktığı için alt boşluğu sıfırlıyoruz */
+        margin-bottom: 0;
     }
 </style>
 </head>
@@ -138,7 +139,7 @@
     <div class="grid-bg"></div>
     <div class="container">
         <h1>Rolünü Seç</h1>
-        <p class="subtitle">Siber güvenlik kariyer yolculuğunda bir uzmanlık seç. Her rol, seni farklı yeteneklerini test edecek iki özel kriz senaryosuna götürecek. Stratejini belirle ve müdahale et.</p>
+        <p class="subtitle">Siber güvenlik kariyer yolculuğunda bir uzmanlık seç. Her rol, seni farklı yeteneklerini test edecek özel kriz senaryolarına götürecek. Stratejini belirle ve müdahale et.</p>
 
         <div class="roles-grid">
             <a href="rol_soc_analyst.html" class="role-card">
@@ -153,10 +154,22 @@
                 <p>Kriz anının soğukkanlı profesyoneli. Aktif saldırıları durdur, delilleri topla ve sistemi düşmandan geri al.</p>
             </a>
 
+            <a href="rol_penetration_tester.html" class="role-card">
+                <div class="icon"><i class="fas fa-user-secret"></i></div>
+                <h2>Sızma Testi Uzmanı</h2>
+                <p>Sistemleri düşman gözüyle test eden, zafiyetleri bulan ve etik sınırlar içinde kanıtlayan bir uzman.</p>
+            </a>
+            
             <a href="rol_cybersecurity_engineer.html" class="role-card">
                 <div class="icon"><i class="fas fa-microchip"></i></div>
                 <h2>Siber Güvenlik Mühendisi</h2>
                 <p>Sistemlerin ve teknolojilerin koruyucusu. Zafiyetleri derinlemesine analiz et, karmaşık sistemleri güçlendir ve proaktif savunma yap.</p>
+            </a>
+
+            <a href="rol_network_security_engineer.html" class="role-card">
+                <div class="icon"><i class="fas fa-network-wired"></i></div>
+                <h2>Ağ Güvenliği Mühendisi</h2>
+                <p>Ağ altyapısının kalbi. Güvenli ağ tasarımları oluştur, trafik akışını izle ve savunma mekanizmalarını kur.</p>
             </a>
 
             <a href="rol_cybersecurity_manager.html" class="role-card">
