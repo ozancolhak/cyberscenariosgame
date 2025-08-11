@@ -357,7 +357,7 @@
                     <div class="interactive-element">
                         <h4>Siber Güvenlik Yöneticisi olarak ilk acil müdahalen ne olacak?</h4>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="p1-isolate-app" data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-server"></i><div class="btn-text">Seçenek A: Riskli Web Uygulamasını Derhal Ağdan İzole Et.<small>Saldırının yayılmasını ve veri sızıntısını anında durdurmak için radikal bir adım at.</small></div></button>
+                            <button class="btn" data-decision="p1-isolate-app" data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-server"></i><div class="btn-text">Seçenek A: Riskli Web Uygulamasını Derhal Ağdan İzole Et.<small>Saldırının yayılmasını ve veri sızıntısını anında durdurmak için radikal bir adım at.</small></div></button>
                             <button class="btn" data-decision="p1-monitor-traffic" data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-eye"></i><div class="btn-text">Seçenek B: Saldırganın Davranışını İzle ve Zafiyeti Anlamaya Çalış.<small>Zero-day'in nasıl sömürüldüğünü ve saldırganın hedeflerini anlamak için gözlem yap.</small></div></button>
                         </div>
                     </div>
@@ -373,7 +373,7 @@
                         <h4>Bu bilgiyle birlikte, kriz ekibindeki yöneticilere nasıl bir bildirimde bulunacaksın?</h4>
                         <div class="decision-buttons">
                             <button class="btn" data-decision="p2a-inform-wait" data-next-section="phase2b_mitigation_strategy"><i class="fa-solid fa-clock"></i><div class="btn-text">Seçenek A: Yönetimi Bilgilendir ve Vendor'ın Yamasını Bekle.<small>Durumu üst yönetime raporla ve vendor'ın resmi yaması gelene kadar beklemeyi öner.</small></div></button>
-                            <button class="btn critical" data-decision="p2a-demand-temp-fix" data-next-section="phase2b_mitigation_strategy"><i class="fa-solid fa-hand-holding-medical"></i><div class="btn-text">Seçenek B: Vendor'dan Acilen Geçici Mitigasyon Talep Et.<small>Yama gelene kadar saldırıyı durduracak hızlı ve geçici bir çözüm için vendor'a baskı yap.</small></div></button>
+                            <button class="btn" data-decision="p2a-demand-temp-fix" data-next-section="phase2b_mitigation_strategy"><i class="fa-solid fa-hand-holding-medical"></i><div class="btn-text">Seçenek B: Vendor'dan Acilen Geçici Mitigasyon Talep Et.<small>Yama gelene kadar saldırıyı durduracak hızlı ve geçici bir çözüm için vendor'a baskı yap.</small></div></button>
                         </div>
                     </div>
                     <div class="learning-note"><strong>Öğrenme Notu:</strong> Zero-day'lerde vendor yanıtı ve yama süreci hayati öneme sahiptir. Bu süreçte boş durmak yerine, geçici çözümler için baskı yapmak kriz yönetiminde proaktif bir yaklaşım gösterir.</div>
@@ -390,7 +390,7 @@
                         <h4>Mevcut riskler ve iş ihtiyaçları doğrultusunda hangi geçici mitigasyon stratejisini önereceksin?</h4>
                         <div class="decision-buttons">
                             <button class="btn" data-decision="p2b-waf-rules" data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-shield-virus"></i><div class="btn-text">Seçenek A: WAF'a Saldırganın Exploiti Hedefleyen Özel Kurallar Ekle.<small>Bilinen exploit paternlerine dayalı olarak WAF kuralları oluşturarak geçici koruma sağla.</small></div></button>
-                            <button class="btn critical" data-decision="p2b-disable-feature" data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-toggle-off"></i><div class="btn-text">Seçenek B: Sömürülen Özelliği Geçici Olarak Devre Dışı Bırak.<small>Zero-day açığı barındıran uygulama özelliğini kapatarak saldırı yüzeyini küçült.</small></div></button>
+                            <button class="btn" data-decision="p2b-disable-feature" data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-toggle-off"></i><div class="btn-text">Seçenek B: Sömürülen Özelliği Geçici Olarak Devre Dışı Bırak.<small>Zero-day açığı barındıran uygulama özelliğini kapatarak saldırı yüzeyini küçült.</small></div></button>
                             <button class="btn" data-decision="p2b-take-offline" data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek C: Uygulamayı Tamamen Çevrimdışı Al.<small>En risksiz ancak en büyük iş kesintisine neden olacak adımı at.</small></div></button>
                         </div>
                     </div>
@@ -405,7 +405,7 @@
                     <div class="interactive-element">
                         <h4>Bu kritik veri ihlali karşısında, hasarı kontrol altına almak ve gelecekteki adımları belirlemek için ne yapacaksın?</h4>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="p3a-reset-passwords" data-next-section="phase3b_insider_threat_suspicion"><i class="fa-solid fa-key"></i><div class="btn-text">Seçenek A: Tüm Kullanıcı Şifrelerini Zorunlu Olarak Sıfırla ve Kullanıcılara Bilgilendirme Yap.<small>Kullanıcı hesaplarının güvenliğini hemen sağla, ancak kullanıcı deneyimini olumsuz etkile.</small></div></button>
+                            <button class="btn" data-decision="p3a-reset-passwords" data-next-section="phase3b_insider_threat_suspicion"><i class="fa-solid fa-key"></i><div class="btn-text">Seçenek A: Tüm Kullanıcı Şifrelerini Zorunlu Olarak Sıfırla ve Kullanıcılara Bilgilendirme Yap.<small>Kullanıcı hesaplarının güvenliğini hemen sağla, ancak kullanıcı deneyimini olumsuz etkile.</small></div></button>
                             <button class="btn" data-decision="p3a-forensic-analysis" data-next-section="phase3b_insider_threat_suspicion"><i class="fa-solid fa-microscope"></i><div class="btn-text">Seçenek B: Adli Bilişim Analizi Başlat ve Sızıntının Tam Kapsamını Belirle.<small>Saldırının derinliğini ve etkilenen verilerin tam listesini çıkarmak için detaylı inceleme yap.</small></div></button>
                         </div>
                     </div>
@@ -421,7 +421,7 @@
                     <div class="interactive-element">
                         <h4>Bu kritik iç tehdit şüphesiyle ilgili olarak nasıl bir adım atacaksın?</h4>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="p3b-isolate-workstation" data-next-section="phase4_public_announcement"><i class="fa-solid fa-plug-circle-xmark"></i><div class="btn-text">Seçenek A: Şüpheli İş İstasyonunu Derhal Ağdan İzole Et ve Hızlı Adli İnceleme Başlat.<small>Potansiyel iç tehdidi anında durdur, ancak gizliliği ihlal etme ve çalışan moralini etkileme riski taşı.</small></div></button>
+                            <button class="btn" data-decision="p3b-isolate-workstation" data-next-section="phase4_public_announcement"><i class="fa-solid fa-plug-circle-xmark"></i><div class="btn-text">Seçenek A: Şüpheli İş İstasyonunu Derhal Ağdan İzole Et ve Hızlı Adli İnceleme Başlat.<small>Potansiyel iç tehdidi anında durdur, ancak gizliliği ihlal etme ve çalışan moralini etkileme riski taşı.</small></div></button>
                             <button class="btn" data-decision="p3b-covert-monitor" data-next-section="phase4_public_announcement"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek B: İş İstasyonunu Gizlice İzlemeye Al ve Daha Fazla Bilgi Topla.<small>Saldırının kökenini ve kapsamını daha iyi anlamak için gizlice gözlem yap, ancak sızıntının devam etme riski al.</small></div></button>
                             <button class="btn" data-decision="p3b-employee-interview" data-next-section="phase4_public_announcement"><i class="fa-solid fa-users-viewfinder"></i><div class="btn-text">Seçenek C: İş İstasyonu Sahibini Gizli Bir Mülakata Çağır.<small>Şüpheli bağlantının nedenini doğrudan öğrenmeye çalış, ancak çalışanı uyarabilir ve kanıtları yok etmesine neden olabilirsin.</small></div></button>
                         </div>
@@ -439,7 +439,7 @@
                         <h4>Bu zero-day saldırısı ve veri ihlali konusunda kamuoyuna nasıl bir mesaj vereceksin?</h4>
                         <div class="decision-buttons">
                             <button class="btn" data-decision="p4-transparent-disclosure" data-next-section="phase5_patch_deployment"><i class="fa-solid fa-handshake"></i><div class="btn-text">Seçenek A: Tamamen Şeffaf Ol, Durumu ve Alınan Önlemleri Açıkla.<small>Zero-day zafiyetini, veri ihlalini ve alınan tüm mitigasyon adımlarını kamuoyuyla paylaş.</small></div></button>
-                            <button class="btn critical" data-decision="p4-minimize-impact" data-next-section="phase5_patch_deployment"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Seçenek B: Zero-Day Teriminden Kaçın, Durumu 'Teknik Sorun' Olarak Nitele.<small>Olayın ciddiyetini küçümse, zero-day terimini kullanmaktan kaçın ve olayın 'küçük bir teknik sorun' olduğunu belirt.</small></div></button>
+                            <button class="btn" data-decision="p4-minimize-impact" data-next-section="phase5_patch_deployment"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Seçenek B: Zero-Day Teriminden Kaçın, Durumu 'Teknik Sorun' Olarak Nitele.<small>Olayın ciddiyetini küçümse, zero-day terimini kullanmaktan kaçın ve olayın 'küçük bir teknik sorun' olduğunu belirt.</small></div></button>
                             <button class="btn" data-decision="p4-focus-on-future" data-next-section="phase5_patch_deployment"><i class="fa-solid fa-lightbulb"></i><div class="btn-text">Seçenek C: Gelecek Güvenlik Yatırımlarına Odaklan, Zero-Day'i Detaylandırma.<small>Krizin detaylarını atlayarak, şirketin gelecekteki güvenlik taahhütlerine ve yatırımlarına vurgu yap.</small></div></button>
                         </div>
                     </div>
@@ -454,7 +454,7 @@
                     <div class="interactive-element">
                         <h4>Zero-day yamasını ne zaman ve nasıl dağıtacaksın?</h4>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="p5-immediate-patch" data-next-section="finalSection"><i class="fa-solid fa-bolt"></i><div class="btn-text">Seçenek A: Yamayı Hemen, Mesai Saatleri İçinde Dağıt.<small>Riski hızlıca kapatmak için anında müdahale et, ancak kullanıcı kesintisini göze al.</small></div></button>
+                            <button class="btn" data-decision="p5-immediate-patch" data-next-section="finalSection"><i class="fa-solid fa-bolt"></i><div class="btn-text">Seçenek A: Yamayı Hemen, Mesai Saatleri İçinde Dağıt.<small>Riski hızlıca kapatmak için anında müdahale et, ancak kullanıcı kesintisini göze al.</small></div></button>
                             <button class="btn" data-decision="p5-scheduled-patch" data-next-section="finalSection"><i class="fa-solid fa-clock"></i><div class="btn-text">Seçenek B: Yamayı Gece Yarısı veya Düşük Kullanım Saatlerinde Dağıt.<small>Kullanıcı etkisini minimize etmek için planlı bir kesinti yap, ancak zero-day riskini birkaç saat daha sürdür.</small></div></button>
                             <button class="btn" data-decision="p5-risk-acceptance" data-next-section="finalSection"><i class="fa-solid fa-triangle-exclamation"></i><div class="btn-text">Seçenek C: Yamayı Uygulama, Sadece Geçici Mitigasyonlarla İlerlemeye Çalış.<small>Uygulamayı hiç kapatmamak adına risk al, ancak zero-day açığı tam olarak kapatılamaz.</small></div></button>
                         </div>
