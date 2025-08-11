@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Siber Güvenlik Kriz Simülasyonları</title>
-    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=CvI7ikV38LY39sihtDG9OOatfcbD1T8rzBXT0sU8JxUZB6b9tU5ppzf0Kjl_Ih3UawxjMfk8ZieRebyOWW2JaHoh1H252ztffyUryWMzWpw" charset="UTF-8"></script>
+    <title>Siber Güvenlik Simülasyonları | Kategori Seçimi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
         :root {
@@ -14,19 +14,29 @@
             --text-color-medium: #A0A0A0;
             --card-bg: rgba(20, 20, 40, 0.85);
             --border-glow: rgba(0, 230, 255, 0.5);
-            --button-hover: #00B3CC;
-            --shadow-light: rgba(0, 230, 255, 0.2);
+            --card-hover-bg: rgba(30, 30, 60, 0.95);
+            --card-hover-border: rgba(0, 230, 255, 0.8);
             --shadow-strong: rgba(0, 230, 255, 0.4);
             --title-glow-color: rgba(0, 230, 255, 0.4);
-            --error-color: #ff5555;
         }
         body {
-            font-family: 'Roboto', sans-serif; display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; background: var(--dark-blue-bg); color: var(--text-color-light);
-            margin: 0; padding: 20px; box-sizing: border-box; text-align: center; overflow: hidden; position: relative;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--dark-blue-bg);
+            color: var(--text-color-light);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
         }
-        /* Animated grid background */
-        .grid-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
+        .grid-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0;
+        }
         .grid-bg::before {
             content: ''; position: absolute; width: 200vw; height: 200vh;
             background-image: linear-gradient(0deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%),
@@ -36,10 +46,17 @@
         }
         @keyframes grid-move { from { transform: translate(0, 0); } to { transform: translate(-50px, -50px); } }
         .container {
-            background-color: var(--card-bg); padding: 50px 70px; border-radius: 20px;
-            box-shadow: 0 15px 40px var(--shadow-strong); max-width: 900px; width: 100%; z-index: 1;
-            border: 1px solid var(--border-glow); backdrop-filter: blur(8px);
-            animation: fadeInScale 1s ease-out forwards; position: relative;
+            background-color: var(--card-bg);
+            padding: 50px 70px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px var(--shadow-strong);
+            max-width: 900px;
+            width: 100%;
+            z-index: 1;
+            border: 1px solid var(--border-glow);
+            backdrop-filter: blur(8px);
+            animation: fadeInScale 1s ease-out forwards;
+            position: relative;
         }
         @keyframes fadeInScale {
             from { opacity: 0; transform: scale(0.95) translateY(20px); }
@@ -54,23 +71,56 @@
             from { text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color); }
             to { text-shadow: 0 0 8px var(--title-glow-color), 0 0 15px var(--title-glow-color); }
         }
-        p {
+        .subtitle {
             font-size: 1.3em; line-height: 1.8; margin-bottom: 40px; color: var(--text-color-medium);
             max-width: 700px; margin-left: auto; margin-right: auto;
         }
-        .start-button {
-            display: inline-block; padding: 18px 45px; font-size: 1.6em; font-weight: bold;
-            color: var(--dark-blue-bg); background-color: var(--main-accent); border: none;
-            border-radius: 10px; text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 8px 25px var(--shadow-strong); cursor: pointer; text-transform: uppercase;
-            letter-spacing: 1px; z-index: 1; position: relative; margin-top: 20px; /* Butonla metin arasına boşluk ekledim */
+        .roles-grid {
+            display: grid;
+            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            align-items: stretch;
+            margin-top: 40px;
         }
-        .start-button:hover {
-            background-color: var(--button-hover); transform: translateY(-5px); box-shadow: 0 12px 30px var(--shadow-strong);
+        .role-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: left;
+            text-decoration: none;
+            color: var(--text-color-light);
+            transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            position: relative;
         }
-        .start-button:active {
-            transform: translateY(0); box-shadow: 0 5px 15px var(--shadow-light);
+        .role-card:hover {
+            transform: translateY(-10px);
+            background-color: var(--card-hover-bg);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 10px 30px var(--shadow-strong);
+        }
+        .role-card .icon {
+            font-size: 3em;
+            color: var(--main-accent);
+            margin-bottom: 20px;
+            height: 50px;
+        }
+        .role-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: var(--text-color-light);
+        }
+        .role-card p {
+            font-size: 1em;
+            color: var(--text-color-medium);
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 0;
         }
         .info-link {
             position: fixed; bottom: 15px; right: 15px; background: var(--card-bg); color: var(--main-accent);
@@ -87,14 +137,25 @@
 
     <div class="container">
         <h1>Siber Güvenlik Simülasyonları</h1>
-        <p>Dijital ağların en karanlık köşelerinde bir kriz demleniyor. Tehditlere meydan okumaya ve bilinmezliğe adım atmaya cesaretin var mı? Gerçek bir siber güvenlik mücadelesi sadece bir tık uzakta.</p>
-        
-        <a href="krizler.html" class="start-button">Simülasyona Başla</a>
-    </div>
+        <p class="subtitle">>Dijital ağların en karanlık köşelerinde bir kriz demleniyor. Tehditlere meydan okumaya ve bilinmezliğe adım atmaya cesaretin var mı? Gerçek bir siber güvenlik mücadelesi sadece bir tık uzakta.Lütfen siber güvenlik maceranıza başlamak için bir kategori seçin.</p>
 
+        <div class="roles-grid">
+            <a href="krizler.html" class="role-card">
+                <div class="icon"><i class="fas fa-user-graduate"></i></div>
+                <h2>Siber güvenlik mesleklerine yönelik teknik ve gerçekçi kriz simülasyonları</h2>
+                <p>Günlük hayatta karşılaşabileceğiniz siber tehditlere karşı kendinizi test edin ve kişisel güvenliğinizi artırın. Siber güvenlikçiler için siber güvenlik farkındalığı.</p>
+            </a>
+            
+            <a href="sirket.html" class="role-card">
+                <div class="icon"><i class="fas fa-building"></i></div>
+                <h2>Şirketler için farkındalık odaklı siber güvenlik kriz simülasyonlarır</h2>
+                <p>Şirketinizin ve kurumunuzun siber ve bilgi güvenliğini ilgilendiren, politika ve prosedürlere dayalı senaryolarla pratik yapın. Takım çalışması ve kriz yönetimi becerilerinizi geliştirin.</p>
+            </a>
+        </div>
+    </div>
+    
     <a href="hakkinda.html" class="info-link" title="Proje Hakkında & Geliştirici">
         Proje Hakkında &amp; Geliştirici
     </a>
-
 </body>
 </html>
