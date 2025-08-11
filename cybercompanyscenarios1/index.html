@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nihai Phishing Simülasyonu v4.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e; --container-bg: #2a2a4a; --section-bg: #333355;
+            --interactive-bg: #444466; --accent-blue: #8be9fd; --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6; --accent-green: #50fa7b; --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555; --text-light: #e0e0e0; --text-dark: #282a36;
+            --shadow-light: rgba(0, 0, 0, 0.2); --shadow-dark: rgba(0, 0, 0, 0.5);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        body {
+            font-family: 'Roboto', sans-serif; background-color: var(--dark-bg); color: var(--text-light);
+            margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start;
+            min-height: 100vh; line-height: 1.7;
+        }
+        .container {
+            background-color: var(--container-bg); border-radius: 12px; box-shadow: 0 10px 30px var(--shadow-dark);
+            padding: 20px; max-width: 950px; width: 100%; margin: 40px 0; animation: fadeIn 0.8s ease-out;
+        }
+        @media (min-width: 768px) { .container { padding: 40px; } }
+        .centered-page { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 60vh; }
+        h1 { font-size: 2.4em; color: var(--accent-blue); margin-bottom: 25px; text-shadow: 2px 2px 5px var(--shadow-dark); }
+        h2 { font-size: 1.9em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 30px; text-align: left; }
+        h3 { font-size: 1.5em; color: var(--accent-purple); margin-top: 25px; margin-bottom: 15px; text-align: left; }
+        p { font-size: 1.1em; margin-bottom: 15px; }
+        .section { padding: 30px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.7s ease-out; }
+        .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 25px; margin-top: 30px; box-shadow: 0 5px 15px var(--shadow-light); }
+        .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .btn {
+            background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer;
+            font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center;
+            gap: 15px; font-weight: 700; box-shadow: 0 2px 8px var(--shadow-light);
+        }
+        .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 6px 15px var(--shadow-dark); }
+        .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        .btn .btn-text { flex-grow: 1; }
+        .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; color: var(--accent-blue); }
+        .btn-start, .btn-continue, .btn-restart {
+            font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green);
+            color: var(--text-dark); justify-content: center; margin-top: 40px; padding: 18px 30px;
+        }
+        #intermissionSection .metric-change-summary-container { background-color: var(--section-bg); border-radius: 8px; padding: 25px; width: 100%; max-width: 600px; }
+        #intermissionSection .metric-change-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        #intermissionSection .metric-change { font-size: 1.1em; display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 5px; background-color: var(--interactive-bg); box-shadow: inset 0 1px 5px rgba(0,0,0,0.2); justify-content: center; }
+        .metric-change .positive { color: var(--accent-green); } .metric-change .negative { color: var(--accent-red); } .metric-change .neutral { color: var(--accent-blue); }
+        .intro-metrics-container { background-color: var(--section-bg); border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px var(--shadow-light); border: 1px solid var(--interactive-bg); margin-top:30px; width:100%; max-width:600px; }
+        .intro-metrics-container h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--interactive-bg); color: var(--accent-purple); text-align: center; }
+        .intro-metrics-container ul { list-style: none; padding: 0; margin: 0; }
+        .intro-metrics-container li { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 10px 0; border-bottom: 1px dashed var(--interactive-bg); }
+        .intro-metrics-container li:last-child { border-bottom: none; margin-bottom: 0; }
+        .intro-metrics-container li .icon { font-size: 1.8em; color: var(--accent-blue); flex-shrink: 0; width: 35px; text-align: center; }
+        /* DÜZELTME: Metriklerin içindeki metinlerin sola hizalanmasını sağlar */
+        .intro-metrics-container li > div { text-align: left; }
+        .intro-metrics-container li small { display: block; font-size: 0.9em; color: var(--text-light); opacity: 0.8; margin-top: 3px; }
+        #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; box-shadow: 0 4px 12px var(--shadow-dark); }
+        #statusBar .metric { text-align: center; font-size: 0.9em; flex: 1; min-width: 100px; }
+        #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); margin-top: 5px; }
+        .scenario-image { width: 100%; max-width: 700px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px var(--shadow-dark); }
+        .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 30px; width: 100%; max-width: 850px; }
+        .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); }
+        .metric-card .icon { font-size: 2.8em; color: var(--accent-blue); margin-bottom: 12px; }
+        .metric-card .label { font-size: 1.1em; margin-bottom: 8px; color: var(--text-light); }
+        .metric-card .value { font-size: 2em; font-weight: bold; color: var(--accent-yellow); }
+        .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+        @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+        .event-timeline, .strategic-debrief { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; margin-top: 20px; }
+        .event-timeline h3, .strategic-debrief h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .event-timeline ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
+        .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); }
+        .event-timeline li:last-child { border-left: none; }
+        .event-timeline li::before { content: '\f05a'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-blue); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; }
+        .event-timeline li.positive::before { content: '\f00c'; color: var(--accent-green); }
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f071'; color: var(--accent-yellow); }
+        .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
+        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
+        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
+        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
+        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
+        #score-breakdown .score-value { font-weight: bold; }
+        #performance-badge { padding: 15px 35px; font-size: 2em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px var(--shadow-dark); margin: 25px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-envelope-circle-check"></i> Phishing Farkındalık Simülasyonu</h1>
+            <p style="max-width: 700px;">Hoş geldiniz! Bu simülasyonda, her çalışanın karşılaşabileceği "acil talep" konulu bir oltalama e-postasının tüm aşamalarını deneyimleyeceksiniz. Vereceğiniz kararlar, hem sizin hem de tüm şirketin güvenliğini doğrudan etkileyecektir. Amacımız, doğru güvenlik alışkanlıklarını kazanmaktır.</p>
+            
+            <img src="https://placehold.co/800x250/282a36/8be9fd?text=Siber+G%C3%BCvenlik+Fark%C4%B1ndal%C4%B1k" alt="Siber güvenlik temalı görsel" class="scenario-image">
+
+            <div class="intro-metrics-container">
+                <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+                <ul>
+                    <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i></span><div><strong>Şirket Güvenliği</strong><small>Genel güvenlik seviyesi.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-triangle-exclamation"></i></span><div><strong>Risk Seviyesi</strong><small>Saldırının başarılı olma ihtimali.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-users"></i></span><div><strong>Farkındalık Skoru</strong><small>Çalışanların genel bilinç düzeyi.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-building-shield"></i></span><div><strong>İtibar Puanı</strong><small>Şirketin iç ve dış imajı.</small></div></li>
+                </ul>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-shield-halved"></i> Şirket Güvenliği</span><div class="value" id="status-security">100%</div></div>
+                <div class="metric"><span><i class="fa-solid fa-triangle-exclamation"></i> Risk Seviyesi</span><div class="value" id="status-risk">0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-users"></i> Farkındalık Skoru</span><div class="value" id="status-awareness">100</div></div>
+                <div class="metric"><span><i class="fa-solid fa-building-shield"></i> İtibar Puanı</span><div class="value" id="status-reputation">100</div></div>
+                <div class="metric"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-timer">10:00</div></div>
+            </div>
+            <div id="game-content"></div>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <div id="intermissionDetails"></div>
+            <button class="btn btn-continue" id="continueButton"><i class="fa-solid fa-forward"></i> Sonraki Aşamaya Geç</button>
+        </div>
+        
+        <div id="finalSection" class="section centered-page" style="display: none; flex-direction:column; align-items:center;">
+            <h2><i class="fa-solid fa-award"></i> Simülasyon Tamamlandı: Değerlendirme Raporu</h2>
+            <p>Simülasyonu başarıyla tamamladınız. Kriz anındaki kararlarınızın analizi ve genel performansınız aşağıdadır.</p>
+            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+            <div class="final-metrics" id="finalMetricsContainer"></div>
+            <div class="post-crisis-layout">
+                <div class="event-timeline">
+                    <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                    <ul id="decision-timeline-list"></ul>
+                </div>
+                <div class="strategic-debrief">
+                    <h3><i class="fa-solid fa-lightbulb"></i> Çıkarılan Dersler</h3>
+                    <div id="strategic-debrief-content"></div>
+                    <h3 style="margin-top: 20px;"><i class="fa-solid fa-calculator"></i> Puan Dökümü</h3>
+                    <ul id="score-breakdown"></ul>
+                </div>
+            </div>
+            <button class="btn btn-restart" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+        </div>
+
+        <div id="html-content-templates" style="display: none;">
+            <div id="stage1">
+                <h2><i class="fa-solid fa-envelope"></i> Aşama 1: E-posta Geliyor</h2>
+                <p>Gelen kutunuza <strong>"IT Duyuru: Şirket Parola Güncelleme"</strong> başlıklı, yüksek öncelikli olarak işaretlenmiş bir e-posta düşüyor. Gönderen adresi <code>itdestek@firma-secure.com</code> olarak görünüyor. Mesajda, güvenlik politikaları gereği parolanızı acilen yenilemeniz gerektiği belirtiliyor ve ortasında büyük, mavi bir butonla <strong>"Parolanızı Güncellemek İçin Buraya Tıklayın"</strong> yazıyor.</p>
+                <img src="https://placehold.co/800x200/282a36/e0e0e0?text=From%3A+itdestek@firma-secure.com%0A%0ASubject%3A+IT+Duyuru%3A+Şirket+Parola+Güncelleme" alt="Sahte parola güncelleme e-postası" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Ne yaparsınız?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s1a"><i class="fa-solid fa-computer-mouse"></i><div class="btn-text">Seçenek A: Linke hemen tıklarım.<small>Şirket IT'sinden gelen bir talimat, hızlıca halletmeliyim.</small></div></button>
+                        <button class="btn" data-decision="s1b"><i class="fa-solid fa-user-group"></i><div class="btn-text">Seçenek B: Yanımdaki iş arkadaşıma sorarım.<small>"Sana da bu e-posta geldi mi? Ne yapıyoruz?" diye danışırım.</small></div></button>
+                        <button class="btn" data-decision="s1c"><i class="fa-solid fa-arrow-pointer"></i><div class="btn-text">Seçenek C: Tıklamadan önce farenin imlecini linkin üzerinde bekletirim.<small>Linkin gerçekte hangi adrese gittiğini görmek için önizleme yaparım.</small></div></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stage2">
+                <h2><i class="fa-solid fa-hourglass-half"></i> Aşama 2: Acele Ettirme Taktiği</h2>
+                <p>E-postayı dikkatli okuduğunuzda, metnin sonunda kırmızı ve kalın harflerle yazılmış bir cümle dikkatinizi çekiyor: <strong>"DİKKAT: 24 saat içinde güncelleme yapmayan kullanıcıların hesapları güvenlik nedeniyle kalıcı olarak kilitlenecektir!"</strong> Bu ifade, bir an önce harekete geçmeniz için üzerinizde bir baskı kuruyor.</p>
+                <img src="https://placehold.co/800x200/282a36/ff5555?font=impact&text=D%C4%B0KKAT!%0A24+SAAT+%C4%B0%C3%87%C4%B0NDE+HESABINIZ+K%C4%B0L%C4%B0TLENECEK!" alt="Acele ettirme taktiği görseli" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu zaman baskısı karşısında tavrınız ne olur?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s2a"><i class="fa-solid fa-bolt"></i><div class="btn-text">Seçenek A: Panik olur, bir an önce halletmek için linke tıklarım.<small>Hesabımın kilitlenmesini riske atamam, acil davranmalıyım.</small></div></button>
+                        <button class="btn" data-decision="s2b"><i class="fa-solid fa-trash-can"></i><div class="btn-text">Seçenek B: E-postayı görmezden gelir ve silerim.<small>Bana pek inandırıcı gelmedi, ilgilenmiyorum.</small></div></button>
+                        <button class="btn" data-decision="s2c"><i class="fa-solid fa-phone"></i><div class="btn-text">Seçenek C: IT departmanını telefonla ararım.<small>E-postadan bağımsız bir kanaldan, böyle acil bir talebin gerçek olup olmadığını doğrularım.</small></div></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stage3">
+                <h2><i class="fa-solid fa-paperclip"></i> Aşama 3: Şüpheli Ekli Dosya</h2>
+                <p>E-postanın en altında, "Detaylı parola değiştirme yönergeleri için ekteki dosyayı inceleyebilirsiniz." notuyla birlikte <strong>"Talimatlar.doc"</strong> adında bir Word belgesi bulunuyor. Bu, linke tıklamak istemeyenler için bir alternatif gibi sunulmuş.</p>
+                <img src="https://placehold.co/800x150/282a36/e0e0e0?text=Attachment%3A+Talimatlar.doc" alt="Ekli dosya görseli" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Ekli dosyaya karşı yaklaşımınız ne olur?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s3a"><i class="fa-solid fa-file-word"></i><div class="btn-text">Seçenek A: Talimatları görmek için dosyayı açarım.<small>Link güvenli değilse bile, en azından talimatları okuyabilirim.</small></div></button>
+                         <button class="btn" data-decision="s3b"><i class="fa-solid fa-reply"></i><div class="btn-text">Seçenek B: E-postayı yanıtlayarak talimatları ek yerine metin olarak göndermelerini isterim.<small>Dosya açmadan bilgi almayı denerim.</small></div></button>
+                        <button class="btn" data-decision="s3c"><i class="fa-solid fa-shield-halved"></i><div class="btn-text">Seçenek C: Dosyayı kesinlikle açmam ve durumu IT'ye bildiririm.<small>Beklenmedik ekli dosyalar her zaman bir risktir.</small></div></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stage4">
+                <h2><i class="fa-solid fa-at"></i> Aşama 4: Gönderen Adresini İnceleme</h2>
+                <p>Gönderenin üzerine tıkladığınızda veya detayları göster dediğinizde, görünen <code>itdestek@firma-secure.com</code> isminin arkasındaki gerçek gönderici adresinin <strong><code>no-reply@secure-mail.info</code></strong> gibi tamamen alakasız bir adres olduğunu fark ediyorsunuz.</p>
+                <img src="https://placehold.co/800x150/282a36/e0e0e0?text=Sender%3A+itdestek@firma-secure.com+%3Cno-reply@secure-mail.info%3E" alt="Sahte gönderici adresi görseli" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu tutarsızlık karşısında ne düşünürsünüz?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s4a"><i class="fa-solid fa-eye-slash"></i><div class="btn-text">Seçenek A: Gönderen isminin "IT Destek" olması yeterli.<small>Teknik detaylara takılmam, otomatik bir sistemden gelmiş olabilir.</small></div></button>
+                        <button class="btn" data-decision="s4b"><i class="fa-solid fa-question"></i><div class="btn-text">Seçenek B: Adresin farklı olması garip ama yine de işlem yapmaya devam ederim.<small>Belki de IT departmanı bu tür duyurular için farklı bir servis kullanıyordur.</small></div></button>
+                        <button class="btn" data-decision="s4c"><i class="fa-solid fa-flag"></i><div class="btn-text">Seçenek C: Adresin şirket alan adıyla eşleşmediğini fark eder ve bunun bir aldatmaca olduğuna kanaat getiririm.<small>Bu, saldırının en net kanıtlarından biridir.</small></div></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stage5">
+                <h2><i class="fa-solid fa-users-rays"></i> Aşama 5: Başkalarını Uyarma Sorumluluğu</h2>
+                <p>Artık bu e-postanın tehlikeli bir oltalama saldırısı olduğundan eminsiniz. Ancak bu e-posta sadece size değil, tüm şirkete gönderildi. Diğer çalışma arkadaşlarınız sizin kadar dikkatli olmayabilir ve tuzağa düşebilirler.</p>
+                <img src="https://placehold.co/800x200/282a36/e0e0e0?text=Siz+Tehdidi+Fark+Ettiniz...%0APeki+ya+Diğerleri%3F" alt="Kurumsal sorumluluk görseli" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu durumda kurumsal sorumluluğunuz nedir?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s5a"><i class="fa-solid fa-user-shield"></i><div class="btn-text">Seçenek A: Sessizce e-postayı silerim ve kendi hesabımı korurum.<small>Ben tuzağa düşmedim, gerisi beni ilgilendirmez.</small></div></button>
+                        <button class="btn" data-decision="s5b"><i class="fa-solid fa-comments"></i><div class="btn-text">Seçenek B: Departman sohbet grubundan arkadaşlarıma yazarım.<small>"Arkadaşlar, parola e-postasına dikkat edin, sahte galiba." diye uyarırım.</small></div></button>
+                        <button class="btn" data-decision="s5c"><i class="fa-solid fa-tower-broadcast"></i><div class="btn-text">Seçenek C: Acilen IT departmanına durumu bildirerek tüm personele yönelik resmi bir uyarı yapılmasını sağlarım.<small>Tehdidin yayılmasını önlemek için merkezi bir aksiyon alınmasını isterim.</small></div></button>
+                    </div>
+                </div>
+            </div>
+
+             <div id="stage6">
+                <h2><i class="fa-solid fa-repeat"></i> Aşama 6: Saldırı Tekrarlanıyor</h2>
+                <p>Ertesi gün, gelen kutunuza bu kez <strong>"İK Duyuru: Maaş Bordro Güncellemesi"</strong> başlıklı bir e-posta daha düşüyor. Gönderen, içerik yapısı ve "acil" vurgusu bir önceki günkü parola e-postasıyla neredeyse aynı. Sadece konu ve talep değiştirilmiş. Linkte "Bordronuzu görüntülemek için tıklayın" yazıyor.</p>
+                <img src="https://placehold.co/800x200/282a36/f1fa8c?text=YEN%C4%B0+SALDIRI%3A+Maaş+Bordro+Güncellemesi" alt="Tekrarlanan saldırı görseli" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Benzer bir yöntemle tekrar karşılaşınca ne yaparsınız?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s6a"><i class="fa-solid fa-file-invoice-dollar"></i><div class="btn-text">Seçenek A: Bu sefer konu farklı ve maaşımla ilgili. Merak edip tıklarım.<small>Belki bu seferki gerçektir.</small></div></button>
+                        <button class="btn" data-decision="s6b"><i class="fa-solid fa-broom"></i><div class="btn-text">Seçenek B: Saldırı yönteminin aynı olduğunu anlar ve e-postayı doğrudan silerim.<small>Aynı tuzağa ikinci kez düşmem ama kimseye de haber vermem.</small></div></button>
+                        <button class="btn" data-decision="s6c"><i class="fa-solid fa-bug"></i><div class="btn-text">Seçenek C: Saldırı kampanyasının devam ettiğini göstermek için bu e-postayı da IT'ye raporlarım.<small>Bu, IT'nin saldırganın yeni alan adlarını ve taktiklerini engellemesine yardımcı olur.</small></div></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const game = {
+            score: { security: 100, risk: 0, awareness: 100, reputation: 100 },
+            state: { currentStageId: 'stage1', decisionHistory: [] },
+            timer: { total: 600, remaining: 600, intervalId: null },
+            elements: {},
+            decisionInfo: {
+                's1a': { title: "Linke Tıkladın", strat: "Gelen linklere hemen tıklamak, oltalama saldırılarının başarılı olmasının bir numaralı nedenidir.", changes: { security: -30, risk: +50, awareness: -25 }, impact: 'Negative' },
+                's1b': { title: "Arkadaşına Sordun", strat: "İyi niyetli de olsa, güvenlik kararları kalabalığa veya arkadaş tavsiyesine göre değil, prosedürlere göre alınmalıdır.", changes: { security: -10, risk: +15, awareness: -10 }, impact: 'Neutral' },
+                's1c': { title: "Linki Kontrol Ettin", strat: "Tıklamadan önce linki kontrol etmek, en basit ve en etkili güvenlik önlemlerinden biridir.", changes: { risk: -10, awareness: +10 }, impact: 'Positive' },
+                's2a': { title: "Panikle Tıkladın", strat: "'ACİL', 'SON GÜN' gibi ifadeler, sizi hata yapmaya zorlamak için tasarlanmıştır. Her zaman şüpheyle yaklaşın.", changes: { security: -25, risk: +40, awareness: -20 }, impact: 'Negative' },
+                's2b': { title: "Görmezden Geldin", strat: "Kişisel güvenlik önemlidir, ancak kurumsal güvenlik bir ekip işidir. Tehditleri raporlamak, tüm takımı korur.", changes: { risk: +10, awareness: -10, reputation: -5 }, impact: 'Neutral' },
+                's2c': { title: "IT'yi Aradın", strat: "Şüpheli ve acil talepleri her zaman e-postadan bağımsız bir kanaldan (telefon gibi) doğrulamak, en etkili savunma yöntemlerinden biridir.", changes: { risk: -15, awareness: +15 }, impact: 'Positive' },
+                's3a': { title: "Eki Açtın", strat: "Tanımadığınız kişilerden gelen veya beklemediğiniz ekli dosyalar tehlikeli makrolar içerebilir. Asla açılmamalıdır.", changes: { security: -40, risk: +60 }, impact: 'Negative' },
+                's3b': { title: "Yanıt Verdin", strat: "Şüpheli e-postalara yanıt vermek, saldırganla diyaloğa girmektir ve e-posta adresinizin aktif olduğunu doğrular.", changes: { risk: +20, awareness: -10 }, impact: 'Neutral' },
+                's3c': { title: "IT'ye Bildirdin", strat: "Şüpheli ekleri açmak yerine raporlamak, kritik bir güvenlik alışkanlığıdır.", changes: { awareness: +15, reputation: +3 }, impact: 'Positive' },
+                's4a': { title: "Adresi Önemsemedin", strat: "Görünen isme asla güvenmeyin. Her zaman gönderenin gerçek e-posta adresini ve alan adını kontrol edin.", changes: { security: -20, risk: +30 }, impact: 'Negative' },
+                's4b': { title: "Fark Ettin Ama Devam Ettin", strat: "Güvenlikte şüphe, en iyi dostunuzdur. Şüpheyi görmezden gelmek, felakete davetiye çıkarmaktır.", changes: { security: -15, risk: +20, awareness: -15 }, impact: 'Neutral' },
+                's4c': { title: "Fark Edip Raporladın", strat: "Gönderici alan adı, bir e-postanın meşruiyetini kontrol etmenin temel noktasıdır.", changes: { awareness: +15, security: +5 }, impact: 'Positive' },
+                's5a': { title: "Sessiz Kaldın", strat: "Siber güvenlik bireysel değil, kolektif bir sorumluluktur. Fark ettiğiniz bir tehdidi bildirmemek, takım arkadaşlarınızı korumasız bırakmaktır.", changes: { awareness: -20, reputation: -15, security: -10 }, impact: 'Negative' },
+                's5b': { title: "Sohbetten Uyardın", strat: "Gayriresmi iletişim kanalları, resmi prosedürlerin yerini tutmaz. Merkezi ve koordineli bir müdahale her zaman daha etkilidir.", changes: { awareness: +5, reputation: -5 }, impact: 'Neutral' },
+                's5c': { title: "IT'ye Bildirip Uyarı Sağladın", strat: "Bir tehdidi ilk fark eden kişi olarak, tüm organizasyonu korumak için merkezi bir alarmı tetikleme gücüne sahipsiniz.", changes: { security: +15, risk: -20, reputation: +10 }, impact: 'Positive' },
+                's6a': { title: "Yeniden Tıkladın", strat: "Saldırganlar işe yarayan bir yöntemi, farklı yemler kullanarak defalarca tekrarlar. Yönteme odaklanın, konuya değil.", changes: { security: -25, risk: +40, awareness: -30 }, impact: 'Negative' },
+                's6b': { title: "Silip Geçtin", strat: "Tehdidi tanımak güzel, ancak raporlamamak, güvenlik ekibinin saldırı kampanyasının devamından haberdar olmasını engeller.", changes: { awareness: -5, risk: +5 }, impact: 'Neutral' },
+                's6c': { title: "Tekrar Raporladın", strat: "Her bir rapor, savunma ekibi için değerli bir istihbarattır. Savunmaya aktif olarak katkıda bulundunuz.", changes: { security: +10, awareness: +15, reputation: +5 }, impact: 'Positive' },
+            },
+            setup() {
+                this.elements = {
+                    intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'),
+                    gameContent: document.getElementById('game-content'), startButton: document.getElementById('startButton'),
+                    intermission: document.getElementById('intermissionSection'), intermissionTitle: document.getElementById('intermissionTitle'),
+                    intermissionDetails: document.getElementById('intermissionDetails'), continueButton: document.getElementById('continueButton'),
+                    finalSection: document.getElementById('finalSection'),
+                    htmlTemplates: document.getElementById('html-content-templates'),
+                    statusBar: {
+                        security: document.getElementById('status-security'), risk: document.getElementById('status-risk'),
+                        awareness: document.getElementById('status-awareness'), reputation: document.getElementById('status-reputation'),
+                        timer: document.getElementById('status-timer'),
+                    }
+                };
+                this.attachListeners();
+            },
+            attachListeners() {
+                this.elements.startButton.addEventListener('click', () => {
+                    this.elements.intro.style.display = 'none'; this.elements.game.style.display = 'block';
+                    this.startTimer(); this.showStage('stage1');
+                });
+                this.elements.gameContent.addEventListener('click', (e) => {
+                    const button = e.target.closest('.btn[data-decision]');
+                    if (!button || button.disabled) return;
+                    this.handleDecision(button.dataset.decision);
+                });
+                this.elements.continueButton.addEventListener('click', () => {
+                    const currentStageNum = parseInt(this.state.currentStageId.replace('stage', ''), 10);
+                    this.elements.intermission.style.display = 'none';
+                    if (currentStageNum >= 6) { this.showFinalReport(); } 
+                    else { this.elements.game.style.display = 'block'; this.showStage(`stage${currentStageNum + 1}`); }
+                });
+            },
+            handleDecision(decisionId) {
+                const info = this.decisionInfo[decisionId];
+                if (!info) return;
+                this.state.decisionHistory.push({ ...info, id: decisionId });
+                this.updateScore(info.changes);
+                this.elements.game.style.display = 'none';
+                this.showIntermission(info);
+            },
+            updateScore(changes) {
+                this.score.security = Math.max(0, Math.min(100, this.score.security + (changes.security || 0)));
+                this.score.risk = Math.max(0, Math.min(100, this.score.risk + (changes.risk || 0)));
+                this.score.awareness = Math.max(0, Math.min(100, this.score.awareness + (changes.awareness || 0)));
+                this.score.reputation = Math.max(0, Math.min(100, this.score.reputation + (changes.reputation || 0)));
+                this.updateStatusBar();
+            },
+            updateStatusBar() {
+                const s = this.score;
+                this.elements.statusBar.security.textContent = `${s.security}%`;
+                this.elements.statusBar.risk.textContent = s.risk;
+                this.elements.statusBar.awareness.textContent = s.awareness;
+                this.elements.statusBar.reputation.textContent = s.reputation;
+            },
+            showStage(stageId) {
+                this.state.currentStageId = stageId;
+                const stageTemplate = this.elements.htmlTemplates.querySelector(`#${stageId}`);
+                if (stageTemplate) {
+                    this.elements.gameContent.innerHTML = stageTemplate.innerHTML;
+                }
+            },
+            showIntermission(info) {
+                this.elements.intermissionTitle.textContent = `Kararınız: ${info.title}`;
+                let metricsHTML = '';
+                const formatChange = (label, value, isRisk = false) => {
+                    if (value === undefined || value === 0) return '';
+                    let colorClass = 'neutral'; const sign = value > 0 ? '+' : '';
+                    if (isRisk) { colorClass = value > 0 ? 'negative' : 'positive'; }
+                    else { colorClass = value > 0 ? 'positive' : 'negative'; }
+                    return `<div class="metric-change ${colorClass}">${label}: ${sign}${value.toLocaleString('tr-TR')}</div>`;
+                };
+                metricsHTML += formatChange('Şirket Güvenliği', info.changes.security);
+                metricsHTML += formatChange('Risk Seviyesi', info.changes.risk, true);
+                metricsHTML += formatChange('Farkındalık Skoru', info.changes.awareness);
+                metricsHTML += formatChange('İtibar Puanı', info.changes.reputation);
+                this.elements.intermissionDetails.innerHTML = `
+                    <div class="metric-change-summary-container"><h4>Kararın Anlık Etkileri</h4><div class="metric-change-summary">${metricsHTML}</div></div>
+                    <div class="interactive-element" style="text-align:left; width:100%; max-width:600px; margin-top:20px;">
+                        <h4>Stratejik Not</h4><p>${info.strat}</p>
+                    </div>`;
+                this.elements.intermission.style.display = 'flex';
+            },
+            showFinalReport() {
+                this.stopTimer();
+                this.elements.game.style.display = 'none';
+                this.elements.intermission.style.display = 'none';
+                this.elements.finalSection.style.display = 'flex';
+                
+                let totalScore = 50;
+                let scoreBreakdown = { 'Başlangıç Puanı': { value: 50, class: 'score-neutral' }};
+                let decisionQualityScore = 0;
+                this.state.decisionHistory.forEach(d => {
+                    if (d.impact === 'Positive') decisionQualityScore += 5;
+                    else if (d.impact === 'Neutral') decisionQualityScore -= 3;
+                    else if (d.impact === 'Negative') decisionQualityScore -= 8;
+                });
+                totalScore += decisionQualityScore;
+                scoreBreakdown['Karar Kalitesi'] = { value: decisionQualityScore, class: decisionQualityScore >= 0 ? 'score-plus' : 'score-minus' };
+                const finalAwarenessBonus = Math.round((this.score.awareness - 60) / 4);
+                totalScore += finalAwarenessBonus;
+                scoreBreakdown['Nihai Farkındalık'] = { value: finalAwarenessBonus, class: finalAwarenessBonus >= 0 ? 'score-plus' : 'score-minus' };
+                const finalSecurityBonus = Math.round((this.score.security - 60) / 4);
+                totalScore += finalSecurityBonus;
+                scoreBreakdown['Nihai Şirket Güvenliği'] = { value: finalSecurityBonus, class: finalSecurityBonus >= 0 ? 'score-plus' : 'score-minus' };
+                const finalRiskPenalty = -Math.round(this.score.risk / 5);
+                totalScore += finalRiskPenalty;
+                if(finalRiskPenalty < 0) scoreBreakdown['Alınan Risk'] = { value: finalRiskPenalty, class: 'score-minus' };
+                totalScore = Math.max(0, Math.min(100, Math.round(totalScore)));
+
+                let badgeInfo = {};
+                if (totalScore >= 90) { badgeInfo = { text: 'GÜVENLİK ŞAMPİYONU', color: 'var(--accent-green)' }; }
+                else if (totalScore >= 75) { badgeInfo = { text: 'DİKKATLİ UZMAN', color: 'var(--accent-blue)' }; }
+                else if (totalScore >= 50) { badgeInfo = { text: 'BİLİNÇLİ ÇALIŞAN', color: 'var(--accent-yellow)' }; }
+                else { badgeInfo = { text: 'GELİŞİM GEREKİYOR', color: 'var(--accent-red)' }; }
+
+                this.elements.finalSection.querySelector('#performance-badge').textContent = badgeInfo.text;
+                this.elements.finalSection.querySelector('#performance-badge').style.backgroundColor = badgeInfo.color;
+                this.elements.finalSection.querySelector('#finalMetricsContainer').innerHTML = `
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-star"></i></div><div class="label">Genel Performans</div><div class="value">${totalScore}/100</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-shield-halved"></i></div><div class="label">Şirket Güvenliği</div><div class="value">${this.score.security}%</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="label">Risk Seviyesi</div><div class="value">${this.score.risk}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-users"></i></div><div class="label">Farkındalık Skoru</div><div class="value">${this.score.awareness}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-building-shield"></i></div><div class="label">İtibar Puanı</div><div class="value">${this.score.reputation}</div></div>`;
+                this.elements.finalSection.querySelector('#decision-timeline-list').innerHTML = this.state.decisionHistory.map(d => `<li class="${d.impact.toLowerCase()}"><span class="decision-title">${d.title}</span></li>`).join('');
+                this.elements.finalSection.querySelector('#score-breakdown').innerHTML = Object.entries(scoreBreakdown).map(([key, item]) => `<li class="${item.class}"><span>${key}</span><span class="score-value">${item.value > 0 ? '+' : ''}${item.value} Puan</span></li>`).join('');
+                this.elements.finalSection.querySelector('#strategic-debrief-content').innerHTML = `<p>Bu simülasyon, oltalama saldırılarının temel taktiklerini ortaya koydu. Başarılı olmak için öğrenmeniz gerekenler:</p>
+                <ul style="text-align:left; max-width: 500px; margin: auto;">
+                    <li><strong>Linkleri Kontrol Edin:</strong> Tıklamadan önce her zaman linkin gerçek adresini kontrol edin.</li>
+                    <li><strong>Aceleye Gelmeyin:</strong> "Acil" gibi ifadeler sizi paniğe sevk etmek için kullanılır. Sakin kalıp doğrulama yapın.</li>
+                    <li><strong>Ekleri Sorgulayın:</strong> Beklemediğiniz veya şüpheli ekleri asla açmayın.</li>
+                    <li><strong>Göndericiyi Doğrulayın:</strong> Görünen isme değil, gönderenin gerçek e-posta adresine ve alan adına bakın.</li>
+                    <li><strong>Raporlayın:</strong> Şüpheli her durumu IT'ye bildirerek tüm şirketi koruyun. Güvenlik bir takım oyunudur.</li>
+                    <li><strong>Desenleri Tanıyın:</strong> Saldırganlar aynı yöntemi farklı konularla tekrar deneyebilir.</li>
+                </ul>`;
+            },
+            startTimer() {
+                this.timer.intervalId = setInterval(() => {
+                    this.timer.remaining--;
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
+                    this.elements.statusBar.timer.textContent = `${m}:${s}`;
+                    if (this.timer.remaining <= 0) { this.stopTimer(); alert("Süre doldu!"); this.showFinalReport(); }
+                }, 1000);
+            },
+            stopTimer() { clearInterval(this.timer.intervalId); }
+        };
+        game.setup();
+    });
+    </script>
+</body>
+</html>
