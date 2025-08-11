@@ -927,7 +927,7 @@
                             <div class="interactive-element">
                                 <h4>İlk analiz adımın ne olacak? (1 Seçim Yap)</h4>
                                 <div class="decision-buttons">
-                                    <button class="btn critical" data-decision="d1-review-idp-logs"><i class="fa-solid fa-file-waveform"></i><div class="btn-text">IdP Oturum Açma Loglarını İncele<small>Anormal oturum açma desenlerini ve token isteklerini bulmak için ana kimlik sağlayıcı loglarına dal.</small></div></button>
+                                    <button class="btn" data-decision="d1-review-idp-logs"><i class="fa-solid fa-file-waveform"></i><div class="btn-text">IdP Oturum Açma Loglarını İncele<small>Anormal oturum açma desenlerini ve token isteklerini bulmak için ana kimlik sağlayıcı loglarına dal.</small></div></button>
                                     <button class="btn" data-decision="d1-interview-helpdesk"><i class="fa-solid fa-headset"></i><div class="btn-text">Yardım Masası ve SOC ile Görüş<small>Gelen şikayetlerin ortak noktasını bulmak ve sorunun kapsamını daraltmak için ekiplerle konuş.</small></div></button>
                                 </div>
                             </div>
@@ -957,7 +957,7 @@
                             <div class="interactive-element">
                                 <h4>Acil durum müdahale stratejin ne olacak? (1 Seçim Yap)</h4>
                                 <div class="decision-buttons">
-                                    <button class="btn critical" data-decision="d3-disable-client"><i class="fa-solid fa-plug-circle-xmark"></i><div class="btn-text">Riskli Entegrasyonu Tamamen Devre Dışı Bırak<small>En güvenli yol. Saldırıyı anında durdurur ama büyük bir operasyonel kesintiye neden olur.</small></div></button>
+                                    <button class="btn" data-decision="d3-disable-client"><i class="fa-solid fa-plug-circle-xmark"></i><div class="btn-text">Riskli Entegrasyonu Tamamen Devre Dışı Bırak<small>En güvenli yol. Saldırıyı anında durdurur ama büyük bir operasyonel kesintiye neden olur.</small></div></button>
                                     <button class="btn" data-decision="d3-revoke-tokens"><i class="fa-solid fa-user-slash"></i><div class="btn-text">Tüm Kullanıcı Oturumlarını Sonlandır<small>Tüm refresh token'ları iptal ederek saldırganları sistemden at, ancak tüm kullanıcıların yeniden giriş yapması gerekir.</small></div></button>
                                 </div>
                             </div>
@@ -972,7 +972,7 @@
                                 <h4>Hangi iki teknik düzeltmeyi hemen uygulayacaksın? (2 Seçim Yap)</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="d4-fix-redirect"><i class="fa-solid fa-location-crosshairs"></i><div class="btn-text">Redirect URI Beyaz Listesini Uygula<small>Yalnızca tam olarak eşleşen URI'lara izin vererek kod çalma saldırılarını engelle.</small></div></button>
-                                    <button class="btn critical" data-decision="d4-fix-scopes"><i class="fa-solid fa-user-check"></i><div class="btn-text">Yetki Kapsamlarını (Scopes) Daralt<small>En Az Yetki Prensibi'ni uygulayarak uygulamaların istediği gereksiz admin yetkilerini kaldır.</small></div></button>
+                                    <button class="btn" data-decision="d4-fix-scopes"><i class="fa-solid fa-user-check"></i><div class="btn-text">Yetki Kapsamlarını (Scopes) Daralt<small>En Az Yetki Prensibi'ni uygulayarak uygulamaların istediği gereksiz admin yetkilerini kaldır.</small></div></button>
                                     <button class="btn" data-decision="d4-enforce-pkce"><i class="fa-solid fa-key-skeleton"></i><div class="btn-text">PKCE Doğrulamasını Zorunlu Kıl<small>Modern güvenlik standardı olan PKCE'yi zorunlu kılarak token ele geçirme saldırılarını zorlaştır.</small></div></button>
                                 </div>
                             </div>
@@ -987,7 +987,7 @@
                                 <h4>Altyapıyı kalıcı olarak güçlendirmek için en etkili adım hangisidir? (1 Seçim Yap)</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="d5-shorten-tokens"><i class="fa-solid fa-hourglass-end"></i><div class="btn-text">Token Ömürlerini Kısalt ve Rotasyon Uygula<small>Token'ların geçerlilik süresini azaltarak çalınmaları durumunda riskleri minimize et.</small></div></button>
-                                    <button class="btn critical" data-decision="d5-harden-architecture"><i class="fa-solid fa-microchip"></i><div class="btn-text">Mimariyi Güçlendir (mTLS/DPoP)<small>Token bağlama gibi gelişmiş tekniklerle token'ların çalınsa bile kullanılamaz hale gelmesini sağla.</small></div></button>
+                                    <button class="btn" data-decision="d5-harden-architecture"><i class="fa-solid fa-microchip"></i><div class="btn-text">Mimariyi Güçlendir (mTLS/DPoP)<small>Token bağlama gibi gelişmiş tekniklerle token'ların çalınsa bile kullanılamaz hale gelmesini sağla.</small></div></button>
                                 </div>
                             </div>
                              <div class="learning-note"><strong>Öğrenme Notu:</strong> Gerçek güvenlik, sadece mevcut açıkları kapatmak değil, gelecekteki bilinmeyen tehditlere karşı da sistemi dirençli hale getirmektir.</div>
@@ -1111,3 +1111,4 @@
 </body>
 
 </html>
+
