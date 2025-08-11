@@ -460,7 +460,7 @@
                                     <div class="code-block"><pre><code class="language-powershell">powershell.exe -NoP -NonI -Exec Bypass -EncodedCommand JABjAGwAaQBlAG4AdA....</code></pre></div>
                                 </div>
                                 <div class="decision-buttons">
-                                    <button class="btn critical" data-decision="s1-isolate" data-next="2"><i class="fa-solid fa-person-running"></i><div class="btn-text">Seçenek A: Elif Hanım'ın bilgisayarını hemen ağdan izole et.<small>Anında müdahale, yayılımı önleyebilir.</small></div></button>
+                                    <button class="btn" data-decision="s1-isolate" data-next="2"><i class="fa-solid fa-person-running"></i><div class="btn-text">Seçenek A: Elif Hanım'ın bilgisayarını hemen ağdan izole et.<small>Anında müdahale, yayılımı önleyebilir.</small></div></button>
                                     <button class="btn" data-decision="s1-observe" data-next="2"><i class="fa-solid fa-magnifying-glass"></i><div class="btn-text">Seçenek B: Daha fazla kanıt toplamak için şüpheli aktiviteyi izle.<small>Emin olmadan aksiyon almak işleri durdurabilir.</small></div></button>
                                 </div>
                                 <div class="learning-note"><strong>Öğrenme Notu:</strong> Oltalama (phishing) e-postaları, fidye yazılımlarının en yaygın başlangıç noktasıdır. Hızlı izolasyon, yanal hareketleri önlemenin anahtarıdır.</div>
@@ -493,7 +493,7 @@
                             <div class="interactive-element"><h4><i class="fa-solid fa-comments"></i> Yönetim Acil Durum Kanalı</h4><div class="slack-chat"><div><span style="font-weight:bold; color:var(--accent-pink);">CEO:</span> İtibarımız mahvolacak! Müşteri verileri güvende mi? Bu krizi hemen bitirin!</div><div style="margin-top: 10px;"><span style="font-weight:bold; color:var(--accent-yellow);">CFO:</span> 5 Milyon TL! Bu parayı ödersek iflas ederiz. Yedeklerimizden dönemiyor muyuz?</div><div style="margin-top: 10px;"><span style="font-weight:bold; color:var(--accent-blue);">Hukuk Müşaviri:</span> Fidyeyi ödemek yasa dışı faaliyetleri finanse etmek anlamına gelebilir ve yasal sonuçları olabilir.</div></div></div>
                             <div class="decision-buttons">
                                 <button class="btn" data-decision="s3-restore" data-next="4"><i class="fa-solid fa-clock-rotate-left"></i><div class="btn-text">Seçenek A: Fidyeyi ödeme. Bir hafta eski olan temiz yedeklerden dön.<small>Veri kaybı yaşanır ama suçlulara para gitmez.</small></div></button>
-                                <button class="btn critical" data-decision="s3-pay" data-next="4"><i class="fa-solid fa-money-bill-wave"></i><div class="btn-text">Seçenek B: Şirketin geleceğini riske atma, fidyeyi öde.<small>Hızlı çözüm olabilir ama garantisi yok ve çok maliyetli.</small></div></button>
+                                <button class="btn" data-decision="s3-pay" data-next="4"><i class="fa-solid fa-money-bill-wave"></i><div class="btn-text">Seçenek B: Şirketin geleceğini riske atma, fidyeyi öde.<small>Hızlı çözüm olabilir ama garantisi yok ve çok maliyetli.</small></div></button>
                             </div>
                             <div class="learning-note"><strong>Öğrenme Notu:</strong> Fidye ödeme kararı sadece teknik bir karar değildir. Finansal, yasal ve etik boyutları vardır.</div>
                         </div>
@@ -504,7 +504,7 @@
                             <img src="siem_ekrani.png" alt="SIEM log ekranı" class="scenario-image">
                             <div class="interactive-element"><h4><i class="fa-solid fa-terminal"></i> SIEM Logları</h4><div class="siem-log-viewer"><div style="color:var(--accent-red); font-weight: bold;">[11:45:10] KRİTİK: DB-Server (192.168.1.70) üzerinden bilinmeyen bir dış IP'ye (81.25.11.92) şifreli ve sürekli veri akışı tespit edildi!</div></div></div>
                             <div class="decision-buttons">
-                                <button class="btn critical" data-decision="s4-cut" data-next="5"><i class="fa-solid fa-scissors"></i><div class="btn-text">Seçenek A: Veri sızıntısını hemen durdurmak için sunucunun dış ağ bağlantısını kes.<small>Kanamayı durdurur ama sunucuyu tamamen çevrimdışı bırakır.</small></div></button>
+                                <button class="btn" data-decision="s4-cut" data-next="5"><i class="fa-solid fa-scissors"></i><div class="btn-text">Seçenek A: Veri sızıntısını hemen durdurmak için sunucunun dış ağ bağlantısını kes.<small>Kanamayı durdurur ama sunucuyu tamamen çevrimdışı bırakır.</small></div></button>
                                 <button class="btn" data-decision="s4-honeypot" data-next="5"><i class="fa-solid fa-hat-cowboy-side"></i><div class="btn-text">Seçenek B: Saldırganı yanıltmak ve ne çaldığını anlamak için bağlantıyı bir tuzak (honeypot) sisteme yönlendir.<small>Değerli bilgi sağlar ama riskli ve zaman alıcıdır.</small></div></button>
                             </div>
                             <div class="learning-note"><strong>Öğrenme Notu:</strong> Modern fidye yazılımı saldırıları genellikle "çifte şantaj" taktiği kullanır.</div>
