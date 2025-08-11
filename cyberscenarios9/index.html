@@ -1080,7 +1080,7 @@
                                 <h4>Bu kritik uyarıyı nasıl ele alacaksınız? (1 Seçim Yapın)</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="d1-investigate"><i class="fa-solid fa-magnifying-glass"></i><div class="btn-text">İnceleme Başlat<small>Olayın gerçek bir tehdit olduğunu varsayarak derhal log toplamaya ve analize başla.</small></div></button>
-                                    <button class="btn critical" data-decision="d1-false-positive"><i class="fa-solid fa-ban"></i><div class="btn-text">Yanlış Pozitif Olarak Kapat<small>Muhtemelen bir iş seyahatidir. Kullanıcıyı rahatsız etmeden olayı kapat.</small></div></button>
+                                    <button class="btn" data-decision="d1-false-positive"><i class="fa-solid fa-ban"></i><div class="btn-text">Yanlış Pozitif Olarak Kapat<small>Muhtemelen bir iş seyahatidir. Kullanıcıyı rahatsız etmeden olayı kapat.</small></div></button>
                                 </div>
                             </div>
                             <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir C-seviye yöneticinin hesabından, coğrafi olarak imkansız bir yerden gelen başarılı bir bağlantı uyarısı, en yüksek öncelikli olaylardan biridir. İlk tepkiniz, tüm olayın seyrini belirleyebilir.</div>
@@ -1096,7 +1096,7 @@
                                     <button class="btn" data-decision="d2-vpn-logs"><i class="fa-solid fa-network-wired"></i><div class="btn-text">VPN Loglarını İncele<small>Bağlantının detaylarını, süresini ve erişilen iç ağ kaynaklarını doğrula.</small></div></button>
                                     <button class="btn" data-decision="d2-edr-logs"><i class="fa-solid fa-desktop"></i><div class="btn-text">EDR Loglarını İncele<small>Burak Mert'in bilgisayarında bağlantı sırasında çalışan anormal işlemleri kontrol et.</small></div></button>
                                     <button class="btn" data-decision="d2-proxy-logs"><i class="fa-solid fa-globe"></i><div class="btn-text">Proxy Loglarını İncele<small>VPN bağlantısı üzerinden giden şüpheli web trafiğini, özellikle veri sızıntısı olabilecek siteleri ara.</small></div></button>
-                                    <button class="btn critical" data-decision="d2-contact-user"><i class="fa-solid fa-phone"></i><div class="btn-text">Kullanıcı Burak Mert ile İletişime Geç<small>Durumu teyit etmek için Finans Direktörü'nü doğrudan ara.</small></div></button>
+                                    <button class="btn" data-decision="d2-contact-user"><i class="fa-solid fa-phone"></i><div class="btn-text">Kullanıcı Burak Mert ile İletişime Geç<small>Durumu teyit etmek için Finans Direktörü'nü doğrudan ara.</small></div></button>
                                 </div>
                             </div>
                             <div class="learning-note"><strong>Öğrenme Notu:</strong> Etkili bir olay müdahalesi için farklı veri kaynaklarını (ağ, uç nokta, kullanıcı) birleştirmek (korelasyon) hayati önem taşır. Tek bir log kaynağı nadiren tüm hikayeyi anlatır.</div>
@@ -1109,7 +1109,7 @@
                                 <h4>Tehdidi kontrol altına almak ve raporlamak için hangi iki adımı atacaksınız? (2 Seçim Yapın)</h4>
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="d3-mitre-map"><i class="fa-solid fa-sitemap"></i><div class="btn-text">Bulguları MITRE ATT&CK ile Eşleştir<small>Saldırganın kullandığı taktik ve teknikleri standart bir çerçeveye oturtarak raporlamayı güçlendir.</small></div></button>
-                                    <button class="btn critical" data-decision="d3-isolate-account"><i class="fa-solid fa-user-lock"></i><div class="btn-text">Burak Mert'in Hesabını Derhal İzole Et<small>Saldırganın daha fazla ilerlemesini önlemek için hesabın tüm erişimini anında kes.</small></div></button>
+                                    <button class="btn" data-decision="d3-isolate-account"><i class="fa-solid fa-user-lock"></i><div class="btn-text">Burak Mert'in Hesabını Derhal İzole Et<small>Saldırganın daha fazla ilerlemesini önlemek için hesabın tüm erişimini anında kes.</small></div></button>
                                     <button class="btn" data-decision="d3-block-ip"><i class="fa-solid fa-ban"></i><div class="btn-text">Saldırgan IP Adresini Engelle<small>Kaynak IP'yi güvenlik duvarından engelleyerek basit ama hızlı bir önlem al.</small></div></button>
                                     <button class="btn" data-decision="d3-escalate"><i class="fa-solid fa-upload"></i><div class="btn-text">Bulguları SOC Ekip Liderine Eskale Et<small>Topladığın tüm kanıtları içeren kapsamlı bir raporla olayı bir üst seviyeye taşı.</small></div></button>
                                 </div>
@@ -1126,7 +1126,7 @@
                                 <div class="decision-buttons">
                                     <button class="btn" data-decision="d4-forensic-report"><i class="fa-solid fa-magnifying-glass-chart"></i><div class="btn-text">Detaylı Adli Bilişim Raporu Öner<small>Olayın kök nedenini bulmak ve başka sızıntı olup olmadığını kesinleştirmek için derinlemesine analiz talep et.</small></div></button>
                                     <button class="btn" data-decision="d4-security-briefing"><i class="fa-solid fa-users-viewfinder"></i><div class="btn-text">Şirket Genelinde Güvenlik Bilgilendirmesi Yap<small>Tüm çalışanları benzer tehditlere karşı uyarmak ve farkındalığı artırmak için bir bülten yayınla.</small></div></button>
-                                    <button class="btn critical" data-decision="d4-revise-policies"><i class="fa-solid fa-file-signature"></i><div class="btn-text">VPN Erişim Politikalarını Gözden Geçir<small>Benzer olayları önlemek için coğrafi kısıtlamalar ve daha güçlü MFA gibi yeni politika önerileri sun.</small></div></button>
+                                    <button class="btn" data-decision="d4-revise-policies"><i class="fa-solid fa-file-signature"></i><div class="btn-text">VPN Erişim Politikalarını Gözden Geçir<small>Benzer olayları önlemek için coğrafi kısıtlamalar ve daha güçlü MFA gibi yeni politika önerileri sun.</small></div></button>
                                 </div>
                             </div>
                              <div class="learning-note"><strong>Öğrenme Notu:</strong> Bir siber olayı kapatmak, sadece tehdidi durdurmakla bitmez. Olaydan ders çıkarmak ve güvenlik duruşunu güçlendirmek, proaktif bir siber güvenlik anlayışının temelidir.</div>
@@ -1250,3 +1250,4 @@
 </body>
 
 </html>
+
