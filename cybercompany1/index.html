@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USB Farkındalık Simülasyonu v3.0 (7 Aşamalı)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e; --container-bg: #2a2a4a; --section-bg: #333355;
+            --interactive-bg: #444466; --accent-blue: #8be9fd; --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6; --accent-green: #50fa7b; --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555; --text-light: #e0e0e0; --text-dark: #282a36;
+            --shadow-light: rgba(0, 0, 0, 0.2); --shadow-dark: rgba(0, 0, 0, 0.5);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        body {
+            font-family: 'Roboto', sans-serif; background-color: var(--dark-bg); color: var(--text-light);
+            margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start;
+            min-height: 100vh; line-height: 1.7;
+        }
+        .container {
+            background-color: var(--container-bg); border-radius: 12px; box-shadow: 0 10px 30px var(--shadow-dark);
+            padding: 20px; max-width: 950px; width: 100%; margin: 40px 0; animation: fadeIn 0.8s ease-out;
+        }
+        @media (min-width: 768px) { .container { padding: 40px; } }
+        .centered-page { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 60vh; }
+        h1 { font-size: 2.4em; color: var(--accent-blue); margin-bottom: 25px; text-shadow: 2px 2px 5px var(--shadow-dark); }
+        h2 { font-size: 1.9em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 30px; text-align: left; }
+        h3 { font-size: 1.5em; color: var(--accent-purple); margin-top: 25px; margin-bottom: 15px; text-align: left; }
+        p { font-size: 1.1em; margin-bottom: 15px; }
+        .section { padding: 30px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.7s ease-out; }
+        .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 25px; margin-top: 30px; box-shadow: 0 5px 15px var(--shadow-light); }
+        .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .btn {
+            background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer;
+            font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center;
+            gap: 15px; font-weight: 700; box-shadow: 0 2px 8px var(--shadow-light);
+        }
+        .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 6px 15px var(--shadow-dark); }
+        .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        .btn .btn-text { flex-grow: 1; }
+        .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; color: var(--accent-blue); }
+        .btn-start, .btn-continue, .btn-restart {
+            font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green);
+            color: var(--text-dark); justify-content: center; margin-top: 40px; padding: 18px 30px;
+        }
+        #intermissionSection .metric-change-summary-container { background-color: var(--section-bg); border-radius: 8px; padding: 25px; width: 100%; max-width: 600px; }
+        #intermissionSection .metric-change-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        #intermissionSection .metric-change { font-size: 1.1em; display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 5px; background-color: var(--interactive-bg); box-shadow: inset 0 1px 5px rgba(0,0,0,0.2); justify-content: center; }
+        .metric-change .positive { color: var(--accent-green); } .metric-change .negative { color: var(--accent-red); } .metric-change .neutral { color: var(--accent-blue); }
+        .intro-metrics-container { background-color: var(--section-bg); border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px var(--shadow-light); border: 1px solid var(--interactive-bg); margin-top:30px; width:100%; max-width:600px; }
+        .intro-metrics-container h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--interactive-bg); color: var(--accent-purple); text-align: center; }
+        .intro-metrics-container ul { list-style: none; padding: 0; margin: 0; }
+        .intro-metrics-container li { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 10px 0; border-bottom: 1px dashed var(--interactive-bg); }
+        .intro-metrics-container li:last-child { border-bottom: none; margin-bottom: 0; }
+        .intro-metrics-container li .icon { font-size: 1.8em; color: var(--accent-blue); flex-shrink: 0; width: 35px; text-align: center; }
+        .intro-metrics-container li > div { text-align: left; }
+        .intro-metrics-container li small { display: block; font-size: 0.9em; color: var(--text-light); opacity: 0.8; margin-top: 3px; }
+        #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; box-shadow: 0 4px 12px var(--shadow-dark); }
+        #statusBar .metric { text-align: center; font-size: 0.9em; flex: 1; min-width: 100px; }
+        #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); margin-top: 5px; }
+        .scenario-image { width: 100%; max-width: 700px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px var(--shadow-dark); }
+        .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 30px; width: 100%; max-width: 850px; }
+        .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); }
+        .metric-card .icon { font-size: 2.8em; color: var(--accent-blue); margin-bottom: 12px; }
+        .metric-card .label { font-size: 1.1em; margin-bottom: 8px; color: var(--text-light); }
+        .metric-card .value { font-size: 2em; font-weight: bold; color: var(--accent-yellow); }
+        .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+        @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+        .event-timeline, .strategic-debrief { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; margin-top: 20px; }
+        .event-timeline h3, .strategic-debrief h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .event-timeline ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
+        .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); }
+        .event-timeline li:last-child { border-left: none; }
+        .event-timeline li::before { content: '\f05a'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-blue); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; }
+        .event-timeline li.positive::before { content: '\f00c'; color: var(--accent-green); }
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f071'; color: var(--accent-yellow); }
+        .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
+        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
+        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
+        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
+        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
+        #score-breakdown .score-value { font-weight: bold; }
+        #performance-badge { padding: 15px 35px; font-size: 2em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px var(--shadow-dark); margin: 25px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-memory"></i> USB Farkındalık Simülasyonu</h1>
+            <p style="max-width: 700px;">Bu simülasyonda, masum görünen bir USB belleğin şirketiniz için ne kadar büyük bir tehdit oluşturabileceğini deneyimleyeceksiniz. Merak ve iyi niyetin, siber güvenlikte nasıl risklere yol açabileceğini göreceksiniz. Vereceğiniz kararlar, tüm şirketin veri güvenliğini etkileyecek.</p>
+            <img src="usb1.png" alt="Yerde bulunan USB Bellek temalı görsel" class="scenario-image">
+            <div class="intro-metrics-container">
+                <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+                <ul>
+                    <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i></span><div><strong>Ağ Güvenliği</strong><small>Şirket ağının dış tehditlere karşı bütünlüğü.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-biohazard"></i></span><div><strong>Zararlı Yazılım Riski</strong><small>Sisteme virüs bulaşma ihtimali.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-user-check"></i></span><div><strong>Prosedür Uyumu</strong><small>Şirket güvenlik politikalarına uyma düzeyiniz.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-file-zipper"></i></span><div><strong>Veri Sızıntısı İhtimali</strong><small>Hassas verilerin çalınma olasılığı.</small></div></li>
+                </ul>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-shield-halved"></i> Ağ Güvenliği</span><div class="value" id="status-security">100%</div></div>
+                <div class="metric"><span><i class="fa-solid fa-biohazard"></i> Zararlı Yazılım Riski</span><div class="value" id="status-risk">0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-user-check"></i> Prosedür Uyumu</span><div class="value" id="status-compliance">100</div></div>
+                <div class="metric"><span><i class="fa-solid fa-file-zipper"></i> Veri Sızıntısı</span><div class="value" id="status-leak">0%</div></div>
+                <div class="metric"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-timer">10:00</div></div>
+            </div>
+            <div id="game-content"></div>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <div id="intermissionDetails"></div>
+            <button class="btn btn-continue" id="continueButton"><i class="fa-solid fa-forward"></i> Sonraki Aşamaya Geç</button>
+        </div>
+        
+        <div id="finalSection" class="section centered-page" style="display: none; flex-direction:column; align-items:center;">
+            <h2><i class="fa-solid fa-award"></i> Simülasyon Tamamlandı: Değerlendirme Raporu</h2>
+            <p>Simülasyonu başarıyla tamamladınız. Fiziksel medya tehditlerine karşı verdiğiniz kararların analizi aşağıdadır.</p>
+            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+            <div class="final-metrics" id="finalMetricsContainer"></div>
+            <div class="post-crisis-layout">
+                <div class="event-timeline">
+                    <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                    <ul id="decision-timeline-list"></ul>
+                </div>
+                <div class="strategic-debrief">
+                    <h3><i class="fa-solid fa-lightbulb"></i> Çıkarılan Dersler</h3>
+                    <div id="strategic-debrief-content"></div>
+                    <h3 style="margin-top: 20px;"><i class="fa-solid fa-calculator"></i> Puan Dökümü</h3>
+                    <ul id="score-breakdown"></ul>
+                </div>
+            </div>
+            <button class="btn btn-restart" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+        </div>
+
+        <div id="html-content-templates" style="display: none;">
+            <div id="stage1"><h2><i class="fa-solid fa-parking"></i> Aşama 1: USB'nin Bulunması</h2><p>Şirket otoparkında, arabanızın yanında yerde duran parlak renkli bir USB bellek gözünüze çarpıyor. Üzerindeki etikette el yazısıyla <strong>"Maaş Listesi - Güncel"</strong> yazdığını fark ediyorsunuz.</p><img src="usb2.png" alt="Otoparkta bulunan USB bellek" class="scenario-image"><div class="interactive-element"><h4>Ne yaparsınız?</h4><div class="decision-buttons"><button class="btn" data-decision="s1a"><i class="fa-solid fa-computer"></i><div class="btn-text">Seçenek A: Hemen arabama biner, laptopuma takıp içinde ne olduğuna bakarım.<small>Belki gerçekten önemlidir, bir an önce sahibini bulmalıyım.</small></div></button><button class="btn" data-decision="s1b"><i class="fa-solid fa-pocket"></i><div class="btn-text">Seçenek B: USB'yi yerden alır, cebime koyarım.<small>Sonra ne yapacağıma karar veririm, belki IT'ye götürürüm.</small></div></button><button class="btn" data-decision="s1c"><i class="fa-solid fa-person-shelter"></i><div class="btn-text">Seçenek C: USB'yi yerden alır ve doğrudan IT departmanına götürürüm.<small>Şüpheli bir cihaz, en iyisi uzmanların ilgilenmesi.</small></div></button></div></div></div>
+            <div id="stage2"><h2><i class="fa-solid fa-brain"></i> Aşama 2: Merak Duygusu</h2><p>USB belleği yanınıza aldınız ve masanıza koydunuz. Üzerindeki "Maaş Listesi" yazısı aklınızdan çıkmıyor. "Acaba kim ne kadar kazanıyor? Belki de benim maaşımda bir hata vardır. Sadece bir göz atmak kime ne zarar verebilir ki?" diye düşünüyorsunuz. Merak, en temel insani duygulardan biridir.</p><img src="usb3.png" alt="Merak duygusu ve USB" class="scenario-image"><div class="interactive-element"><h4>Merakınızla nasıl başa çıkarsınız?</h4><div class="decision-buttons"><button class="btn" data-decision="s2a"><i class="fa-solid fa-plug"></i><div class="btn-text">Seçenek A: Merakıma yenik düşer ve USB'yi iş bilgisayarıma takarım.<small>Hızlıca bakıp çıkaracağım, bir sorun olmaz.</small></div></button><button class="btn" data-decision="s2b"><i class="fa-solid fa-box-archive"></i><div class="btn-text">Seçenek B: Çekmeceme kilitler, unutmaya çalışırım.<small>Ne bana ne de başkasına bir zararı dokunmasın.</small></div></button><button class="btn" data-decision="s2c"><i class="fa-solid fa-headset"></i><div class="btn-text">Seçenek C: Bunun bir tuzak olabileceğini düşünür ve IT departmanını ararım.<small>Merak duygusu beni yanlış bir karar vermeye itmemeli.</small></div></button></div></div></div>
+            <div id="stage3"><h2><i class="fa-solid fa-virus-covid"></i> Aşama 3: Bilgisayara Takma Riski</h2><p>USB'yi bilgisayarınıza taktınız. "Bu Bilgisayar" penceresinde USB sürücüsü göründü ancak içine tıkladığınızda boş olduğunu fark ettiniz. "Herhalde bozuk" diye düşünürken, aslında arka planda siz farkında olmadan bir "otomatik çalıştırma" (autorun) betiği devreye girdi ve zararlı bir yazılım sisteminize sızmaya başladı.</p><img src="usb4.png" alt="Zararlı yazılım yüklenmesi" class="scenario-image"><div class="interactive-element"><h4>USB'nin boş olduğunu gördüğünüzde ne yaparsınız?</h4><div class="decision-buttons"><button class="btn" data-decision="s3a"><i class="fa-solid fa-arrows-rotate"></i><div class="btn-text">Seçenek A: USB'yi çıkarıp tekrar takarım.<small>Belki de bilgisayarım okuyamamıştır, tekrar denerim.</small></div></button><button class="btn" data-decision="s3b"><i class="fa-solid fa-file-circle-question"></i><div class="btn-text">Seçenek B: "Bozukmuş" der, USB'yi çıkarıp çöpe atarım.<small>İşe yaramadığına göre sorun da yoktur.</small></div></button><button class="btn" data-decision="s3c"><i class="fa-solid fa-triangle-exclamation"></i><div class="btn-text">Seçenek C: Olağandışı bir durum olduğunu anlar, hemen USB'yi çıkarır ve IT'ye haber veririm.<small>Boş görünmesi bile şüpheli, bir uzmanın bakması en iyisi.</small></div></button></div></div></div>
+            <div id="stage4"><h2><i class="fa-solid fa-map-location-dot"></i> Aşama 4: IT Soruşturması</h2><p>Durumu IT departmanına bildirdiniz. IT uzmanı, olayın ciddiyetini anlamak için size soruyor: <strong>"Bu USB belleği tam olarak nerede ve yaklaşık olarak ne zaman buldunuz? Bu bilgi, kamera kayıtlarını incelememiz için kritik öneme sahip."</strong></p><img src="usb5.png" alt="IT soruşturması" class="scenario-image"><div class="interactive-element"><h4>IT'nin bu sorusuna nasıl yanıt verirsiniz?</h4><div class="decision-buttons"><button class="btn" data-decision="s4a"><i class="fa-solid fa-brain"></i><div class="btn-text">Seçenek A: Hatırladığım tüm detayları eksiksiz ve net bir şekilde anlatırım.<small>"Dün saat 17:30 civarı, B blok otoparkının -2. katında, 42 numaralı park yerinin yanında buldum."</small></div></button><button class="btn" data-decision="s4b"><i class="fa-solid fa-envelope"></i><div class="btn-text">Seçenek B: Sürecin resmi ilerlemesi için durumu anlatan bir e-posta göndereceğimi söylerim.<small>Söz uçar yazı kalır, en iyisi yazılı olarak bildirmek.</small></div></button><button class="btn" data-decision="s4c"><i class="fa-solid fa-question"></i><div class="btn-text">Seçenek C: "Pek hatırlamıyorum, otoparkta bir yerdeydi sanırım" gibi belirsiz bir cevap veririm.<small>Sonuçta USB'yi getirdim, bu kadar detayın ne önemi var?</small></div></button></div></div></div>
+            <div id="stage5"><h2><i class="fa-solid fa-keyboard"></i> Aşama 5: Tehdidi Anlamak</h2><p>IT uzmanı size teşekkür ettikten sonra bir açıklama yapıyor: "Bu tür USB'ler bazen 'badUSB' olarak bilinen özel cihazlar olabiliyor. İçinde dosya olmasa bile, bilgisayara takıldığında kendisini bir klavye gibi tanıtıp, saniyeler içinde yüzlerce komut çalıştırarak güvenlik sistemlerini aşabilir. Bu, kasıtlı ve profesyonel bir sızma girişimi olabilir."</p><img src="usb6.png" alt="BadUSB tehdidi" class="scenario-image"><div class="interactive-element"><h4>Bu profesyonel saldırı tekniğini öğrendiğinizde tepkiniz ne olur?</h4><div class="decision-buttons"><button class="btn" data-decision="s5a"><i class="fa-solid fa-user-ninja"></i><div class="btn-text">Seçenek A: "Vay canına, ne kadar zekice bir yöntem. Neyse ki ben bilgisayarıma takmadım, dolayısıyla güvendeyim."<small>Tehdidi anlarım ama kişisel olarak risk altında olmadığım için rahatlarım.</small></div></button><button class="btn" data-decision="s5b"><i class="fa-solid fa-lightbulb"></i><div class="btn-text">Seçenek B: Tehdidin ne kadar ciddi ve beklenmedik olabileceğini anlar ve bu konuda başka ne yapabileceğimi sorarım.<small>Bu olaydan ders çıkarıp, gelecekte daha dikkatli olmak için proaktif bir tavır sergilerim.</small></div></button><button class="btn" data-decision="s5c"><i class="fa-solid fa-circle-question"></i><div class="btn-text">Seçenek C: "Bu kadar karmaşık bir saldırının bizim şirketi hedef alacağına pek inanmıyorum."<small>IT departmanının durumu biraz abarttığını düşünürüm.</small></div></button></div></div></div>
+             <div id="stage6"><h2><i class="fa-solid fa-building-circle-exclamation"></i> Aşama 6: Kriz İletişimi</h2><p>IT ekibi, verdiğiniz bilgiler sayesinde güvenlik kameralarını incelerken, başka katların koridorlarında ve mola alanlarında da benzer USB'lerin bulunduğunu ve bazı çalışanların bunları alıp odalarına götürdüğünü fark ediyor. Durumun aciliyeti nedeniyle hemen bir uyarı anonsu hazırlanması gerekiyor.</p><img src="usb7.png" alt="Yaygın tehdit görseli" class="scenario-image"><div class="interactive-element"><h4>IT ekibi resmi duyuruyu hazırlarken siz nasıl bir aksiyon alırsınız?</h4><div class="decision-buttons"><button class="btn" data-decision="s6a"><i class="fa-solid fa-bullhorn"></i><div class="btn-text">Seçenek A: Herkesi bir an önce uyarmak için tüm şirkete "ACİL: OTOPARKTAKİ USB'LERE DOKUNMAYIN!" diye bir e-posta gönderirim.<small>İyi niyetle, en hızlı şekilde herkesi uyarmaya çalışırım.</small></div></button><button class="btn" data-decision="s6b"><i class="fa-solid fa-user-group-slash"></i><div class="btn-text">Seçenek B: "Ben görevimi yaptım, durumu IT'ye bildirdim" der, süreci onlara bırakırım.<small>Daha fazla müdahil olmam, karışıklığa neden olabilir.</small></div></button><button class="btn" data-decision="s6c"><i class="fa-solid fa-circle-check"></i><div class="btn-text">Seçenek C: IT'nin hazırlayacağı resmi ve doğrulanmış bilgiyi bekler, duyuru yapıldıktan sonra bu bilginin yayılmasına yardımcı olurum.<small>Doğru bilginin, doğru kanaldan yayılması en etkili yöntemdir.</small></div></button></div></div></div>
+
+            <div id="stage7">
+                <h2><i class="fa-solid fa-shield-virus"></i> Aşama 7: Artçı Saldırı</h2>
+                <p>IT departmanının genel uyarısından bir saat sonra, tüm şirkete IT Direktörü adıyla yeni bir e-posta geliyor. E-postada, "Yaşanan USB olayı nedeniyle tüm bilgisayarların acilen bir güvenlik taramasından geçirilmesi gerekmektedir. Lütfen aşağıdaki linkten 'Acil Durum Güvenlik Tarayıcısı'nı indirip çalıştırın. Bu, ağımızı korumak için zorunludur." yazıyor. E-posta son derece resmi görünüyor.</p>
+                <img src="usb8.png" alt="Artçı saldırı e-postası" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu yeni ve kritik e-posta karşısında ne yaparsınız?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s7a"><i class="fa-solid fa-download"></i><div class="btn-text">Seçenek A: IT Direktörünün talimatına uyar ve programı hemen indirip çalıştırırım.<small>Şirketin güvenliği için söylenenleri harfiyen yapmalıyım.</small></div></button>
+                        <button class="btn" data-decision="s7b"><i class="fa-solid fa-share-nodes"></i><div class="btn-text">Seçenek B: Linki hemen departman sohbet grubunda paylaşırım.<small>"Arkadaşlar, IT'den tarayıcı gelmiş, herkes yapsın!" diyerek yardımcı olurum.</small></div></button>
+                        <button class="btn" data-decision="s7c"><i class="fa-solid fa-phone-volume"></i><div class="btn-text">Seçenek C: E-postanın meşruiyetinden şüphe duyarım ve IT'yi telefonla arayarak teyit ederim.<small>Kriz anları, yeni tuzaklar için en uygun zamanlardır. Önce doğrulamalıyım.</small></div></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const game = {
+            score: { security: 100, risk: 0, compliance: 100, leak: 0 },
+            state: { currentStageId: 'stage1', decisionHistory: [], usbPluggedIn: false },
+            timer: { total: 600, remaining: 600, intervalId: null },
+            elements: {},
+            decisionInfo: {
+                's1a': { title: "Laptop'una Taktın", strat: "Bulunan bir USB'yi doğrudan kişisel veya iş bilgisayarına takmak, bir siber saldırıya kapı açmanın en hızlı yoludur. Merak, güvenliğin en büyük düşmanıdır.", changes: { security: -40, risk: +60, compliance: -50, leak: +30 }, impact: 'Negative' },
+                's1b': { title: "Cebine Koydun", strat: "Tehdidi fark etmeden yanınızda taşımak, riski ertelemekten başka bir işe yaramaz. Cihaz hala bir tehdittir ve eninde sonunda merak duygunuz sizi yanlış bir karar vermeye itebilir.", changes: { risk: +20, compliance: -20 }, impact: 'Neutral' },
+                's1c': { title: "Doğrudan IT'ye Götürdün", strat: "Sahipsiz bir cihazı alıp doğrudan IT'ye teslim ederek en doğru ve profesyonel davranışı sergilediniz. Bu, 'sıfır güven' ilkesinin mükemmel bir uygulamasıdır.", changes: { compliance: +10, risk: -5 }, impact: 'Positive' },
+                's2a': { title: "Merakına Yenik Düştün", strat: "Saldırganların en çok güvendiği insani zafiyet meraktır. 'Maaş Listesi' gibi cezbedici bir başlık, bu zafiyeti tetiklemek için özel olarak seçilmiştir.", changes: { security: -35, risk: +50, leak: +25 }, impact: 'Negative' },
+                's2b': { title: "Çekmecene Kilitledin", strat: "Tehdidi ortadan kaldırmadınız, sadece sakladınız. Başka birinin bulup takma riskini azalttınız, ancak sorunu çözmediniz. Güvenlikte pasif kalmak, genellikle riskin artmasına neden olur.", changes: { risk: +10, compliance: -15 }, impact: 'Neutral' },
+                's2c': { title: "IT'yi Aradın", strat: "Merak duygunuzu mantığınızla ve prosedür bilgisiyle yenerek doğru kararı verdiniz. Bu, yüksek bir güvenlik farkındalığına işaret eder.", changes: { compliance: +15, risk: -10 }, impact: 'Positive' },
+                's3a': { title: "Tekrar Taktın", strat: "Bir anormallik fark ettiğinizde, aynı eylemi tekrarlamak genellikle sorunu daha da kötüleştirir. Bu, zararlı yazılımın sisteme daha derinlemesine sızması için ona ikinci bir şans vermek gibidir.", changes: { security: -20, risk: +30, leak: +10 }, impact: 'Negative' },
+                's3b': { title: "Çöpe Attın", strat: "USB'yi bilgisayarınıza zaten taktınız. Zararlı yazılım çoktan bulaşmış olabilir. Tehdidi çöpe atmak, kanıtları yok etmek ve IT'nin sorunu anlamasını engellemektir. Durum mutlaka rapor edilmelidir.", changes: { security: -10, compliance: -25, leak: +5 }, impact: 'Neutral' },
+                's3c': { title: "Hemen IT'ye Bildirdin", strat: "Bir hata yapmış olsanız bile, bunu en hızlı şekilde fark edip doğru merciye bildirmek, zararı en aza indirme konusunda atılacak en kritik adımdır.", changes: { security: +10, compliance: +10, risk: -20 }, impact: 'Positive' },
+                's4a': { title: "Tüm Detayları Anlattın", strat: "Fiziksel bir sızma girişiminde, olayın nerede ve ne zaman gerçekleştiği, soruşturmanın en önemli parçasıdır. Bu bilgi, güvenlik kameralarının incelenmesi için hayati önem taşır.", changes: { compliance: +15 }, impact: 'Positive' },
+                's4b': { title: "Yazılı Bildirim Yaptın", strat: "Resmiyet doğru bir içgüdü olsa da, acil güvenlik olaylarında hız esastır. E-posta ile bildirim süreci yavaşlatabilir ve sözlü iletişimin sağlayacağı anlık soru-cevap fırsatını ortadan kaldırır. İlk müdahale sözlü olmalıdır.", changes: { compliance: -10, risk: +5 }, impact: 'Neutral' },
+                's4c': { title: "Belirsiz Cevap Verdin", strat: "Önemli detayları paylaşmamak, güvenlik ekibinin işini neredeyse imkansız hale getirir ve soruşturmanın yavaşlamasına veya başarısız olmasına neden olabilir. Her bilgi değerlidir.", changes: { compliance: -25, risk: +10 }, impact: 'Negative' },
+                's5a': { title: "Kendini Güvende Hissettin", strat: "Bir güvenlik olayı tüm şirketi etkiler. 'Bana bir şey olmaz' düşüncesi, takım çalışması ruhuna aykırıdır ve genel güvenlik kültürünü zayıflatır. Tehdit ortadan kalkana kadar kimse tamamen güvende değildir.", changes: { compliance: -10, leak: +5 }, impact: 'Neutral' },
+                's5b': { title: "Proaktif Davrandın", strat: "Yeni ve karmaşık saldırı vektörlerini öğrenmeye açık olmak ve çözümün bir parçası olmaya çalışmak, bir çalışanın sahip olabileceği en önemli siber güvenlik yetkinliğidir.", changes: { compliance: +15 }, impact: 'Positive' },
+                's5c': { title: "Tehdidi Küçümsedin", strat: "Siber tehditleri küçümsemek veya gerçek dışı bulmak, farkındalığın önündeki en büyük engeldir. Saldırganlar, her zaman en beklenmedik ve 'abartılı' görünen yöntemleri kullanır.", changes: { compliance: -20, risk: +15 }, impact: 'Negative' },
+                's6a': { title: "Yetkisiz E-posta Gönderdin", strat: "İyi niyetle bile olsa, kriz anında yetkisiz ve kontrolsüz iletişim yapmak paniği artırabilir, yanlış bilginin yayılmasına neden olabilir ve IT'nin resmi duyurusunun etkisini azaltabilir. İletişim her zaman tek ve resmi kanaldan yapılmalıdır.", changes: { compliance: -15, leak: +5, reputation: -10 }, impact: 'Neutral' },
+                's6b': { title: "Pasif Kaldın", strat: "Güvenlik, sadece IT departmanının değil, tüm çalışanların ortak sorumluluğudur. Kritik bir anda pasif kalmak, tehlikenin yayılmasına göz yummak anlamına gelebilir.", changes: { compliance: -20, risk: +10 }, impact: 'Negative' },
+                's6c': { title: "Resmi Duyuruya Destek Oldun", strat: "Kriz anında tek ve güvenilir bir ses olması önemlidir. Resmi duyuruların yayılmasına yardımcı olmak ve bilgi kirliliğini önlemek, en doğru ve sorumlu davranıştır.", changes: { compliance: +15, risk: -10, reputation: +5 }, impact: 'Positive' },
+
+                's7a': { title: "Tarayıcıyı Çalıştırdın", strat: "Saldırganlar genellikle bir kriz anını, insanların gardını düşürdüğü bir zamanı ikinci bir saldırı için kullanır. Bu 'artçı' saldırı, ilk olaydan daha yıkıcı olabilir. Güvenden gelen talimat bile olsa, beklenmedik yazılımlar asla çalıştırılmamalıdır.", changes: { security: -50, risk: +70, leak: +40 }, impact: 'Negative' },
+                's7b': { title: "Linki Paylaştın", strat: "İyi niyetle de olsa, doğrulanmamış ve potansiyel olarak zararlı bir linki başkalarıyla paylaşmak, saldırının yayılmasına yardım etmektir. Bu, tek bir kurban yerine onlarca kurban yaratabilir.", changes: { security: -20, risk: +40, compliance: -20, reputation: -15 }, impact: 'Neutral' },
+                's7c': { title: "IT'yi Arayarak Teyit Ettin", strat: "Tebrikler! En gelişmiş sosyal mühendislik tuzağını bile fark ettiniz. Bir krizden hemen sonra gelen 'yardımcı' veya 'zorunlu' e-postalar, en tehlikelileridir. Daima sözlü ve ayrı bir kanaldan teyit almak, en üst düzey güvenlik farkındalığıdır.", changes: { compliance: +20, security: +10, reputation: +5 }, impact: 'Positive' },
+            },
+            
+            setup() {
+                this.elements = {
+                    intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'),
+                    gameContent: document.getElementById('game-content'), startButton: document.getElementById('startButton'),
+                    intermission: document.getElementById('intermissionSection'), intermissionTitle: document.getElementById('intermissionTitle'),
+                    intermissionDetails: document.getElementById('intermissionDetails'), continueButton: document.getElementById('continueButton'),
+                    finalSection: document.getElementById('finalSection'),
+                    htmlTemplates: document.getElementById('html-content-templates'),
+                    statusBar: {
+                        security: document.getElementById('status-security'), risk: document.getElementById('status-risk'),
+                        compliance: document.getElementById('status-compliance'), leak: document.getElementById('status-leak'),
+                        timer: document.getElementById('status-timer'),
+                    }
+                };
+                this.attachListeners();
+            },
+            attachListeners() {
+                this.elements.startButton.addEventListener('click', () => {
+                    this.elements.intro.style.display = 'none'; this.elements.game.style.display = 'block';
+                    this.startTimer(); this.showStage('stage1');
+                });
+                this.elements.gameContent.addEventListener('click', (e) => {
+                    const button = e.target.closest('.btn[data-decision]');
+                    if (!button || button.disabled) return;
+                    this.handleDecision(button.dataset.decision);
+                });
+                this.elements.continueButton.addEventListener('click', () => {
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block';
+                    
+                    const lastDecisionId = this.state.decisionHistory[this.state.decisionHistory.length - 1].id;
+                    let nextStageId = '';
+
+                    switch (this.state.currentStageId) {
+                        case 'stage1':
+                            if (lastDecisionId === 's1a') { this.state.usbPluggedIn = true; nextStageId = 'stage3'; } 
+                            else if (lastDecisionId === 's1b') { nextStageId = 'stage2'; } 
+                            else { nextStageId = 'stage4'; }
+                            break;
+                        case 'stage2':
+                            if (lastDecisionId === 's2a') { this.state.usbPluggedIn = true; nextStageId = 'stage3'; } 
+                            else { nextStageId = 'stage4'; }
+                            break;
+                        case 'stage3': nextStageId = 'stage4'; break;
+                        case 'stage4': nextStageId = 'stage5'; break;
+                        case 'stage5': nextStageId = 'stage6'; break;
+                        case 'stage6': nextStageId = 'stage7'; break; // 6'dan sonra 7'ye git
+                        case 'stage7':
+                            this.showFinalReport();
+                            return; // Final raporu gösterildiği için fonksiyondan çık
+                    }
+                    this.showStage(nextStageId);
+                });
+            },
+            handleDecision(decisionId) {
+                const info = this.decisionInfo[decisionId];
+                if (!info) return;
+                this.state.decisionHistory.push({ ...info, id: decisionId });
+                this.updateScore(info.changes);
+                this.elements.game.style.display = 'none';
+                this.showIntermission(info);
+            },
+            updateScore(changes) {
+                this.score.security = Math.max(0, Math.min(100, this.score.security + (changes.security || 0)));
+                this.score.risk = Math.max(0, Math.min(100, this.score.risk + (changes.risk || 0)));
+                this.score.compliance = Math.max(0, Math.min(100, this.score.compliance + (changes.compliance || 0)));
+                this.score.leak = Math.max(0, Math.min(100, this.score.leak + (changes.leak || 0)));
+                this.updateStatusBar();
+            },
+            updateStatusBar() {
+                const s = this.score;
+                this.elements.statusBar.security.textContent = `${s.security}%`;
+                this.elements.statusBar.risk.textContent = s.risk;
+                this.elements.statusBar.compliance.textContent = s.compliance;
+                this.elements.statusBar.leak.textContent = `${s.leak}%`;
+            },
+            showStage(stageId) {
+                this.state.currentStageId = stageId;
+                const stageTemplate = this.elements.htmlTemplates.querySelector(`#${stageId}`);
+                if (stageTemplate) { this.elements.gameContent.innerHTML = stageTemplate.innerHTML; }
+            },
+            showIntermission(info) {
+                this.elements.intermissionTitle.textContent = `Kararınız: ${info.title}`;
+                let metricsHTML = '';
+                const formatChange = (label, value, isRisk = false, unit = '') => {
+                    if (value === undefined || value === 0) return '';
+                    let colorClass = 'neutral'; const sign = value > 0 ? '+' : '';
+                    if (isRisk) { colorClass = value > 0 ? 'negative' : 'positive'; }
+                    else { colorClass = value > 0 ? 'positive' : 'negative'; }
+                    return `<div class="metric-change ${colorClass}">${label}: ${sign}${value.toLocaleString('tr-TR')}${unit}</div>`;
+                };
+                metricsHTML += formatChange('Ağ Güvenliği', info.changes.security, false, '%');
+                metricsHTML += formatChange('Zararlı Yazılım Riski', info.changes.risk, true);
+                metricsHTML += formatChange('Prosedür Uyumu', info.changes.compliance);
+                metricsHTML += formatChange('Veri Sızıntısı İhtimali', info.changes.leak, true, '%');
+                this.elements.intermissionDetails.innerHTML = `
+                    <div class="metric-change-summary-container"><h4>Kararın Anlık Etkileri</h4><div class="metric-change-summary">${metricsHTML}</div></div>
+                    <div class="interactive-element" style="text-align:left; width:100%; max-width:600px; margin-top:20px;">
+                        <h4>Stratejik Not</h4><p>${info.strat}</p>
+                    </div>`;
+                this.elements.intermission.style.display = 'flex';
+            },
+            showFinalReport() {
+                this.stopTimer();
+                this.elements.game.style.display = 'none';
+                this.elements.intermission.style.display = 'none';
+                this.elements.finalSection.style.display = 'flex';
+                
+                let totalScore = 50;
+                let scoreBreakdown = { 'Başlangıç Puanı': { value: 50, class: 'score-neutral' }};
+                let decisionQualityScore = 0;
+                this.state.decisionHistory.forEach(d => {
+                    if (d.impact === 'Positive') decisionQualityScore += 5;
+                    else if (d.impact === 'Neutral') decisionQualityScore -= 3;
+                    else if (d.impact === 'Negative') decisionQualityScore -= 8;
+                });
+                totalScore += decisionQualityScore;
+                scoreBreakdown['Karar Kalitesi'] = { value: decisionQualityScore, class: decisionQualityScore >= 0 ? 'score-plus' : 'score-minus' };
+                const finalComplianceBonus = Math.round((this.score.compliance - 50) / 4);
+                totalScore += finalComplianceBonus;
+                scoreBreakdown['Prosedürlere Uyum'] = { value: finalComplianceBonus, class: finalComplianceBonus >= 0 ? 'score-plus' : 'score-minus' };
+                const finalSecurityBonus = Math.round((this.score.security - 50) / 4);
+                totalScore += finalSecurityBonus;
+                scoreBreakdown['Nihai Ağ Güvenliği'] = { value: finalSecurityBonus, class: finalSecurityBonus >= 0 ? 'score-plus' : 'score-minus' };
+                const finalRiskPenalty = -Math.round((this.score.risk + this.score.leak) / 10);
+                totalScore += finalRiskPenalty;
+                if(finalRiskPenalty < 0) scoreBreakdown['Alınan Riskler'] = { value: finalRiskPenalty, class: 'score-minus' };
+                totalScore = Math.max(0, Math.min(100, Math.round(totalScore)));
+
+                let badgeInfo = {};
+                if (totalScore >= 90) { badgeInfo = { text: 'GÜVENLİK UZMANI', color: 'var(--accent-green)' }; }
+                else if (totalScore >= 75) { badgeInfo = { text: 'GÜVENLİK BİLİNÇLİ', color: 'var(--accent-blue)' }; }
+                else if (totalScore >= 50) { badgeInfo = { text: 'DİKKATLİ ÇALIŞAN', color: 'var(--accent-yellow)' }; }
+                else { badgeInfo = { text: 'RİSKLİ DAVRANIŞ', color: 'var(--accent-red)' }; }
+
+                this.elements.finalSection.querySelector('#performance-badge').textContent = badgeInfo.text;
+                this.elements.finalSection.querySelector('#performance-badge').style.backgroundColor = badgeInfo.color;
+                this.elements.finalSection.querySelector('#finalMetricsContainer').innerHTML = `
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-star"></i></div><div class="label">Genel Performans</div><div class="value">${totalScore}/100</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-shield-halved"></i></div><div class="label">Ağ Güvenliği</div><div class="value">${this.score.security}%</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-biohazard"></i></div><div class="label">Zararlı Yazılım Riski</div><div class="value">${this.score.risk}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-user-check"></i></div><div class="label">Prosedür Uyumu</div><div class="value">${this.score.compliance}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-file-zipper"></i></div><div class="label">Veri Sızıntısı İhtimali</div><div class="value">${this.score.leak}%</div></div>`;
+                this.elements.finalSection.querySelector('#decision-timeline-list').innerHTML = this.state.decisionHistory.map(d => `<li class="${d.impact.toLowerCase()}"><span class="decision-title">${d.title}</span></li>`).join('');
+                this.elements.finalSection.querySelector('#score-breakdown').innerHTML = Object.entries(scoreBreakdown).map(([key, item]) => `<li class="${item.class}"><span>${key}</span><span class="score-value">${item.value > 0 ? '+' : ''}${item.value} Puan</span></li>`).join('');
+                this.elements.finalSection.querySelector('#strategic-debrief-content').innerHTML = `<p>Bu simülasyon, fiziksel medya kaynaklı tehditlerin ne kadar ciddi olabileceğini gösterdi. Doğru refleksler:</p>
+                <ul style="text-align:left; max-width: 500px; margin: auto;">
+                    <li>Bulunan cihazlar (USB, HDD vb.) <strong>asla</strong> kişisel ya da iş bilgisayarına takılmaz.</li>
+                    <li>Şüpheli cihazlar en kısa sürede <strong>doğrudan IT departmanına</strong> teslim edilir.</li>
+                    <li>Cihazın nerede ve ne zaman bulunduğu gibi detaylar, soruşturma için kritik olduğundan net olarak iletilir.</li>
+                    <li><strong>Merak duygusu,</strong> güvenlik prosedürlerinin önüne asla geçmemelidir.</li>
+                </ul>`;
+            },
+            startTimer() {
+                this.timer.intervalId = setInterval(() => {
+                    this.timer.remaining--;
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
+                    this.elements.statusBar.timer.textContent = `${m}:${s}`;
+                    if (this.timer.remaining <= 0) { this.stopTimer(); alert("Süre doldu!"); this.showFinalReport(); }
+                }, 1000);
+            },
+            stopTimer() { clearInterval(this.timer.intervalId); }
+        };
+        game.setup();
+    });
+    </script>
+</body>
+</html>
