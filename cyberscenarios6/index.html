@@ -385,7 +385,7 @@
                     <div class="interactive-element">
                         <h4>Bu kritik bulgu karşısında bir sonraki acil teknik adımın ne olacak?</h4>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="d1-s3-close-access" data-next-section="day2_iam_review"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: `Analiz-Verileri-Uretim` deposunun herkese açık erişimini derhal kapat ve izinleri en kısıtlı seviyeye getir.<small>En büyük güvenlik açığını anında kapat ve sızıntıyı durdur.</small></div></button>
+                            <button class="btn" data-decision="d1-s3-close-access" data-next-section="day2_iam_review"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: `Analiz-Verileri-Uretim` deposunun herkese açık erişimini derhal kapat ve izinleri en kısıtlı seviyeye getir.<small>En büyük güvenlik açığını anında kapat ve sızıntıyı durdur.</small></div></button>
                             <button class="btn" data-decision="d1-s3-scan-all" data-next-section="day2_iam_review"><i class="fa-solid fa-search-plus"></i><div class="btn-text">Seçenek B: Bulut ortamındaki tüm diğer veri depolarını da acil olarak güvenlik taramasından geçir.<small>Benzer yanlış yapılandırmaların olup olmadığını tespit etmek için kapsamlı bir denetim yap.</small></div></button>
                         </div>
                     </div>
@@ -400,7 +400,7 @@
                     <div class="interactive-element">
                         <h4>Bu kritik güvenlik açığını kapatmak ve saldırganın daha fazla hareketini engellemek için ne yapacaksın?</h4>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="d2-iam-suspend-report" data-next-section="day2_internal_connections"><i class="fa-solid fa-user-slash"></i><div class="btn-text">Seçenek A: `developer_cem` hesabını derhal askıya al ve bulguları yöneticilerine acilen bildir.<small>Kritik bir güvenlik açığını kapat, ancak olayı üst yönetime raporlayarak sorumluluk al.</small></div></button>
+                            <button class="btn" data-decision="d2-iam-suspend-report" data-next-section="day2_internal_connections"><i class="fa-solid fa-user-slash"></i><div class="btn-text">Seçenek A: `developer_cem` hesabını derhal askıya al ve bulguları yöneticilerine acilen bildir.<small>Kritik bir güvenlik açığını kapat, ancak olayı üst yönetime raporlayarak sorumluluk al.</small></div></button>
                             <button class="btn" data-decision="d2-iam-delete-quietly" data-next-section="day2_internal_connections"><i class="fa-solid fa-user-minus"></i><div class="btn-text">Seçenek B: `developer_cem` hesabını kimseye bildirmeden derhal sil.<small>Açığı hızla kapat, ancak olayla ilgili resmi bir kayıt bırakmadan ve potansiyel iç soruşturmayı engellemeden.</small></div></button>
                         </div>
                     </div>
@@ -417,7 +417,7 @@
                         <h4>Bu şüpheli iç bağlantıyı nasıl ele alacaksın?</h4>
                         <div class="decision-buttons">
                             <button class="btn" data-decision="d2-internal-isolate-device" data-next-section="day3_media_leak"><i class="fa-solid fa-plug-circle-xmark"></i><div class="btn-text">Seçenek A: Şüpheli cihazı derhal ağdan izole et ve adli inceleme başlat.<small>Potansiyel iç tehdidi anında durdur, ancak operasyonel aksaklığa ve çalışan moraline etki edebilir.</small></div></button>
-                            <button class="btn critical" data-decision="d2-internal-confront-dev" data-next-section="day3_media_leak"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek B: Finans departmanındaki geliştiriciyle doğrudan ve gizli bir görüşme ayarla.<small>Şüpheli bağlantının nedenini anlamak için doğrudan bilgi topla, ancak geliştiriciyi uyarabilir veya işbirliğini kaybetme riski taşırsın.</small></div></button>
+                            <button class="btn" data-decision="d2-internal-confront-dev" data-next-section="day3_media_leak"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek B: Finans departmanındaki geliştiriciyle doğrudan ve gizli bir görüşme ayarla.<small>Şüpheli bağlantının nedenini anlamak için doğrudan bilgi topla, ancak geliştiriciyi uyarabilir veya işbirliğini kaybetme riski taşırsın.</small></div></button>
                             <button class="btn" data-decision="d2-internal-monitor-further" data-next-section="day3_media_leak"><i class="fa-solid fa-chart-line"></i><div class="btn-text">Seçenek C: Cihazı izlemeye devam et ve daha fazla bilgi topla.<small>Saldırganın (veya geliştiricinin) niyetini anlamak için gözlemi sürdür, ancak veri sızıntısının devam etme riski var.</small></div></button>
                         </div>
                     </div>
@@ -433,7 +433,7 @@
                         <h4>PR Direktörü Serap Nur ve Hukuk Müşaviri ile birlikte, bu medya krizini nasıl yönetecek ve kamuoyuna nasıl bir mesaj vereceksin?</h4>
                         <div class="decision-buttons">
                             <button class="btn" data-decision="d3-media-full-disclosure" data-next-section="day3_management_decision"><i class="fa-solid fa-check-double"></i><div class="btn-text">Seçenek A: Tam Şeffaflıkla Hemen Basına Açıkla.<small>Olayı tüm detaylarıyla, sızıntının nedenini ve alınan önlemleri şeffafça kamuoyuna duyur.</small></div></button>
-                            <button class="btn critical" data-decision="d3-media-deny-ignore" data-next-section="day3_management_decision"><i class="fa-solid fa-ban"></i><div class="btn-text">Seçenek B: İddiaları Kesinlikle Reddet ve Medyayla Teması Engelle.<small>Sızıntı iddialarını yalanla ve krizin büyümesini önlemek için medyadan uzak dur.</small></div></button>
+                            <button class="btn" data-decision="d3-media-deny-ignore" data-next-section="day3_management_decision"><i class="fa-solid fa-ban"></i><div class="btn-text">Seçenek B: İddiaları Kesinlikle Reddet ve Medyayla Teması Engelle.<small>Sızıntı iddialarını yalanla ve krizin büyümesini önlemek için medyadan uzak dur.</small></div></button>
                             <button class="btn" data-decision="d3-media-controlled-leak" data-next-section="day3_management_decision"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek C: Sızıntının Kontrollü Bir Versiyonunu Yayınla.<small>Hassas detayları atlayarak, olayı önemsiz gösteren, kontrollü bir açıklama sızdır.</small></div></button>
                         </div>
                     </div>
@@ -448,7 +448,7 @@
                     <div class="interactive-element">
                         <h4>Siber Güvenlik Mühendisi olarak, tüm bu baskılar altında, şirketin kaderini belirleyecek son büyük teknik ve stratejik kararı nasıl vereceksin?</h4>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="d3-m-take-offline" data-next-section="day3_regulatory_threat"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek A: Tüm kritik sistemleri derhal kapat ve kapsamlı bir güvenlik denetimi ve temizliği yap.<small>En güvenli yolu seç, ancak lansmanı süresiz ertele ve büyük finansal kayıplara yol aç.</small></div></button>
+                            <button class="btn" data-decision="d3-m-take-offline" data-next-section="day3_regulatory_threat"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek A: Tüm kritik sistemleri derhal kapat ve kapsamlı bir güvenlik denetimi ve temizliği yap.<small>En güvenli yolu seç, ancak lansmanı süresiz ertele ve büyük finansal kayıplara yol aç.</small></div></button>
                             <button class="btn" data-decision="d3-m-patch-continue" data-next-section="day3_regulatory_threat"><i class="fa-solid fa-wrench"></i><div class="btn-text">Seçenek B: Hızlı güvenlik yamaları uygula ve ürün lansmanına devam et.<small>Riski kabul et, lansmanı kurtar, ancak gizli zafiyetler veya kalan saldırganlar için risk altında ol.</small></div></button>
                         </div>
                     </div>
@@ -464,7 +464,7 @@
                         <h4>Bu yasal yükümlülük ve itibar riskini nasıl ele alacaksın?</h4>
                             <div class="decision-buttons">
                             <button class="btn" data-decision="d3-e-officially-report" data-next-section="finalSection"><i class="fa-solid fa-file-invoice"></i><div class="btn-text">Seçenek A: Yasal Yükümlülükleri Yerine Getirerek Veri İhlalini Resmi Olarak Bildir.<small>Şeffaflığı ve yasal uyumu önceliklendir, ancak bu, şirketin itibarını daha fazla etkileyebilir.</small></div></button>
-                            <button class="btn critical" data-decision="d3-e-internal-incident" data-next-section="finalSection"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek B: Olayı İç Kaynaklı Küçük Bir Olay Olarak Göster ve Resmi Bildirimi Ertele.<small>Kısa vadede paniği önle, ancak uzun vadede yasal ve itibari riskleri artırabilir.</small></div></button>
+                            <button class="btn" data-decision="d3-e-internal-incident" data-next-section="finalSection"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek B: Olayı İç Kaynaklı Küçük Bir Olay Olarak Göster ve Resmi Bildirimi Ertele.<small>Kısa vadede paniği önle, ancak uzun vadede yasal ve itibari riskleri artırabilir.</small></div></button>
                         </div>
                     </div>
                     <div class="learning-note"><strong>Öğrenme Notu:</strong> Veri ihlallerinde yasal uyumluluk, sadece cezalardan kaçınmakla kalmaz, aynı zamanda şirketin etik duruşunu ve müşteri güvenini de yansıtır.</div>
