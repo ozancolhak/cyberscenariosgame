@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simülasyon: Açık Masada Gizli Bilgi (Zorlaştırılmış)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e; --container-bg: #2a2a4a; --section-bg: #333355;
+            --interactive-bg: #444466; --accent-blue: #8be9fd; --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6; --accent-green: #50fa7b; --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555; --text-light: #e0e0e0; --text-dark: #282a36;
+            --shadow-light: rgba(0, 0, 0, 0.2); --shadow-dark: rgba(0, 0, 0, 0.5);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        body {
+            font-family: 'Roboto', sans-serif; background-color: var(--dark-bg); color: var(--text-light);
+            margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start;
+            min-height: 100vh; line-height: 1.7;
+        }
+        .container {
+            background-color: var(--container-bg); border-radius: 12px; box-shadow: 0 10px 30px var(--shadow-dark);
+            padding: 20px; max-width: 950px; width: 100%; margin: 40px 0; animation: fadeIn 0.8s ease-out;
+        }
+        @media (min-width: 768px) { .container { padding: 40px; } }
+        .centered-page { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 60vh; }
+        h1 { font-size: 2.4em; color: var(--accent-blue); margin-bottom: 25px; text-shadow: 2px 2px 5px var(--shadow-dark); }
+        h2 { font-size: 1.9em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 30px; text-align: left; }
+        h3 { font-size: 1.5em; color: var(--accent-purple); margin-top: 25px; margin-bottom: 15px; text-align: left; }
+        p { font-size: 1.1em; margin-bottom: 15px; }
+        .section { padding: 30px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.7s ease-out; }
+        .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 25px; margin-top: 30px; box-shadow: 0 5px 15px var(--shadow-light); }
+        .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .btn {
+            background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer;
+            font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center;
+            gap: 15px; font-weight: 700; box-shadow: 0 2px 8px var(--shadow-light);
+        }
+        .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 6px 15px var(--shadow-dark); }
+        .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        .btn .btn-text { flex-grow: 1; }
+        .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; color: var(--accent-blue); }
+        .btn-start, .btn-continue, .btn-restart {
+            font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green);
+            color: var(--text-dark); justify-content: center; margin-top: 40px; padding: 18px 30px;
+        }
+        #intermissionSection .metric-change-summary-container { background-color: var(--section-bg); border-radius: 8px; padding: 25px; width: 100%; max-width: 600px; }
+        #intermissionSection .metric-change-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        #intermissionSection .metric-change { font-size: 1.1em; display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 5px; background-color: var(--interactive-bg); box-shadow: inset 0 1px 5px rgba(0,0,0,0.2); justify-content: center; }
+        .metric-change .positive { color: var(--accent-green); } .metric-change .negative { color: var(--accent-red); } .metric-change .neutral { color: var(--accent-blue); }
+        .intro-metrics-container { background-color: var(--section-bg); border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px var(--shadow-light); border: 1px solid var(--interactive-bg); margin-top:30px; width:100%; max-width:600px; }
+        .intro-metrics-container h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--interactive-bg); color: var(--accent-purple); text-align: center; }
+        .intro-metrics-container ul { list-style: none; padding: 0; margin: 0; }
+        .intro-metrics-container li { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 10px 0; border-bottom: 1px dashed var(--interactive-bg); }
+        .intro-metrics-container li:last-child { border-bottom: none; margin-bottom: 0; }
+        .intro-metrics-container li .icon { font-size: 1.8em; color: var(--accent-blue); flex-shrink: 0; width: 35px; text-align: center; }
+        .intro-metrics-container li > div { text-align: left; }
+        .intro-metrics-container li small { display: block; font-size: 0.9em; color: var(--text-light); opacity: 0.8; margin-top: 3px; }
+        #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; box-shadow: 0 4px 12px var(--shadow-dark); }
+        #statusBar .metric { text-align: center; font-size: 0.9em; flex: 1; min-width: 100px; }
+        #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); margin-top: 5px; }
+        .scenario-image { width: 100%; max-width: 700px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px var(--shadow-dark); }
+        .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 30px; width: 100%; max-width: 850px; }
+        .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); }
+        .metric-card .icon { font-size: 2.8em; color: var(--accent-blue); margin-bottom: 12px; }
+        .metric-card .label { font-size: 1.1em; margin-bottom: 8px; color: var(--text-light); }
+        .metric-card .value { font-size: 2em; font-weight: bold; color: var(--accent-yellow); }
+        .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
+        @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
+        .event-timeline, .strategic-debrief { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; margin-top: 20px; }
+        .event-timeline h3, .strategic-debrief h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .event-timeline ul { list-style-type: none; padding-left: 0; margin: 15px 0 0; }
+        .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); }
+        .event-timeline li:last-child { border-left: none; }
+        .event-timeline li::before { content: '\f05a'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-blue); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; }
+        .event-timeline li.positive::before { content: '\f00c'; color: var(--accent-green); }
+        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
+        .event-timeline li.neutral::before { content: '\f071'; color: var(--accent-yellow); }
+        .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
+        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
+        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
+        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
+        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
+        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
+        #score-breakdown .score-value { font-weight: bold; }
+        #performance-badge { padding: 15px 35px; font-size: 2em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px var(--shadow-dark); margin: 25px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-desktop"></i> Bilgi Güvenliği Simülasyonu 3</h1>
+            <p style="max-width: 700px;">Bu simülasyonda, "Temiz Masa ve Temiz Ekran" politikasının önemini yaşayarak öğreneceksiniz. Günlük iş temposu içinde farkında olmadan bıraktığınız küçük bir açık, şirket için ne kadar büyük bir riske dönüşebilir? Vereceğiniz kararlar, ISO 27001 standartlarına uyumunuzu ve fiziksel ortamdaki güvenlik farkındalığınızı gösterecek.</p>
+            <img src="https://placehold.co/800x250/282a36/f1fa8c?text=Açık+Masada+Gizli+Bilgi" alt="Temiz Masa ve Ekran temalı görsel" class="scenario-image">
+            <div class="intro-metrics-container">
+                <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+                <ul>
+                    <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-lock"></i></span><div><strong>Masa Güvenliği</strong><small>Fiziksel belgelerin güvenli saklanması.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-display"></i></span><div><strong>Ekran Güvenliği</strong><small>Dijital bilginin ekranda korunması.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-book-bookmark"></i></span><div><strong>ISO 27001 Uyumu</strong><small>Temiz Masa/Ekran politikasına bağlılık.</small></div></li>
+                    <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-file-export"></i></span><div><strong>Veri Sızıntı Riski</strong><small>Hassas verilerin açığa çıkma ihtimali.</small></div></li>
+                </ul>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-lock"></i> Masa Güvenliği</span><div class="value" id="status-desk">100</div></div>
+                <div class="metric"><span><i class="fa-solid fa-display"></i> Ekran Güvenliği</span><div class="value" id="status-screen">100</div></div>
+                <div class="metric"><span><i class="fa-solid fa-book-bookmark"></i> ISO 27001 Uyumu</span><div class="value" id="status-compliance">100</div></div>
+                <div class="metric"><span><i class="fa-solid fa-file-export"></i> Veri Sızıntı Riski</span><div class="value" id="status-risk">0</div></div>
+                <div class="metric"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-timer">10:00</div></div>
+            </div>
+            <div id="game-content"></div>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <div id="intermissionDetails"></div>
+            <button class="btn btn-continue" id="continueButton"><i class="fa-solid fa-forward"></i> Sonraki Aşamaya Geç</button>
+        </div>
+        
+        <div id="finalSection" class="section centered-page" style="display: none; flex-direction:column; align-items:center;">
+            <h2><i class="fa-solid fa-award"></i> Simülasyon Tamamlandı: Değerlendirme Raporu</h2>
+            <p>Simülasyonu başarıyla tamamladınız. Temiz Masa ve Temiz Ekran politikalarına uyum konusundaki kararlarınızın analizi aşağıdadır.</p>
+            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+            <div class="final-metrics" id="finalMetricsContainer"></div>
+            <div class="post-crisis-layout">
+                <div class="event-timeline">
+                    <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+                    <ul id="decision-timeline-list"></ul>
+                </div>
+                <div class="strategic-debrief">
+                    <h3><i class="fa-solid fa-lightbulb"></i> Çıkarılan Dersler</h3>
+                    <div id="strategic-debrief-content"></div>
+                    <h3 style="margin-top: 20px;"><i class="fa-solid fa-calculator"></i> Puan Dökümü</h3>
+                    <ul id="score-breakdown"></ul>
+                </div>
+            </div>
+            <button class="btn btn-restart" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+        </div>
+
+        <div id="html-content-templates" style="display: none;">
+            <div id="stage1">
+                <h2><i class="fa-solid fa-person-running"></i> Aşama 1: Öğle Yemeği Aceleciliği</h2>
+                <p>Saat 12:30 ve arkadaşlarınız öğle yemeği için sizi bekliyor. Masanızın üzerinde, son derece gizli bir birleşme & satın alma projesi olan "Proje Titan" ile ilgili çıktılar ve el yazısı notlar duruyor. Bilgisayar ekranınızda ise projenin finansal verilerini içeren bir Excel tablosu açık.</p>
+                <img src="https://placehold.co/800x250/282a36/e0e0e0?text=Dağınık+Masa+-+Açık+Ekran" alt="Dağınık masa ve açık ekran" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Hızla yemeğe çıkmanız gerekiyor. Ne yaparsınız?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s1a"><i class="fa-solid fa-table-list"></i><div class="btn-text">Seçenek A: Her şeyi olduğu gibi bırakırım.<small>Sadece 30 dakikalığına gidiyorum, ofis zaten güvenli.</small></div></button>
+                        <button class="btn" data-decision="s1b"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek B: Tüm belgeleri kilitli dolaba kaldırır ve ekranımı kilitlerim.<small>Temiz Masa ve Temiz Ekran politikası bunu gerektirir.</small></div></button>
+                        <button class="btn" data-decision="s1c"><i class="fa-solid fa-layer-group"></i><div class="btn-text">Seçenek C: Belgeleri ters çevirip üst üste koyar, ekranı kilitlerim.<small>Hızlı bir çözüm, kimsenin bir şey göreceğini sanmam.</small></div></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stage2">
+                <h2><i class="fa-solid fa-print"></i> Aşama 2: Yazıcıdaki Unutkanlık</h2>
+                <p>"Proje Titan"ın 10 sayfalık özetini yazıcıya gönderdiniz. Yazıcının bulunduğu kata indiğinizde, acil bir telefon geliyor ve 10 dakikalık önemli bir görüşme yapmanız gerekiyor. Çıktılar ise yazıcının tepsisinde sizi bekliyor.</p>
+                <img src="https://placehold.co/800x250/282a36/f1fa8c?text=Yazıcıda+Bekleyen+Gizli+Belgeler" alt="Yazıcıda bekleyen belgeler" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu durumda nasıl bir yol izlersiniz?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s2a"><i class="fa-solid fa-folder-closed"></i><div class="btn-text">Seçenek A: Arayandan bir saniye ister, çıktıları alır ve hemen kapalı bir dosyaya koyarak yanıma alırım.<small>Hassas belgeler asla ortada bırakılmamalıdır.</small></div></button>
+                        <button class="btn" data-decision="s2b"><i class="fa-solid fa-user-tie"></i><div class="btn-text">Seçenek B: Güvendiğim bir iş arkadaşımdan benim için alıp masama bırakmasını rica ederim.<small>Takım çalışması önemlidir, o benim için halleder.</small></div></button>
+                        <button class="btn" data-decision="s2c"><i class="fa-solid fa-phone"></i><div class="btn-text">Seçenek C: "Nasılsa kimse almaz" der, telefon görüşmesini yaparım.<small>Görüşmem bittikten sonra çıktıları alırım.</small></div></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stage3">
+                <h2><i class="fa-solid fa-people-group"></i> Aşama 3: Beklenmedik Ziyaretçiler</h2>
+                <p>Masanızda "Proje Titan" belgeleriyle çalışırken, ofis katınıza daha önce görmediğiniz, dış hizmet firmasına ait logolu üniformalar giyen bir bakım ekibi giriyor. Klimaları kontrol etmek için masalar arasında dolaşmaya başlıyorlar.</p>
+                <img src="https://placehold.co/800x250/282a36/8be9fd?text=Ofiste+Dolaşan+Bakım+Ekibi" alt="Ofisteki bakım ekibi" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu durum karşısında ne yaparsınız?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s3a"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: Çalışmaya ara verir, tüm belgeleri kilitli dolabıma kaldırırım.<small>Yetkisiz gözlerin hassas bilgilere erişimini tamamen engellemeliyim.</small></div></button>
+                        <button class="btn" data-decision="s3b"><i class="fa-solid fa-display"></i><div class="btn-text">Seçenek B: Çalışmaya devam ederim.<small>Onlar işlerini yapıyor, benim masama bakacak değiller ya.</small></div></button>
+                        <button class="btn" data-decision="s3c"><i class="fa-solid fa-file-shield"></i><div class="btn-text">Seçenek C: Tüm gizli belgeleri hemen ters çevirir veya üzerlerini başka bir dosyayla kapatırım.<small>Bu, hızlı ve pratik bir çözüm.</small></div></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stage4">
+                <h2><i class="fa-solid fa-chalkboard-user"></i> Aşama 4: Toplantı Odası Molası</h2>
+                <p>Ekibinizle "Proje Titan" üzerine bir toplantı yapıyorsunuz. Projenin tüm stratejik detayları, finansal hedefleri ve risk analizleri toplantı odasındaki büyük ekrana yansıtılmış durumda. Toplantıya 5 dakikalık bir kahve molası veriliyor ve herkes odadan çıkıyor.</p>
+                <img src="https://placehold.co/800x250/282a36/bd93f9?text=Toplantı+Odası+Ekranında+Kalan+Gizli+Bilgiler" alt="Toplantı odası ekranı" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Odadan en son siz çıkıyorsunuz. Ne yaparsınız?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s4a"><i class="fa-solid fa-power-off"></i><div class="btn-text">Seçenek A: Sadece sunumu kapatırım ama bilgisayar açık kalır.<small>Bu, bilgilerin görünmesini engeller.</small></div></button>
+                        <button class="btn" data-decision="s4b"><i class="fa-solid fa-display-arrow-down"></i><div class="btn-text">Seçenek B: Sunumu kapatır ve bilgisayarın ekranını kilitlerim (Win+L).<small>Temiz Ekran politikası, ortak alanlardaki ekranlar için de geçerlidir.</small></div></button>
+                        <button class="btn" data-decision="s4c"><i class="fa-solid fa-person-walking-arrow-right"></i><div class="btn-text">Seçenek C: Ekranı olduğu gibi açık bırakırım.<small>Sonuçta 5 dakika sonra geri döneceğiz ve oda boş.</small></div></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stage5">
+                <h2><i class="fa-solid fa-eraser"></i> Aşama 5: Beyaz Tahta Tehlikesi</h2>
+                <p>Toplantınız bitti ve herkes odadan ayrıldı. Ancak, toplantı boyunca kullandığınız beyaz tahta, "Proje Titan"ın tüm yol haritasını, kilit personel isimlerini ve potansiyel satın alma rakamlarını içeren şema ve notlarla dolu.</p>
+                <img src="https://placehold.co/800x250/282a36/ff79c6?text=Beyaz+Tahtada+Unutulan+Sırlar" alt="Beyaz tahtada kalan bilgiler" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu durumda doğru davranış nedir?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s5a"><i class="fa-solid fa-camera"></i><div class="btn-text">Seçenek A: Tahtanın fotoğrafını çeker, "Sonra temizlenir" diye düşünerek odadan ayrılırım.<small>Notlar önemli, dijital bir kopyası bulunsun.</small></div></button>
+                        <button class="btn" data-decision="s5b"><i class="fa-solid fa-door-open"></i><div class="btn-text">Seçenek B: Odadan çıkarım.<small>Temizlik personeli veya bir sonraki toplantı sahibi nasılsa temizler.</small></div></button>
+                        <button class="btn" data-decision="s5c"><i class="fa-solid fa-broom"></i><div class="btn-text">Seçenek C: Odadan çıkmadan önce beyaz tahtadaki tüm bilgileri tamamen silerim.<small>Geçici olarak yazılan bilgiler de gizlidir ve imha edilmelidir.</small></div></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stage6">
+                <h2><i class="fa-solid fa-moon"></i> Aşama 6: Gün Sonu Yorgunluğu</h2>
+                <p>Saat geç oldu, yorucu bir gün geçirdiniz ve bir an önce eve gitmek istiyorsunuz. Masanızda gün boyunca kullandığınız "Proje Titan" notları, karalamalar ve bir-iki resmi belge duruyor. Bilgisayarınız ise hala açık.</p>
+                <img src="https://placehold.co/800x250/282a36/f1fa8c?text=Eve+Gitme+Zamanı...+Ama+Masanız+Böyle..." alt="Günün sonunda dağınık masa" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu yorgunlukla son görevinizi nasıl yerine getirirsiniz?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s6a"><i class="fa-solid fa-shield-halved"></i><div class="btn-text">Seçenek A: Tüm gizli belgeleri kilitli dolaba kaldırır veya imha kutusuna atar ve bilgisayarımı kapatırım.<small>Yorgunluk, güvenlik prosedürlerini atlamak için bir mazeret değildir.</small></div></button>
+                        <button class="btn" data-decision="s6b"><i class="fa-solid fa-lock-open"></i><div class="btn-text">Seçenek B: Tüm belgeleri kilitli olmayan standart çekmeceme koyar, ekranı kilitlerim.<small>En azından ortada durmasınlar, bu kadarı yeterli.</small></div></button>
+                        <button class="btn" data-decision="s6c"><i class="fa-solid fa-layer-group"></i><div class="btn-text">Seçenek C: Belgeleri üst üste koyup ters çeviririm ve bilgisayarı kapatırım.<small>Bu şekilde kimse bir şey göremez.</small></div></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stage7">
+                <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Aşama 7: Güvenlik Denetimi</h2>
+                <p>Ertesi sabah, Bilgi Güvenliği Yöneticisinden (CISO) bir e-posta alıyorsunuz: "Değerli Çalışanlar, dün gece ofislerimizde habersiz bir 'Temiz Masa & Temiz Ekran' denetimi gerçekleştirilmiştir. Maalesef, birçok masada ve toplantı odasında hassas bilgilere ulaşılabilecek ciddi zafiyetler tespit edilmiştir. Bu simülasyon, dün geceki denetim sırasında sizin masanızda ve sorumlu olduğunuz alanlarda tespit edilen durumları yansıtmaktadır."</p>
+                <img src="https://placehold.co/800x250/282a36/50fa7b?text=HABERSİZ+GÜVENLİK+DENETİMİ+SONUÇLARI" alt="Güvenlik Denetimi Raporu" class="scenario-image">
+                <div class="interactive-element">
+                    <h4>Bu bilgilendirme sonrası ne düşünürsünüz?</h4>
+                    <div class="decision-buttons">
+                        <button class="btn" data-decision="s7a"><i class="fa-solid fa-user-secret"></i><div class="btn-text">Seçenek A: "Sürekli izleniyoruz" hissine kapılır, rahatsız olurum.<small>Bu tür habersiz denetimler çalışanların motivasyonunu düşürür.</small></div></button>
+                        <button class="btn" data-decision="s7b"><i class="fa-solid fa-award"></i><div class="btn-text">Seçenek B: Bu denetimin, kişisel farkındalığımı ve alışkanlıklarımı geliştirmek için harika bir fırsat olduğunu düşünürüm.<small>Hatalardan ders çıkarmak önemlidir.</small></div></button>
+                        <button class="btn" data-decision="s7c"><i class="fa-solid fa-person-circle-question"></i><div class="btn-text">Seçenek C: "Benim masamda bir sorun yoktur" diye düşünürüm.<small>Genellikle dikkatli bir insanım, muhtemelen bir hata yapılmamıştır.</small></div></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const game = {
+            score: { desk: 100, screen: 100, compliance: 100, risk: 0 },
+            state: { currentStageId: 'stage1', decisionHistory: [] },
+            timer: { total: 240, remaining: 240, intervalId: null },
+            elements: {},
+            decisionInfo: {
+                's1a': { title: "Sadece Ekranı Kilitledin", strat: "Temiz Ekran politikasını uyguladınız ancak Temiz Masa politikasını ihlal ettiniz. Hassas belgeleri masada bırakmak, yetkisiz kişilerin (temizlik, bakım, diğer çalışanlar) bilgilere erişmesi için bir davetiyedir. (ISO 27001 A.7.7)", changes: { desk: -25, compliance: -10, risk: +20 }, impact: 'Neutral' },
+                's1b': { title: "Her Şeyi Açık Bıraktın", strat: "Hem Temiz Masa hem de Temiz Ekran politikalarını ihlal ettiniz. Bu, en yüksek riskli davranıştır ve hassas verilerin sızması için büyük bir zafiyet oluşturur. (ISO 27001 A.7.7)", changes: { desk: -40, screen: -40, compliance: -30, risk: +40 }, impact: 'Negative' },
+                's1c': { title: "Tam Güvenlik Sağladın", strat: "Mükemmel! Masanızı terk etmeden önce hem fiziksel hem de dijital tüm gizli bilgileri güvence altına aldınız. Bu, sorumlu ve bilinçli bir çalışanın davranışıdır. (ISO 27001 A.7.7)", changes: { compliance: +15 }, impact: 'Positive' },
+                
+                's2a': { title: "Çıktıları Hemen ve Güvenli Aldın", strat: "Çok doğru. Hassas bir belge, basıldığı andan imha edildiği ana kadar sizin sorumluluğunuzdadır. Onu bir an bile sahipsiz bırakmamak en doğru davranıştır.", changes: { compliance: +15 }, impact: 'Positive' },
+                's2b': { title: "Arkadaşından Rica Ettin", strat: "İyi niyetli bir 'tuzak'. Güvendiğiniz bir iş arkadaşı bile olsa, hassas bir belgenin sorumluluğunu devredemezsiniz. Bu, belgenin kontrolünü kaybetmektir ve politika ihlalidir.", changes: { desk: -15, compliance: -15, risk: +20, ethics: -5 }, impact: 'Neutral' },
+                's2c': { title: "Çıktıları Sonra Alırım Dedin", strat: "Yazıcılar, genellikle kontrolsüz ortak alanlardır. Hassas bir çıktıyı tepsisinde bırakmak, o belgenin kontrolünü kaybetmek anlamına gelir. Belge, kasıtlı olarak alınabilir.", changes: { desk: -30, compliance: -20, risk: +30 }, impact: 'Negative' },
+
+                's3a': { title: "Tam Güvenlik Sağladın", strat: "Mükemmel! 'Bilmesi gereken' prensibi, sadece şirket içindeki farklı departmanlar için değil, aynı zamanda yetkisi olmayan dış hizmet sağlayıcıları için de geçerlidir. Bilgiyi gizlemek en doğru adımdır.", changes: { compliance: +15, desk: +10 }, impact: 'Positive' },
+                's3b': { title: "Çalışmaya Devam Ettin", strat: "Yetkisiz kişilerin (ziyaretçi, bakım ekibi vb.) yanında gizli bilgilerle çalışmaya devam etmek, doğrudan bir politika ihlalidir ve omuz sörfü (shoulder surfing) gibi risklere yol açar.", changes: { desk: -30, compliance: -20, risk: +25 }, impact: 'Negative' },
+                's3c': { title: "Belgeleri Ters Çevirdin", strat: "Bu, hiç önlem almamaktan daha iyi olsa da, yetersiz bir güvenlik adımıdır. Belgeler hala masadadır ve meraklı bir göz tarafından kolayca okunabilir. Bu, 'güvenlik yanılsaması' yaratır.", changes: { desk: -15, compliance: -10, risk: +10 }, impact: 'Neutral' },
+                
+                's4a': { title: "Sadece Sunumu Kapattın", strat: "Sunumu kapatmak, anlık görüntüyü engeller ancak bilgisayar hala açıktır ve kilitsizdir. Kötü niyetli biri, saniyeler içinde masaüstündeki diğer dosyalara veya sistemlere erişebilir.", changes: { screen: -20, compliance: -10, risk: +15 }, impact: 'Neutral' },
+                's4b': { title: "Ekranı Kilitledin", strat: "Çok doğru. Bir anlığına bile olsa, bir cihazın başından ayrılırken ekranı kilitlemek (Win+L), en temel ve en etkili siber güvenlik alışkanlıklarından biridir.", changes: { compliance: +15, screen: +10 }, impact: 'Positive' },
+                's4c': { title: "Ekranı Açık Bıraktın", strat: "Boş ve denetimsiz bir toplantı odasında hassas verileri ekranda bırakmak, tüm şirketin sırlarını vitrine koymak gibidir. Temiz Ekran politikası ortak alanlarda iki kat önemlidir. (ISO 27001 A.7.7)", changes: { screen: -40, compliance: -20, risk: +30 }, impact: 'Negative' },
+
+                's5a': { title: "Fotoğrafını Çektin", strat: "Gizli bilgilerin fotoğrafını çekmek, kontrolsüz bir dijital kopya yaratmaktır. Bu telefon çalınabilir, hacklenebilir veya bulut hesabınızdan sızdırılabilir. Ayrıca, tahtayı silme sorumluluğundan kaçtınız.", changes: { desk: -20, risk: +20, compliance: -15 }, impact: 'Negative' },
+                's5b': { title: "Odadan Çıktın", strat: "Toplantı odasındaki bilgilerin güvenliği, o toplantıya katılan herkesin ortak sorumluluğundadır. 'Başkası yapar' düşüncesi, veri sızıntılarının en yaygın nedenlerindendir.", changes: { desk: -25, compliance: -15, risk: +15 }, impact: 'Negative' },
+                's5c': { title: "Tahtayı Sildin", strat: "Mükemmel. Beyaz tahtalar, bir toplantı bittiğinde üzerindeki tüm bilgilerin imha edilmesi gereken geçici depolama alanlarıdır. Bu sorumluluğu üstlenmeniz, yüksek bir farkındalık göstergesidir.", changes: { compliance: +15, desk: +10 }, impact: 'Positive' },
+                
+                's6a': { title: "Tam Prosedürü Uyguladın", strat: "Tebrikler! Yorgunluğa rağmen güvenlik disiplininden taviz vermediniz. Gerçek güvenlik kültürü, tam olarak bu tür anlarda gösterilen davranışlarla oluşur.", changes: { compliance: +15, desk: +10, screen: +10 }, impact: 'Positive' },
+                's6b': { title: "Kilitsiz Çekmeceye Koydun", strat: "Belgeleri ortadan kaldırmak doğru bir adım, ancak onları kilitsiz bir alana koymak, 'Temiz Masa' politikasının ruhuna aykırıdır. Politika, sadece dağınıklığı değil, gizliliği de hedefler.", changes: { desk: -15, compliance: -15, risk: +15 }, impact: 'Neutral' },
+                's6c': { title: "Belgeleri Ters Çevirdin", strat: "Gün sonunda yapılan bu yarım yamalak güvenlik önlemi, yorgunluğun disiplinin önüne geçtiğini gösterir. Bu, etkili bir koruma sağlamaz ve ertesi güne bir risk bırakır.", changes: { desk: -20, compliance: -10, risk: +10 }, impact: 'Neutral' },
+
+                's7a': { title: "Rahatsız Oldun", strat: "Habersiz denetimler rahatsız edici olabilir, ancak gerçek bir saldırgan da haber vermeden gelir. Bu testler, şirketin gerçek hayattaki bir olaya ne kadar hazırlıklı olduğunu ölçmenin tek yoludur.", changes: { compliance: -10, reputation: -5 }, impact: 'Neutral' },
+                's7b': { title: "Bunu Fırsat Olarak Gördün", strat: "Bu, en sağlıklı ve en profesyonel yaklaşımdır. Güvenlik denetimleri, cezalandırmak için değil, zayıflıkları tespit edip güçlendirmek için yapılır. Bu süreci öğrenme fırsatı olarak görmek, olgun bir güvenlik kültürünün işaretidir.", changes: { compliance: +10, reputation: +5 }, impact: 'Positive' },
+                's7c': { title: "Sorun Olmadığını Düşündün", strat: "Aşırı özgüven, güvenlikte tehlikeli bir durumdur. 'Bana bir şey olmaz' veya 'Ben hata yapmam' düşüncesi, genellikle en basit hataların yapılmasına neden olan kör noktaları yaratır.", changes: { compliance: -5, risk: +5 }, impact: 'Negative' },
+            },
+            
+            setup() {
+                this.elements = {
+                    intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'),
+                    gameContent: document.getElementById('game-content'), startButton: document.getElementById('startButton'),
+                    intermission: document.getElementById('intermissionSection'), intermissionTitle: document.getElementById('intermissionTitle'),
+                    intermissionDetails: document.getElementById('intermissionDetails'), continueButton: document.getElementById('continueButton'),
+                    finalSection: document.getElementById('finalSection'),
+                    htmlTemplates: document.getElementById('html-content-templates'),
+                    statusBar: {
+                        desk: document.getElementById('status-desk'), screen: document.getElementById('status-screen'),
+                        compliance: document.getElementById('status-compliance'), risk: document.getElementById('status-risk'),
+                        timer: document.getElementById('status-timer'),
+                    }
+                };
+                this.attachListeners();
+            },
+            attachListeners() {
+                this.elements.startButton.addEventListener('click', () => {
+                    this.elements.intro.style.display = 'none'; this.elements.game.style.display = 'block';
+                    this.startTimer(); this.showStage('stage1');
+                });
+                this.elements.gameContent.addEventListener('click', (e) => {
+                    const button = e.target.closest('.btn[data-decision]');
+                    if (!button || button.disabled) return;
+                    this.handleDecision(button.dataset.decision);
+                });
+                this.elements.continueButton.addEventListener('click', () => {
+                    const currentStageNum = parseInt(this.state.currentStageId.replace('stage', ''), 10);
+                    this.elements.intermission.style.display = 'none';
+                    if (currentStageNum >= 7) { this.showFinalReport(); } 
+                    else { this.elements.game.style.display = 'block'; this.showStage(`stage${currentStageNum + 1}`); }
+                });
+            },
+            handleDecision(decisionId) {
+                const info = this.decisionInfo[decisionId];
+                if (!info) return;
+                this.state.decisionHistory.push({ ...info, id: decisionId });
+                this.updateScore(info.changes);
+                this.elements.game.style.display = 'none';
+                this.showIntermission(info);
+            },
+            updateScore(changes) {
+                this.score.desk = Math.max(0, Math.min(100, this.score.desk + (changes.desk || 0)));
+                this.score.screen = Math.max(0, Math.min(100, this.score.screen + (changes.screen || 0)));
+                this.score.compliance = Math.max(0, Math.min(100, this.score.compliance + (changes.compliance || 0)));
+                this.score.risk = Math.max(0, Math.min(100, this.score.risk + (changes.risk || 0)));
+                this.updateStatusBar();
+            },
+            updateStatusBar() {
+                const s = this.score;
+                this.elements.statusBar.desk.textContent = s.desk;
+                this.elements.statusBar.screen.textContent = s.screen;
+                this.elements.statusBar.compliance.textContent = s.compliance;
+                this.elements.statusBar.risk.textContent = s.risk;
+            },
+            showStage(stageId) {
+                this.state.currentStageId = stageId;
+                const stageTemplate = this.elements.htmlTemplates.querySelector(`#${stageId}`);
+                if (stageTemplate) { this.elements.gameContent.innerHTML = stageTemplate.innerHTML; }
+            },
+            showIntermission(info) {
+                this.elements.intermissionTitle.textContent = `Kararınız: ${info.title}`;
+                let metricsHTML = '';
+                const formatChange = (label, value, isRisk = false) => {
+                    if (value === undefined || value === 0) return '';
+                    let colorClass = 'neutral'; const sign = value > 0 ? '+' : '';
+                    if (isRisk) { colorClass = value > 0 ? 'negative' : 'positive'; }
+                    else { colorClass = value > 0 ? 'positive' : 'negative'; }
+                    return `<div class="metric-change ${colorClass}">${label}: ${sign}${value.toLocaleString('tr-TR')}</div>`;
+                };
+                metricsHTML += formatChange('Masa Güvenliği', info.changes.desk);
+                metricsHTML += formatChange('Ekran Güvenliği', info.changes.screen);
+                metricsHTML += formatChange('ISO 27001 Uyumu', info.changes.compliance);
+                metricsHTML += formatChange('Veri Sızıntı Riski', info.changes.risk, true);
+                this.elements.intermissionDetails.innerHTML = `
+                    <div class="metric-change-summary-container"><h4>Kararın Anlık Etkileri</h4><div class="metric-change-summary">${metricsHTML}</div></div>
+                    <div class="interactive-element" style="text-align:left; width:100%; max-width:600px; margin-top:20px;">
+                        <h4>Stratejik Not (ISO 27001)</h4><p>${info.strat}</p>
+                    </div>`;
+                this.elements.intermission.style.display = 'flex';
+            },
+            showFinalReport() {
+                this.stopTimer();
+                this.elements.game.style.display = 'none';
+                this.elements.intermission.style.display = 'none';
+                this.elements.finalSection.style.display = 'flex';
+                
+                let totalScore = 50;
+                let scoreBreakdown = { 'Başlangıç Puanı': { value: 50, class: 'score-neutral' }};
+                let decisionQualityScore = 0;
+                this.state.decisionHistory.forEach(d => {
+                    if (d.impact === 'Positive') decisionQualityScore += 5;
+                    else if (d.impact === 'Neutral') decisionQualityScore -= 3;
+                    else if (d.impact === 'Negative') decisionQualityScore -= 7;
+                });
+                totalScore += decisionQualityScore;
+                scoreBreakdown['Karar Kalitesi'] = { value: decisionQualityScore, class: decisionQualityScore >= 0 ? 'score-plus' : 'score-minus' };
+                const finalComplianceBonus = Math.round((this.score.compliance - 50) / 4);
+                totalScore += finalComplianceBonus;
+                scoreBreakdown['ISO 27001 Uyum Puanı'] = { value: finalComplianceBonus, class: finalComplianceBonus >= 0 ? 'score-plus' : 'score-minus' };
+                const finalSecurityBonus = Math.round(((this.score.desk + this.score.screen) / 2 - 50) / 4);
+                totalScore += finalSecurityBonus;
+                scoreBreakdown['Masa ve Ekran Güvenliği'] = { value: finalSecurityBonus, class: finalSecurityBonus >= 0 ? 'score-plus' : 'score-minus' };
+                const finalRiskPenalty = -Math.round(this.score.risk / 5);
+                totalScore += finalRiskPenalty;
+                if(finalRiskPenalty < 0) scoreBreakdown['Oluşan Sızıntı Riski'] = { value: finalRiskPenalty, class: 'score-minus' };
+                totalScore = Math.max(0, Math.min(100, Math.round(totalScore)));
+
+                let badgeInfo = {};
+                if (totalScore >= 90) { badgeInfo = { text: 'GÜVENLİK PROFESYONELİ', color: 'var(--accent-green)' }; }
+                else if (totalScore >= 75) { badgeInfo = { text: 'DİSİPLİNLİ ÇALIŞAN', color: 'var(--accent-blue)' }; }
+                else if (totalScore >= 50) { badgeInfo = { text: 'FARKINDALIĞI YÜKSEK', color: 'var(--accent-yellow)' }; }
+                else { badgeInfo = { text: 'GELİŞİM GEREKİYOR', color: 'var(--accent-red)' }; }
+
+                this.elements.finalSection.querySelector('#performance-badge').textContent = badgeInfo.text;
+                this.elements.finalSection.querySelector('#performance-badge').style.backgroundColor = badgeInfo.color;
+                this.elements.finalSection.querySelector('#finalMetricsContainer').innerHTML = `
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-star"></i></div><div class="label">Genel Performans</div><div class="value">${totalScore}/100</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-lock"></i></div><div class="label">Masa Güvenliği</div><div class="value">${this.score.desk}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-display"></i></div><div class="label">Ekran Güvenliği</div><div class="value">${this.score.screen}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-book-bookmark"></i></div><div class="label">ISO 27001 Uyumu</div><div class="value">${this.score.compliance}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-file-export"></i></div><div class="label">Veri Sızıntı Riski</div><div class="value">${this.score.risk}</div></div>`;
+                this.elements.finalSection.querySelector('#decision-timeline-list').innerHTML = this.state.decisionHistory.map(d => `<li class="${d.impact.toLowerCase()}"><span class="decision-title">${d.title}</span></li>`).join('');
+                this.elements.finalSection.querySelector('#score-breakdown').innerHTML = Object.entries(scoreBreakdown).map(([key, item]) => `<li class="${item.class}"><span>${key}</span><span class="score-value">${item.value > 0 ? '+' : ''}${item.value} Puan</span></li>`).join('');
+                this.elements.finalSection.querySelector('#strategic-debrief-content').innerHTML = `<p>Bu simülasyon, fiziksel bilgi güvenliğinin temelini oluşturan ISO 27001 A.7.7 maddesini test etti. Doğru alışkanlıklar:</p>
+                <ul style="text-align:left; max-width: 500px; margin: auto;">
+                    <li><strong>Temiz Masa:</strong> Masanızı terk ederken, özellikle gün sonunda, tüm hassas belgeler kilitli dolaplara kaldırılmalıdır.</li>
+                    <li><strong>Temiz Ekran:</strong> Bir anlığına bile olsa masanızdan ayrılırken ekranınızı kilitleyin (Win+L).</li>
+                    <li><strong>Ortak Alanlar:</strong> Yazıcı, toplantı odası gibi ortak alanlarda asla gizli bilgi bırakmayın.</li>
+                    <li><strong>Beyaz Tahtalar:</strong> Toplantı bitiminde beyaz tahtadaki tüm bilgiler silinmelidir.</li>
+                </ul>`;
+            },
+            startTimer() {
+                this.timer.intervalId = setInterval(() => {
+                    this.timer.remaining--;
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
+                    this.elements.statusBar.timer.textContent = `${m}:${s}`;
+                    if (this.timer.remaining <= 0) { this.stopTimer(); alert("Süre doldu!"); this.showFinalReport(); }
+                }, 1000);
+            },
+            stopTimer() { clearInterval(this.timer.intervalId); }
+        };
+        game.setup();
+    });
+    </script>
+</body>
+</html>
