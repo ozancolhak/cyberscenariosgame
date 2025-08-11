@@ -304,7 +304,7 @@ table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
                     <img src="spike.png" alt="DDoS traffic spike visual" class="scenario-image">
                     <div class="interactive-element">
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="ddos-p1-enable-onprem-mitigation" data-next-section="ddos_phase2_cdn_contact"><i class="fa-solid fa-firewall"></i><div class="btn-text">Seçenek A: Mevcut On-Prem DDoS Mitigasyon Sistemlerini Aktive Et.<small>Trafiği kendi altyapındaki çözümlerle filtrelemeye başla. Hızlı ancak kapasitesi sınırlı olabilir.</small></div></button>
+                            <button class="btn" data-decision="ddos-p1-enable-onprem-mitigation" data-next-section="ddos_phase2_cdn_contact"><i class="fa-solid fa-firewall"></i><div class="btn-text">Seçenek A: Mevcut On-Prem DDoS Mitigasyon Sistemlerini Aktive Et.<small>Trafiği kendi altyapındaki çözümlerle filtrelemeye başla. Hızlı ancak kapasitesi sınırlı olabilir.</small></div></button>
                             <button class="btn" data-decision="ddos-p1-contact-isp" data-next-section="ddos_phase2_cdn_contact"><i class="fa-solid fa-phone-volume"></i><div class="btn-text">Seçenek B: ISP ile İletişime Geç ve Trafik Filtrelemesini Talep Et.<small>Saldırı trafiğinin şirket ağına ulaşmadan önce filtrelemesini iste. Dış bağımlılık ve gecikme riski var.</small></div></button>
                         </div>
                     </div>
@@ -320,7 +320,7 @@ table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
 
                         <h4>Bu bekleme süresinde, iş sürekliliğini sağlamak için ne yapacaksın?</h4>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="ddos-p2-temporary-service-degradation" data-next-section="ddos_phase3_traffic_diversion"><i class="fa-solid fa-minus-circle"></i><div class="btn-text">Seçenek A: Bazı Kritik Olmayan Hizmetleri Geçici Olarak Kapat.<small>Sistem yükünü azaltmak ve ana hizmetleri ayakta tutmak için kaynak tüketimini düşür.</small></div></button>
+                            <button class="btn" data-decision="ddos-p2-temporary-service-degradation" data-next-section="ddos_phase3_traffic_diversion"><i class="fa-solid fa-minus-circle"></i><div class="btn-text">Seçenek A: Bazı Kritik Olmayan Hizmetleri Geçici Olarak Kapat.<small>Sistem yükünü azaltmak ve ana hizmetleri ayakta tutmak için kaynak tüketimini düşür.</small></div></button>
                             <button class="btn" data-decision="ddos-p2-scale-up-resources" data-next-section="ddos_phase3_traffic_diversion"><i class="fa-solid fa-arrow-up-right-dots"></i><div class="btn-text">Seçenek B: Sunucu Kaynaklarını Hızla Artır (Scale Up/Out).<small>Mevcut sunucuların kapasitesini artır veya ek sunucular devreye al. Maliyetli olabilir.</small></div></button>
                         </div>
                     </div>
@@ -335,7 +335,7 @@ table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
                     <img src="traffic.png" alt="Traffic diversion visual" class="scenario-image">
                     <div class="interactive-element">
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="ddos-p3-rate-limiting" data-next-section="ddos_phase4_communication_and_reputation"><i class="fa-solid fa-hand-holding-dollar"></i><div class="btn-text">Seçenek A: Uygulama Katmanında Oran Sınırlaması (Rate Limiting) Uygula.<small>Belirli IP adreslerinden veya kullanıcı oturumlarından gelen istek hızını kısıtla. Meşru kullanıcıları etkileyebilir.</small></div></button>
+                            <button class="btn" data-decision="ddos-p3-rate-limiting" data-next-section="ddos_phase4_communication_and_reputation"><i class="fa-solid fa-hand-holding-dollar"></i><div class="btn-text">Seçenek A: Uygulama Katmanında Oran Sınırlaması (Rate Limiting) Uygula.<small>Belirli IP adreslerinden veya kullanıcı oturumlarından gelen istek hızını kısıtla. Meşru kullanıcıları etkileyebilir.</small></div></button>
                             <button class="btn" data-decision="ddos-p3-captcha-challenges" data-next-section="ddos_phase4_communication_and_reputation"><i class="fa-solid fa-robot"></i><div class="btn-text">Seçenek B: Şüpheli Trafik için CAPTCHA Zorlaması Getir.<small>Bot trafiğini ayırt etmek için CAPTCHA gibi interaktif zorlamalar kullan. Kullanıcı deneyimini kötü etkileyebilir.</small></div></button>
                         </div>
                     </div>
@@ -351,7 +351,7 @@ table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
                     <div class="interactive-element">
                         <div class="decision-buttons">
                             <button class="btn" data-decision="ddos-p4-transparent-apology" data-next-section="ddos_phase5_post_attack_recovery"><i class="fa-solid fa-bullhorn"></i><div class="btn-text">Seçenek A: Saldırıyı Açıkla, Özür Dile ve Alınan Önlemleri Paylaş.<small>Şeffaf ol, DDoS saldırısı altında olduğunuzu ve mitigasyon adımlarını duyur. Güveni geri kazanmaya çalış.</small></div></button>
-                            <button class="btn critical" data-decision="ddos-p4-downplay-issue" data-next-section="ddos_phase5_post_attack_recovery"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Seçenek B: Sorunu 'Yoğun Bakım' veya 'Teknik Aksaklık' Olarak Nitele.<small>DDoS saldırısından bahsetme, durumu küçümse ve iç bir teknik sorun olarak göster.</small></div></button>
+                            <button class="btn" data-decision="ddos-p4-downplay-issue" data-next-section="ddos_phase5_post_attack_recovery"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Seçenek B: Sorunu 'Yoğun Bakım' veya 'Teknik Aksaklık' Olarak Nitele.<small>DDoS saldırısından bahsetme, durumu küçümse ve iç bir teknik sorun olarak göster.</small></div></button>
                             <button class="btn" data-decision="ddos-p4-offer-compensation" data-next-section="ddos_phase5_post_attack_recovery"><i class="fa-solid fa-gift"></i><div class="btn-text">Seçenek C: Hizmet Kesintisi İçin Kullanıcılara Telafi Teklif Et.<small>Finansal kaybı telafi etmek için indirim veya ücretsiz hizmet gibi teşvikler sun.</small></div></button>
                         </div>
                     </div>
@@ -366,7 +366,7 @@ table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
                         <h4>Bu büyük DDoS saldırısından çıkarılan derslerle, gelecekteki savunmanızı nasıl güçlendireceksin?</h4>
                         <div class="slack-chat" id="slackChatDDoS_P5"></div>
                         <div class="decision-buttons">
-                            <button class="btn critical" data-decision="ddos-p5-invest-advanced-mitigation" data-next-section="ddos_phase6_investigation"><i class="fa-solid fa-chart-line-up"></i><div class="btn-text">Seçenek A: Gelişmiş DDoS Mitigasyon Çözümlerine Yatırım Yap.<small>Daha sofistike DDoS koruma hizmetleri ve donanımları edinerek altyapıyı daha dayanıklı hale getir.</small></div></button>
+                            <button class="btn" data-decision="ddos-p5-invest-advanced-mitigation" data-next-section="ddos_phase6_investigation"><i class="fa-solid fa-chart-line-up"></i><div class="btn-text">Seçenek A: Gelişmiş DDoS Mitigasyon Çözümlerine Yatırım Yap.<small>Daha sofistike DDoS koruma hizmetleri ve donanımları edinerek altyapıyı daha dayanıklı hale getir.</small></div></button>
                             <button class="btn" data-decision="ddos-p5-conduct-drills" data-next-section="ddos_phase6_investigation"><i class="fa-solid fa-users-medical"></i><div class="btn-text">Seçenek B: Düzenli DDoS Simülasyonları ve Tatbikatlar Yap.<small>Ekibin kriz anında daha hızlı ve koordineli hareket etmesi için düzenli tatbikatlar düzenle.</small></div></button>
                             <button class="btn" data-decision="ddos-p5-review-network-architecture" data-next-section="ddos_phase6_investigation"><i class="fa-solid fa-sitemap"></i><div class="btn-text">Seçenek C: Ağ Altyapısını DDoS Dayanıklılığı İçin Yeniden Tasarla.<small>Tek bir noktadan başarısızlığı önlemek için ağ mimarisini dağıtık ve yedekli hale getir.</small></div></button>
                         </div>
@@ -402,7 +402,7 @@ table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
                         <div class="decision-buttons">
                             <button class="btn" data-decision="ddos-p6-blame-competitor" data-next-section="finalSection"><i class="fa-solid fa-briefcase"></i><div class="btn-text">Seçenek A: Rakip Firma (Disruptor Tech)<small>Yasal işlem başlatmak ve endüstriyel casusluğa karşı önlemleri artırmak için yönetime bu bilgiyi sun.</small></div></button>
                             <button class="btn" data-decision="ddos-p6-blame-hacktivists" data-next-section="finalSection"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Seçenek B: Hacktivist Grup (Digital Justice Front)<small>Halkla ilişkiler ekibini devreye sokarak şirketin kamuoyu imajını düzeltmeye ve politikaları gözden geçirmeye odaklan.</small></div></button>
-                            <button class="btn critical" data-decision="ddos-p6-blame-gang" data-next-section="finalSection"><i class="fa-solid fa-skull-crossbones"></i><div class="btn-text">Seçenek C: Fidye Grubu (Crypto-Lock Çetesi)<small>Soruşturmayı siber suç birimlerine devret ve gelecekteki fidye saldırılarına karşı savunma mekanizmalarını güçlendir.</small></div></button>
+                            <button class="btn" data-decision="ddos-p6-blame-gang" data-next-section="finalSection"><i class="fa-solid fa-skull-crossbones"></i><div class="btn-text">Seçenek C: Fidye Grubu (Crypto-Lock Çetesi)<small>Soruşturmayı siber suç birimlerine devret ve gelecekteki fidye saldırılarına karşı savunma mekanizmalarını güçlendir.</small></div></button>
                         </div>
                     </div>
                 </div>
