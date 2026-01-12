@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,8 +27,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         body {
@@ -41,7 +49,7 @@
             align-items: flex-start;
             min-height: 100vh;
             line-height: 1.7;
-            font-size:0.90em;
+            font-size: 0.90em;
         }
 
         .container {
@@ -56,7 +64,9 @@
         }
 
         @media (min-width: 768px) {
-            .container { padding: 40px; }
+            .container {
+                padding: 40px;
+            }
         }
 
         .centered-page {
@@ -116,7 +126,9 @@
         }
 
         @media (min-width: 768px) {
-            .section { padding: 30px; }
+            .section {
+                padding: 30px;
+            }
         }
 
         .interactive-element {
@@ -179,7 +191,8 @@
             color: var(--accent-blue);
         }
 
-        .btn-start, .btn-continue {
+        .btn-start,
+        .btn-continue {
             font-size: 1.3em;
             font-weight: bold;
             text-align: center;
@@ -223,13 +236,21 @@
             padding: 8px 15px;
             border-radius: 5px;
             background-color: var(--interactive-bg);
-            box-shadow: inset 0 1px 5px rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
             justify-content: center;
         }
 
-        .metric-change .positive { color: var(--accent-green); }
-        .metric-change .negative { color: var(--accent-red); }
-        .metric-change .neutral { color: var(--accent-blue); }
+        .metric-change .positive {
+            color: var(--accent-green);
+        }
+
+        .metric-change .negative {
+            color: var(--accent-red);
+        }
+
+        .metric-change .neutral {
+            color: var(--accent-blue);
+        }
 
         .intro-info-grid {
             display: grid;
@@ -247,7 +268,8 @@
             }
         }
 
-        .intro-roles-container, .intro-metrics-container {
+        .intro-roles-container,
+        .intro-metrics-container {
             background-color: var(--section-bg);
             border-radius: 10px;
             padding: 25px;
@@ -255,7 +277,8 @@
             border: 1px solid var(--interactive-bg);
         }
 
-        .intro-roles-container h3, .intro-metrics-container h3 {
+        .intro-roles-container h3,
+        .intro-metrics-container h3 {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--interactive-bg);
@@ -263,13 +286,15 @@
             text-align: center;
         }
 
-        .intro-roles-container ul, .intro-metrics-container ul {
+        .intro-roles-container ul,
+        .intro-metrics-container ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .intro-roles-container li, .intro-metrics-container li {
+        .intro-roles-container li,
+        .intro-metrics-container li {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -279,19 +304,21 @@
             font-size: 1.05em;
         }
 
-        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+        .intro-roles-container li:last-child,
+        .intro-metrics-container li:last-child {
             border-bottom: none;
             margin-bottom: 0;
         }
 
-        .intro-roles-container li .icon, .intro-metrics-container li .icon {
+        .intro-roles-container li .icon,
+        .intro-metrics-container li .icon {
             font-size: 1.8em;
             color: var(--accent-blue);
             flex-shrink: 0;
             width: 35px;
             text-align: center;
         }
-        
+
         .intro-roles-container li strong {
             color: var(--accent-yellow);
         }
@@ -379,7 +406,8 @@
             color: var(--accent-yellow);
         }
 
-        .code-block, .slack-chat {
+        .code-block,
+        .slack-chat {
             background-color: var(--text-dark);
             border: 1px solid #6272a4;
             border-radius: 8px;
@@ -389,8 +417,9 @@
             word-break: break-all;
             font-family: 'Consolas', monospace;
             font-size: 0.95em;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+
         .code-block code {
             color: var(--text-light);
         }
@@ -430,16 +459,37 @@
             margin-right: 8px;
         }
 
-        .slack-chat .sender.cso { color: var(--accent-green); }
-        .slack-chat .sender.ops { color: var(--accent-yellow); }
-        .slack-chat .sender.hr { color: var(--accent-blue); }
-        .slack-chat .sender.finance { color: var(--accent-red); }
-        .slack-chat .sender.ceo { color: var(--accent-purple); }
-        .slack-chat .sender.siem { color: var(--accent-blue); }
+        .slack-chat .sender.cso {
+            color: var(--accent-green);
+        }
 
-        #finalSection { text-align: center; }
+        .slack-chat .sender.ops {
+            color: var(--accent-yellow);
+        }
 
-        #performance-badge-container { margin: 25px 0; }
+        .slack-chat .sender.hr {
+            color: var(--accent-blue);
+        }
+
+        .slack-chat .sender.finance {
+            color: var(--accent-red);
+        }
+
+        .slack-chat .sender.ceo {
+            color: var(--accent-purple);
+        }
+
+        .slack-chat .sender.siem {
+            color: var(--accent-blue);
+        }
+
+        #finalSection {
+            text-align: center;
+        }
+
+        #performance-badge-container {
+            margin: 25px 0;
+        }
 
         #performance-badge {
             padding: 15px 35px;
@@ -452,7 +502,9 @@
             transition: transform 0.3s ease;
         }
 
-        #performance-badge:hover { transform: scale(1.08); }
+        #performance-badge:hover {
+            transform: scale(1.08);
+        }
 
         .post-crisis-layout {
             display: grid;
@@ -469,7 +521,8 @@
             }
         }
 
-        .event-timeline, .strategic-debrief {
+        .event-timeline,
+        .strategic-debrief {
             background-color: var(--interactive-bg);
             padding: 25px;
             border-radius: 8px;
@@ -478,7 +531,8 @@
             box-shadow: 0 4px 15px var(--shadow-light);
         }
 
-        .event-timeline h3, .strategic-debrief h3 {
+        .event-timeline h3,
+        .strategic-debrief h3 {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--section-bg);
@@ -523,8 +577,15 @@
             border: 2px solid var(--section-bg);
         }
 
-        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
-        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+        .event-timeline li.negative::before {
+            content: '\f00d';
+            color: var(--accent-red);
+        }
+
+        .event-timeline li.neutral::before {
+            content: '\f05a';
+            color: var(--accent-blue);
+        }
 
         .event-timeline li .decision-title {
             font-weight: bold;
@@ -538,97 +599,255 @@
             margin-bottom: 15px;
         }
 
-        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
-        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
-        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
-        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
-        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
-        #score-breakdown .score-value { font-weight: bold; }
+        #score-breakdown {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
 
-        .lb-overlay{
-            display:none; position:fixed; inset:0;
-            background: rgba(10,10,25,.7);
+        #score-breakdown li {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-breakdown .score-plus {
+            background-color: rgba(80, 250, 123, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        #score-breakdown .score-minus {
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        #score-breakdown .score-neutral {
+            background-color: rgba(139, 233, 253, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        #score-breakdown .score-value {
+            font-weight: bold;
+        }
+
+        .lb-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 25, .7);
             -webkit-backdrop-filter: blur(4px);
             backdrop-filter: blur(4px);
-            z-index:9999; align-items:center; justify-content:center; padding:20px;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
             animation: fadeIn 0.3s ease-out;
         }
-        .lb-modal{
+
+        .lb-modal {
             background: linear-gradient(180deg, #2a2a4a 0%, #1f1f36 100%);
             color: var(--text-light);
-            width:100%; max-width: 760px; border-radius:14px; padding:22px 22px 16px;
-            border:1px solid rgba(255,255,255,.08);
-            box-shadow: 0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
-        }
-        .lb-header{
-            display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;
-        }
-        .lb-title{
-            display:flex; align-items:center; gap:10px;
-            font-size:1.25em; font-weight:800; letter-spacing:.2px; color: var(--accent-yellow);
-        }
-        .lb-title i{ filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
-        .lb-tablewrap{
-            margin-top:10px;
-            max-height: 60vh; overflow:auto;
-            border:1px solid var(--interactive-bg); border-radius:10px;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
-        }
-        table.lb-table{ width:100%; border-collapse:collapse; font-size:.97em; }
-        table.lb-table th, table.lb-table td{ padding:10px 12px; text-align:left; }
-        table.lb-table thead th{
-            position: sticky; top:0; z-index:1;
-            background:#1f1f36; color:#e9e9ff;
-            border-bottom: 1px solid #3b3b66;
-            font-weight:700; letter-spacing:.3px;
-        }
-        table.lb-table tbody td{ border-bottom:1px solid rgba(255,255,255,.06); color:#e9e9f5; }
-        table.lb-table tbody tr:hover{ background-color: rgba(255,255,255,.045); }
-        table.lb-table tbody tr:nth-child(1){ background: linear-gradient(90deg, rgba(255,215,0,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(1) td:first-child::after{ content:" 🥇"; }
-        table.lb-table tbody tr:nth-child(2){ background: linear-gradient(90deg, rgba(192,192,192,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(2) td:first-child::after{ content:" 🥈"; }
-        table.lb-table tbody tr:nth-child(3){ background: linear-gradient(90deg, rgba(205,127,50,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
-        .lb-actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:14px; }
-        .lb-close, .lb-refresh{
-            border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:700;
-            transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
-        }
-        .lb-refresh{ background: var(--accent-blue); color:#0c1130; }
-        .lb-close{ background: #3d3d60; color:#fff; }
-        .lb-refresh:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(139,233,253,.22); }
-        .lb-close:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.35); }
-        @media (max-width: 420px){
-            .lb-title{ font-size:1.05em; }
-            table.lb-table th, table.lb-table td{ padding:9px 10px; }
+            width: 100%;
+            max-width: 760px;
+            border-radius: 14px;
+            padding: 22px 22px 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .04);
         }
 
+        .lb-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .lb-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25em;
+            font-weight: 800;
+            letter-spacing: .2px;
+            color: var(--accent-yellow);
+        }
+
+        .lb-title i {
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35));
+        }
+
+        .lb-tablewrap {
+            margin-top: 10px;
+            max-height: 60vh;
+            overflow: auto;
+            border: 1px solid var(--interactive-bg);
+            border-radius: 10px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02);
+        }
+
+        table.lb-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .97em;
+        }
+
+        table.lb-table th,
+        table.lb-table td {
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        table.lb-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #1f1f36;
+            color: #e9e9ff;
+            border-bottom: 1px solid #3b3b66;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        table.lb-table tbody td {
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            color: #e9e9f5;
+        }
+
+        table.lb-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, .045);
+        }
+
+        table.lb-table tbody tr:nth-child(1) {
+            background: linear-gradient(90deg, rgba(255, 215, 0, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(1) td:first-child::after {
+            content: " 🥇";
+        }
+
+        table.lb-table tbody tr:nth-child(2) {
+            background: linear-gradient(90deg, rgba(192, 192, 192, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(2) td:first-child::after {
+            content: " 🥈";
+        }
+
+        table.lb-table tbody tr:nth-child(3) {
+            background: linear-gradient(90deg, rgba(205, 127, 50, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(3) td:first-child::after {
+            content: " 🥉";
+        }
+
+        .lb-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .lb-close,
+        .lb-refresh {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+        }
+
+        .lb-refresh {
+            background: var(--accent-blue);
+            color: #0c1130;
+        }
+
+        .lb-close {
+            background: #3d3d60;
+            color: #fff;
+        }
+
+        .lb-refresh:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(139, 233, 253, .22);
+        }
+
+        .lb-close:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, .35);
+        }
+
+        @media (max-width: 420px) {
+            .lb-title {
+                font-size: 1.05em;
+            }
+
+            table.lb-table th,
+            table.lb-table td {
+                padding: 9px 10px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div id="introSection" class="centered-page">
             <h1><i class="fa-solid fa-door-open"></i> Fiziksel Güvenlik İhlali Simülasyonu</h1>
-            <p style="max-width: 600px;">VeriCore Analytics'e hoş geldin, Olay Müdahale Uzmanı! Bu sabah şirketin birincil veri merkezi fiziksel bir saldırıya uğradı. Güvenlik kayıtları zorla girildiğini gösteriyor ancak olay sırasında birkaç CCTV kamera çevrimdışıydı. Bazı depolama sürücülerinin söküldüğü ve kritik ağ anahtarlarının kapatıldığı görülüyor. Görevin: Hasarı kontrol altına almak, adli kanıtları toplamak ve soruşturmadan ödün vermeden operasyonları yeniden başlatmak.</p>
+            <p style="max-width: 600px;">VeriCore Analytics'e hoş geldin, Olay Müdahale Uzmanı! Bu sabah şirketin
+                birincil veri merkezi fiziksel bir saldırıya uğradı. Güvenlik kayıtları zorla girildiğini gösteriyor
+                ancak olay sırasında birkaç CCTV kamera çevrimdışıydı. Bazı depolama sürücülerinin söküldüğü ve kritik
+                ağ anahtarlarının kapatıldığı görülüyor. Görevin: Hasarı kontrol altına almak, adli kanıtları toplamak
+                ve soruşturmadan ödün vermeden operasyonları yeniden başlatmak.</p>
             <img src="intro.png" alt="Saldırıya uğramış veri merkezi sunucu odası" class="scenario-image">
 
             <div class="intro-info-grid">
                 <div class="intro-roles-container">
                     <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
                     <ul>
-                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span><div><strong>Senin Rolün: Olay Müdahale Uzmanı</strong> <small>Adli bilişimden kurtarmaya ve iletişime kadar tüm müdahale sürecinden sorumlusun.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-server"></i></span><div><strong>BT Operasyon Lideri</strong> <small>Önceliği, servisleri mümkün olan en kısa sürede yeniden çevrimiçi hale getirmek.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-gavel"></i></span><div><strong>Hukuk Departmanı Lideri</strong> <small>Kanıtların korunması ve yasal yükümlülükler konusunda endişeli.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span>
+                            <div><strong>Senin Rolün: Olay Müdahale Uzmanı</strong> <small>Adli bilişimden kurtarmaya ve
+                                    iletişime kadar tüm müdahale sürecinden sorumlusun.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-server"></i></span>
+                            <div><strong>BT Operasyon Lideri</strong> <small>Önceliği, servisleri mümkün olan en kısa
+                                    sürede yeniden çevrimiçi hale getirmek.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-gavel"></i></span>
+                            <div><strong>Hukuk Departmanı Lideri</strong> <small>Kanıtların korunması ve yasal
+                                    yükümlülükler konusunda endişeli.</small></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="intro-metrics-container">
                     <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
                     <ul>
-                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-database"></i></span><div><strong>Veri Bütünlüğü</strong> <small>Verilerin ve kanıtların güvenliği. (Başlangıç: 100%)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-hand-holding-dollar"></i></span><div><strong>Finansal Kayıp</strong> <small>Kesinti ve kurtarma maliyeti. (Başlangıç: ₺0)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-power-off"></i></span><div><strong>Hizmet Sürekliliği</strong> <small>Servislerin aktif olma yüzdesi. (Başlangıç: 0%)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-users"></i></span><div><strong>Müşteri Güveni</strong> <small>Müşterilerin şirketinizin güvenliğine olan inancı. (Başlangıç: 100)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-green);"><i
+                                    class="fa-solid fa-database"></i></span>
+                            <div><strong>Veri Bütünlüğü</strong> <small>Verilerin ve kanıtların güvenliği. (Başlangıç:
+                                    100%)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-red);"><i
+                                    class="fa-solid fa-hand-holding-dollar"></i></span>
+                            <div><strong>Finansal Kayıp</strong> <small>Kesinti ve kurtarma maliyeti. (Başlangıç:
+                                    ₺0)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i
+                                    class="fa-solid fa-power-off"></i></span>
+                            <div><strong>Hizmet Sürekliliği</strong> <small>Servislerin aktif olma yüzdesi. (Başlangıç:
+                                    0%)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i
+                                    class="fa-solid fa-users"></i></span>
+                            <div><strong>Müşteri Güveni</strong> <small>Müşterilerin şirketinizin güvenliğine olan
+                                    inancı. (Başlangıç: 100)</small></div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -639,16 +858,27 @@
             <h2 id="intermissionTitle"></h2>
             <div id="intermissionDetails">
             </div>
-            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i
+                    class="fa-solid fa-forward"></i> Devam Et</button>
         </div>
 
         <div id="gameContainer" style="display: none;">
             <div id="statusBar">
-                <div class="metric"><span><i class="fa-solid fa-database"></i> Veri Bütünlüğü</span><div class="value" id="status-dataIntegrity">100%</div></div>
-                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Kayıp</span><div class="value" id="status-financialLoss">₺0</div></div>
-                <div class="metric"><span><i class="fa-solid fa-power-off"></i> Hizmet Sürekliliği</span><div class="value" id="status-serviceUptime">0%</div></div>
-                <div class="metric"><span><i class="fa-solid fa-users"></i> Müşteri Güveni</span><div class="value" id="status-customerTrust">100</div></div>
-                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-remaining">04:00</div></div>
+                <div class="metric"><span><i class="fa-solid fa-database"></i> Veri Bütünlüğü</span>
+                    <div class="value" id="status-dataIntegrity">100%</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Kayıp</span>
+                    <div class="value" id="status-financialLoss">₺0</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-power-off"></i> Hizmet Sürekliliği</span>
+                    <div class="value" id="status-serviceUptime">0%</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-users"></i> Müşteri Güveni</span>
+                    <div class="value" id="status-customerTrust">100</div>
+                </div>
+                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span>
+                    <div class="value" id="status-remaining">04:00</div>
+                </div>
             </div>
             <div id="game-content">
             </div>
@@ -664,10 +894,17 @@
             <div class="lb-tablewrap">
                 <table class="lb-table" id="leaderboardTable">
                     <thead>
-                        <tr><th>#</th><th>İsim</th><th>Puan</th><th>Tarih</th></tr>
+                        <tr>
+                            <th>#</th>
+                            <th>İsim</th>
+                            <th>Puan</th>
+                            <th>Tarih</th>
+                        </tr>
                     </thead>
                     <tbody id="leaderboardBody">
-                        <tr><td colspan="4">Yükleniyor…</td></tr>
+                        <tr>
+                            <td colspan="4">Yükleniyor…</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -702,20 +939,20 @@
                 },
 
                 elements: {},
-                
+
                 timer: {
                     total: 240, // 4 dakika
                     remaining: 240,
                     intervalId: null,
                     running: false
                 },
-                
+
                 decisionInfo: {
                     // Aşama 1
                     'd1-secure-scene': { title: "Olay Yerini Güvence Altına Al", text: "Sunucu odasını derhal bir olay yeri ilan ettiniz ve kimsenin girip bir şeye dokunmasına izin vermediniz. Bu, kritik fiziksel kanıtları korur ancak ilk dijital analizi geciktirir.", strat: "Fiziksel bir ihlalde, olayın bütünlüğünü korumak, yasal süreçler ve iç soruşturma için her şeyden önemlidir. Bu, standart ilk adımdır.", changes: { dataIntegrity: +5, financialLoss: 5000, serviceUptime: 0 }, clue: 'sceneSecured', impact: 'Positive' },
                     'd1-check-backups': { title: "Şirket Dışı Yedekleri Kontrol Et", text: "İlk iş olarak şirket dışı yedeklerin durumunu ve bütünlüğünü doğruladınız. Yedeklerin sağlam ve saldırıdan etkilenmemiş olduğunu teyit ettiniz, bu kurtarma stratejisi için kritik bir bilgidir.", strat: "Kurtarma seçeneklerinizi erken bilmek, tüm olay müdahalesini şekillendirir. Sağlam bir yedek, en iyi güvenlik ağınızdır.", changes: { dataIntegrity: 0, financialLoss: 2000 }, clue: 'backupsChecked', impact: 'Positive' },
                     'd1-check-logs': { title: "Sunucu Loglarını Kontrol Et", text: "Sunucu loglarına uzaktan erişmeye çalıştınız ancak kapatılan anahtarlar nedeniyle çoğu sistemin çevrimdışı olduğunu gördünüz. Fiziksel kanıtlara harcanabilecek değerli zamanı kaybettiniz.", strat: "Fiziksel bir kesintide, dijital adli bilişim anında ilk adım olmayabilir. Dijitale dalmadan önce fiziksel durumu değerlendirmek daha verimli olabilir.", changes: { financialLoss: 8000, customerTrust: -2 }, clue: 'logsChecked', impact: 'Negative' },
-                    
+
                     // Aşama 2
                     'd2-image-drives': { title: "Diskleri İmajlamaya Başla", text: "Kalan sabit disklerin adli kopyalarını (imajlarını) oluşturma gibi zaman alıcı bir sürece başladınız. Bu, derin bir soruşturma için gereklidir ancak kesinti süresini önemli ölçüde uzatır.", strat: "Adli imajlama, orijinal kanıtı değiştirmeden derinlemesine analiz için depolama ortamının birebir kopyasını oluşturur.", changes: { dataIntegrity: +15, financialLoss: 20000, serviceUptime: -5 }, clue: 'drivesImaged', impact: 'Positive' },
                     'd2-assess-impact': { title: "İş Etki Analizi Yap", text: "BT Operasyon ile çalışarak, çalınan disklerin kritik müşteri veritabanlarını ve ana finansal işlem sunucusunu içerdiğini hızla belirlediniz. Potansiyel iş etkisi çok ciddi.", strat: "Neyin çalındığını veya etkilendiğini anlamak, kurtarmayı önceliklendirmek ve paydaşlarla iletişim kurmak için çok önemlidir. Bu, iş sürekliliğinin kilit bir adımıdır.", changes: { financialLoss: 1000, customerTrust: -5 }, clue: 'impactAssessed', impact: 'Neutral' },
@@ -725,12 +962,12 @@
                     'd3-scan-malware': { title: "Kalan Sistemleri Zararlı Yazılıma Karşı Tara", text: "Saldırganların sadece diskleri çalmakla kalmayıp, geride bir arka kapı veya zararlı yazılım bırakmış olabileceği şüphesiyle kalan sunucularda derinlemesine bir tarama başlattınız.", strat: "Fiziksel bir ihlal, genellikle daha büyük bir dijital saldırının parçasıdır. Saldırganların geride kalıcı erişim sağlamak için bir dayanak noktası bırakıp bırakmadığını kontrol etmek esastır.", changes: { dataIntegrity: +10, financialLoss: 15000 }, clue: 'malwareScanned', impact: 'Positive' },
                     'd3-profile-actor': { title: "Tehdit Aktörü Profili Oluştur", text: "Mevcut kanıtlara (profesyonel giriş, belirli sürücülerin hedeflenmesi) dayanarak, bunun rastgele bir hırsızlık değil, muhtemelen bir rakip veya endüstriyel casusluk tarafından yönlendirilen hedefli bir operasyon olduğu sonucuna vardınız.", strat: "Saldırganın kim olduğunu ve ne istediğini anlamak (tehdit modellemesi), müdahalenin sonraki adımlarını ve gelecekteki savunma stratejilerini belirlemeye yardımcı olur.", changes: { customerTrust: +2, financialLoss: 5000 }, clue: 'actorProfiled', impact: 'Neutral' },
                     'd3-check-tampering': { title: "Veri Manipülasyonu Kontrolü Yap", text: "Sadece veri hırsızlığına değil, aynı zamanda veri manipülasyonuna karşı da tetikte olmalısınız. Kalan kritik veritabanlarında bütünlük karması (hash) kontrolleri çalıştırarak verilerin değiştirilip değiştirilmediğini kontrol ettiniz.", strat: "Bir saldırganın en sinsi eylemlerinden biri, verileri çalmak yerine sessizce değiştirmektir. Veri bütünlüğünü doğrulamak, özellikle finansal sistemlerde göz ardı edilemez.", changes: { dataIntegrity: +15, financialLoss: 12000 }, clue: 'tamperingChecked', impact: 'Positive' },
-                    
+
                     // Aşama 4 (Eski 3)
                     'd4-restore-now': { title: "Hizmetleri Derhal Geri Yükle", text: "Hizmet sürekliliğini her şeyin üzerinde tuttunuz ve yedekleri kullanarak servisleri yeni donanımlarda hemen geri yüklediniz. Servisler saatler içinde çevrimiçi olmaya başladı ve müşteriler memnun oldu, ancak bu aceleci süreç kalan sistemlerdeki dijital adli kanıtların çoğunu yok etti.", strat: "Bu 'önce kurtarma' yaklaşımı, kesintiden kaynaklanan finansal kayıpları en aza indirir ancak soruşturma ve kovuşturma yeteneğini ciddi şekilde tehlikeye atar ve kök nedenin bilinmemesine yol açabilir.", changes: { dataIntegrity: -40, financialLoss: 50000, serviceUptime: +80, customerTrust: +10 }, clue: 'restoredNow', impact: 'Negative' },
                     'd4-forensics-first': { title: "Önce Adli Bilişim Yaklaşımı", text: "Veri merkezinin tam bir adli imajı alınana kadar hiçbir sistemin çevrimiçi hale getirilmemesi konusunda ısrar ettiniz. Bu, yasal işlem için maksimum kanıt korunmasını sağlar ancak çok günlü bir kesintiye neden olarak büyük finansal kayıplara ve müşteri hayal kırıklığına yol açar.", strat: "Bu 'önce kanıt' yaklaşımı yasal olarak sağlamdır ancak iş için yıkıcı olabilir. Hukuki hazırlığı operasyonel hayatta kalma ile karşı karşıya getiren zor bir seçimdir.", changes: { dataIntegrity: +25, financialLoss: 250000, serviceUptime: 0, customerTrust: -30 }, clue: 'forensicsFirst', impact: 'Negative' },
                     'd4-hybrid': { title: "Hibrit Yaklaşım", text: "Paralel bir süreç başlattınız: en kritik servisleri yedeklerden yalıtılmış bir bulut ortamında geri yüklerken, yerindeki adli bilişim ekibi çalışmalarına kesintisiz devam etti. Bu yaklaşım karmaşık ve maliyetlidir ancak hem işin hem de soruşturmanın ihtiyaçlarını dengeler.", strat: "Hibrit yaklaşım genellikle modern olay müdahalesinde en iyi uygulamadır. Kaynak yoğundur ancak hem kanıt kaybını hem de iş etkisini en aza indirir.", changes: { dataIntegrity: +10, financialLoss: 120000, serviceUptime: +50, customerTrust: -5 }, clue: 'hybridDone', impact: 'Positive' },
-                    
+
                     // Aşama 5 (Eski 4)
                     'd5-overhaul-security': { title: "Fiziksel Güvenliği Güçlendir", text: "Biyometrik erişim, 7/24 güvenlik görevlisi ve yedekli kamera sistemleri de dahil olmak üzere veri merkezi güvenliğinin tamamen elden geçirilmesini önerdiniz ve onay aldınız. Bu, tesisi gelecekteki saldırılara karşı önemli ölçüde güçlendirir.", strat: "Bir olaydan ders çıkararak savunmayı iyileştirmek, müdahale yaşam döngüsünün son ve en önemli adımıdır. Bu, aynı ihlalin tekrar yaşanmasını önler.", changes: { financialLoss: 150000, dataIntegrity: +10, customerTrust: +5 }, clue: 'securityOverhauled', impact: 'Positive' },
                     'd5-client-postmortem': { title: "Şeffaf Müşteri Raporu Hazırla", text: "Yönetimle birlikte, etkilenen müşteriler için ihlalin doğasını, atılan adımları ve uygulanmakta olan güvenlik iyileştirmelerini özetleyen şeffaf (ancak dikkatle yazılmış) bir rapor hazırladınız. Bu, güveni yeniden inşa etmeye yardımcı oldu.", strat: "Bir krizde, şeffaf iletişim bir felaketi müşterilere yetkinlik ve bağlılık gösterme fırsatına dönüştürebilir.", changes: { financialLoss: 10000, customerTrust: +15 }, clue: 'clientsInformed', impact: 'Positive' },
@@ -743,10 +980,10 @@
                         startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
                         intermissionTitle: document.getElementById('intermissionTitle'), intermissionDetails: document.getElementById('intermissionDetails'),
                         continueButton: document.getElementById('continueButton'),
-                        statusBar: { 
-                            dataIntegrity: document.getElementById('status-dataIntegrity'), 
-                            financialLoss: document.getElementById('status-financialLoss'), 
-                            serviceUptime: document.getElementById('status-serviceUptime'), 
+                        statusBar: {
+                            dataIntegrity: document.getElementById('status-dataIntegrity'),
+                            financialLoss: document.getElementById('status-financialLoss'),
+                            serviceUptime: document.getElementById('status-serviceUptime'),
                             customerTrust: document.getElementById('status-customerTrust'),
                             remaining: document.getElementById('status-remaining')
                         },
@@ -761,7 +998,7 @@
                     this.loadGameHTML();
                     this.attachListeners();
                 },
-                
+
                 attachListeners() {
                     this.elements.startButton.addEventListener('click', () => {
                         this.elements.intro.style.display = 'none';
@@ -769,18 +1006,18 @@
                         this.startGlobalTimer();
                         this.showSection('phase1_triage');
                     });
-                    
+
                     this.elements.gameContent.addEventListener('click', (e) => {
                         const button = e.target.closest('.btn[data-decision]');
                         if (!button || button.disabled) return;
-                        
+
                         const sectionElement = button.closest('.section');
                         const decisionId = button.dataset.decision;
                         const info = this.decisionInfo[decisionId];
 
                         button.disabled = true;
                         this.state.currentTurnDecisions.push(info);
-                        
+
                         this.score.financialLoss += info.changes.financialLoss || 0;
                         this.score.customerTrust = Math.max(0, Math.min(100, this.score.customerTrust + (info.changes.customerTrust || 0)));
                         this.score.dataIntegrity = Math.max(0, Math.min(100, this.score.dataIntegrity + (info.changes.dataIntegrity || 0)));
@@ -789,7 +1026,7 @@
                         this.updateStatusBar();
 
                         const maxSelections = parseInt(sectionElement.dataset.maxSelections || 1, 10);
-                        
+
                         if (this.state.currentTurnDecisions.length >= maxSelections) {
                             this.elements.game.style.display = 'none';
                             this.showFullIntermission();
@@ -806,7 +1043,7 @@
                         this.elements.continueButton.style.display = 'none';
 
                         this.state.currentTurnDecisions = [];
-                        
+
                         if (nextPath === 'finalSection') {
                             this.showFinalReport();
                         } else {
@@ -814,7 +1051,7 @@
                             this.showSection(nextPath);
                         }
                     });
-                    
+
                     this.elements.leaderboard.btnClose?.addEventListener('click', () => this.closeLeaderboard());
                     this.elements.leaderboard.btnRefresh?.addEventListener('click', () => this.loadLeaderboard());
                     this.elements.leaderboard.overlay.addEventListener('click', (e) => {
@@ -825,7 +1062,7 @@
                 },
 
                 showFullIntermission() {
-                    this.elements.intermissionDetails.innerHTML = ''; 
+                    this.elements.intermissionDetails.innerHTML = '';
 
                     let totalChanges = { financialLoss: 0, dataIntegrity: 0, serviceUptime: 0, customerTrust: 0 };
                     let combinedDecisionTitles = [];
@@ -837,7 +1074,7 @@
                         totalChanges.dataIntegrity += info.changes.dataIntegrity || 0;
                         totalChanges.serviceUptime += info.changes.serviceUptime || 0;
                         totalChanges.customerTrust += info.changes.customerTrust || 0;
-                        
+
                         combinedDecisionTitles.push(info.title);
                         combinedDecisionTexts.push(info.text);
                         combinedStrategicNotes.push(info.strat);
@@ -865,7 +1102,7 @@
                         </div>
                     `);
 
-                    switch(this.state.currentSectionId) {
+                    switch (this.state.currentSectionId) {
                         case 'phase1_triage': nextSectionToGo = 'phase2_evidence'; break;
                         case 'phase2_evidence': nextSectionToGo = 'phase3_analysis'; break;
                         case 'phase3_analysis': nextSectionToGo = 'phase4_dilemma'; break;
@@ -873,7 +1110,7 @@
                         case 'phase5_strategy': nextSectionToGo = 'finalSection'; break;
                         default: nextSectionToGo = 'finalSection'; break;
                     }
-                    
+
                     this.elements.continueButton.dataset.nextPath = nextSectionToGo;
                     this.elements.intermission.style.display = 'flex';
                     this.elements.continueButton.style.display = 'flex';
@@ -886,7 +1123,7 @@
                         const arrow = value > 0 ? 'up' : 'down';
                         const sign = value > 0 ? '+' : '';
                         let colorClass = 'neutral';
-                        
+
                         if (isNegativeGood) {
                             colorClass = value < 0 ? 'positive' : 'negative';
                         } else {
@@ -900,7 +1137,7 @@
                     metricsHTML += formatChange('Veri Bütünlüğü', changes.dataIntegrity, '%', 'fa-database');
                     metricsHTML += formatChange('Hizmet Sürekliliği', changes.serviceUptime, '%', 'fa-power-off', false);
                     metricsHTML += formatChange('Müşteri Güveni', changes.customerTrust, '', 'fa-users');
-                    
+
                     if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1.1em; opacity: 0.8;">Bu kararların metriklere doğrudan bir etkisi olmadı.</p>';
                     return metricsHTML;
                 },
@@ -938,20 +1175,20 @@
                         button.disabled = info && this.state[info.clue];
                     });
                 },
-                
+
                 showFinalReport() {
                     this.stopGlobalTimer();
                     this.elements.intro.style.display = 'none';
                     this.elements.intermission.style.display = 'none';
-                    this.elements.game.style.display = 'block'; 
+                    this.elements.game.style.display = 'block';
                     document.getElementById('statusBar').style.display = 'none';
 
                     this.elements.sections.forEach(section => section.style.display = 'none');
-                    
+
                     const finalSection = document.getElementById('finalSection');
                     if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
                     finalSection.style.display = 'flex';
-                    
+
                     const badge = document.getElementById('performance-badge');
                     const metricsContainer = document.getElementById('finalMetricsContainer');
                     const timelineList = document.getElementById('decision-timeline-list');
@@ -959,55 +1196,83 @@
                     const scoreBreakdownList = document.getElementById('score-breakdown');
 
                     // --- PUANLAMA SİSTEMİ ---
+                    // --- STANDARD PUANLAMA SİSTEMİ (V2) ---
                     let scoreBreakdown = {};
-                    let totalScore = 50; 
+                    let totalScore = 50;
                     scoreBreakdown['Başlangıç Puanı'] = { value: 50, class: 'score-neutral' };
 
-                    if (this.state.hybridDone) {
-                        totalScore += 25;
-                        scoreBreakdown['Kritik Karar: Hibrit Yaklaşım'] = { value: 25, class: 'score-plus' };
-                    } else if (this.state.restoredNow) {
-                        totalScore -= 20;
-                        scoreBreakdown['Riskli Karar: Anında Geri Yükleme'] = { value: -20, class: 'score-minus' };
-                    } else if (this.state.forensicsFirst) {
-                        totalScore -= 20;
-                        scoreBreakdown['Maliyetli Karar: Önce Adli Bilişim'] = { value: -20, class: 'score-minus' };
+                    // 1. Karar Bazlı Puanlama (+10 / 0 / -10)
+                    let decisionScore = 0;
+                    this.state.decisionHistory.forEach(decision => {
+                        if (decision.impactType === 'Positive') {
+                            decisionScore += 10;
+                        } else if (decision.impactType === 'Negative') {
+                            decisionScore -= 10;
+                        }
+                    });
+
+                    if (decisionScore !== 0) {
+                        totalScore += decisionScore;
+                        scoreBreakdown['Karar Kalitesi'] = {
+                            value: decisionScore,
+                            class: decisionScore > 0 ? 'score-plus' : 'score-minus'
+                        };
                     }
-                    
-                    if (this.state.securityOverhauled || this.state.encryptionImplemented) {
-                        totalScore += 15;
-                        scoreBreakdown['Stratejik İyileştirme'] = { value: 15, class: 'score-plus' };
-                    }
-                    
-                    if (this.state.clientsInformed) {
+
+                    // 2. Metrik Bazlı Bonuslar/Cezalar
+                    // Veri Bütünlüğü
+                    if (this.score.dataIntegrity >= 90) {
                         totalScore += 10;
-                        scoreBreakdown['Mükemmel İletişim'] = { value: 10, class: 'score-plus' };
-                    }
-                    
-                    if(this.state.malwareScanned){
-                        totalScore += 5;
-                        scoreBreakdown['Detaylı Analiz Bonusu'] = { value: 5, class: 'score-plus'};
+                        scoreBreakdown['Yüksek Veri Bütünlüğü'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.dataIntegrity < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Veri Bütünlüğü Kaybı'] = { value: -10, class: 'score-minus' };
                     }
 
+                    // Hizmet Sürekliliği
+                    if (this.score.serviceUptime >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['Yüksek Hizmet Sürekliliği'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.serviceUptime < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Hizmet Kesintisi Cezası'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Müşteri Güveni
+                    if (this.score.customerTrust >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['Yüksek Müşteri Güveni'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.customerTrust < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Güven Kaybı Cezası'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Finansal Ceza
                     if (this.score.financialLoss > 200000) {
-                        totalScore -= 15;
-                        scoreBreakdown['Yüksek Finansal Kayıp'] = { value: -15, class: 'score-minus' };
+                        totalScore -= 10;
+                        scoreBreakdown['Yüksek Finansal Kayıp'] = { value: -10, class: 'score-minus' };
                     }
 
-                    if (this.score.dataIntegrity < 75) {
-                        totalScore -= 20;
-                        scoreBreakdown['Kanıt/Veri Bütünlüğü Kaybı'] = { value: -20, class: 'score-minus' };
+                    // 3. Stratejik Bonuslar (Eski logic'ten korunanlar)
+                    if (this.state.hybridDone) {
+                        totalScore += 10;
+                        scoreBreakdown['Kritik Karar: Hibrit Yaklaşım'] = { value: 10, class: 'score-plus' };
                     }
 
+                    // 4. Zaman Bonusu
+                    if (this.timer.remaining >= 180) {
+                        totalScore += 5;
+                        scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' };
+                    }
 
-                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
                     this.state.totalScore = totalScore;
                     // --- PUANLAMA SİSTEMİ SONU ---
 
                     let badgeInfo = {};
-                    if (totalScore >= 90) { badgeInfo = { text: 'UZMAN MÜDAHALE YÖNETİCİSİ', color: 'var(--accent-green)' }; } 
-                    else if (totalScore >= 70) { badgeInfo = { text: 'MÜKEMMEL STRATEJİST', color: 'var(--accent-blue)' }; } 
-                    else if (totalScore >= 50) { badgeInfo = { text: 'ETKİN OPERATÖR', color: 'var(--accent-yellow)' }; } 
+                    if (totalScore >= 90) { badgeInfo = { text: 'UZMAN MÜDAHALE YÖNETİCİSİ', color: 'var(--accent-green)' }; }
+                    else if (totalScore >= 70) { badgeInfo = { text: 'MÜKEMMEL STRATEJİST', color: 'var(--accent-blue)' }; }
+                    else if (totalScore >= 50) { badgeInfo = { text: 'ETKİN OPERATÖR', color: 'var(--accent-yellow)' }; }
                     else { badgeInfo = { text: 'OLAY KONTROLDEN ÇIKTI', color: '#ff5555' }; }
 
                     badge.textContent = badgeInfo.text;
@@ -1031,11 +1296,11 @@
                     }).join('');
 
                     let debriefHTML = '';
-                    if (totalScore >= 85) { 
+                    if (totalScore >= 85) {
                         debriefHTML = `<p><strong>Mükemmel Performans!</strong> Fiziksel bir ihlalin karmaşık zorluklarını ustalıkla yönettiniz. Hibrit yaklaşımı seçerek kanıt koruma ve iş sürekliliği gibi kritik ihtiyaçları dengeleme yeteneğiniz örnek teşkil etti. Sadece olayı kontrol altına almakla kalmadınız, aynı zamanda daha güçlü ve dirençli bir güvenlik duruşu için zemin hazırladınız.</p>`;
-                    } else if (totalScore >= 60) { 
+                    } else if (totalScore >= 60) {
                         debriefHTML = `<p><strong>İyi Müdahale:</strong> Zorlu bir krizi başarıyla yönettiniz. Önemli maliyetler ve müşteri güveninde bir düşüş yaşansa da, doğru önceliklendirme yaptınız ve feci bir veri kaybını önlediniz. Kararlarınız, olay müdahale prensiplerini sağlam bir şekilde anladığınızı gösteriyor; hız ve titizlik arasındaki dengeyi optimize etme potansiyeliniz var.</p>`;
-                    } else { 
+                    } else {
                         debriefHTML = `<p><strong>Zorlu Sonuç:</strong> Fiziksel ihlale müdahale zordu ve önemli sonuçlar doğurdu. Aşırı bir yol seçmek - ya kanıt pahasına hizmetleri hemen geri yüklemek ya da aşırı kesinti pahasına kanıtları korumak - büyük kayıplara yol açtı. Bu senaryo, karmaşık krizlerde dengeli, hibrit bir yaklaşım bulmanın ne kadar kritik olduğunu vurgulamaktadır.</p>`;
                     }
                     debriefContent.innerHTML = debriefHTML;
@@ -1171,8 +1436,8 @@
                 },
 
                 updateTimerUI() {
-                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2,'0');
-                    const s = String(this.timer.remaining % 60).padStart(2,'0');
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
                     if (this.elements.statusBar.remaining) {
                         this.elements.statusBar.remaining.textContent = `${m}:${s}`;
                     }
@@ -1204,27 +1469,27 @@
                     const key = 'leaderboard-v9.1-physical-breach';
                     const arr = JSON.parse(localStorage.getItem(key) || '[]');
                     arr.push(payload);
-                    arr.sort((a,b)=> b.score - a.score);
-                    localStorage.setItem(key, JSON.stringify(arr.slice(0,100)));
+                    arr.sort((a, b) => b.score - a.score);
+                    localStorage.setItem(key, JSON.stringify(arr.slice(0, 100)));
                 },
 
                 loadLeaderboard() {
                     const tbody = this.elements.leaderboard.body;
                     const key = 'leaderboard-v9.1-physical-breach';
                     tbody.innerHTML = `<tr><td colspan="4">Yükleniyor…</td></tr>`;
-                    
+
                     const rows = JSON.parse(localStorage.getItem(key) || '[]');
-                    
+
                     if (!rows.length) {
                         tbody.innerHTML = `<tr><td colspan="4">Henüz kayıt bulunmuyor.</td></tr>`;
                         return;
                     }
-                    
-                    rows.sort((a,b)=> b.score - a.score);
-                    tbody.innerHTML = rows.slice(0,50).map((r,i)=>`
+
+                    rows.sort((a, b) => b.score - a.score);
+                    tbody.innerHTML = rows.slice(0, 50).map((r, i) => `
                         <tr>
-                            <td>${i+1}</td>
-                            <td>${(r.name || 'Anonim').toString().slice(0,40)}</td>
+                            <td>${i + 1}</td>
+                            <td>${(r.name || 'Anonim').toString().slice(0, 40)}</td>
                             <td>${r.score}</td>
                             <td>${r.timestamp ? new Date(r.timestamp).toLocaleString('tr-TR') : '-'}</td>
                         </tr>
@@ -1234,7 +1499,7 @@
             window.game.setup();
         });
     </script>
+<script src="../global-scenario.js"></script>
 </body>
 
 </html>
-

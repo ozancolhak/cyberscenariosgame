@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberScenario v7: VPN ve İç Ağ Sızma Testi Simülasyonu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CyberScenario v7: VPN ve İç Ağ Sızma Testi Simülasyonu</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css" rel="stylesheet"/>
+<style>
         :root {
             --dark-bg: #1a1a2e;
             --container-bg: #2a2a4a;
@@ -24,10 +25,19 @@
             --shadow-light: rgba(0, 0, 0, 0.2);
             --shadow-dark: rgba(0, 0, 0, 0.5);
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--dark-bg);
@@ -41,6 +51,7 @@
             line-height: 1.7;
             font-size: 0.90em;
         }
+
         .container {
             background-color: var(--container-bg);
             border-radius: 12px;
@@ -51,9 +62,13 @@
             margin: 40px 0;
             animation: fadeIn 0.8s ease-out;
         }
+
         @media (min-width: 768px) {
-            .container { padding: 40px; }
+            .container {
+                padding: 40px;
+            }
         }
+
         .centered-page {
             display: flex;
             flex-direction: column;
@@ -62,12 +77,14 @@
             text-align: center;
             min-height: 60vh;
         }
+
         h1 {
             font-size: 2.4em;
             color: var(--accent-blue);
             margin-bottom: 25px;
             text-shadow: 2px 2px 5px var(--shadow-dark);
         }
+
         h2 {
             font-size: 1.9em;
             color: var(--accent-blue);
@@ -76,6 +93,7 @@
             margin-bottom: 30px;
             text-align: left;
         }
+
         h3 {
             font-size: 1.5em;
             color: var(--accent-purple);
@@ -83,6 +101,7 @@
             margin-bottom: 15px;
             text-align: left;
         }
+
         h4 {
             font-size: 1.1em;
             color: var(--accent-yellow);
@@ -91,10 +110,12 @@
             border-bottom: 1px solid var(--interactive-bg);
             padding-bottom: 10px;
         }
+
         p {
             font-size: 1em;
             margin-bottom: 15px;
         }
+
         .section {
             display: none;
             padding: 20px;
@@ -103,9 +124,13 @@
             margin-top: 25px;
             animation: fadeIn 0.7s ease-out;
         }
+
         @media (min-width: 768px) {
-            .section { padding: 30px; }
+            .section {
+                padding: 30px;
+            }
         }
+
         .interactive-element {
             background-color: var(--interactive-bg);
             border-radius: 8px;
@@ -113,12 +138,14 @@
             margin-top: 30px;
             box-shadow: 0 5px 15px var(--shadow-light);
         }
+
         .decision-buttons {
             display: flex;
             flex-direction: column;
             gap: 15px;
             margin-top: 25px;
         }
+
         .btn {
             background-color: #6272a4;
             color: white;
@@ -135,11 +162,13 @@
             font-weight: 700;
             box-shadow: 0 2px 8px var(--shadow-light);
         }
+
         .btn:hover {
             background-color: #7a8ab9;
             transform: translateY(-3px);
             box-shadow: 0 6px 15px var(--shadow-dark);
         }
+
         .btn:disabled {
             background-color: #555 !important;
             color: #999 !important;
@@ -148,9 +177,11 @@
             box-shadow: none;
             opacity: 0.7;
         }
+
         .btn .btn-text {
             flex-grow: 1;
         }
+
         .btn small {
             display: block;
             font-size: 0.85em;
@@ -159,7 +190,9 @@
             font-weight: 400;
             color: var(--accent-blue);
         }
-        .btn-start, .btn-continue {
+
+        .btn-start,
+        .btn-continue {
             font-size: 1.3em;
             font-weight: bold;
             text-align: center;
@@ -169,6 +202,7 @@
             margin-top: 40px;
             padding: 18px 30px;
         }
+
         #intermissionSection .metric-change-summary-container {
             background-color: var(--section-bg);
             border-radius: 8px;
@@ -178,12 +212,14 @@
             width: 100%;
             max-width: 600px;
         }
+
         #intermissionSection .metric-change-summary {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
+
         #intermissionSection .metric-change {
             font-size: 1.1em;
             display: flex;
@@ -192,12 +228,22 @@
             padding: 8px 15px;
             border-radius: 5px;
             background-color: var(--interactive-bg);
-            box-shadow: inset 0 1px 5px rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
             justify-content: center;
         }
-        .metric-change .positive { color: var(--accent-green); }
-        .metric-change .negative { color: var(--accent-red); }
-        .metric-change .neutral { color: var(--accent-blue); }
+
+        .metric-change .positive {
+            color: var(--accent-green);
+        }
+
+        .metric-change .negative {
+            color: var(--accent-red);
+        }
+
+        .metric-change .neutral {
+            color: var(--accent-blue);
+        }
+
         .intro-info-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -207,31 +253,40 @@
             max-width: 800px;
             text-align: left;
         }
+
         @media (min-width: 768px) {
             .intro-info-grid {
                 grid-template-columns: 1fr 1fr;
             }
         }
-        .intro-roles-container, .intro-metrics-container {
+
+        .intro-roles-container,
+        .intro-metrics-container {
             background-color: var(--section-bg);
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 5px 15px var(--shadow-light);
             border: 1px solid var(--interactive-bg);
         }
-        .intro-roles-container h3, .intro-metrics-container h3 {
+
+        .intro-roles-container h3,
+        .intro-metrics-container h3 {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--interactive-bg);
             color: var(--accent-purple);
             text-align: center;
         }
-        .intro-roles-container ul, .intro-metrics-container ul {
+
+        .intro-roles-container ul,
+        .intro-metrics-container ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        .intro-roles-container li, .intro-metrics-container li {
+
+        .intro-roles-container li,
+        .intro-metrics-container li {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -240,20 +295,26 @@
             border-bottom: 1px dashed var(--interactive-bg);
             font-size: 1.05em;
         }
-        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+
+        .intro-roles-container li:last-child,
+        .intro-metrics-container li:last-child {
             border-bottom: none;
             margin-bottom: 0;
         }
-        .intro-roles-container li .icon, .intro-metrics-container li .icon {
+
+        .intro-roles-container li .icon,
+        .intro-metrics-container li .icon {
             font-size: 1.8em;
             color: var(--accent-blue);
             flex-shrink: 0;
             width: 35px;
             text-align: center;
         }
+
         .intro-roles-container li strong {
             color: var(--accent-yellow);
         }
+
         .intro-roles-container li small {
             display: block;
             font-size: 0.9em;
@@ -261,6 +322,7 @@
             opacity: 0.8;
             margin-top: 3px;
         }
+
         #statusBar {
             display: flex;
             justify-content: space-around;
@@ -273,18 +335,21 @@
             border: 1px solid #6272a4;
             box-shadow: 0 4px 12px var(--shadow-dark);
         }
+
         #statusBar .metric {
             text-align: center;
             font-size: 0.9em;
             flex: 1;
             min-width: 100px;
         }
+
         #statusBar .metric .value {
             font-size: 1.3em;
             font-weight: bold;
             color: var(--accent-yellow);
             margin-top: 5px;
         }
+
         .final-metrics {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -293,6 +358,7 @@
             width: 100%;
             max-width: 850px;
         }
+
         .metric-card {
             background-color: var(--section-bg);
             padding: 25px;
@@ -307,27 +373,33 @@
             align-items: center;
             min-height: 160px;
         }
+
         .metric-card:hover {
             transform: scale(1.03);
             border-color: var(--accent-blue);
             box-shadow: 0 6px 20px var(--shadow-dark);
         }
+
         .metric-card .icon {
             font-size: 2.8em;
             color: var(--accent-blue);
             margin-bottom: 12px;
         }
+
         .metric-card .label {
             font-size: 1.1em;
             margin-bottom: 8px;
             color: var(--text-light);
         }
+
         .metric-card .value {
             font-size: 2em;
             font-weight: bold;
             color: var(--accent-yellow);
         }
-        .code-block, .slack-chat {
+
+        .code-block,
+        .slack-chat {
             background-color: var(--text-dark);
             border: 1px solid #6272a4;
             border-radius: 8px;
@@ -337,8 +409,9 @@
             word-break: break-all;
             font-family: 'Consolas', monospace;
             font-size: 0.95em;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+
         .learning-note {
             background-color: var(--text-dark);
             border-left: 5px solid var(--accent-blue);
@@ -348,6 +421,7 @@
             font-style: italic;
             opacity: 0.9;
         }
+
         .scenario-image {
             width: 100%;
             max-width: 600px;
@@ -357,6 +431,7 @@
             border: 1px solid var(--interactive-bg);
             box-shadow: 0 4px 15px var(--shadow-dark);
         }
+
         .slack-chat .message {
             margin-bottom: 12px;
             padding: 10px;
@@ -365,17 +440,37 @@
             border: 1px solid #555577;
             animation: fadeIn 0.5s ease-out;
         }
+
         .slack-chat .sender {
             font-weight: bold;
             color: var(--accent-pink);
             margin-right: 8px;
         }
-        .slack-chat .sender.cso { color: var(--accent-green); }
-        .slack-chat .sender.ops { color: var(--accent-yellow); }
-        .slack-chat .sender.hr { color: var(--accent-blue); }
-        .slack-chat .sender.finance { color: var(--accent-red); }
-        .slack-chat .sender.ceo { color: var(--accent-purple); }
-        .slack-chat .sender.bt { color: var(--accent-blue); }
+
+        .slack-chat .sender.cso {
+            color: var(--accent-green);
+        }
+
+        .slack-chat .sender.ops {
+            color: var(--accent-yellow);
+        }
+
+        .slack-chat .sender.hr {
+            color: var(--accent-blue);
+        }
+
+        .slack-chat .sender.finance {
+            color: var(--accent-red);
+        }
+
+        .slack-chat .sender.ceo {
+            color: var(--accent-purple);
+        }
+
+        .slack-chat .sender.bt {
+            color: var(--accent-blue);
+        }
+
         .suspect-card {
             background-color: var(--interactive-bg);
             border-radius: 8px;
@@ -384,14 +479,22 @@
             border-left: 5px solid var(--accent-purple);
             box-shadow: 0 2px 8px var(--shadow-light);
         }
+
         .suspect-card h4 {
             margin-top: 0;
             margin-bottom: 5px;
             border-bottom: none;
             color: var(--accent-purple);
         }
-        #finalSection { text-align: center; }
-        #performance-badge-container { margin: 25px 0; }
+
+        #finalSection {
+            text-align: center;
+        }
+
+        #performance-badge-container {
+            margin: 25px 0;
+        }
+
         #performance-badge {
             padding: 15px 35px;
             font-size: 2em;
@@ -402,7 +505,11 @@
             box-shadow: 0 5px 20px var(--shadow-dark);
             transition: transform 0.3s ease;
         }
-        #performance-badge:hover { transform: scale(1.08); }
+
+        #performance-badge:hover {
+            transform: scale(1.08);
+        }
+
         .post-crisis-layout {
             display: grid;
             grid-template-columns: 1fr;
@@ -411,12 +518,15 @@
             margin-top: 40px;
             width: 100%;
         }
+
         @media (min-width: 800px) {
             .post-crisis-layout {
                 grid-template-columns: 1fr 1fr;
             }
         }
-        .event-timeline, .strategic-debrief {
+
+        .event-timeline,
+        .strategic-debrief {
             background-color: var(--interactive-bg);
             padding: 25px;
             border-radius: 8px;
@@ -424,7 +534,9 @@
             margin-top: 20px;
             box-shadow: 0 4px 15px var(--shadow-light);
         }
-        .event-timeline h3, .strategic-debrief h3 {
+
+        .event-timeline h3,
+        .strategic-debrief h3 {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--section-bg);
@@ -433,20 +545,24 @@
             align-items: center;
             gap: 10px;
         }
+
         .event-timeline ul {
             list-style-type: none;
             padding-left: 0;
             margin: 15px 0 0 0;
         }
+
         .event-timeline li {
             position: relative;
             padding: 5px 0 15px 35px;
             border-left: 2px solid var(--section-bg);
             font-size: 0.95em;
         }
+
         .event-timeline li:last-child {
             border-left: none;
         }
+
         .event-timeline li::before {
             content: '\f00c';
             font-family: 'Font Awesome 6 Free';
@@ -464,275 +580,510 @@
             font-size: 0.8em;
             border: 2px solid var(--section-bg);
         }
-        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
-        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+
+        .event-timeline li.negative::before {
+            content: '\f00d';
+            color: var(--accent-red);
+        }
+
+        .event-timeline li.neutral::before {
+            content: '\f05a';
+            color: var(--accent-blue);
+        }
+
         .event-timeline li .decision-title {
             font-weight: bold;
             color: var(--accent-purple);
             display: block;
             margin-bottom: 4px;
         }
+
         #strategic-debrief-content p {
             font-size: 1.1em;
             margin-bottom: 15px;
         }
-        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
-        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
-        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
-        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
-        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
-        #score-breakdown .score-value { font-weight: bold; }
-        .lb-overlay{
-            display:none; position:fixed; inset:0;
-            background: rgba(10,10,25,.7);
+
+        #score-breakdown {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        #score-breakdown li {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-breakdown .score-plus {
+            background-color: rgba(80, 250, 123, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        #score-breakdown .score-minus {
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        #score-breakdown .score-neutral {
+            background-color: rgba(139, 233, 253, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        #score-breakdown .score-value {
+            font-weight: bold;
+        }
+
+        .lb-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 25, .7);
             -webkit-backdrop-filter: blur(4px);
             backdrop-filter: blur(4px);
-            z-index:9999; align-items:center; justify-content:center; padding:20px;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
             animation: fadeIn 0.3s ease-out;
         }
-        .lb-modal{
+
+        .lb-modal {
             background: linear-gradient(180deg, #2a2a4a 0%, #1f1f36 100%);
             color: var(--text-light);
-            width:100%; max-width: 760px; border-radius:14px; padding:22px 22px 16px;
-            border:1px solid rgba(255,255,255,.08);
-            box-shadow: 0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
+            width: 100%;
+            max-width: 760px;
+            border-radius: 14px;
+            padding: 22px 22px 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .04);
         }
-        .lb-header{
-            display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;
+
+        .lb-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
         }
-        .lb-title{
-            display:flex; align-items:center; gap:10px;
-            font-size:1.25em; font-weight:800; letter-spacing:.2px; color: var(--accent-yellow);
+
+        .lb-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25em;
+            font-weight: 800;
+            letter-spacing: .2px;
+            color: var(--accent-yellow);
         }
-        .lb-title i{ filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
-        .lb-tablewrap{
-            margin-top:10px;
-            max-height: 60vh; overflow:auto;
-            border:1px solid var(--interactive-bg); border-radius:10px;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+
+        .lb-title i {
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35));
         }
-        table.lb-table{ width:100%; border-collapse:collapse; font-size:.97em; }
-        table.lb-table th, table.lb-table td{ padding:10px 12px; text-align:left; }
-        table.lb-table thead th{
-            position: sticky; top:0; z-index:1;
-            background:#1f1f36; color:#e9e9ff;
+
+        .lb-tablewrap {
+            margin-top: 10px;
+            max-height: 60vh;
+            overflow: auto;
+            border: 1px solid var(--interactive-bg);
+            border-radius: 10px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02);
+        }
+
+        table.lb-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .97em;
+        }
+
+        table.lb-table th,
+        table.lb-table td {
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        table.lb-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #1f1f36;
+            color: #e9e9ff;
             border-bottom: 1px solid #3b3b66;
-            font-weight:700; letter-spacing:.3px;
+            font-weight: 700;
+            letter-spacing: .3px;
         }
-        table.lb-table tbody td{ border-bottom:1px solid rgba(255,255,255,.06); color:#e9e9f5; }
-        table.lb-table tbody tr:hover{ background-color: rgba(255,255,255,.045); }
-        table.lb-table tbody tr:nth-child(1){ background: linear-gradient(90deg, rgba(255,215,0,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(1) td:first-child::after{ content:" 🥇"; }
-        table.lb-table tbody tr:nth-child(2){ background: linear-gradient(90deg, rgba(192,192,192,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(2) td:first-child::after{ content:" 🥈"; }
-        table.lb-table tbody tr:nth-child(3){ background: linear-gradient(90deg, rgba(205,127,50,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
-        .lb-actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:14px; }
-        .lb-refresh, .lb-close{
-            border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:700;
+
+        table.lb-table tbody td {
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            color: #e9e9f5;
+        }
+
+        table.lb-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, .045);
+        }
+
+        table.lb-table tbody tr:nth-child(1) {
+            background: linear-gradient(90deg, rgba(255, 215, 0, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(1) td:first-child::after {
+            content: " 🥇";
+        }
+
+        table.lb-table tbody tr:nth-child(2) {
+            background: linear-gradient(90deg, rgba(192, 192, 192, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(2) td:first-child::after {
+            content: " 🥈";
+        }
+
+        table.lb-table tbody tr:nth-child(3) {
+            background: linear-gradient(90deg, rgba(205, 127, 50, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(3) td:first-child::after {
+            content: " 🥉";
+        }
+
+        .lb-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .lb-refresh,
+        .lb-close {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 700;
             transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
         }
-        .lb-refresh:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(139,233,253,.22); }
-        .lb-close:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.35); }
-        @media (max-width: 420px){
-            .lb-title{ font-size:1.05em; }
-            table.lb-table th, table.lb-table td{ padding:9px 10px; }
+
+        .lb-refresh:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(139, 233, 253, .22);
+        }
+
+        .lb-close:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, .35);
+        }
+
+        @media (max-width: 420px) {
+            .lb-title {
+                font-size: 1.05em;
+            }
+
+            table.lb-table th,
+            table.lb-table td {
+                padding: 9px 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="introSection" class="centered-page">
-            <h1><i class="fa-solid fa-bug"></i> VPN ve İç Ağ Sızma Testi Simülasyonu</h1>
-            <p style="max-width: 600px;">Hoş geldiniz, bu yeni sızma testi projesinde hedefiniz bir şirketin VPN ağı. Dışarıdan VPN erişimiyle içeri sızacak ve içeriden bilgi toplayarak yetki yükseltme fırsatları arayacaksınız. Göreviniz, şirket ağına sızma potansiyelini değerlendirmek ve zafiyetleri etik sınırlar içinde kanıtlamak. Kararlarınız, hem projenin başarısını hem de şirket ağının güvenliğini doğrudan etkileyecek!</p>
-            <img src="1.png" alt="Sızma testi uzmanı, bir web uygulamasında güvenlik açıklarını arıyor" class="scenario-image">
-            <div class="intro-info-grid">
-                <div class="intro-roles-container">
-                    <h3><i class="fa-solid fa-user-lock"></i> Simülasyon Rolünüz</h3>
-                    <ul>
-                        <li><span class="icon"><i class="fa-solid fa-user-ninja"></i></span><div><strong>Sizin Rolünüz: Sızma Testi Uzmanı</strong> <small>Verilen ağda zafiyet bulmak ve bunları etik sınırlar içinde kanıtlamakla sorumlusunuz.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-network-wired"></i></span><div><strong>Hedef: Kurumsal VPN ve İç Ağ</strong> <small>Şirketin VPN portalına erişim ve iç ağdaki kaynakları keşfetme.</small></div></li>
-                    </ul>
-                </div>
-                <div class="intro-metrics-container">
-                    <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
-                    <ul>
-                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i></span><div><strong>Veri Bütünlüğü</strong> <small>Veri sızıntısı veya hasar riski. (Başlangıç: %100)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-network-wired"></i></span><div><strong>Ağ Performansı</strong> <small>Uygulamanın çalışmasına verilen zarar. (Başlangıç: %100)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-users"></i></span><div><strong>İtibar Puanı</strong> <small>Güvenlik ekibinin profesyonelliği ve etik duruşu. (Başlangıç: 100)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-hand-holding-dollar"></i></span><div><strong>Finansal Etki</strong> <small>Onarım ve ceza maliyetleri. (Başlangıç: ₺0)</small></div></li>
-                    </ul>
-                </div>
-            </div>
-            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
-        </div>
-        <div id="intermissionSection" class="centered-page" style="display: none;">
-            <h2 id="intermissionTitle"></h2>
-            <div id="intermissionDetails"></div>
-            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i class="fa-solid fa-forward"></i> Devam Et</button>
-        </div>
-        <div id="gameContainer" style="display: none;">
-            <div id="statusBar">
-                <div class="metric"><span><i class="fa-solid fa-shield-halved"></i> Veri Bütünlüğü</span><div class="value" id="status-dataIntegrity">100%</div></div>
-                <div class="metric"><span><i class="fa-solid fa-network-wired"></i> Ağ Performansı</span><div class="value" id="status-networkPerf">100%</div></div>
-                <div class="metric"><span><i class="fa-solid fa-users"></i> İtibar Puanı</span><div class="value" id="status-reputation">100</div></div>
-                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Etki</span><div class="value" id="status-financialImpact">₺0</div></div>
-                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-remaining">10:00</div></div>
-            </div>
-            <div id="game-content">
-                <div id="phase1_osint" class="section">
-                    <h2><i class="fa-solid fa-magnifying-glass-location"></i> Faz 1: OSINT & Adlandırma Şeması</h2>
-                    <h3>Hedef: VPN Kullanıcı Adlarını Çıkarmak</h3>
-                    <p>Sızma testinizin ilk aşamasında, şirket hakkında açık kaynaklardan (OSINT) bilgi topluyorsunuz. Amacınız, VPN portalında kullanılabilecek geçerli kullanıcı adlarını tahmin etmek için e-posta ve adlandırma şemalarını bulmaktır.</p>
-                    <img src="2.png" alt="OSINT ve adlandırma şeması" class="scenario-image">
-                    <div class="interactive-element">
-                        <h4>Kullanıcı adlarını çıkarmak için hangi OSINT tekniğini uygulayacaksınız?</h4>
-                        <div class="decision-buttons">
-                            <button class="btn" data-decision="v1-osint-safe"><i class="fa-solid fa-users"></i><div class="btn-text">Seçenek A: Güvenli OSINT<small>LinkedIn profillerini ve iş ilanlarını inceleyerek e-posta adlandırma kalıplarını (örn. `ad.soyad@sirket.com`) çıkarın.</small></div></button>
-                            <button class="btn" data-decision="v1-pattern-guess"><i class="fa-solid fa-bullseye"></i><div class="btn-text">Seçenek B: Kısmi Tahmin<small>Sadece şirketin adını kullanarak yaygın adlandırma şemalarını (örn. `admin`, `support`) tahmin etmeye çalışın.</small></div></button>
-                            <button class="btn" data-decision="v1-spear-phish"><i class="fa-solid fa-envelope-open-text"></i><div class="btn-text">Seçenek C: Oltalama Saldırısı (Kapsam Dışı)<small>Hedefli oltalama e-postaları göndererek geçerli kullanıcı adlarını ve şifrelerini ele geçirmeye çalışın.</small></div></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="phase2_spray" class="section">
-                    <h2><i class="fa-solid fa-spray-can"></i> Faz 2: Password Spray Planı (Lockout-Safe)</h2>
-                    <h3>Hedef: VPN Erişimi Kazanmak</h3>
-                    <p>Bir önceki aşamada elde ettiğiniz kullanıcı adlarını kullanarak VPN portalına erişim sağlamaya çalışacaksınız. Şirketin hesap kilitlenme politikalarını ihlal etmeden ve gürültü yapmadan, yaygın bir parola listesiyle deneme yapmanız gerekiyor.</p>
-                    <img src="3.png" alt="Password Spray" class="scenario-image">
-                    <div class="interactive-element">
-                        <h4>Hesap kilitlenmesini tetiklemeden hangi parola saldırı planını uygulayacaksınız?</h4>
-                        <div class="decision-buttons">
-                            <button class="btn" data-decision="v2-spray-slow"><i class="fa-solid fa-clock"></i><div class="btn-text">Seçenek A: Yavaş ve Etkin Password Spray<small>Mevsim veya yıl gibi yaygın parolaları seçerek, çok sayıda kullanıcı için yavaş ve dikkatli bir şekilde deneme yapın.</small></div></button>
-                            <button class="btn" data-decision="v2-spray-window"><i class="fa-solid fa-calendar-alt"></i><div class="btn-text">Seçenek B: Mesai Dışı Deneme<small>Mesai saatleri dışında, düşük hacimli ve manuel olarak birkaç parola denemesi yapın.</small></div></button>
-                            <button class="btn" data-decision="v2-spray-flood"><i class="fa-solid fa-meteor"></i><div class="btn-text">Seçenek C: Hızlı Kaba Kuvvet Saldırısı<small>Geniş bir parola listesiyle hızlı ve agresif bir şekilde saldırarak mümkün olduğunca fazla hesabı test edin.</small></div></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="phase3_mfa" class="section">
-                    <h2><i class="fa-solid fa-shield-virus"></i> Faz 3: MFA / Portal Çevresi</h2>
-                    <h3>Hedef: VPN'e Erişim</h3>
-                    <p>Password Spray saldırınız başarılı oldu ve bir kullanıcı hesabının kimlik bilgilerini ele geçirdiniz. Ancak, VPN portalına erişmeye çalıştığınızda MFA (Multi-Factor Authentication) engeliyle karşılaştınız. Bu aşamada amacınız, zayıf bir MFA yapılandırması veya eski bir erişim protokolü bularak bu engeli aşmak.</p>
-                    <img src="https://i.imgur.com/pE9k1Qe.png" alt="MFA atlatma denemesi" class="scenario-image">
-                    <div class="interactive-element">
-                        <h4>MFA engeliyle karşılaştığınızda hangi yöntemi deneyeceksiniz?</h4>
-                        <div class="decision-buttons">
-                            <button class="btn" data-decision="v3-legacy-endpoint"><i class="fa-solid fa-file-invoice"></i><div class="btn-text">Seçenek A: Eski Protokolleri Kontrol Etmek<small>VPN bağlantısı için MFA gerektirmeyen eski veya zayıf bir protokol (örneğin, PPTP) bulmaya çalışın.</small></div></button>
-                            <button class="btn" data-decision="v3-fallback-proto"><i class="fa-solid fa-user-shield"></i><div class="btn-text">Seçenek B: MFA Dışı Grupları Hedeflemek<small>Uygulamanın `MFA-bypassed` veya `legacy` gibi gruplara atanan kullanıcılar için farklı bir akış izleyip izlemediğini araştırın.</small></div></button>
-                            <button class="btn" data-decision="v3-otp-bomb"><i class="fa-solid fa-mobile-alt"></i><div class="btn-text">Seçenek C: OTP Bombalama<small>Kullanıcının telefonuna veya e-postasına arka arkaya çok sayıda MFA kodu göndererek dikkatini dağıtmaya ve hata yapmasını sağlamaya çalışın.</small></div></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="phase4_low_noise" class="section">
-                    <h2><i class="fa-solid fa-search"></i> Faz 4: Düşük Gürültülü İç Keşif</h2>
-                    <h3>Hedef: İç Ağ Kaynaklarını Keşfetmek</h3>
-                    <p>VPN üzerinden iç ağa erişim sağladınız. Artık amacınız, mümkün olduğunca az gürültü çıkararak içerideki kaynaklar, sunucular ve potansiyel bilgi sızıntısı kaynakları hakkında bilgi toplamaktır. Bu, sonraki aşamada yetki yükseltme için zemin hazırlayacaktır.</p>
-                    <img src="4.png" alt="İç ağ keşif" class="scenario-image">
-                    <div class="interactive-element">
-                        <h4>İç ağda gürültü yapmadan hangi keşif yöntemlerini kullanacaksınız?</h4>
-                        <div class="decision-buttons">
-                            <button class="btn" data-decision="v4-nmap-wide"><i class="fa-solid fa-network-wired"></i><div class="btn-text">Seçenek A: Geniş Kapsamlı Nmap Taraması<small>Tüm iç ağa yönelik geniş kapsamlı bir port taraması (nmap) yaparak tüm açık servisleri tespit edin.</small></div></button>
-                            <button class="btn" data-decision="v4-share-enum"><i class="fa-solid fa-folder-open"></i><div class="btn-text">Seçenek B: Paylaşım Taraması<small>Ağdaki dosya sunucularını ve paylaşımlarını (`\\filesrv\IT\deploy\scripts` gibi) sessizce tarayarak hassas dosya ve bilgilere ulaşmaya çalışın.</small></div></button>
-                            <button class="btn" data-decision="v4-dns-srv"><i class="fa-solid fa-server"></i><div class="btn-text">Seçenek C: DNS/SRV Kayıtları ile Servis Keşfi<small>Sadece DNS ve SRV kayıtlarını sorgulayarak ağdaki hizmetlerin konumlarını ve türlerini belirleyin.</small></div></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="phase5_cred_hunt" class="section">
-                    <h2><i class="fa-solid fa-user-secret"></i> Faz 5: Kimlik Bilgisi Avı (Config/Script)</h2>
-                    <h3>Hedef: Yetki Yükseltme için Kimlik Bilgisi Bulmak</h3>
-                    <p>İç ağ keşfiniz sırasında, bir dosya paylaşımında potansiyel olarak hassas bilgiler içeren bir `deploy.ps1` veya `db.yml` dosyası buldunuz. Amacınız, bu dosyalarda gömülü olan kullanıcı adı, şifre veya bağlantı dizesi (connection string) gibi kritik kimlik bilgilerini bulmak ve yetkinizi artırmak için kullanmaktır.</p>
-                    <img src="5.png" alt="Kimlik bilgisi avı" class="scenario-image">
-                    <div class="interactive-element">
-                        <h4>Hassas dosyalardan kimlik bilgilerini nasıl çıkaracaksınız?</h4>
-                        <div class="decision-buttons">
-                            <button class="btn" data-decision="v5-config-grep"><i class="fa-solid fa-terminal"></i><div class="btn-text">Seçenek A: `grep` Komutuyla Anahtar Kelime Avı<small>Bulduğunuz script ve yapılandırma dosyalarında `password`, `user`, `conn` gibi anahtar kelimeleri arayın.</small></div></button>
-                            <button class="btn" data-decision="v5-b64-hint"><i class="fa-solid fa-code"></i><div class="btn-text">Seçenek B: Base64/Obfuscation Çözümü<small>Dosyalardaki şüpheli ve anlaşılmaz metinleri Base64 veya benzeri yöntemlerle deşifre etmeye çalışın.</small></div></button>
-                            <button class="btn" data-decision="v5-secret-move"><i class="fa-solid fa-copy"></i><div class="btn-text">Seçenek C: Canlı Sırları Kopyalama<small>Canlı sistemdeki anahtar deposuna (key vault) erişerek tüm sırları kendi kontrolünüzdeki bir sunucuya kopyalayın.</small></div></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="phase6_impact" class="section">
-                    <h2><i class="fa-solid fa-check-circle"></i> Faz 6: Hizmet Hesabı ile Etki Kanıtı</h2>
-                    <h3>Hedef: Etki Kanıtı Oluşturmak</h3>
-                    <p>Önceki aşamada, bir hizmet hesabının kimlik bilgilerini ele geçirdiniz. Bu hesap, ağda kritik bir yetkiye sahip. Amacınız, bu yetkiyi kullanarak, sisteme kalıcı zarar vermeden bir etki kanıtı (Proof of Concept) oluşturmaktır.</p>
-                    <img src="6.png" alt="Etki kanıtı oluşturma" class="scenario-image">
-                    <div class="interactive-element">
-                        <h4>Yetki yükseltmenizin kanıtını nasıl oluşturacaksınız?</h4>
-                        <div class="decision-buttons">
-                            <button class="btn" data-decision="v6-spn-check"><i class="fa-solid fa-lock"></i><div class="btn-text">Seçenek A: Sınırlı Erişim Kontrolü<small>Hizmet hesabının hangi kaynaklara erişebildiğini (SPN/ACL) listeleyin ve bu yetkinin kapsamını raporlayın.</small></div></button>
-                            <button class="btn" data-decision="v6-gpo-edit"><i class="fa-solid fa-user-pen"></i><div class="btn-text">Seçenek B: Politika Değişikliği<small>Hizmet hesabını kullanarak, tüm ağdaki kullanıcılar için Group Policy (GPO) ayarlarını değiştirin.</small></div></button>
-                            <button class="btn" data-decision="v6-whoami-all"><i class="fa-solid fa-file-circle-plus"></i><div class="btn-text">Seçenek C: Zararsız Dosya Oluşturma<small>Hizmet hesabının yetkisiyle kritik bir paylaşıma küçük bir test dosyası oluşturup hemen silin.</small></div></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="phase7_report" class="section">
-                    <h2><i class="fa-solid fa-file-lines"></i> Faz 7: Rapor & Sertleştirme</h2>
-                    <h3>Hedef: Kapsamlı Raporlama ve İyileştirme</h3>
-                    <p>Sızma testini başarıyla tamamladınız ve VPN'den başlayarak iç ağa kadar olan tüm zafiyet zincirini kanıtladınız. Şimdi, bulgularınızı, yöneticilere ve teknik ekibe sunmak için bir rapor hazırlamanız ve kalıcı iyileştirme önerilerinde bulunmanız gerekiyor.</p>
-                    <img src="77.png" alt="Raporlama ve sertleştirme" class="scenario-image">
-                    <div class="interactive-element">
-                        <h4>Projenizi tamamlamak için nasıl bir raporlama ve sertleştirme stratejisi izleyeceksiniz?</h4>
-                        <div class="decision-buttons">
-                            <button class="btn" data-decision="v7-report-brief"><i class="fa-solid fa-file-alt"></i><div class="btn-text">Seçenek A: Kısa Özet<small>Bulgularınızı özetleyen kısa bir not hazırlayın ve detaylı onarım adımları sunmayın.</small></div></button>
-                            <button class="btn" data-decision="v7-persist"><i class="fa-solid fa-bomb"></i><div class="btn-text">Seçenek B: Kalıcılık Bırakma<small>Testin kalıcılığını kanıtlamak için ağda bir arka kapı (backdoor) bırakın.</small></div></button>
-                            <button class="btn" data-decision="v7-report-hardening"><i class="fa-solid fa-file-circle-check"></i><div class="btn-text">Seçenek C: Detaylı Rapor ve Sertleştirme Önerisi<small>VPN MFA kapsamını genişletme, lockout politikası ve paylaşımlarda least-privilege gibi somut sertleştirme önerileri sunun.</small></div></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="finalSection" class="section centered-page" style="display: none;">
-                    <h2><i class="fa-solid fa-chart-line"></i> Sızma Testi Değerlendirme Raporu</h2>
-                    <p>Simülasyon tamamlandı. Sızma testi performansınızın detaylı dökümü aşağıdadır.</p>
-                    <div id="performance-badge-container"><span id="performance-badge"></span></div>
-                    <div class="final-metrics" id="finalMetricsContainer"></div>
-                    <div class="post-crisis-layout">
-                        <div class="event-timeline">
-                            <h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
-                            <ul id="decision-timeline-list"></ul>
-                        </div>
-                        <div class="strategic-debrief">
-                            <h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme</h3>
-                            <div id="strategic-debrief-content"></div>
-                            <h3 style="margin-top: 20px;"><i class="fa-solid fa-calculator"></i> Puan Dökümü</h3>
-                            <ul id="score-breakdown"></ul>
-                        </div>
-                    </div>
-                    <div class="decision-buttons" style="margin-top: 40px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
-                        <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="lb-overlay" id="leaderboardOverlay" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
-        <div class="lb-modal">
-            <div class="lb-header">
-                <h2 id="lbTitle" class="lb-title"><i class="fa-solid fa-trophy"></i> Liderlik Tablosu</h2>
-                <span class="lb-sub">Sızma Testi Simülasyonu En İyileri</span>
-            </div>
-            <div class="lb-tablewrap">
-                <table class="lb-table" id="leaderboardTable">
-                    <thead>
-                        <tr><th>#</th><th>İsim</th><th>Puan</th><th>Tarih</th></tr>
-                    </thead>
-                    <tbody id="leaderboardBody">
-                        <tr><td colspan="4">Yükleniyor…</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="lb-actions">
-                <button class="lb-refresh" id="lbRefreshBtn"><i class="fa-solid fa-arrows-rotate"></i> Yenile</button>
-                <button class="lb-close" id="lbCloseBtn">Kapat</button>
-            </div>
-        </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script>
+<div class="container">
+<div class="centered-page" id="introSection">
+<h1><i class="fa-solid fa-bug"></i> VPN ve İç Ağ Sızma Testi Simülasyonu</h1>
+<p style="max-width: 600px;">Hoş geldiniz, bu yeni sızma testi projesinde hedefiniz bir şirketin VPN ağı.
+                Dışarıdan VPN erişimiyle içeri sızacak ve içeriden bilgi toplayarak yetki yükseltme fırsatları
+                arayacaksınız. Göreviniz, şirket ağına sızma potansiyelini değerlendirmek ve zafiyetleri etik sınırlar
+                içinde kanıtlamak. Kararlarınız, hem projenin başarısını hem de şirket ağının güvenliğini doğrudan
+                etkileyecek!</p>
+<img alt="Sızma testi uzmanı, bir web uygulamasında güvenlik açıklarını arıyor" class="scenario-image" src="1.png"/>
+<div class="intro-info-grid">
+<div class="intro-roles-container">
+<h3><i class="fa-solid fa-user-lock"></i> Simülasyon Rolünüz</h3>
+<ul>
+<li><span class="icon"><i class="fa-solid fa-user-ninja"></i></span>
+<div><strong>Sizin Rolünüz: Sızma Testi Uzmanı</strong> <small>Verilen ağda zafiyet bulmak
+                                    ve bunları etik sınırlar içinde kanıtlamakla sorumlusunuz.</small></div>
+</li>
+<li><span class="icon"><i class="fa-solid fa-network-wired"></i></span>
+<div><strong>Hedef: Kurumsal VPN ve İç Ağ</strong> <small>Şirketin VPN portalına erişim ve
+                                    iç ağdaki kaynakları keşfetme.</small></div>
+</li>
+</ul>
+</div>
+<div class="intro-metrics-container">
+<h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
+<ul>
+<li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i></span>
+<div><strong>Veri Bütünlüğü</strong> <small>Veri sızıntısı veya hasar riski. (Başlangıç:
+                                    %100)</small></div>
+</li>
+<li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-network-wired"></i></span>
+<div><strong>Ağ Performansı</strong> <small>Uygulamanın çalışmasına verilen zarar.
+                                    (Başlangıç: %100)</small></div>
+</li>
+<li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-users"></i></span>
+<div><strong>İtibar Puanı</strong> <small>Güvenlik ekibinin profesyonelliği ve etik duruşu.
+                                    (Başlangıç: 100)</small></div>
+</li>
+<li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+<div><strong>Finansal Etki</strong> <small>Onarım ve ceza maliyetleri. (Başlangıç:
+                                    ₺0)</small></div>
+</li>
+</ul>
+</div>
+</div>
+<button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
+</div>
+<div class="centered-page" id="intermissionSection" style="display: none;">
+<h2 id="intermissionTitle"></h2>
+<div id="intermissionDetails"></div>
+<button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+</div>
+<div id="gameContainer" style="display: none;">
+<div id="statusBar">
+<div class="metric"><span><i class="fa-solid fa-shield-halved"></i> Veri Bütünlüğü</span>
+<div class="value" id="status-dataIntegrity">100%</div>
+</div>
+<div class="metric"><span><i class="fa-solid fa-network-wired"></i> Ağ Performansı</span>
+<div class="value" id="status-networkPerf">100%</div>
+</div>
+<div class="metric"><span><i class="fa-solid fa-users"></i> İtibar Puanı</span>
+<div class="value" id="status-reputation">100</div>
+</div>
+<div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Etki</span>
+<div class="value" id="status-financialImpact">₺0</div>
+</div>
+<div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span>
+<div class="value" id="status-remaining">10:00</div>
+</div>
+</div>
+<div id="game-content">
+<div class="section" id="phase1_osint">
+<h2><i class="fa-solid fa-magnifying-glass-location"></i> Faz 1: OSINT &amp; Adlandırma Şeması</h2>
+<h3>Hedef: VPN Kullanıcı Adlarını Çıkarmak</h3>
+<p>Sızma testinizin ilk aşamasında, şirket hakkında açık kaynaklardan (OSINT) bilgi topluyorsunuz.
+                        Amacınız, VPN portalında kullanılabilecek geçerli kullanıcı adlarını tahmin etmek için e-posta
+                        ve adlandırma şemalarını bulmaktır.</p>
+<img alt="OSINT ve adlandırma şeması" class="scenario-image" src="2.png"/>
+<div class="interactive-element">
+<h4>Kullanıcı adlarını çıkarmak için hangi OSINT tekniğini uygulayacaksınız?</h4>
+<div class="decision-buttons"><button class="btn" data-decision="v1-osint-safe"><i class="fa-solid fa-users"></i>
+<div class="btn-text">Seçenek A: Güvenli OSINT<small>LinkedIn profillerini ve iş
+                                        ilanlarını inceleyerek e-posta adlandırma kalıplarını (örn.
+                                        `ad.soyad@sirket.com`) çıkarın.</small></div>
+</button><button class="btn" data-decision="v1-pattern-guess"><i class="fa-solid fa-bullseye"></i>
+<div class="btn-text">Seçenek B: Kısmi Tahmin<small>Sadece şirketin adını kullanarak
+                                        yaygın adlandırma şemalarını (örn. `admin`, `support`) tahmin etmeye
+                                        çalışın.</small></div>
+</button><button class="btn" data-decision="v1-spear-phish"><i class="fa-solid fa-envelope-open-text"></i>
+<div class="btn-text">Seçenek C: Oltalama Saldırısı (Kapsam Dışı)<small>Hedefli oltalama
+                                        e-postaları göndererek geçerli kullanıcı adlarını ve şifrelerini ele geçirmeye
+                                        çalışın.</small></div>
+</button></div>
+</div>
+</div>
+<div class="section" id="phase2_spray">
+<h2><i class="fa-solid fa-spray-can"></i> Faz 2: Password Spray Planı (Lockout-Safe)</h2>
+<h3>Hedef: VPN Erişimi Kazanmak</h3>
+<p>Bir önceki aşamada elde ettiğiniz kullanıcı adlarını kullanarak VPN portalına erişim sağlamaya
+                        çalışacaksınız. Şirketin hesap kilitlenme politikalarını ihlal etmeden ve gürültü yapmadan,
+                        yaygın bir parola listesiyle deneme yapmanız gerekiyor.</p>
+<img alt="Password Spray" class="scenario-image" src="3.png"/>
+<div class="interactive-element">
+<h4>Hesap kilitlenmesini tetiklemeden hangi parola saldırı planını uygulayacaksınız?</h4>
+<div class="decision-buttons"><button class="btn" data-decision="v2-spray-window"><i class="fa-solid fa-calendar-alt"></i>
+<div class="btn-text">Seçenek B: Mesai Dışı Deneme<small>Mesai saatleri dışında, düşük
+                                        hacimli ve manuel olarak birkaç parola denemesi yapın.</small></div>
+</button><button class="btn" data-decision="v2-spray-flood"><i class="fa-solid fa-meteor"></i>
+<div class="btn-text">Seçenek C: Hızlı Kaba Kuvvet Saldırısı<small>Geniş bir parola
+                                        listesiyle hızlı ve agresif bir şekilde saldırarak mümkün olduğunca fazla hesabı
+                                        test edin.</small></div>
+</button><button class="btn" data-decision="v2-spray-slow"><i class="fa-solid fa-clock"></i>
+<div class="btn-text">Seçenek A: Yavaş ve Etkin Password Spray<small>Mevsim veya yıl
+                                        gibi yaygın parolaları seçerek, çok sayıda kullanıcı için yavaş ve dikkatli bir
+                                        şekilde deneme yapın.</small></div>
+</button></div>
+</div>
+</div>
+<div class="section" id="phase3_mfa">
+<h2><i class="fa-solid fa-shield-virus"></i> Faz 3: MFA / Portal Çevresi</h2>
+<h3>Hedef: VPN'e Erişim</h3>
+<p>Password Spray saldırınız başarılı oldu ve bir kullanıcı hesabının kimlik bilgilerini ele
+                        geçirdiniz. Ancak, VPN portalına erişmeye çalıştığınızda MFA (Multi-Factor Authentication)
+                        engeliyle karşılaştınız. Bu aşamada amacınız, zayıf bir MFA yapılandırması veya eski bir erişim
+                        protokolü bularak bu engeli aşmak.</p>
+<img alt="MFA atlatma denemesi" class="scenario-image" src="https://i.imgur.com/pE9k1Qe.png"/>
+<div class="interactive-element">
+<h4>MFA engeliyle karşılaştığınızda hangi yöntemi deneyeceksiniz?</h4>
+<div class="decision-buttons"><button class="btn" data-decision="v3-otp-bomb"><i class="fa-solid fa-mobile-alt"></i>
+<div class="btn-text">Seçenek C: OTP Bombalama<small>Kullanıcının telefonuna veya
+                                        e-postasına arka arkaya çok sayıda MFA kodu göndererek dikkatini dağıtmaya ve
+                                        hata yapmasını sağlamaya çalışın.</small></div>
+</button><button class="btn" data-decision="v3-legacy-endpoint"><i class="fa-solid fa-file-invoice"></i>
+<div class="btn-text">Seçenek A: Eski Protokolleri Kontrol Etmek<small>VPN bağlantısı
+                                        için MFA gerektirmeyen eski veya zayıf bir protokol (örneğin, PPTP) bulmaya
+                                        çalışın.</small></div>
+</button><button class="btn" data-decision="v3-fallback-proto"><i class="fa-solid fa-user-shield"></i>
+<div class="btn-text">Seçenek B: MFA Dışı Grupları Hedeflemek<small>Uygulamanın
+                                        `MFA-bypassed` veya `legacy` gibi gruplara atanan kullanıcılar için farklı bir
+                                        akış izleyip izlemediğini araştırın.</small></div>
+</button></div>
+</div>
+</div>
+<div class="section" id="phase4_low_noise">
+<h2><i class="fa-solid fa-search"></i> Faz 4: Düşük Gürültülü İç Keşif</h2>
+<h3>Hedef: İç Ağ Kaynaklarını Keşfetmek</h3>
+<p>VPN üzerinden iç ağa erişim sağladınız. Artık amacınız, mümkün olduğunca az gürültü çıkararak
+                        içerideki kaynaklar, sunucular ve potansiyel bilgi sızıntısı kaynakları hakkında bilgi
+                        toplamaktır. Bu, sonraki aşamada yetki yükseltme için zemin hazırlayacaktır.</p>
+<img alt="İç ağ keşif" class="scenario-image" src="4.png"/>
+<div class="interactive-element">
+<h4>İç ağda gürültü yapmadan hangi keşif yöntemlerini kullanacaksınız?</h4>
+<div class="decision-buttons"><button class="btn" data-decision="v4-share-enum"><i class="fa-solid fa-folder-open"></i>
+<div class="btn-text">Seçenek B: Paylaşım Taraması<small>Ağdaki dosya sunucularını ve
+                                        paylaşımlarını (`\\filesrv\IT\deploy\scripts` gibi) sessizce tarayarak hassas
+                                        dosya ve bilgilere ulaşmaya çalışın.</small></div>
+</button><button class="btn" data-decision="v4-dns-srv"><i class="fa-solid fa-server"></i>
+<div class="btn-text">Seçenek C: DNS/SRV Kayıtları ile Servis Keşfi<small>Sadece DNS ve
+                                        SRV kayıtlarını sorgulayarak ağdaki hizmetlerin konumlarını ve türlerini
+                                        belirleyin.</small></div>
+</button><button class="btn" data-decision="v4-nmap-wide"><i class="fa-solid fa-network-wired"></i>
+<div class="btn-text">Seçenek A: Geniş Kapsamlı Nmap Taraması<small>Tüm iç ağa yönelik
+                                        geniş kapsamlı bir port taraması (nmap) yaparak tüm açık servisleri tespit
+                                        edin.</small></div>
+</button></div>
+</div>
+</div>
+<div class="section" id="phase5_cred_hunt">
+<h2><i class="fa-solid fa-user-secret"></i> Faz 5: Kimlik Bilgisi Avı (Config/Script)</h2>
+<h3>Hedef: Yetki Yükseltme için Kimlik Bilgisi Bulmak</h3>
+<p>İç ağ keşfiniz sırasında, bir dosya paylaşımında potansiyel olarak hassas bilgiler içeren bir
+                        `deploy.ps1` veya `db.yml` dosyası buldunuz. Amacınız, bu dosyalarda gömülü olan kullanıcı adı,
+                        şifre veya bağlantı dizesi (connection string) gibi kritik kimlik bilgilerini bulmak ve
+                        yetkinizi artırmak için kullanmaktır.</p>
+<img alt="Kimlik bilgisi avı" class="scenario-image" src="5.png"/>
+<div class="interactive-element">
+<h4>Hassas dosyalardan kimlik bilgilerini nasıl çıkaracaksınız?</h4>
+<div class="decision-buttons"><button class="btn" data-decision="v5-secret-move"><i class="fa-solid fa-copy"></i>
+<div class="btn-text">Seçenek C: Canlı Sırları Kopyalama<small>Canlı sistemdeki anahtar
+                                        deposuna (key vault) erişerek tüm sırları kendi kontrolünüzdeki bir sunucuya
+                                        kopyalayın.</small></div>
+</button><button class="btn" data-decision="v5-b64-hint"><i class="fa-solid fa-code"></i>
+<div class="btn-text">Seçenek B: Base64/Obfuscation Çözümü<small>Dosyalardaki şüpheli ve
+                                        anlaşılmaz metinleri Base64 veya benzeri yöntemlerle deşifre etmeye
+                                        çalışın.</small></div>
+</button><button class="btn" data-decision="v5-config-grep"><i class="fa-solid fa-terminal"></i>
+<div class="btn-text">Seçenek A: `grep` Komutuyla Anahtar Kelime Avı<small>Bulduğunuz
+                                        script ve yapılandırma dosyalarında `password`, `user`, `conn` gibi anahtar
+                                        kelimeleri arayın.</small></div>
+</button></div>
+</div>
+</div>
+<div class="section" id="phase6_impact">
+<h2><i class="fa-solid fa-check-circle"></i> Faz 6: Hizmet Hesabı ile Etki Kanıtı</h2>
+<h3>Hedef: Etki Kanıtı Oluşturmak</h3>
+<p>Önceki aşamada, bir hizmet hesabının kimlik bilgilerini ele geçirdiniz. Bu hesap, ağda kritik bir
+                        yetkiye sahip. Amacınız, bu yetkiyi kullanarak, sisteme kalıcı zarar vermeden bir etki kanıtı
+                        (Proof of Concept) oluşturmaktır.</p>
+<img alt="Etki kanıtı oluşturma" class="scenario-image" src="6.png"/>
+<div class="interactive-element">
+<h4>Yetki yükseltmenizin kanıtını nasıl oluşturacaksınız?</h4>
+<div class="decision-buttons"><button class="btn" data-decision="v6-spn-check"><i class="fa-solid fa-lock"></i>
+<div class="btn-text">Seçenek A: Sınırlı Erişim Kontrolü<small>Hizmet hesabının hangi
+                                        kaynaklara erişebildiğini (SPN/ACL) listeleyin ve bu yetkinin kapsamını
+                                        raporlayın.</small></div>
+</button><button class="btn" data-decision="v6-gpo-edit"><i class="fa-solid fa-user-pen"></i>
+<div class="btn-text">Seçenek B: Politika Değişikliği<small>Hizmet hesabını kullanarak,
+                                        tüm ağdaki kullanıcılar için Group Policy (GPO) ayarlarını değiştirin.</small>
+</div>
+</button><button class="btn" data-decision="v6-whoami-all"><i class="fa-solid fa-file-circle-plus"></i>
+<div class="btn-text">Seçenek C: Zararsız Dosya Oluşturma<small>Hizmet hesabının
+                                        yetkisiyle kritik bir paylaşıma küçük bir test dosyası oluşturup hemen
+                                        silin.</small></div>
+</button></div>
+</div>
+</div>
+<div class="section" id="phase7_report">
+<h2><i class="fa-solid fa-file-lines"></i> Faz 7: Rapor &amp; Sertleştirme</h2>
+<h3>Hedef: Kapsamlı Raporlama ve İyileştirme</h3>
+<p>Sızma testini başarıyla tamamladınız ve VPN'den başlayarak iç ağa kadar olan tüm zafiyet
+                        zincirini kanıtladınız. Şimdi, bulgularınızı, yöneticilere ve teknik ekibe sunmak için bir rapor
+                        hazırlamanız ve kalıcı iyileştirme önerilerinde bulunmanız gerekiyor.</p>
+<img alt="Raporlama ve sertleştirme" class="scenario-image" src="77.png"/>
+<div class="interactive-element">
+<h4>Projenizi tamamlamak için nasıl bir raporlama ve sertleştirme stratejisi izleyeceksiniz?
+                        </h4>
+<div class="decision-buttons"><button class="btn" data-decision="v7-report-brief"><i class="fa-solid fa-file-alt"></i>
+<div class="btn-text">Seçenek A: Kısa Özet<small>Bulgularınızı özetleyen kısa bir not
+                                        hazırlayın ve detaylı onarım adımları sunmayın.</small></div>
+</button><button class="btn" data-decision="v7-report-hardening"><i class="fa-solid fa-file-circle-check"></i>
+<div class="btn-text">Seçenek C: Detaylı Rapor ve Sertleştirme Önerisi<small>VPN MFA
+                                        kapsamını genişletme, lockout politikası ve paylaşımlarda least-privilege gibi
+                                        somut sertleştirme önerileri sunun.</small></div>
+</button><button class="btn" data-decision="v7-persist"><i class="fa-solid fa-bomb"></i>
+<div class="btn-text">Seçenek B: Kalıcılık Bırakma<small>Testin kalıcılığını kanıtlamak
+                                        için ağda bir arka kapı (backdoor) bırakın.</small></div>
+</button></div>
+</div>
+</div>
+<div class="section centered-page" id="finalSection" style="display: none;">
+<h2><i class="fa-solid fa-chart-line"></i> Sızma Testi Değerlendirme Raporu</h2>
+<p>Simülasyon tamamlandı. Sızma testi performansınızın detaylı dökümü aşağıdadır.</p>
+<div id="performance-badge-container"><span id="performance-badge"></span></div>
+<div class="final-metrics" id="finalMetricsContainer"></div>
+<div class="post-crisis-layout">
+<div class="event-timeline">
+<h3><i class="fa-solid fa-timeline"></i> Karar Zaman Tüneli</h3>
+<ul id="decision-timeline-list"></ul>
+</div>
+<div class="strategic-debrief">
+<h3><i class="fa-solid fa-lightbulb"></i> Stratejik Değerlendirme</h3>
+<div id="strategic-debrief-content"></div>
+<h3 style="margin-top: 20px;"><i class="fa-solid fa-calculator"></i> Puan Dökümü</h3>
+<ul id="score-breakdown"></ul>
+</div>
+</div>
+<div class="decision-buttons" style="margin-top: 40px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+<button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Simülasyonu Yeniden Başlat</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div aria-labelledby="lbTitle" aria-modal="true" class="lb-overlay" id="leaderboardOverlay" role="dialog">
+<div class="lb-modal">
+<div class="lb-header">
+<h2 class="lb-title" id="lbTitle"><i class="fa-solid fa-trophy"></i> Liderlik Tablosu</h2>
+<span class="lb-sub">Sızma Testi Simülasyonu En İyileri</span>
+</div>
+<div class="lb-tablewrap">
+<table class="lb-table" id="leaderboardTable">
+<thead>
+<tr>
+<th>#</th>
+<th>İsim</th>
+<th>Puan</th>
+<th>Tarih</th>
+</tr>
+</thead>
+<tbody id="leaderboardBody">
+<tr>
+<td colspan="4">Yükleniyor…</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="lb-actions">
+<button class="lb-refresh" id="lbRefreshBtn"><i class="fa-solid fa-arrows-rotate"></i> Yenile</button>
+<button class="lb-close" id="lbCloseBtn">Kapat</button>
+</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
         document.addEventListener('DOMContentLoaded', () => {
             window.game = {
                 score: { dataIntegrity: 100, networkPerf: 100, reputation: 100, financialImpact: 0 },
@@ -890,7 +1241,7 @@
                         </div>
                     `);
                     let nextSectionToGo;
-                    switch(this.state.currentSectionId) {
+                    switch (this.state.currentSectionId) {
                         case 'phase1_osint': nextSectionToGo = 'phase2_spray'; break;
                         case 'phase2_spray': nextSectionToGo = 'phase3_mfa'; break;
                         case 'phase3_mfa': nextSectionToGo = 'phase4_low_noise'; break;
@@ -982,37 +1333,61 @@
                     const timelineList = document.getElementById('decision-timeline-list');
                     const debriefContent = document.getElementById('strategic-debrief-content');
                     const scoreBreakdownList = document.getElementById('score-breakdown');
+                    // --- STANDARD PUANLAMA SİSTEMİ (V2) ---
                     let scoreBreakdown = {};
-                    let totalScore = 40;
-                    scoreBreakdown['Başlangıç Puanı'] = { value: 40, class: 'score-neutral' };
-                    let decisionQualityScore = 0;
+                    let totalScore = 50;
+                    scoreBreakdown['Başlangıç Puanı'] = { value: 50, class: 'score-neutral' };
+
+                    // 1. Karar Bazlı Puanlama (+10 / 0 / -10)
+                    let decisionScore = 0;
                     this.state.decisionHistory.forEach(decision => {
-                        if (decision.impactType === 'Negative') { decisionQualityScore -= 10; }
-                        else if (decision.impactType === 'Positive') { decisionQualityScore += 5; }
+                        if (decision.impactType === 'Positive') {
+                            decisionScore += 10;
+                        } else if (decision.impactType === 'Negative') {
+                            decisionScore -= 10;
+                        }
                     });
-                    if (decisionQualityScore !== 0) {
-                        totalScore += decisionQualityScore;
-                        scoreBreakdown['Karar Kalitesi (Ceza/Ödül)'] = { value: decisionQualityScore, class: decisionQualityScore >= 0 ? 'score-plus' : 'score-minus' };
+
+                    if (decisionScore !== 0) {
+                        totalScore += decisionScore;
+                        scoreBreakdown['Karar Kalitesi'] = {
+                            value: decisionScore,
+                            class: decisionScore > 0 ? 'score-plus' : 'score-minus'
+                        };
                     }
+
+                    // 2. Metrik Bazlı Bonuslar
                     const finalDataIntegrity = Math.max(0, this.score.dataIntegrity);
                     const finalNetworkPerf = Math.max(0, this.score.networkPerf);
                     const finalReputation = Math.max(0, this.score.reputation);
                     const finalFinancialImpact = this.score.financialImpact;
+
                     if (finalDataIntegrity >= 95) { totalScore += 10; scoreBreakdown['Veri Bütünlüğü Koruması (Mükemmel)'] = { value: 10, class: 'score-plus' }; }
-                    else if (finalDataIntegrity < 80) { totalScore -= 15; scoreBreakdown['Veri Bütünlüğü Kaybı (Ciddi)'] = { value: -15, class: 'score-minus' }; }
+                    else if (finalDataIntegrity < 50) { totalScore -= 10; scoreBreakdown['Veri Bütünlüğü Kaybı (Ciddi)'] = { value: -10, class: 'score-minus' }; }
+
                     if (finalNetworkPerf >= 95) { totalScore += 5; scoreBreakdown['Ağ Performansı (Mükemmel)'] = { value: 5, class: 'score-plus' }; }
-                    else if (finalNetworkPerf < 80) { totalScore -= 10; scoreBreakdown['Ağ Performansı Kaybı (Ciddi)'] = { value: -10, class: 'score-minus' }; }
+                    else if (finalNetworkPerf < 50) { totalScore -= 10; scoreBreakdown['Ağ Performansı Kaybı (Ciddi)'] = { value: -10, class: 'score-minus' }; }
+
                     if (finalReputation >= 90) { totalScore += 10; scoreBreakdown['Etik ve Profesyonellik (Yüksek)'] = { value: 10, class: 'score-plus' }; }
-                    else if (finalReputation < 70) { totalScore -= 20; scoreBreakdown['İtibar Kaybı (Ciddi)'] = { value: -20, class: 'score-minus' }; }
+                    else if (finalReputation < 50) { totalScore -= 10; scoreBreakdown['İtibar Kaybı (Ciddi)'] = { value: -10, class: 'score-minus' }; }
+
                     if (finalFinancialImpact <= 10000) { totalScore += 10; scoreBreakdown['Maliyet Yönetimi (Etkili)'] = { value: 10, class: 'score-plus' }; }
-                    else if (finalFinancialImpact > 100000) { totalScore -= 15; scoreBreakdown['Yüksek Finansal Maliyet'] = { value: -15, class: 'score-minus' }; }
+                    else if (finalFinancialImpact > 50000) { totalScore -= 10; scoreBreakdown['Yüksek Finansal Maliyet'] = { value: -10, class: 'score-minus' }; }
+
+                    // 3. Stratejik Bonuslar
                     if (this.state.v7ReportHardening) { totalScore += 10; scoreBreakdown['Kritik Karar: Kapsamlı Raporlama'] = { value: 10, class: 'score-plus' }; }
                     if (this.state.v6WhoamiAll) { totalScore += 5; scoreBreakdown['Kritik Kanıt: Zararsız Etki'] = { value: 5, class: 'score-plus' }; }
+
+                    // 4. Zaman Bonusu
                     const timeSpent = this.timer.total - this.timer.remaining;
-                    if (timeSpent <= 300) { totalScore += 5; scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' }; }
-                    else if (timeSpent > 500) { totalScore -= 5; scoreBreakdown['Zaman Yönetimi Cezası'] = { value: -5, class: 'score-minus' }; }
+                    if (this.timer.remaining >= 180) {
+                        totalScore += 5;
+                        scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' };
+                    }
+
                     totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
                     this.state.totalScore = totalScore;
+                    // --- PUANLAMA SİSTEMİ SONU ---
                     let badgeInfo = {};
                     if (totalScore >= 90) { badgeInfo = { text: 'SİBER KAHRAMAN', color: 'var(--accent-green)' }; }
                     else if (totalScore >= 70) { badgeInfo = { text: 'UZMAN PENETRASYON TEST UZMANI', color: 'var(--accent-blue)' }; }
@@ -1069,8 +1444,8 @@
                     this.timer.running = false;
                 },
                 updateTimerUI() {
-                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2,'0');
-                    const s = String(this.timer.remaining % 60).padStart(2,'0');
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
                     if (this.elements.statusBar.remaining) {
                         this.elements.statusBar.remaining.textContent = `${m}:${s}`;
                     }
@@ -1105,13 +1480,13 @@
                             body: JSON.stringify(payload)
                         });
                         if (!res.ok) throw new Error('API isteği başarısız: ' + res.status);
-                    } catch(e) {
+                    } catch (e) {
                         console.warn("API'ye ulaşılamadı. Puan yerel olarak saklanıyor.");
                         const key = 'leaderboard-v7-vpn-insider-chain';
                         const arr = JSON.parse(localStorage.getItem(key) || '[]');
                         arr.push(payload);
-                        arr.sort((a,b)=> b.score - a.score);
-                        localStorage.setItem(key, JSON.stringify(arr.slice(0,100)));
+                        arr.sort((a, b) => b.score - a.score);
+                        localStorage.setItem(key, JSON.stringify(arr.slice(0, 100)));
                     }
                 },
                 async loadLeaderboard() {
@@ -1120,11 +1495,11 @@
                     tbody.innerHTML = `<tr><td colspan="4">Yükleniyor…</td></tr>`;
                     let rows = [];
                     try {
-                        const res = await fetch('/api/leaderboard?scenario=v7-vpn-insider-chain', { method:'GET' });
+                        const res = await fetch('/api/leaderboard?scenario=v7-vpn-insider-chain', { method: 'GET' });
                         if (!res.ok) throw new Error('API isteği başarısız: ' + res.status);
                         const data = await res.json();
                         rows = Array.isArray(data) ? data : [];
-                    } catch(e) {
+                    } catch (e) {
                         console.warn("API'ye ulaşılamadı. Liderlik tablosu yerelden yükleniyor.");
                         const arr = JSON.parse(localStorage.getItem(key) || '[]');
                         rows = arr.map(x => ({ name: x.name, score: x.score, timestamp: x.timestamp }));
@@ -1133,11 +1508,11 @@
                         tbody.innerHTML = `<tr><td colspan="4">Henüz kayıt bulunmuyor.</td></tr>`;
                         return;
                     }
-                    rows.sort((a,b)=> b.score - a.score);
-                    tbody.innerHTML = rows.slice(0,50).map((r,i)=>`
+                    rows.sort((a, b) => b.score - a.score);
+                    tbody.innerHTML = rows.slice(0, 50).map((r, i) => `
                         <tr>
-                            <td>${i+1}</td>
-                            <td>${(r.name || 'Anonim').toString().slice(0,40)}</td>
+                            <td>${i + 1}</td>
+                            <td>${(r.name || 'Anonim').toString().slice(0, 40)}</td>
                             <td>${r.score}</td>
                             <td>${r.timestamp ? new Date(r.timestamp).toLocaleString('tr-TR') : '-'}</td>
                         </tr>
@@ -1147,5 +1522,6 @@
             window.game.setup();
         });
     </script>
+<script src="../global-scenario.js"></script>
 </body>
 </html>

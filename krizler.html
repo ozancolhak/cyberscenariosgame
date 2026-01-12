@@ -1,183 +1,66 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Rol Seçimi | Siber Güvenlik Simülasyonları</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
-
-    :root {
-        --dark-blue-bg: #0A0A1E;
-        --main-accent: #00E6FF;
-        --text-color-light: #E0E0E0;
-        --text-color-medium: #A0A0A0;
-        --card-bg: rgba(20, 20, 40, 0.85);
-        --border-glow: rgba(0, 230, 255, 0.5);
-        --card-hover-bg: rgba(30, 30, 60, 0.95);
-        --card-hover-border: rgba(0, 230, 255, 0.8);
-        --shadow-strong: rgba(0, 230, 255, 0.4);
-        --title-glow-color: rgba(0, 230, 255, 0.4);
-    }
-
-    body {
-        font-family: 'Roboto', sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        min-height: 100vh;
-        background: var(--dark-blue-bg);
-        color: var(--text-color-light);
-        margin: 0;
-        padding: 40px 20px;
-        box-sizing: border-box;
-        overflow-x: hidden;
-        position: relative;
-    }
-
-    .grid-bg {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-    }
-    .grid-bg::before {
-        content: ''; position: absolute; width: 200vw; height: 200vh;
-        background-image: linear-gradient(0deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%),
-                          linear-gradient(90deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%);
-        background-size: 50px 50px; animation: grid-move 60s linear infinite;
-        transform-origin: 0 0; opacity: 0.2;
-    }
-    @keyframes grid-move { from { transform: translate(0, 0); } to { transform: translate(-50px, -50px); } }
-
-    .container {
-        width: 100%;
-        max-width: 1200px;
-        z-index: 1;
-        animation: fadeIn 1s ease-out;
-    }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    h1 {
-        font-family: 'Orbitron', sans-serif; font-size: 2.8em; margin-bottom: 15px;
-        color: var(--main-accent); text-shadow: 0 0 8px var(--title-glow-color);
-        text-align: center; letter-spacing: 1px;
-    }
-    
-    .subtitle {
-        font-size: 1.2em; line-height: 1.7; margin-bottom: 50px;
-        color: var(--text-color-medium); text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;
-    }
-
-    .roles-grid {
-        display: grid;
-        gap: 30px;
-        /* Default: 1 sütun */
-        grid-template-columns: repeat(1, 1fr);
-        align-items: stretch; /* Kartların aynı yüksekliğe sahip olmasını sağlar */
-    }
-
-    @media (min-width: 768px) {
-        .roles-grid {
-            /* Tablet ve üzeri: 2 sütun */
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (min-width: 1024px) {
-        .roles-grid {
-            /* Masaüstü ve üzeri: 3 sütun */
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-
-    .role-card {
-        background-color: var(--card-bg);
-        border: 1px solid var(--border-glow);
-        border-radius: 20px;
-        padding: 30px;
-        text-align: left;
-        text-decoration: none;
-        color: var(--text-color-light);
-        transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        backdrop-filter: blur(8px);
-        display: flex;
-        flex-direction: column;
-        cursor: pointer;
-    }
-
-    .role-card:hover {
-        transform: translateY(-10px);
-        background-color: var(--card-hover-bg);
-        border-color: var(--card-hover-border);
-        box-shadow: 0 10px 30px var(--shadow-strong);
-    }
-
-    .role-card .icon {
-        font-size: 3em;
-        color: var(--main-accent);
-        margin-bottom: 20px;
-        height: 50px;
-    }
-
-    .role-card h2 {
-        font-family: 'Orbitron', sans-serif;
-        font-size: 1.6em;
-        margin-bottom: 15px;
-        color: var(--text-color-light);
-    }
-    
-    .role-card p {
-        font-size: 1em;
-        color: var(--text-color-medium);
-        line-height: 1.6;
-        flex-grow: 1;
-        margin-bottom: 0;
-    }
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rol Seçimi | Siber Güvenlik Simülasyonları</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
-<body>
+
+<body class="page-content">
     <div class="grid-bg"></div>
     <div class="container">
         <h1>Rolünü Seç</h1>
-        <p class="subtitle">Siber güvenlik kariyer yolculuğunda bir uzmanlık seç. Her rol, seni farklı yeteneklerini test edecek özel kriz senaryolarına götürecek. Stratejini belirle ve müdahale et.</p>
+        <p class="subtitle">Siber güvenlik kariyer yolculuğunda bir uzmanlık seç. Her rol, seni farklı yeteneklerini
+            test edecek özel kriz senaryolarına götürecek. Stratejini belirle ve müdahale et.</p>
 
         <div class="roles-grid">
             <a href="rol_soc_analyst.html" class="role-card">
                 <div class="icon"><i class="fas fa-binoculars"></i></div>
                 <h2>SOC Analisti</h2>
-                <p>Savunmanın ilk hattı. Uyarıları izle, anomalileri tespit et ve gürültünün içindeki gerçek tehdit sinyalini bulan ilk kişi ol.</p>
+                <p>Savunmanın ilk hattı. Uyarıları izle, anomalileri tespit et ve gürültünün içindeki gerçek tehdit
+                    sinyalini bulan ilk kişi ol.</p>
             </a>
 
             <a href="rol_incident_responder.html" class="role-card">
                 <div class="icon"><i class="fas fa-fire-extinguisher"></i></div>
                 <h2>Olay Müdahale Uzmanı</h2>
-                <p>Kriz anının soğukkanlı profesyoneli. Aktif saldırıları durdur, delilleri topla ve sistemi düşmandan geri al.</p>
+                <p>Kriz anının soğukkanlı profesyoneli. Aktif saldırıları durdur, delilleri topla ve sistemi düşmandan
+                    geri al.</p>
             </a>
 
             <a href="rol_penetration_tester.html" class="role-card">
                 <div class="icon"><i class="fas fa-user-secret"></i></div>
                 <h2>Sızma Testi Uzmanı</h2>
-                <p>Sistemleri düşman gözüyle test eden, zafiyetleri bulan ve etik sınırlar içinde kanıtlayan bir uzman.</p>
+                <p>Sistemleri düşman gözüyle test eden, zafiyetleri bulan ve etik sınırlar içinde kanıtlayan bir uzman.
+                </p>
             </a>
-            
+
             <a href="rol_cybersecurity_engineer.html" class="role-card">
                 <div class="icon"><i class="fas fa-microchip"></i></div>
                 <h2>Siber Güvenlik Mühendisi</h2>
-                <p>Sistemlerin ve teknolojilerin koruyucusu. Zafiyetleri derinlemesine analiz et, karmaşık sistemleri güçlendir ve proaktif savunma yap.</p>
+                <p>Sistemlerin ve teknolojilerin koruyucusu. Zafiyetleri derinlemesine analiz et, karmaşık sistemleri
+                    güçlendir ve proaktif savunma yap.</p>
             </a>
 
             <a href="rol_network_security_engineer.html" class="role-card">
                 <div class="icon"><i class="fas fa-network-wired"></i></div>
                 <h2>Ağ Güvenliği Mühendisi</h2>
-                <p>Ağ altyapısının kalbi. Güvenli ağ tasarımları oluştur, trafik akışını izle ve savunma mekanizmalarını kur.</p>
+                <p>Ağ altyapısının kalbi. Güvenli ağ tasarımları oluştur, trafik akışını izle ve savunma mekanizmalarını
+                    kur.</p>
             </a>
 
             <a href="rol_cybersecurity_manager.html" class="role-card">
                 <div class="icon"><i class="fas fa-user-tie"></i></div>
                 <h2>Siber Güvenlik Yöneticisi</h2>
-                <p>Stratejist ve lider. Teknik krizleri iş dünyası diline çevir, riski yönet, bütçeyi planla ve yönetim kuruluna liderlik et.</p>
+                <p>Stratejist ve lider. Teknik krizleri iş dünyası diline çevir, riski yönet, bütçeyi planla ve yönetim
+                    kuruluna liderlik et.</p>
             </a>
         </div>
     </div>
 </body>
+
 </html>

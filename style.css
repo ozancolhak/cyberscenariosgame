@@ -1,0 +1,576 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+:root {
+    --dark-blue-bg: #0A0A1E;
+    --main-accent: #00E6FF;
+    --text-color-light: #E0E0E0;
+    --text-color-medium: #A0A0A0;
+    --card-bg: rgba(20, 20, 40, 0.85);
+    --border-glow: rgba(0, 230, 255, 0.5);
+    --card-hover-bg: rgba(30, 30, 60, 0.95);
+    --card-hover-border: rgba(0, 230, 255, 0.8);
+    --shadow-strong: rgba(0, 230, 255, 0.4);
+    --title-glow-color: rgba(0, 230, 255, 0.4);
+
+    /* Difficulty Colors */
+    --difficulty-kolay-bg: rgba(70, 201, 140, 0.1);
+    --difficulty-kolay-border: #46c98c;
+    --difficulty-medium: #f1fa8c;
+    --difficulty-high: #ff5555;
+    --difficulty-yuksek-bg: rgba(255, 85, 85, 0.1);
+    --difficulty-yuksek-border: #ff5555;
+
+    --focus-color: var(--main-accent);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Changed to center for index, others might need flex-start override */
+    min-height: 100vh;
+    background: var(--dark-blue-bg);
+    color: var(--text-color-light);
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    overflow-x: hidden;
+    position: relative;
+    flex-direction: column;
+    /* Added for footer/nav structure */
+}
+
+/* Page specific body overrides can be handled by classes if needed, 
+   but for now let's try to keep it generic.
+   Some pages had align-items: flex-start and padding top.
+*/
+body.page-content {
+    align-items: flex-start;
+    padding-top: 80px;
+    /* Accounts for navbar */
+    justify-content: flex-start;
+}
+
+.grid-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.grid-bg::before {
+    content: '';
+    position: absolute;
+    width: 200vw;
+    height: 200vh;
+    background-image: linear-gradient(0deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%),
+        linear-gradient(90deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%);
+    background-size: 50px 50px;
+    animation: grid-move 60s linear infinite;
+    transform-origin: 0 0;
+    opacity: 0.2;
+}
+
+@keyframes grid-move {
+    from {
+        transform: translate(0, 0);
+    }
+
+    to {
+        transform: translate(-50px, -50px);
+    }
+}
+
+.container {
+    background-color: var(--card-bg);
+    padding: 50px 70px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px var(--shadow-strong);
+    max-width: 900px;
+    width: 100%;
+    z-index: 1;
+    border: 1px solid var(--border-glow);
+    backdrop-filter: blur(12px);
+    /* Increased blur */
+    animation: fadeInScale 1s ease-out forwards;
+    position: relative;
+    margin: 40px auto;
+}
+
+body.page-content .container {
+    max-width: 1300px;
+    background-color: transparent;
+    /* Some pages didn't have container bg */
+    box-shadow: none;
+    border: none;
+    backdrop-filter: none;
+    padding: 0;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5em;
+    margin-bottom: 25px;
+    color: var(--main-accent);
+    text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color);
+    letter-spacing: 2px;
+}
+
+body.page-content h1 {
+    font-size: 2.8em;
+    animation: none;
+    /* Remove textGlow if not needed or keep it consistent */
+}
+
+/* Combined textGlow animation if we want it globally */
+@keyframes textGlow {
+    from {
+        text-shadow: 0 0 5px var(--title-glow-color), 0 0 10px var(--title-glow-color);
+    }
+
+    to {
+        text-shadow: 0 0 8px var(--title-glow-color), 0 0 15px var(--title-glow-color);
+    }
+}
+
+.subtitle {
+    font-size: 1.3em;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    color: var(--text-color-medium);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Cards Grid */
+.roles-grid {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    align-items: stretch;
+    margin-top: 40px;
+    width: 100%;
+}
+
+.home-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.home-grid .role-card {
+    flex: 1 1 300px;
+    /* Allow shrinking/growing, base 300px fits in 760px (300+300+30 < 760) */
+    max-width: 500px;
+    width: auto;
+}
+
+.scenarios-grid {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    align-items: stretch;
+    margin-top: 40px;
+    width: 100%;
+}
+
+@media (min-width: 1100px) {
+    /* Scenarios still grid, roles handled by flex */
+}
+
+/* General Headers (Restoring 'About' page look with Neon effect) */
+h2 {
+    color: var(--main-accent);
+    text-shadow: 0 0 5px var(--title-glow-color), 0 0 15px var(--title-glow-color);
+    border-bottom: 1px solid var(--border-glow);
+    padding-bottom: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+}
+
+/* Role / Scenario Card Shared Styles */
+.role-card,
+.scenario-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: left;
+    text-decoration: none;
+    color: var(--text-color-light);
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.scenario-card {
+    padding: 0;
+    /* Scenario cards have image on top */
+    border-radius: 15px;
+}
+
+.role-card:hover,
+.scenario-card:hover {
+    transform: translateY(-10px);
+    background-color: var(--card-hover-bg);
+    border-color: var(--card-hover-border);
+    box-shadow: 0 10px 30px var(--shadow-strong);
+}
+
+.role-card .icon {
+    font-size: 3em;
+    color: var(--main-accent);
+    margin-bottom: 20px;
+    height: 50px;
+}
+
+.role-card h2,
+.scenario-card h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6em;
+    margin-bottom: 15px;
+    color: var(--text-color-light);
+}
+
+.role-card p,
+.scenario-card p {
+    font-size: 1em;
+    color: var(--text-color-medium);
+    line-height: 1.6;
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+.scenario-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-glow);
+}
+
+.scenario-card .content {
+    padding: 25px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.scenario-card p {
+    margin-bottom: 25px;
+}
+
+.card-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 230, 255, 0.2);
+}
+
+.card-info span {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.card-info span i {
+    margin-right: 8px;
+}
+
+.difficulty-medium {
+    color: var(--difficulty-medium);
+}
+
+.difficulty-high {
+    color: var(--difficulty-high);
+}
+
+.focus-color {
+    color: var(--focus-color);
+}
+
+/* Floating Info Link (to be replaced by footer maybe, but keeping for compatibility) */
+.info-link {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background: var(--card-bg);
+    color: var(--main-accent);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.9em;
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border-glow);
+    box-shadow: 0 6px 20px var(--shadow-strong);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    z-index: 1000;
+    user-select: none;
+}
+
+.info-link:hover {
+    background-color: var(--main-accent);
+    color: var(--dark-blue-bg);
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.mt-2 {
+    margin-top: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 1rem;
+}
+
+/* Difficulty Badges */
+.difficulty-badge {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    padding: 5px 15px;
+    font-size: 0.8em;
+    font-weight: 700;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.difficulty-kolay {
+    background-color: var(--difficulty-kolay-bg);
+    border: 1px solid var(--difficulty-kolay-border);
+    color: var(--difficulty-kolay-border);
+}
+
+.difficulty-orta {
+    background-color: var(--difficulty-orta-bg);
+    border: 1px solid var(--difficulty-orta-border);
+    color: var(--difficulty-orta-border);
+}
+
+.difficulty-yuksek {
+    background-color: var(--difficulty-yuksek-bg);
+    border: 1px solid var(--difficulty-yuksek-border);
+    color: var(--difficulty-yuksek-border);
+}
+
+/* About Page Specifics */
+.developer-info {
+    margin-top: 30px;
+    border-top: 1px solid var(--border-glow);
+    padding-top: 25px;
+}
+
+.links a {
+    color: var(--main-accent);
+    text-decoration: none;
+    font-weight: 700;
+    margin-right: 25px;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    color: #00B3CC;
+    /* Button hover color from about page */
+    text-decoration: underline;
+}
+
+/* Navigation Bar */
+.main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px 40px;
+    background: rgba(10, 10, 30, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-glow);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.nav-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--main-accent);
+    text-decoration: none;
+    text-shadow: 0 0 10px var(--title-glow-color);
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link {
+    color: var(--text-color-light);
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--main-accent);
+    text-shadow: 0 0 8px var(--title-glow-color);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--main-accent);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 5px var(--title-glow-color);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Mobile Menu Button */
+.menu-toggle {
+    display: none;
+    font-size: 1.5em;
+    color: var(--text-color-light);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Footer */
+.main-footer {
+    width: 100%;
+    padding: 30px 20px;
+    margin-top: auto;
+    /* Pushes footer to bottom */
+    background: rgba(10, 10, 30, 0.9);
+    border-top: 1px solid var(--border-glow);
+    text-align: center;
+    color: var(--text-color-medium);
+    font-size: 0.9em;
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 10;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-link {
+    color: var(--text-color-medium);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: var(--main-accent);
+}
+
+/* Page Content Padding for Fixed Nav */
+body {
+    padding-top: 80px;
+    /* Default padding for all pages with nav */
+}
+
+/* Responsive Nav */
+@media (max-width: 768px) {
+    .main-nav {
+        padding: 15px 20px;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(10, 10, 30, 0.95);
+        backdrop-filter: blur(15px);
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+        gap: 20px;
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        /* Hidden by default */
+        transition: clip-path 0.4s ease-in-out;
+        border-bottom: 1px solid var(--border-glow);
+    }
+
+    .nav-links.active {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}

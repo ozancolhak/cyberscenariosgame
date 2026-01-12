@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,8 +27,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         body {
@@ -41,7 +49,7 @@
             align-items: flex-start;
             min-height: 100vh;
             line-height: 1.7;
-            font-size:0.90em;
+            font-size: 0.90em;
         }
 
         .container {
@@ -56,7 +64,9 @@
         }
 
         @media (min-width: 768px) {
-            .container { padding: 40px; }
+            .container {
+                padding: 40px;
+            }
         }
 
         .centered-page {
@@ -116,7 +126,9 @@
         }
 
         @media (min-width: 768px) {
-            .section { padding: 30px; }
+            .section {
+                padding: 30px;
+            }
         }
 
         .interactive-element {
@@ -179,7 +191,8 @@
             color: var(--accent-blue);
         }
 
-        .btn-start, .btn-continue {
+        .btn-start,
+        .btn-continue {
             font-size: 1.3em;
             font-weight: bold;
             text-align: center;
@@ -223,13 +236,21 @@
             padding: 8px 15px;
             border-radius: 5px;
             background-color: var(--interactive-bg);
-            box-shadow: inset 0 1px 5px rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
             justify-content: center;
         }
 
-        .metric-change .positive { color: var(--accent-green); }
-        .metric-change .negative { color: var(--accent-red); }
-        .metric-change .neutral { color: var(--accent-blue); }
+        .metric-change .positive {
+            color: var(--accent-green);
+        }
+
+        .metric-change .negative {
+            color: var(--accent-red);
+        }
+
+        .metric-change .neutral {
+            color: var(--accent-blue);
+        }
 
         .intro-info-grid {
             display: grid;
@@ -247,7 +268,8 @@
             }
         }
 
-        .intro-roles-container, .intro-metrics-container {
+        .intro-roles-container,
+        .intro-metrics-container {
             background-color: var(--section-bg);
             border-radius: 10px;
             padding: 25px;
@@ -255,7 +277,8 @@
             border: 1px solid var(--interactive-bg);
         }
 
-        .intro-roles-container h3, .intro-metrics-container h3 {
+        .intro-roles-container h3,
+        .intro-metrics-container h3 {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--interactive-bg);
@@ -263,13 +286,15 @@
             text-align: center;
         }
 
-        .intro-roles-container ul, .intro-metrics-container ul {
+        .intro-roles-container ul,
+        .intro-metrics-container ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .intro-roles-container li, .intro-metrics-container li {
+        .intro-roles-container li,
+        .intro-metrics-container li {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -279,19 +304,21 @@
             font-size: 1.05em;
         }
 
-        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+        .intro-roles-container li:last-child,
+        .intro-metrics-container li:last-child {
             border-bottom: none;
             margin-bottom: 0;
         }
 
-        .intro-roles-container li .icon, .intro-metrics-container li .icon {
+        .intro-roles-container li .icon,
+        .intro-metrics-container li .icon {
             font-size: 1.8em;
             color: var(--accent-blue);
             flex-shrink: 0;
             width: 35px;
             text-align: center;
         }
-        
+
         .intro-roles-container li strong {
             color: var(--accent-yellow);
         }
@@ -379,7 +406,8 @@
             color: var(--accent-yellow);
         }
 
-        .code-block, .slack-chat {
+        .code-block,
+        .slack-chat {
             background-color: var(--text-dark);
             border: 1px solid #6272a4;
             border-radius: 8px;
@@ -389,7 +417,7 @@
             word-break: break-all;
             font-family: 'Consolas', monospace;
             font-size: 0.95em;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .learning-note {
@@ -427,12 +455,29 @@
             margin-right: 8px;
         }
 
-        .slack-chat .sender.cso { color: var(--accent-green); }
-        .slack-chat .sender.ops { color: var(--accent-yellow); }
-        .slack-chat .sender.hr { color: var(--accent-blue); }
-        .slack-chat .sender.finance { color: var(--accent-red); }
-        .slack-chat .sender.ceo { color: var(--accent-purple); }
-        .slack-chat .sender.bt { color: var(--accent-blue); }
+        .slack-chat .sender.cso {
+            color: var(--accent-green);
+        }
+
+        .slack-chat .sender.ops {
+            color: var(--accent-yellow);
+        }
+
+        .slack-chat .sender.hr {
+            color: var(--accent-blue);
+        }
+
+        .slack-chat .sender.finance {
+            color: var(--accent-red);
+        }
+
+        .slack-chat .sender.ceo {
+            color: var(--accent-purple);
+        }
+
+        .slack-chat .sender.bt {
+            color: var(--accent-blue);
+        }
 
         .suspect-card {
             background-color: var(--interactive-bg);
@@ -450,9 +495,13 @@
             color: var(--accent-purple);
         }
 
-        #finalSection { text-align: center; }
+        #finalSection {
+            text-align: center;
+        }
 
-        #performance-badge-container { margin: 25px 0; }
+        #performance-badge-container {
+            margin: 25px 0;
+        }
 
         #performance-badge {
             padding: 15px 35px;
@@ -465,7 +514,9 @@
             transition: transform 0.3s ease;
         }
 
-        #performance-badge:hover { transform: scale(1.08); }
+        #performance-badge:hover {
+            transform: scale(1.08);
+        }
 
         .post-crisis-layout {
             display: grid;
@@ -482,7 +533,8 @@
             }
         }
 
-        .event-timeline, .strategic-debrief {
+        .event-timeline,
+        .strategic-debrief {
             background-color: var(--interactive-bg);
             padding: 25px;
             border-radius: 8px;
@@ -491,7 +543,8 @@
             box-shadow: 0 4px 15px var(--shadow-light);
         }
 
-        .event-timeline h3, .strategic-debrief h3 {
+        .event-timeline h3,
+        .strategic-debrief h3 {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--section-bg);
@@ -536,8 +589,15 @@
             border: 2px solid var(--section-bg);
         }
 
-        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
-        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+        .event-timeline li.negative::before {
+            content: '\f00d';
+            color: var(--accent-red);
+        }
+
+        .event-timeline li.neutral::before {
+            content: '\f05a';
+            color: var(--accent-blue);
+        }
 
         .event-timeline li .decision-title {
             font-weight: bold;
@@ -551,101 +611,270 @@
             margin-bottom: 15px;
         }
 
-        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
-        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
-        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
-        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
-        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
-        #score-breakdown .score-value { font-weight: bold; }
+        #score-breakdown {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
 
-        .lb-overlay{
-            display:none; position:fixed; inset:0;
-            background: rgba(10,10,25,.7);
+        #score-breakdown li {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-breakdown .score-plus {
+            background-color: rgba(80, 250, 123, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        #score-breakdown .score-minus {
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        #score-breakdown .score-neutral {
+            background-color: rgba(139, 233, 253, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        #score-breakdown .score-value {
+            font-weight: bold;
+        }
+
+        .lb-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 25, .7);
             -webkit-backdrop-filter: blur(4px);
             backdrop-filter: blur(4px);
-            z-index:9999; align-items:center; justify-content:center; padding:20px;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
             animation: fadeIn 0.3s ease-out;
         }
-        .lb-modal{
+
+        .lb-modal {
             background: linear-gradient(180deg, #2a2a4a 0%, #1f1f36 100%);
             color: var(--text-light);
-            width:100%; max-width: 760px; border-radius:14px; padding:22px 22px 16px;
-            border:1px solid rgba(255,255,255,.08);
-            box-shadow: 0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
-        }
-        .lb-header{
-            display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;
-        }
-        .lb-title{
-            display:flex; align-items:center; gap:10px;
-            font-size:1.25em; font-weight:800; letter-spacing:.2px; color: var(--accent-yellow);
-        }
-        .lb-title i{ filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
-        .lb-tablewrap{
-            margin-top:10px;
-            max-height: 60vh; overflow:auto;
-            border:1px solid var(--interactive-bg); border-radius:10px;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
-        }
-        table.lb-table{ width:100%; border-collapse:collapse; font-size:.97em; }
-        table.lb-table th, table.lb-table td{ padding:10px 12px; text-align:left; }
-        table.lb-table thead th{
-            position: sticky; top:0; z-index:1;
-            background:#1f1f36; color:#e9e9ff;
-            border-bottom: 1px solid #3b3b66;
-            font-weight:700; letter-spacing:.3px;
-        }
-        table.lb-table tbody td{ border-bottom:1px solid rgba(255,255,255,.06); color:#e9e9f5; }
-        table.lb-table tbody tr:hover{ background-color: rgba(255,255,255,.045); }
-        table.lb-table tbody tr:nth-child(1){ background: linear-gradient(90deg, rgba(255,215,0,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(1) td:first-child::after{ content:" 🥇"; }
-        table.lb-table tbody tr:nth-child(2){ background: linear-gradient(90deg, rgba(192,192,192,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(2) td:first-child::after{ content:" 🥈"; }
-        table.lb-table tbody tr:nth-child(3){ background: linear-gradient(90deg, rgba(205,127,50,.18), transparent 65%); }
-        table.lb-table tbody tr:nth-child(3) td:first-child::after{ content:" 🥉"; }
-        .lb-actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:14px; }
-        .lb-close, .lb-refresh{
-            border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:700;
-            transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
-        }
-        .lb-refresh{ background: var(--accent-blue); color:#0c1130; }
-        .lb-close{ background: #3d3d60; color:#fff; }
-        .lb-refresh:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(139,233,253,.22); }
-        .lb-close:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.35); }
-        @media (max-width: 420px){
-            .lb-title{ font-size:1.05em; }
-            table.lb-table th, table.lb-table td{ padding:9px 10px; }
+            width: 100%;
+            max-width: 760px;
+            border-radius: 14px;
+            padding: 22px 22px 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .04);
         }
 
+        .lb-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .lb-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25em;
+            font-weight: 800;
+            letter-spacing: .2px;
+            color: var(--accent-yellow);
+        }
+
+        .lb-title i {
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35));
+        }
+
+        .lb-tablewrap {
+            margin-top: 10px;
+            max-height: 60vh;
+            overflow: auto;
+            border: 1px solid var(--interactive-bg);
+            border-radius: 10px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02);
+        }
+
+        table.lb-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .97em;
+        }
+
+        table.lb-table th,
+        table.lb-table td {
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        table.lb-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #1f1f36;
+            color: #e9e9ff;
+            border-bottom: 1px solid #3b3b66;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        table.lb-table tbody td {
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            color: #e9e9f5;
+        }
+
+        table.lb-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, .045);
+        }
+
+        table.lb-table tbody tr:nth-child(1) {
+            background: linear-gradient(90deg, rgba(255, 215, 0, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(1) td:first-child::after {
+            content: " 🥇";
+        }
+
+        table.lb-table tbody tr:nth-child(2) {
+            background: linear-gradient(90deg, rgba(192, 192, 192, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(2) td:first-child::after {
+            content: " 🥈";
+        }
+
+        table.lb-table tbody tr:nth-child(3) {
+            background: linear-gradient(90deg, rgba(205, 127, 50, .18), transparent 65%);
+        }
+
+        table.lb-table tbody tr:nth-child(3) td:first-child::after {
+            content: " 🥉";
+        }
+
+        .lb-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .lb-close,
+        .lb-refresh {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+        }
+
+        .lb-refresh {
+            background: var(--accent-blue);
+            color: #0c1130;
+        }
+
+        .lb-close {
+            background: #3d3d60;
+            color: #fff;
+        }
+
+        .lb-refresh:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(139, 233, 253, .22);
+        }
+
+        .lb-close:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, .35);
+        }
+
+        @media (max-width: 420px) {
+            .lb-title {
+                font-size: 1.05em;
+            }
+
+            table.lb-table th,
+            table.lb-table td {
+                padding: 9px 10px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div id="introSection" class="centered-page">
             <h1><i class="fa-solid fa-envelope-open-text"></i> Phishing Kriz Simülasyonu</h1>
-            <p style="max-width: 600px;">Hoş geldiniz, ÇOLHAK Teknoloji’nin yeni SOC Analisti! Şirketiniz, ses getiren yapay zeka tabanlı bir ürün geliştiriyor. Ancak rakip bir grup, fikri mülkiyeti çalmak için çok katmanlı bir spear phishing saldırısı başlatıyor. Bu saldırı sadece e-postalarla sınırlı değil — LinkedIn, WhatsApp ve telefon görüşmeleri ile destekleniyor. Görevin: Anormal davranışları tespit edip şirketi bu sinsi saldırıya karşı korumak!</p>
+            <p style="max-width: 600px;">Hoş geldiniz, ÇOLHAK Teknoloji’nin yeni SOC Analisti! Şirketiniz, ses getiren
+                yapay zeka tabanlı bir ürün geliştiriyor. Ancak rakip bir grup, fikri mülkiyeti çalmak için çok katmanlı
+                bir spear phishing saldırısı başlatıyor. Bu saldırı sadece e-postalarla sınırlı değil — LinkedIn,
+                WhatsApp ve telefon görüşmeleri ile destekleniyor. Görevin: Anormal davranışları tespit edip şirketi bu
+                sinsi saldırıya karşı korumak!</p>
             <img src="intro.png" alt="Siber güvenlik temalı bir giriş görseli" class="scenario-image">
 
             <div class="intro-info-grid">
                 <div class="intro-roles-container">
                     <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
                     <ul>
-                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span><div><strong>Sizin Rolünüz: SOC Analisti</strong> <small>Çok kanallı oltalama saldırılarını tespit etmek, analiz etmek ve krizi yönetmekle sorumlusunuz.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span><div><strong>CEO Elara Yılmaz</strong> <small>Şirketin itibarına ve lansmanına odaklı.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span><div><strong>CSO Can Demir</strong> <small>Siber güvenliğe odaklı sorumlu.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-user-group"></i></span><div><strong>İK Direktörü Ayşe Erdem</strong> <small>Çalışan morale ve verimliliğine odaklı.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-money-bill-transfer"></i></span><div><strong>Finans Direktörü Burak Mert</strong> <small>Bütçe ve finans sorumlusu.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-microchip"></i></span><div><strong>Ar-Ge Direktörü Deniz Akın</strong> <small>Yapay zeka ürününün baş geliştiricisi.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-server"></i></span><div><strong>BT Sistem Yöneticisi Mert Can</strong> <small>Ağın ve sistemin sağlığından sorumlu.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span>
+                            <div><strong>Sizin Rolünüz: SOC Analisti</strong> <small>Çok kanallı oltalama saldırılarını
+                                    tespit etmek, analiz etmek ve krizi yönetmekle sorumlusunuz.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span>
+                            <div><strong>CEO Elara Yılmaz</strong> <small>Şirketin itibarına ve lansmanına
+                                    odaklı.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span>
+                            <div><strong>CSO Can Demir</strong> <small>Siber güvenliğe odaklı sorumlu.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-user-group"></i></span>
+                            <div><strong>İK Direktörü Ayşe Erdem</strong> <small>Çalışan morale ve verimliliğine
+                                    odaklı.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
+                            <div><strong>Finans Direktörü Burak Mert</strong> <small>Bütçe ve finans sorumlusu.</small>
+                            </div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-microchip"></i></span>
+                            <div><strong>Ar-Ge Direktörü Deniz Akın</strong> <small>Yapay zeka ürününün baş
+                                    geliştiricisi.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-server"></i></span>
+                            <div><strong>BT Sistem Yöneticisi Mert Can</strong> <small>Ağın ve sistemin sağlığından
+                                    sorumlu.</small></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="intro-metrics-container">
                     <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
                     <ul>
-                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-square-check"></i></span><div><strong>Fikri Mülkiyet Bütünlüğü</strong> <small>AI projesi verilerinin güvenliği. (Başlangıç: %100)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-hand-holding-dollar"></i></span><div><strong>Finansal Zarar</strong> <small>Krizin şirkete maliyeti. (Başlangıç: ₺0)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-users"></i></span><div><strong>Çalışan Güveni</strong> <small>Personelin şirkete ve yönetime olan inancı. (Başlangıç: 100)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-building-shield"></i></span><div><strong>İtibar Puanı</strong> <small>Şirketinizin kamuoyu ve sektördeki imajı. (Başlangıç: 100)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-green);"><i
+                                    class="fa-solid fa-square-check"></i></span>
+                            <div><strong>Fikri Mülkiyet Bütünlüğü</strong> <small>AI projesi verilerinin güvenliği.
+                                    (Başlangıç: %100)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-red);"><i
+                                    class="fa-solid fa-hand-holding-dollar"></i></span>
+                            <div><strong>Finansal Zarar</strong> <small>Krizin şirkete maliyeti. (Başlangıç: ₺0)</small>
+                            </div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i
+                                    class="fa-solid fa-users"></i></span>
+                            <div><strong>Çalışan Güveni</strong> <small>Personelin şirkete ve yönetime olan inancı.
+                                    (Başlangıç: 100)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i
+                                    class="fa-solid fa-building-shield"></i></span>
+                            <div><strong>İtibar Puanı</strong> <small>Şirketinizin kamuoyu ve sektördeki imajı.
+                                    (Başlangıç: 100)</small></div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -656,16 +885,27 @@
             <h2 id="intermissionTitle"></h2>
             <div id="intermissionDetails">
             </div>
-            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i
+                    class="fa-solid fa-forward"></i> Devam Et</button>
         </div>
 
         <div id="gameContainer" style="display: none;">
             <div id="statusBar">
-                <div class="metric"><span><i class="fa-solid fa-lock"></i> Fikri Mülkiyet</span><div class="value" id="status-ipIntegrity">100%</div></div>
-                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Zarar</span><div class="value" id="status-financialLoss">₺0</div></div>
-                <div class="metric"><span><i class="fa-solid fa-users"></i> Çalışan Güveni</span><div class="value" id="status-employeeTrust">100</div></div>
-                <div class="metric"><span><i class="fa-solid fa-building-shield"></i> İtibar Puanı</span><div class="value" id="status-reputation">100</div></div>
-                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-remaining">05:00</div></div>
+                <div class="metric"><span><i class="fa-solid fa-lock"></i> Fikri Mülkiyet</span>
+                    <div class="value" id="status-ipIntegrity">100%</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Finansal Zarar</span>
+                    <div class="value" id="status-financialLoss">₺0</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-users"></i> Çalışan Güveni</span>
+                    <div class="value" id="status-employeeTrust">100</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-building-shield"></i> İtibar Puanı</span>
+                    <div class="value" id="status-reputation">100</div>
+                </div>
+                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span>
+                    <div class="value" id="status-remaining">05:00</div>
+                </div>
             </div>
             <div id="game-content">
             </div>
@@ -681,10 +921,17 @@
             <div class="lb-tablewrap">
                 <table class="lb-table" id="leaderboardTable">
                     <thead>
-                        <tr><th>#</th><th>İsim</th><th>Puan</th><th>Tarih</th></tr>
+                        <tr>
+                            <th>#</th>
+                            <th>İsim</th>
+                            <th>Puan</th>
+                            <th>Tarih</th>
+                        </tr>
                     </thead>
                     <tbody id="leaderboardBody">
-                        <tr><td colspan="4">Yükleniyor…</td></tr>
+                        <tr>
+                            <td colspan="4">Yükleniyor…</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -713,14 +960,14 @@
                 },
 
                 elements: {},
-                
+
                 timer: {
                     total: 300,
                     remaining: 300,
                     intervalId: null,
                     running: false
                 },
-                
+
                 decisionInfo: {
                     'd1-m-email-analysis': { title: "CEO Maili Detaylı Analizi", text: "CEO'dan gelen e-postayı teknik analize aldınız. Kötü amaçlı bağlantı/ek dosya tespitiyle saldırının birincil vektörünü anladınız. Dosya bir dropper içeriyordu.", strat: "Oltalama saldırılarında erken teknik analiz, zinciri kırmak için esastır. Hız, zararı minimize eder.", changes: { financialLoss: 5000, ipIntegrity: -2, employeeTrust: -1 }, clue: 'emailAnalyzed', impact: 'Positive' },
                     'd1-m-linkedin-analysis': { title: "LinkedIn Profil Analizi ve OSINT", text: "LinkedIn profilini ve mesajı analiz ettiniz. Sahte profil ve kimlik avı portalı URL'si tespit edildi. Saldırganın sosyal mühendislik yeteneklerini anladınız.", strat: "Sosyal mühendislikte OSINT, saldırganın hazırlığını anlamak için değerlidir. Yönlendirmeleri takip etmek kritik.", changes: { financialLoss: 2000, ipIntegrity: -1, employeeTrust: -1, reputation: -1 }, clue: 'linkedinProfileAnalyzed', impact: 'Neutral' },
@@ -741,8 +988,8 @@
                     'd2-a-cemil-management': { title: "Cemil Kaan Durumu Yönetimi", text: "Cemil Kaan'ın itirafını takiben, İK ve Hukuk ile işbirliği yaparak, Cemil'e psikolojik destek sağladınız ve ondan gizlilik anlaşması imzalamasını talep ettiniz. Çalışanın itibarını koruyarak ve bilgi edinerek durumu yönettiniz. İnsani yaklaşım şirket kültürüne olumlu yansıdı.", strat: "İç tehdit kaynaklarının insani yönünü yönetmek etik ve kurumsal kültür açısından önemlidir. Destek ve gizlilik, uzun vadede şirket bağlılığını ve güvenliğini artırabilir.", changes: { financialLoss: 8000, employeeTrust: +4, reputation: -2 }, clue: 'cemilManaged', impact: 'Positive' },
                     'd3-m-protocol-revision-ai-training': { title: "Çok Kanallı Güvenlik Protokolleri ve Yapay Zeka Destekli Farkındalık Eğitimleri", text: "Tüm iletişim kanallarında güvenlik protokollerini sıkılaştırdınız. Yapay zeka destekli oltalama simülasyonları ve davranışsal analiz tabanlı farkındalık eğitimleri ile çalışanları daha dirençli hale getirdiniz. Şirketin genel güvenlik duruşu güçlendi.", strat: "Çok kanallı saldırılara karşı savunma, teknik ve insan davranışlarını dikkate alır. AI destekli eğitimler adaptasyonu artırır.", changes: { financialLoss: 70000, reputation: +10, employeeTrust: +7, ipIntegrity: +5 }, clue: 'protocolsRevised', impact: 'Positive' },
                     'd3-m-ip-security-enhancement': { title: "AI Projesi Fikri Mülkiyet Güvenliğinin Kapsamlı Artırılması", text: "AI projesinin kod tabanı, algoritmaları ve veri setleri için ek güvenlik katmanları (DAC, MAC, DLP, IRM) uyguladınız. Kritik verilere erişimi sürekli izleyen otomatik sistemler kurdunuz. En değerli varlığınızı korudunuz.", strat: "Kritik fikri mülkiyetin korunması, en önemli varlığı güvence altına alır. Sürekli, katmanlı ve teknoloji destekli bir güvenlik yaklaşımı gerektirir.", changes: { financialLoss: 100000, ipIntegrity: +20, reputation: +5 }, clue: 'ipSecurityEnhanced', impact: 'Positive' },
-                    'd3-m-reputation-campaign': { title: "Proaktif İtibar Yönetimi ve Şeffaflık Kampanyası", text: "Kamuoyuna tam şeffaflık içeren, saldırının sektörün ortak problemi olduğunu vurgulayan, proaktif bir itibar yönetimi kampanyası başlattınız. Şirket itibarını önemli ölçüde güçlendirdiniz ve siber güvenlik alanındaki liderliğinizi pekiştirdiniz.", strat: "Krizde kamuoyu iletişimi şirket itibarını doğrudan etkiler. Dengeli, şeffaf açıklama kritik öneme sahiptir. Krizleri fırsata çevirmek stratejiktir.", changes: { financialLoss: 120000, reputation: +15, employeeTrust: +5}, clue: 'reputationCampaignLaunched', impact: 'Positive' },
-                    'd3-m-employee-support': { title: "Çalışan Psikolojik Destek ve Güven Yeniden Yapılandırma Programları", text: "Çalışanlar üzerindeki olumsuz etkileri azaltmak için psikolojik destek ve moral artırıcı etkinlikler başlattınız. Çalışanların güvenini yeniden kazanmalarına ve bağlılıklarını artırmalarına yardımcı oldunuz. İç dayanıklılığı güçlendi.", strat: "Çalışanların refahı ve güvenliği, şirket dayanıklılığının temelidir. Kriz sonrası moral ve güvenin yeniden inşası hayati öneme sahiptir. İnsan odaklı yaklaşım kritik.", changes: { financialLoss: 30000, employeeTrust: +10, reputation: +2}, clue: 'employeeSupportInitiated', impact: 'Positive' },
+                    'd3-m-reputation-campaign': { title: "Proaktif İtibar Yönetimi ve Şeffaflık Kampanyası", text: "Kamuoyuna tam şeffaflık içeren, saldırının sektörün ortak problemi olduğunu vurgulayan, proaktif bir itibar yönetimi kampanyası başlattınız. Şirket itibarını önemli ölçüde güçlendirdiniz ve siber güvenlik alanındaki liderliğinizi pekiştirdiniz.", strat: "Krizde kamuoyu iletişimi şirket itibarını doğrudan etkiler. Dengeli, şeffaf açıklama kritik öneme sahiptir. Krizleri fırsata çevirmek stratejiktir.", changes: { financialLoss: 120000, reputation: +15, employeeTrust: +5 }, clue: 'reputationCampaignLaunched', impact: 'Positive' },
+                    'd3-m-employee-support': { title: "Çalışan Psikolojik Destek ve Güven Yeniden Yapılandırma Programları", text: "Çalışanlar üzerindeki olumsuz etkileri azaltmak için psikolojik destek ve moral artırıcı etkinlikler başlattınız. Çalışanların güvenini yeniden kazanmalarına ve bağlılıklarını artırmalarına yardımcı oldunuz. İç dayanıklılığı güçlendi.", strat: "Çalışanların refahı ve güvenliği, şirket dayanıklılığının temelidir. Kriz sonrası moral ve güvenin yeniden inşası hayati öneme sahiptir. İnsan odaklı yaklaşım kritik.", changes: { financialLoss: 30000, employeeTrust: +10, reputation: +2 }, clue: 'employeeSupportInitiated', impact: 'Positive' },
                     'd3-m-insider-threat-program': { title: "İç Tehdit İstihbarat Programının Kurulması ve Güvenlik Kültürü Entegrasyonu", text: "İç tehditleri proaktif olarak tespit etmek için davranışsal analiz araçları, risk değerlendirmeleri ve etik çerçevede izleme politikaları geliştirdiniz. Güçlü güvenlik kültürü ile entegre ettiniz. Uzun vadede içeriden kaynaklanabilecek zafiyetleri minimuma indirdiniz.", strat: "İç tehdit programları, en zorlu siber risklerden birini yönetmek için hayati öneme sahiptir. Etik ve şeffaf yürütme, çalışan güvenini korur. Güvenlik kültürü entegrasyonu başarıyı garanti eder.", changes: { financialLoss: 80000, employeeTrust: -5, ipIntegrity: +15, reputation: +7 }, clue: 'insiderThreatProgramStarted', impact: 'Positive' }
                 },
 
@@ -752,10 +999,10 @@
                         startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
                         intermissionTitle: document.getElementById('intermissionTitle'), intermissionDetails: document.getElementById('intermissionDetails'),
                         continueButton: document.getElementById('continueButton'),
-                        statusBar: { 
-                            ipIntegrity: document.getElementById('status-ipIntegrity'), 
-                            financialLoss: document.getElementById('status-financialLoss'), 
-                            employeeTrust: document.getElementById('status-employeeTrust'), 
+                        statusBar: {
+                            ipIntegrity: document.getElementById('status-ipIntegrity'),
+                            financialLoss: document.getElementById('status-financialLoss'),
+                            employeeTrust: document.getElementById('status-employeeTrust'),
                             reputation: document.getElementById('status-reputation'),
                             remaining: document.getElementById('status-remaining')
                         },
@@ -770,7 +1017,7 @@
                     this.loadGameHTML();
                     this.attachListeners();
                 },
-                
+
                 attachListeners() {
                     this.elements.startButton.addEventListener('click', () => {
                         this.elements.intro.style.display = 'none';
@@ -778,18 +1025,18 @@
                         this.startGlobalTimer();
                         this.showSection('day1_morning_phishing');
                     });
-                    
+
                     this.elements.gameContent.addEventListener('click', (e) => {
                         const button = e.target.closest('.btn[data-decision]');
                         if (!button || button.disabled) return;
-                        
+
                         const sectionElement = button.closest('.section');
                         const decisionId = button.dataset.decision;
                         const info = this.decisionInfo[decisionId];
 
                         button.disabled = true;
                         this.state.currentTurnDecisions.push(info);
-                        
+
                         this.score.financialLoss += info.changes.financialLoss || 0;
                         this.score.reputation = Math.max(0, Math.min(100, this.score.reputation + (info.changes.reputation || 0)));
                         this.score.ipIntegrity = Math.max(0, Math.min(100, this.score.ipIntegrity + (info.changes.ipIntegrity || 0)));
@@ -798,7 +1045,7 @@
                         this.updateStatusBar();
 
                         const maxSelections = parseInt(sectionElement.dataset.maxSelections || 1, 10);
-                        
+
                         if (this.state.currentSectionId === 'day1_afternoon_phishing') {
                             this.elements.game.style.display = 'block';
                             this.state.currentTurnDecisions.forEach(decision => {
@@ -810,7 +1057,7 @@
                             this.elements.game.style.display = 'none';
                             this.showFullIntermission();
                         } else {
-                            this.updateButtonStates(this.state.currentSectionId); 
+                            this.updateButtonStates(this.state.currentSectionId);
                         }
                     });
 
@@ -824,7 +1071,7 @@
                         this.elements.continueButton.style.display = 'none';
 
                         this.state.currentTurnDecisions = [];
-                        
+
                         if (nextPath === 'finalSection') {
                             this.showFinalReport();
                         } else {
@@ -832,7 +1079,7 @@
                             this.showSection(nextPath);
                         }
                     });
-                    
+
                     this.elements.leaderboard.btnClose?.addEventListener('click', () => this.closeLeaderboard());
                     this.elements.leaderboard.btnRefresh?.addEventListener('click', () => this.loadLeaderboard());
                     this.elements.leaderboard.overlay.addEventListener('click', (e) => {
@@ -843,7 +1090,7 @@
                 },
 
                 showFullIntermission() {
-                    this.elements.intermissionDetails.innerHTML = ''; 
+                    this.elements.intermissionDetails.innerHTML = '';
 
                     let totalChanges = { financialLoss: 0, ipIntegrity: 0, employeeTrust: 0, reputation: 0 };
                     let combinedDecisionTitles = [];
@@ -855,14 +1102,14 @@
                         totalChanges.ipIntegrity += info.changes.ipIntegrity || 0;
                         totalChanges.employeeTrust += info.changes.employeeTrust || 0;
                         totalChanges.reputation += info.changes.reputation || 0;
-                        
+
                         combinedDecisionTitles.push(info.title);
                         combinedDecisionTexts.push(info.text);
                         combinedStrategicNotes.push(info.strat);
                     });
 
-                    this.elements.intermissionTitle.textContent = "Bu Seçimlerin Toplam Etkileri"; 
-                    
+                    this.elements.intermissionTitle.textContent = "Bu Seçimlerin Toplam Etkileri";
+
                     this.elements.intermissionDetails.insertAdjacentHTML('afterbegin', `
                         <div class="metric-change-summary-container">
                             <div class="metric-change-summary">
@@ -883,12 +1130,12 @@
                     `);
 
                     let nextSectionToGo;
-                    switch(this.state.currentSectionId) {
+                    switch (this.state.currentSectionId) {
                         case 'day1_morning_phishing': nextSectionToGo = 'day1_afternoon_phishing'; break;
                         case 'day1_evening_phishing': nextSectionToGo = 'day2_morning_ipthreat'; break;
                         case 'day2_morning_ipthreat': nextSectionToGo = 'day2_afternoon_crisis_mgmt'; break;
                         case 'day2_afternoon_crisis_mgmt': nextSectionToGo = 'day3_morning_resolution'; break;
-                        case 'day3_morning_resolution': nextSectionToGo = 'finalSection'; break; 
+                        case 'day3_morning_resolution': nextSectionToGo = 'finalSection'; break;
                         default: nextSectionToGo = 'finalSection'; break;
                     }
 
@@ -900,16 +1147,16 @@
                 getMetricsHtml(changes) {
                     let metricsHTML = '';
                     const formatChange = (label, value, unit) => {
-                        const arrow = value >= 0 ? (value > 0 ? 'up' : 'right') : 'down'; 
-                        const sign = value >= 0 ? '+' : ''; 
-                        let colorClass = 'neutral'; 
+                        const arrow = value >= 0 ? (value > 0 ? 'up' : 'right') : 'down';
+                        const sign = value >= 0 ? '+' : '';
+                        let colorClass = 'neutral';
 
                         if (label === 'Finansal Zarar') {
                             colorClass = value > 0 ? 'negative' : (value < 0 ? 'positive' : 'neutral');
                         } else {
                             colorClass = value > 0 ? 'positive' : (value < 0 ? 'negative' : 'neutral');
                         }
-                        
+
                         let icon = '';
                         if (label === 'Finansal Zarar') icon = 'fa-sack-xmark';
                         else if (label === 'Fikri Mülkiyet') icon = 'fa-lock';
@@ -923,7 +1170,7 @@
                     if (changes.ipIntegrity !== undefined && changes.ipIntegrity !== 0) metricsHTML += formatChange('Fikri Mülkiyet', changes.ipIntegrity, '%');
                     if (changes.employeeTrust !== undefined && changes.employeeTrust !== 0) metricsHTML += formatChange('Çalışan Güveni', changes.employeeTrust, '');
                     if (changes.reputation !== undefined && changes.reputation !== 0) metricsHTML += formatChange('İtibar Puanı', changes.reputation, '');
-                    
+
                     if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1.1em; opacity: 0.8;">Bu kararların metriklere doğrudan bir etkisi olmadı.</p>';
                     return metricsHTML;
                 },
@@ -945,12 +1192,12 @@
                         this.updateDynamicContent(sectionId);
                         this.updateButtonStates(sectionId);
                         this.state.currentTurnDecisions = []; // Reset for new section
-                        
+
                         const day1AfternoonContinueBtn = document.querySelector('#day1_afternoon_phishing .btn-continue');
                         if (day1AfternoonContinueBtn) {
                             day1AfternoonContinueBtn.style.display = (sectionId === 'day1_afternoon_phishing') ? 'flex' : 'none';
                         }
-                        this.elements.continueButton.style.display = 'none'; 
+                        this.elements.continueButton.style.display = 'none';
 
                     } else {
                         console.error('Bölüm bulunamadı:', sectionId);
@@ -965,7 +1212,7 @@
 
                     const decisionButtonsContainer = currentSectionElement.querySelector('.decision-buttons');
                     if (!decisionButtonsContainer) {
-                        return; 
+                        return;
                     }
 
                     const buttons = decisionButtonsContainer.querySelectorAll('.btn[data-decision]');
@@ -994,113 +1241,95 @@
                         }
                     });
                 },
-                
+
                 showFinalReport() {
                     this.stopGlobalTimer();
                     this.elements.intro.style.display = 'none';
                     this.elements.intermission.style.display = 'none';
-                    this.elements.game.style.display = 'block'; 
+                    this.elements.game.style.display = 'block';
                     document.getElementById('statusBar').style.display = 'none';
 
                     this.elements.sections.forEach(section => {
                         section.style.display = 'none';
                     });
-                    
+
                     const finalSection = document.getElementById('finalSection');
                     if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
 
                     finalSection.style.display = 'flex';
-                    
+
                     const badge = document.getElementById('performance-badge');
                     const metricsContainer = document.getElementById('finalMetricsContainer');
                     const timelineList = document.getElementById('decision-timeline-list');
                     const debriefContent = document.getElementById('strategic-debrief-content');
                     const scoreBreakdownList = document.getElementById('score-breakdown');
 
-                  // --- PUANLAMA SİSTEMİ ---
-                  let scoreBreakdown = {};
-                  let totalScore = 40; 
-                  scoreBreakdown['Başlangıç Puanı'] = { value: 40, class: 'score-neutral' };
+                    // --- PUANLAMA SİSTEMİ ---
+                    // --- STANDARD PUANLAMA SİSTEMİ (V2) ---
+                    let scoreBreakdown = {};
+                    let totalScore = 50;
+                    scoreBreakdown['Başlangıç Puanı'] = { value: 50, class: 'score-neutral' };
 
-                  let decisionQualityScore = 0;
-                  this.state.decisionHistory.forEach(decision => {
-                      if (decision.impactType === 'Negative') {
-                          decisionQualityScore -= 8; 
-                      } else if (decision.impactType === 'Positive') {
-                          decisionQualityScore += 2; 
-                      }
-                  });
-                  if (decisionQualityScore !== 0) {
-                      totalScore += decisionQualityScore;
-                      scoreBreakdown['Karar Kalitesi (Ceza/Ödül)'] = { value: decisionQualityScore, class: decisionQualityScore >= 0 ? 'score-plus' : 'score-minus' };
-                  }
+                    // 1. Karar Bazlı Puanlama (+10 / 0 / -10)
+                    let decisionScore = 0;
+                    this.state.decisionHistory.forEach(decision => {
+                        if (decision.impactType === 'Positive') {
+                            decisionScore += 10;
+                        } else if (decision.impactType === 'Negative') {
+                            decisionScore -= 10;
+                        }
+                    });
+                    if (decisionScore !== 0) {
+                        totalScore += decisionScore;
+                        scoreBreakdown['Karar Kalitesi'] = {
+                            value: decisionScore,
+                            class: decisionScore > 0 ? 'score-plus' : 'score-minus'
+                        };
+                    }
 
-                  const finalIP = Math.max(0, this.score.ipIntegrity);
-                  const finalRep = Math.max(0, this.score.reputation);
-                  const finalTrust = Math.max(0, this.score.employeeTrust);
-                  const avgRepTrust = (finalRep + finalTrust) / 2;
+                    // 2. Metrik Bazlı Bonuslar/Cezalar
+                    const finalIP = Math.max(0, this.score.ipIntegrity);
+                    const finalRep = Math.max(0, this.score.reputation);
+                    const finalTrust = Math.max(0, this.score.employeeTrust);
+                    const avgRepTrust = (finalRep + finalTrust) / 2;
 
-                  if (finalIP >= 90) { 
-                      totalScore += 15; 
-                      scoreBreakdown['Fikri Mülkiyet Koruması (Mükemmel)'] = { value: 15, class: 'score-plus' }; 
-                  } else if (finalIP >= 75) { 
-                      totalScore += 8;
-                      scoreBreakdown['Fikri Mülkiyet Koruması (İyi)'] = { value: 8, class: 'score-plus' }; 
-                  } else if (finalIP < 50) { 
-                      totalScore -= 15; 
-                      scoreBreakdown['Fikri Mülkiyet Kaybı (Ciddi)'] = { value: -15, class: 'score-minus' }; 
-                  }
-        
-                  if (this.score.financialLoss <= 150000) { 
-                      totalScore += 10; 
-                      scoreBreakdown['Finansal Yönetim (Etkili)'] = { value: 10, class: 'score-plus' }; 
-                  } else if (this.score.financialLoss <= 300000) { 
-                      totalScore += 5; 
-                      scoreBreakdown['Finansal Yönetim (Orta)'] = { value: 5, class: 'score-plus' }; 
-                  } else if (this.score.financialLoss > 500000) { 
-                      totalScore -= 15;
-                      scoreBreakdown['Finansal Kayıp (Yüksek)'] = { value: -15, class: 'score-minus' }; 
-                  }
+                    if (finalIP >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['Yüksek Fikri Mülkiyet Koruması'] = { value: 10, class: 'score-plus' };
+                    } else if (finalIP < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Ciddi Fikri Mülkiyet Kaybı'] = { value: -10, class: 'score-minus' };
+                    }
 
-                  if (avgRepTrust >= 85) {
-                      totalScore += 10; 
-                      scoreBreakdown['İtibar & Güven Yönetimi (Güçlü)'] = { value: 10, class: 'score-plus' }; 
-                  } else if (avgRepTrust < 50) {
-                      totalScore -= 15; 
-                      scoreBreakdown['İtibar & Güven Kaybı (Yüksek)'] = { value: -15, class: 'score-minus' }; 
-                  }
+                    if (this.score.financialLoss > 200000) {
+                        totalScore -= 10;
+                        scoreBreakdown['Yüksek Finansal Kayıp'] = { value: -10, class: 'score-minus' };
+                    }
 
-                  if(this.state.systemsIsolated) { 
-                      totalScore += 7; 
-                      scoreBreakdown['Kritik Karar: Sistem İzolasyonu'] = { value: 7, class: 'score-plus' }; 
-                  }
-                  if(this.state.cemilConfronted && this.state.cemilManaged) { 
-                      totalScore += 7; 
-                      scoreBreakdown['Kritik Karar: İç Tehdit Yönetimi'] = { value: 7, class: 'score-plus' }; 
-                  }
-                  if(this.state.usomCollaboration) { 
-                      totalScore += 3; 
-                      scoreBreakdown['Stratejik Karar: USOM İşbirliği'] = { value: 3, class: 'score-plus' }; 
-                  }
-                  if(this.state.reputationCampaignLaunched) { 
-                      totalScore += 3; 
-                      scoreBreakdown['Stratejik Karar: İtibar Kampanyası'] = { value: 3, class: 'score-plus' }; 
-                  }
+                    if (avgRepTrust >= 80) {
+                        totalScore += 10;
+                        scoreBreakdown['Yüksek Güven & İtibar'] = { value: 10, class: 'score-plus' };
+                    } else if (avgRepTrust < 40) {
+                        totalScore -= 10;
+                        scoreBreakdown['Düşük Güven & İtibar'] = { value: -10, class: 'score-minus' };
+                    }
 
-                  if (this.timer.remaining >= 180) {
-                      totalScore += 5; 
-                      scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' }; 
-                  } 
+                    // 3. Zaman Bonusu
+                    if (this.timer.remaining >= 180) {
+                        totalScore += 5;
+                        scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' };
+                    }
 
-                  totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
-                  this.state.totalScore = totalScore;
-                  // --- PUANLAMA SİSTEMİ SONU ---
+                    // Sınırlandırma (0-100)
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
+                    this.state.totalScore = totalScore;
+                    // --- PUANLAMA SİSTEMİ SONU ---
 
                     let badgeInfo = {};
-                    if (totalScore >= 90) { badgeInfo = { text: 'SİBER KAHRAMAN', color: 'var(--accent-green)' }; } 
-                    else if (totalScore >= 75) { badgeInfo = { text: 'UZMAN KRİZ YÖNETİCİSİ', color: 'var(--accent-blue)' }; } 
-                    else if (totalScore >= 50) { badgeInfo = { text: 'ZORLU BİR MÜCADELE', color: 'var(--accent-yellow)' }; } 
-                    else { badgeInfo = { text: 'CİDDİ HASAR', color: '#ff5555' }; }
+                    if (totalScore >= 90) badgeInfo = { text: 'EFSANE (SİBER KAHRAMAN)', color: 'var(--accent-green)' };
+                    else if (totalScore >= 70) badgeInfo = { text: 'UZMAN (KRİZ YÖNETİCİSİ)', color: 'var(--accent-blue)' };
+                    else if (totalScore >= 50) badgeInfo = { text: 'ORTA (ZORLU MÜCADELE)', color: 'var(--accent-yellow)' };
+                    else badgeInfo = { text: 'BAŞARISIZ (CİDDİ HASAR)', color: '#ff5555' };
 
                     badge.textContent = badgeInfo.text;
                     badge.style.backgroundColor = badgeInfo.color;
@@ -1124,13 +1353,13 @@
                     }).join('');
 
                     let debriefHTML = '';
-                    if (badgeInfo.text === 'SİBER KAHRAMAN') { 
+                    if (badgeInfo.text === 'SİBER KAHRAMAN') {
                         debriefHTML += `<p><strong>Olağanüstü Başarı!</strong> Bir SOC Analisti olarak, çok kanallı ve sofistike bu saldırıyı tüm katmanlarında tespit ederek şirketinizi büyük bir felaketten kurtardınız. Stratejik ve hızlı kararlarınızla sadece fikri mülkiyetimizi korumakla kalmadınız, aynı zamanda şirketimizin itibarını ve çalışan güvenini zirveye taşıdınız. Bu kriz, sizin liderliğiniz sayesinde ÇOLHAK Teknoloji'yi daha da güçlendirdi.</p>`;
-                    } else if (badgeInfo.text === 'UZMAN KRİZ YÖNETİCİSİ') { 
+                    } else if (badgeInfo.text === 'UZMAN KRİZ YÖNETİCİSİ') {
                         debriefHTML += `<p><strong>Başarılı Bir Müdahale!</strong> Çok karmaşık bir saldırıyla karşı karşıya kalmanıza rağmen, etkili müdahalelerle krizi kontrol altına almayı başardınız. Bazı küçük kayıplar yaşansa da, genel olarak şirketinizin fikri mülkiyetini, itibarını ve çalışan güvenini önemli ölçüde korudunuz. Aldığınız kararlar, ÇOLHAK Teknoloji'nin bu zorlu süreçten ders çıkararak daha dirençli hale gelmesini sağladı.</p>`;
-                    } else if (badgeInfo.text === 'ZORLU BİR MÜCADELE') { 
+                    } else if (badgeInfo.text === 'ZORLU BİR MÜCADELE') {
                         debriefHTML += `<p><strong>Öğrenilen Büyük Dersler:</strong> Krizle başa çıktınız ve en kötü senaryonun önüne geçtiniz, ancak saldırının bazı etkilerini tamamen engellemeyi başaramadınız. Fikri mülkiyetimizde kısmi kayıplar yaşandı, finansal zararlar oluştu ve şirketin itibarı bir miktar zedelendi. Bu deneyim, gelecekteki siber güvenlik stratejilerimizi geliştirmemiz için önemli dersler çıkardı.</p>`;
-                    } else { 
+                    } else {
                         debriefHTML += `<p><strong>Ciddi Sonuçlar:</strong> Çok kanallı oltalama saldırısı, ÇOLHAK Teknoloji'ye ciddi zararlar verdi. Fikri mülkiyetimizde büyük sızıntılar yaşandı, finansal kayıplar çok yüksek ve şirket itibarımız ciddi şekilde zedelendi. Çalışanların güveni sarsıldı. Bu deneyimden acilen ders çıkararak güvenlik stratejilerimizi kökten değiştirmeli ve daha güçlü savunma mekanizmaları inşa etmeliyiz.</p>`;
                     }
                     debriefContent.innerHTML = debriefHTML;
@@ -1139,7 +1368,7 @@
 
                 updateSlackChat(currentSection) {
                     const chatViewer = document.getElementById('slackChat');
-                    if (!chatViewer) return; 
+                    if (!chatViewer) return;
                     let chat = '';
                     if (currentSection === 'day1_afternoon_phishing') {
                         chat = `
@@ -1158,7 +1387,7 @@
                             <div class="message"><span class="sender bt">BT Sistem Yöneticisi Mert Can:</span> İzolasyon için hazırız ama üretim ortamını kapatmak ciddi kesintilere yol açacak.</div>
                             <div class="message"><span class="sender">Siz (SOC Analisti):</span> Hedef fikri mülkiyetimiz! Anında aksiyon almalıyız! Cemil'in durumu da öncelik.</div>
                         `;
-                    } else if (currentSection === 'day2_afternoon_crisis_mgmt') { 
+                    } else if (currentSection === 'day2_afternoon_crisis_mgmt') {
                         chat = `
                             <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> Cemil'in itirafı şok edici. Şimdi ne olacak? Kamuoyuna nasıl açıklama yapacağız? Fikri mülkiyet kurtarıldı mı?</div>
                             <div class="message"><span class="sender hr">İK Direktörü Ayşe Erdem:</span> Çalışanlarımızın morali düşük. Cemil'in durumu belirsizlik yaratıyor. İç huzuru sağlamalıyız.</div>
@@ -1167,7 +1396,7 @@
                             <div class="message"><span class="sender ops">Ar-Ge Direktörü Deniz Akın:</span> Veri sızıntısını izole ettik ama ne kadar bilgi çıktı emin değiliz. Proje lansmanı risk altında.</div>
                             <div class="message"><span class="sender">Siz (SOC Analisti):</span> Koordinasyon çok önemli. Her departmanın katkısıyla bu krizden en az zararla çıkacağız. Doğru kararlar alma zamanı.</div>
                         `;
-                    } else if (currentSection === 'day3_morning_resolution') { 
+                    } else if (currentSection === 'day3_morning_resolution') {
                         chat = `
                             <div class="message"><span class="sender ceo">CEO Elara Yılmaz:</span> Korkutucuydu ama ayakta kaldık. Şimdi nasıl ileri gideceğiz? Bu krizi fırsata çevirmeliyiz.</div>
                             <div class="message"><span class="sender hr">İK Direktörü Ayşe Erdem:</span> Çalışanlarımız çok yıprandı. Moral yüksek tutmak ve güvenlerini sağlamak önceliğimiz. Eğitim ve destek şart.</div>
@@ -1350,8 +1579,8 @@
                 },
 
                 updateTimerUI() {
-                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2,'0');
-                    const s = String(this.timer.remaining % 60).padStart(2,'0');
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
                     if (this.elements.statusBar.remaining) {
                         this.elements.statusBar.remaining.textContent = `${m}:${s}`;
                     }
@@ -1368,7 +1597,7 @@
 
                 async saveLeaderboard(finalScore) {
                     const name = localStorage.getItem('playerName') || 'Anonim';
-                    
+
                     const payload = {
                         scenario: 'v5-phishing',
                         name: name.toString().slice(0, 40),
@@ -1391,13 +1620,13 @@
                             body: JSON.stringify(payload)
                         });
                         if (!res.ok) throw new Error('API isteği başarısız: ' + res.status);
-                    } catch(e) {
+                    } catch (e) {
                         console.warn("API'ye ulaşılamadı. Puan yerel olarak saklanıyor.");
                         const key = 'leaderboard-v5-phishing';
                         const arr = JSON.parse(localStorage.getItem(key) || '[]');
                         arr.push(payload);
-                        arr.sort((a,b)=> b.score - a.score);
-                        localStorage.setItem(key, JSON.stringify(arr.slice(0,100)));
+                        arr.sort((a, b) => b.score - a.score);
+                        localStorage.setItem(key, JSON.stringify(arr.slice(0, 100)));
                     }
                 },
 
@@ -1407,11 +1636,11 @@
                     tbody.innerHTML = `<tr><td colspan="4">Yükleniyor…</td></tr>`;
                     let rows = [];
                     try {
-                        const res = await fetch('/api/leaderboard?scenario=v5-phishing', { method:'GET' });
+                        const res = await fetch('/api/leaderboard?scenario=v5-phishing', { method: 'GET' });
                         if (!res.ok) throw new Error('API isteği başarısız: ' + res.status);
                         const data = await res.json();
                         rows = Array.isArray(data) ? data : [];
-                    } catch(e) {
+                    } catch (e) {
                         console.warn("API'ye ulaşılamadı. Liderlik tablosu yerelden yükleniyor.");
                         const arr = JSON.parse(localStorage.getItem(key) || '[]');
                         rows = arr.map(x => ({ name: x.name, score: x.score, timestamp: x.timestamp }));
@@ -1421,12 +1650,12 @@
                         tbody.innerHTML = `<tr><td colspan="4">Henüz kayıt bulunmuyor.</td></tr>`;
                         return;
                     }
-                    
-                    rows.sort((a,b)=> b.score - a.score);
-                    tbody.innerHTML = rows.slice(0,50).map((r,i)=>`
+
+                    rows.sort((a, b) => b.score - a.score);
+                    tbody.innerHTML = rows.slice(0, 50).map((r, i) => `
                         <tr>
-                            <td>${i+1}</td>
-                            <td>${(r.name || 'Anonim').toString().slice(0,40)}</td>
+                            <td>${i + 1}</td>
+                            <td>${(r.name || 'Anonim').toString().slice(0, 40)}</td>
                             <td>${r.score}</td>
                             <td>${r.timestamp ? new Date(r.timestamp).toLocaleString('tr-TR') : '-'}</td>
                         </tr>
@@ -1436,5 +1665,7 @@
             window.game.setup();
         });
     </script>
+<script src="../global-scenario.js"></script>
 </body>
+
 </html>

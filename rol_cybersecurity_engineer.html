@@ -1,91 +1,30 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Siber Güvenlik Mühendisi | Senaryo Seçimi</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
-    :root {
-        --dark-blue-bg: #0A0A1E; --main-accent: #00E6FF; --text-color-light: #E0E0E0; --text-color-medium: #A0A0A0;
-        --card-bg: rgba(20, 20, 40, 0.85); --border-glow: rgba(0, 230, 255, 0.5); --card-hover-bg: rgba(30, 30, 60, 0.95);
-        --card-hover-border: rgba(0, 230, 255, 0.8); --shadow-strong: rgba(0, 230, 255, 0.4); --title-glow-color: rgba(0, 230, 255, 0.4);
-        --difficulty-medium: #f1fa8c; /* Sarı */
-        --difficulty-high: #ff5555;   /* Kırmızı */
-        --focus-color: var(--main-accent);
-    }
-    body {
-        font-family: 'Roboto', sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
-        background: var(--dark-blue-bg); color: var(--text-color-light); margin: 0; padding: 40px 20px; box-sizing: border-box;
-        overflow-x: hidden; position: relative;
-    }
-    .grid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-    .grid-bg::before {
-        content: ''; position: absolute; width: 200vw; height: 200vh;
-        background-image: linear-gradient(0deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%), linear-gradient(90deg, transparent 95%, rgba(0, 230, 255, 0.1) 100%);
-        background-size: 50px 50px; animation: grid-move 60s linear infinite; transform-origin: 0 0; opacity: 0.2;
-    }
-    @keyframes grid-move { from { transform: translate(0, 0); } to { transform: translate(-50px, -50px); } }
-    .container { width: 100%; max-width: 1300px; z-index: 1; animation: fadeIn 1s ease-out; } /* Genişletildi */
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    h1 {
-        font-family: 'Orbitron', sans-serif; font-size: 2.8em; margin-bottom: 15px; color: var(--main-accent);
-        text-shadow: 0 0 8px var(--title-glow-color); text-align: center; letter-spacing: 1px;
-    }
-    .subtitle {
-        font-size: 1.2em; line-height: 1.7; margin-bottom: 50px; color: var(--text-color-medium);
-        text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;
-    }
-    .scenarios-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 35px; }
-    
-    @media (min-width: 768px) {
-        .scenarios-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    
-    @media (min-width: 1200px) { /* 3 kart için düzenleme */
-        .scenarios-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-
-    .scenario-card {
-        background-color: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 15px;
-        text-decoration: none; color: var(--text-color-light); transition: all 0.3s ease;
-        backdrop-filter: blur(8px); display: flex; flex-direction: column; overflow: hidden;
-    }
-    .scenario-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px var(--shadow-strong); }
-    .scenario-card img { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid var(--border-glow); }
-    .scenario-card .content { padding: 25px; text-align: left; display: flex; flex-direction: column; flex-grow: 1; }
-    .scenario-card h2 { font-family: 'Orbitron', sans-serif; font-size: 1.6em; margin-bottom: 15px; color: var(--text-color-light); }
-    .scenario-card p { font-size: 1em; color: var(--text-color-medium); line-height: 1.6; flex-grow: 1; margin-bottom: 25px; }
-    .card-info {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(0, 230, 255, 0.2);
-    }
-    .card-info span { display: flex; align-items: center; font-size: 0.9em; font-weight: bold; }
-    .card-info span i { margin-right: 8px; }
-    .difficulty-medium { color: var(--difficulty-medium); }
-    .difficulty-high { color: var(--difficulty-high); }
-    .focus-color { color: var(--focus-color); }
-
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Siber Güvenlik Mühendisi | Senaryo Seçimi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
-<body>
+
+<body class="page-content">
     <div class="grid-bg"></div>
     <div class="container">
         <h1>Simülasyonu Seç</h1>
-        <p class="subtitle">Siber Güvenlik Mühendisi olarak, sistemlerin derinliklerine ineceksin. Zafiyetleri analiz et, karmaşık altyapıları güvence altına al ve bilinmeyen tehditlere karşı savunma hatları inşa et.</p>
+        <p class="subtitle">Siber Güvenlik Mühendisi olarak, sistemlerin derinliklerine ineceksin. Zafiyetleri analiz
+            et, karmaşık altyapıları güvence altına al ve bilinmeyen tehditlere karşı savunma hatları inşa et.</p>
 
         <div class="scenarios-grid">
             <a href="cyberscenarios1/index.html" class="scenario-card">
                 <img src="iot_card.png" alt="IoT Cihazları Ağı">
                 <div class="content">
                     <h2>IoT Krizi</h2>
-                    <p>Şirketin akıllı cihaz ağı (kameralar, sensörler) bilinmeyen bir tehdit tarafından ele geçiriliyor. Geleneksel olmayan bu sistemlerdeki zafiyeti bul ve saldırıyı durdur.</p>
-                    
+                    <p>Şirketin akıllı cihaz ağı (kameralar, sensörler) bilinmeyen bir tehdit tarafından ele
+                        geçiriliyor. Geleneksel olmayan bu sistemlerdeki zafiyeti bul ve saldırıyı durdur.</p>
+
                     <div class="card-info">
                         <span class="difficulty-medium">
                             <i class="fas fa-signal"></i>
@@ -103,7 +42,8 @@
                 <img src="cloud_card.png" alt="Bulut Altyapısı">
                 <div class="content">
                     <h2>Bulut Güvenliği Krizi</h2>
-                    <p>Kritik müşteri verilerini barındıran bulut altyapısında bir veri sızıntısı tespit edildi. Sorun bir hacker mı, yoksa basit bir yapılandırma hatası mı? Kök nedeni bul.</p>
+                    <p>Kritik müşteri verilerini barındıran bulut altyapısında bir veri sızıntısı tespit edildi. Sorun
+                        bir hacker mı, yoksa basit bir yapılandırma hatası mı? Kök nedeni bul.</p>
 
                     <div class="card-info">
                         <span class="difficulty-high">
@@ -122,7 +62,8 @@
                 <img src="iam_card.png" alt="Kimlik ve Erişim Krizi">
                 <div class="content">
                     <h2>Kimlik ve Erişim Krizi</h2>
-                    <p>Yeni SSO entegrasyonu sonrası, kullanıcılar beklenmedik yetkilere sahip oluyor. Yanlış yapılandırılmış OIDC/OAuth akışını analiz et ve kimlik sistemini güçlendir.</p>
+                    <p>Yeni SSO entegrasyonu sonrası, kullanıcılar beklenmedik yetkilere sahip oluyor. Yanlış
+                        yapılandırılmış OIDC/OAuth akışını analiz et ve kimlik sistemini güçlendir.</p>
 
                     <div class="card-info">
                         <span class="difficulty-high">
@@ -139,6 +80,5 @@
         </div>
     </div>
 </body>
+
 </html>
-
-

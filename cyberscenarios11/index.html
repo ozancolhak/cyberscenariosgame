@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,8 +27,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         body {
@@ -41,7 +49,7 @@
             align-items: flex-start;
             min-height: 100vh;
             line-height: 1.7;
-            font-size:0.90em;
+            font-size: 0.90em;
         }
 
         .container {
@@ -56,7 +64,9 @@
         }
 
         @media (min-width: 768px) {
-            .container { padding: 40px; }
+            .container {
+                padding: 40px;
+            }
         }
 
         .centered-page {
@@ -116,7 +126,9 @@
         }
 
         @media (min-width: 768px) {
-            .section { padding: 30px; }
+            .section {
+                padding: 30px;
+            }
         }
 
         .interactive-element {
@@ -179,7 +191,8 @@
             color: var(--accent-blue);
         }
 
-        .btn-start, .btn-continue {
+        .btn-start,
+        .btn-continue {
             font-size: 1.3em;
             font-weight: bold;
             text-align: center;
@@ -223,13 +236,21 @@
             padding: 8px 15px;
             border-radius: 5px;
             background-color: var(--interactive-bg);
-            box-shadow: inset 0 1px 5px rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
             justify-content: center;
         }
 
-        .metric-change .positive { color: var(--accent-green); }
-        .metric-change .negative { color: var(--accent-red); }
-        .metric-change .neutral { color: var(--accent-blue); }
+        .metric-change .positive {
+            color: var(--accent-green);
+        }
+
+        .metric-change .negative {
+            color: var(--accent-red);
+        }
+
+        .metric-change .neutral {
+            color: var(--accent-blue);
+        }
 
         .intro-info-grid {
             display: grid;
@@ -247,7 +268,8 @@
             }
         }
 
-        .intro-roles-container, .intro-metrics-container {
+        .intro-roles-container,
+        .intro-metrics-container {
             background-color: var(--section-bg);
             border-radius: 10px;
             padding: 25px;
@@ -255,7 +277,8 @@
             border: 1px solid var(--interactive-bg);
         }
 
-        .intro-roles-container h3, .intro-metrics-container h3 {
+        .intro-roles-container h3,
+        .intro-metrics-container h3 {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--interactive-bg);
@@ -263,13 +286,15 @@
             text-align: center;
         }
 
-        .intro-roles-container ul, .intro-metrics-container ul {
+        .intro-roles-container ul,
+        .intro-metrics-container ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .intro-roles-container li, .intro-metrics-container li {
+        .intro-roles-container li,
+        .intro-metrics-container li {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -279,19 +304,21 @@
             font-size: 1.05em;
         }
 
-        .intro-roles-container li:last-child, .intro-metrics-container li:last-child {
+        .intro-roles-container li:last-child,
+        .intro-metrics-container li:last-child {
             border-bottom: none;
             margin-bottom: 0;
         }
 
-        .intro-roles-container li .icon, .intro-metrics-container li .icon {
+        .intro-roles-container li .icon,
+        .intro-metrics-container li .icon {
             font-size: 1.8em;
             color: var(--accent-blue);
             flex-shrink: 0;
             width: 35px;
             text-align: center;
         }
-        
+
         .intro-roles-container li strong {
             color: var(--accent-yellow);
         }
@@ -379,7 +406,8 @@
             color: var(--accent-yellow);
         }
 
-        .code-block, .slack-chat {
+        .code-block,
+        .slack-chat {
             background-color: var(--text-dark);
             border: 1px solid #6272a4;
             border-radius: 8px;
@@ -389,8 +417,9 @@
             word-break: break-all;
             font-family: 'Consolas', monospace;
             font-size: 0.95em;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+
         .code-block code {
             color: var(--text-light);
         }
@@ -415,9 +444,13 @@
             box-shadow: 0 4px 15px var(--shadow-dark);
         }
 
-        #finalSection { text-align: center; }
+        #finalSection {
+            text-align: center;
+        }
 
-        #performance-badge-container { margin: 25px 0; }
+        #performance-badge-container {
+            margin: 25px 0;
+        }
 
         #performance-badge {
             padding: 15px 35px;
@@ -430,7 +463,9 @@
             transition: transform 0.3s ease;
         }
 
-        #performance-badge:hover { transform: scale(1.08); }
+        #performance-badge:hover {
+            transform: scale(1.08);
+        }
 
         .post-crisis-layout {
             display: grid;
@@ -447,7 +482,8 @@
             }
         }
 
-        .event-timeline, .strategic-debrief {
+        .event-timeline,
+        .strategic-debrief {
             background-color: var(--interactive-bg);
             padding: 25px;
             border-radius: 8px;
@@ -456,7 +492,8 @@
             box-shadow: 0 4px 15px var(--shadow-light);
         }
 
-        .event-timeline h3, .strategic-debrief h3 {
+        .event-timeline h3,
+        .strategic-debrief h3 {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--section-bg);
@@ -501,8 +538,15 @@
             border: 2px solid var(--section-bg);
         }
 
-        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
-        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
+        .event-timeline li.negative::before {
+            content: '\f00d';
+            color: var(--accent-red);
+        }
+
+        .event-timeline li.neutral::before {
+            content: '\f05a';
+            color: var(--accent-blue);
+        }
 
         .event-timeline li .decision-title {
             font-weight: bold;
@@ -516,37 +560,96 @@
             margin-bottom: 15px;
         }
 
-        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
-        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
-        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
-        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
-        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
-        #score-breakdown .score-value { font-weight: bold; }
+        #score-breakdown {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        #score-breakdown li {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-breakdown .score-plus {
+            background-color: rgba(80, 250, 123, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        #score-breakdown .score-minus {
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        #score-breakdown .score-neutral {
+            background-color: rgba(139, 233, 253, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        #score-breakdown .score-value {
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div id="introSection" class="centered-page">
             <h1><i class="fa-solid fa-id-card"></i> Kimlik ve Erişim Krizi</h1>
-            <p style="max-width: 600px;">ConnectSphere'e hoş geldin, Siber Güvenlik Mühendisi! Müşteri portalını SSO (Tek Oturum Açma) ile entegre ettikten sonra alarm zilleri çalmaya başladı. Yardım masası, kullanıcıların beklenmedik yetkilere sahip olduğuna ve bazı hesapların ele geçirildiğine dair şikayetlerle dolup taşıyor. Görevin: Bu karmaşık kimlik krizinin kök nedenini bulmak, güvenlik açıklarını kapatmak ve sistem mimarisini güçlendirmek.</p>
+            <p style="max-width: 600px;">ConnectSphere'e hoş geldin, Siber Güvenlik Mühendisi! Müşteri portalını SSO
+                (Tek Oturum Açma) ile entegre ettikten sonra alarm zilleri çalmaya başladı. Yardım masası,
+                kullanıcıların beklenmedik yetkilere sahip olduğuna ve bazı hesapların ele geçirildiğine dair
+                şikayetlerle dolup taşıyor. Görevin: Bu karmaşık kimlik krizinin kök nedenini bulmak, güvenlik
+                açıklarını kapatmak ve sistem mimarisini güçlendirmek.</p>
             <img src="intro.png" alt="Kimlik ve Erişim Yönetimi Konsepti" class="scenario-image">
 
             <div class="intro-info-grid">
                 <div class="intro-roles-container">
                     <h3><i class="fa-solid fa-people-arrows"></i> Simülasyon Rolleri</h3>
                     <ul>
-                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span><div><strong>Senin Rolün: Siber Güvenlik Mühendisi</strong> <small>SSO/OIDC yapılandırmasını derinlemesine inceleyecek, açıkları düzeltecek ve gelecekteki riskleri azaltacaksın.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-cogs"></i></span><div><strong>DevOps Ekibi</strong> <small>Uygulamanın çalışır durumda kalmasından sorumlu ve yapılacak değişikliklerin operasyonel etkisinden endişeli.</small></div></li>
-                        <li><span class="icon"><i class="fa-solid fa-balance-scale"></i></span><div><strong>Uyum Departmanı</strong> <small>Veri gizliliği düzenlemeleri ve olası yasal sonuçlar konusunda endişeli.</small></div></li>
+                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span>
+                            <div><strong>Senin Rolün: Siber Güvenlik Mühendisi</strong> <small>SSO/OIDC yapılandırmasını
+                                    derinlemesine inceleyecek, açıkları düzeltecek ve gelecekteki riskleri
+                                    azaltacaksın.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-cogs"></i></span>
+                            <div><strong>DevOps Ekibi</strong> <small>Uygulamanın çalışır durumda kalmasından sorumlu ve
+                                    yapılacak değişikliklerin operasyonel etkisinden endişeli.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-balance-scale"></i></span>
+                            <div><strong>Uyum Departmanı</strong> <small>Veri gizliliği düzenlemeleri ve olası yasal
+                                    sonuçlar konusunda endişeli.</small></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="intro-metrics-container">
                     <h3><i class="fa-solid fa-chart-line"></i> Temel Metrikler</h3>
                     <ul>
-                        <li><span class="icon" style="color: var(--accent-red);"><i class="fa-solid fa-user-lock"></i></span><div><strong>Risk Altındaki Hesaplar</strong> <small>Yanlış yetkilendirilmiş veya ele geçirilmiş hesap sayısı. (Başlangıç: 50)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-green);"><i class="fa-solid fa-tasks"></i></span><div><strong>Sistem Bütünlüğü</strong> <small>Kimlik altyapısının güvenlik seviyesi. (Başlangıç: 20%)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-yellow);"><i class="fa-solid fa-business-time"></i></span><div><strong>Operasyonel Etki</strong> <small>Kullanıcıları ve işleyişi etkileyen kesintiler. (Başlangıç: 0)</small></div></li>
-                        <li><span class="icon" style="color: var(--accent-blue);"><i class="fa-solid fa-users"></i></span><div><strong>Kullanıcı Güveni</strong> <small>Müşterilerin platformun güvenliğine olan inancı. (Başlangıç: 100)</small></div></li>
+                        <li><span class="icon" style="color: var(--accent-red);"><i
+                                    class="fa-solid fa-user-lock"></i></span>
+                            <div><strong>Risk Altındaki Hesaplar</strong> <small>Yanlış yetkilendirilmiş veya ele
+                                    geçirilmiş hesap sayısı. (Başlangıç: 50)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-green);"><i
+                                    class="fa-solid fa-tasks"></i></span>
+                            <div><strong>Sistem Bütünlüğü</strong> <small>Kimlik altyapısının güvenlik seviyesi.
+                                    (Başlangıç: 20%)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i
+                                    class="fa-solid fa-business-time"></i></span>
+                            <div><strong>Operasyonel Etki</strong> <small>Kullanıcıları ve işleyişi etkileyen
+                                    kesintiler. (Başlangıç: 0)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i
+                                    class="fa-solid fa-users"></i></span>
+                            <div><strong>Kullanıcı Güveni</strong> <small>Müşterilerin platformun güvenliğine olan
+                                    inancı. (Başlangıç: 100)</small></div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -556,16 +659,27 @@
         <div id="intermissionSection" class="centered-page" style="display: none;">
             <h2 id="intermissionTitle"></h2>
             <div id="intermissionDetails"></div>
-            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i class="fa-solid fa-forward"></i> Devam Et</button>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i
+                    class="fa-solid fa-forward"></i> Devam Et</button>
         </div>
 
         <div id="gameContainer" style="display: none;">
             <div id="statusBar">
-                <div class="metric"><span><i class="fa-solid fa-user-lock"></i> Riskli Hesaplar</span><div class="value" id="status-compromisedAccounts">50</div></div>
-                <div class="metric"><span><i class="fa-solid fa-tasks"></i> Sistem Bütünlüğü</span><div class="value" id="status-systemIntegrity">20%</div></div>
-                <div class="metric"><span><i class="fa-solid fa-business-time"></i> Operasyonel Etki</span><div class="value" id="status-operationalImpact">0</div></div>
-                <div class="metric"><span><i class="fa-solid fa-users"></i> Kullanıcı Güveni</span><div class="value" id="status-userTrust">100</div></div>
-                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span><div class="value" id="status-remaining">04:00</div></div>
+                <div class="metric"><span><i class="fa-solid fa-user-lock"></i> Riskli Hesaplar</span>
+                    <div class="value" id="status-compromisedAccounts">50</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-tasks"></i> Sistem Bütünlüğü</span>
+                    <div class="value" id="status-systemIntegrity">20%</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-business-time"></i> Operasyonel Etki</span>
+                    <div class="value" id="status-operationalImpact">0</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-users"></i> Kullanıcı Güveni</span>
+                    <div class="value" id="status-userTrust">100</div>
+                </div>
+                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span>
+                    <div class="value" id="status-remaining">04:00</div>
+                </div>
             </div>
             <div id="game-content">
             </div>
@@ -595,14 +709,14 @@
                 },
 
                 elements: {},
-                
+
                 timer: {
                     total: 240, // 4 dakika
                     remaining: 240,
                     intervalId: null,
                     running: false
                 },
-                
+
                 decisionInfo: {
                     // Aşama 1: Triyaj ve Kapsam Belirleme
                     'd1-review-idp-logs': { title: "IdP Oturum Açma Loglarını İncele", text: "Kimlik Sağlayıcı (IdP) loglarını inceledin ve anormal derecede yüksek sayıda token yenileme isteği tespit ettin. Bu, saldırganların uzun ömürlü refresh token'ları kötüye kullandığını gösteriyor.", strat: "Bir kimlik krizinde ilk bakılacak yer, kimliğin kaynağıdır. IdP logları, kimin, ne zaman ve nasıl kimlik doğruladığını gösteren en temel kanıttır.", changes: { operationalImpact: 2, compromisedAccounts: -5 }, clue: 'logsReviewed', impact: 'Positive' },
@@ -616,7 +730,7 @@
                     // Aşama 3: Kontrol Altına Alma Stratejisi
                     'd3-disable-client': { title: "Riskli 'Destek Aracı' Entegrasyonunu Devre Dışı Bırak", text: "Sorunun kaynağı olan 'Destek Aracı' istemcisini IdP üzerinden tamamen devre dışı bıraktın. Bu, saldırıyı anında durdurdu ancak bu aracı kullanan tüm destek ekibinin işini tamamen durdurdu.", strat: "En radikal ama en etkili kontrol altına alma yöntemi, kanayan damarı sıkmaktır. Bu, operasyonel maliyeti çok yüksek bir karardır.", changes: { compromisedAccounts: -40, operationalImpact: 25, userTrust: -10 }, clue: 'clientDisabled', impact: 'Negative' },
                     'd3-revoke-tokens': { title: "Tüm Refresh Token'ları İptal Et", text: "IdP üzerinden, etkilenen uygulama için verilmiş tüm refresh token'ları zorla iptal ettin. Bu, saldırganların mevcut oturumlarını yenilemesini engelledi ancak geçerli tüm kullanıcıların yeniden oturum açmasını gerektirdi.", strat: "Ele geçirilmiş refresh token'lar, kalıcı erişim anahtarlarıdır. Onları iptal etmek, saldırganı sistemden atmanın en etkili yollarından biridir.", changes: { compromisedAccounts: -30, operationalImpact: 10, userTrust: -5 }, clue: 'tokensRevoked', impact: 'Positive' },
-                    
+
                     // Aşama 4: Taktiksel Uygulama ve Düzeltmeler
                     'd4-fix-redirect': { title: "Redirect URI Beyaz Listesini Uygula", text: "Uygulama ve IdP tarafında, yalnızca tam olarak eşleşen ve önceden tanımlanmış URI'lara izin verecek şekilde katı bir beyaz liste (whitelist) uyguladın.", strat: "Bu, 'açık yönlendirme' saldırı vektörünü kalıcı olarak kapatan temel bir düzeltmedir.", changes: { systemIntegrity: 15 }, clue: 'redirectUriFixed', impact: 'Positive' },
                     'd4-fix-scopes': { title: "Yetki Kapsamlarını (Scopes) Daralt", text: "'Destek Aracı' istemcisinin istediği 'admin:read/write' kapsamını, yalnızca gereken 'user:read' olarak düzelttin (Least Privilege).", strat: "Asla gereğinden fazla yetki verme. Kapsamları en aza indirmek, bir istemci ele geçirilse bile oluşacak hasarı sınırlar.", changes: { systemIntegrity: 10 }, clue: 'scopesFixed', impact: 'Positive' },
@@ -625,7 +739,7 @@
                     // Aşama 5: Mimariyi Güçlendirme
                     'd5-shorten-tokens': { title: "Token Ömürlerini Kısalt ve Rotasyon Uygula", text: "Access token ömrünü 15 dakikaya, refresh token ömrünü ise 8 saate indirdin. Ayrıca, her kullanıldığında refresh token'ların da yenilenmesini zorunlu kıldın.", strat: "Kısa ömürlü token'lar, çalınmaları durumunda saldırganın erişim süresini sınırlar. Refresh token rotasyonu, bir token'ın tekrar kullanılmasını önler.", changes: { systemIntegrity: 15, userTrust: -2 }, clue: 'tokensShortened', impact: 'Positive' },
                     'd5-harden-architecture': { title: "Mimariyi Güçlendir (mTLS/DPoP)", text: "Kritik istemciler için mTLS veya DPoP gibi token bağlama tekniklerini uygulamaya koydun. Bu, token'ların çalınsa bile başka bir yerden kullanılmasını neredeyse imkansız hale getirir.", strat: "Token bağlama, en gelişmiş OIDC güvenlik önlemlerinden biridir. Saldırganın çaldığı bir token'ı kendi makinesinden kullanmasını engeller.", changes: { systemIntegrity: 25, operationalImpact: 5 }, clue: 'architectureHardened', impact: 'Positive' },
-                    
+
                     // Aşama 6 ve 7 eklenecek...
                 },
 
@@ -635,10 +749,10 @@
                         startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
                         intermissionTitle: document.getElementById('intermissionTitle'), intermissionDetails: document.getElementById('intermissionDetails'),
                         continueButton: document.getElementById('continueButton'),
-                        statusBar: { 
-                            compromisedAccounts: document.getElementById('status-compromisedAccounts'), 
-                            systemIntegrity: document.getElementById('status-systemIntegrity'), 
-                            operationalImpact: document.getElementById('status-operationalImpact'), 
+                        statusBar: {
+                            compromisedAccounts: document.getElementById('status-compromisedAccounts'),
+                            systemIntegrity: document.getElementById('status-systemIntegrity'),
+                            operationalImpact: document.getElementById('status-operationalImpact'),
                             userTrust: document.getElementById('status-userTrust'),
                             remaining: document.getElementById('status-remaining')
                         },
@@ -651,7 +765,7 @@
                     this.loadGameHTML();
                     this.attachListeners();
                 },
-                
+
                 attachListeners() {
                     this.elements.startButton.addEventListener('click', () => {
                         this.elements.intro.style.display = 'none';
@@ -659,18 +773,18 @@
                         this.startGlobalTimer();
                         this.showSection('phase1_triage');
                     });
-                    
+
                     this.elements.gameContent.addEventListener('click', (e) => {
                         const button = e.target.closest('.btn[data-decision]');
                         if (!button || button.disabled) return;
-                        
+
                         const sectionElement = button.closest('.section');
                         const decisionId = button.dataset.decision;
                         const info = this.decisionInfo[decisionId];
 
                         button.disabled = true;
                         this.state.currentTurnDecisions.push(info);
-                        
+
                         this.score.operationalImpact += info.changes.operationalImpact || 0;
                         this.score.compromisedAccounts = Math.max(0, this.score.compromisedAccounts + (info.changes.compromisedAccounts || 0));
                         this.score.systemIntegrity = Math.max(0, Math.min(100, this.score.systemIntegrity + (info.changes.systemIntegrity || 0)));
@@ -679,7 +793,7 @@
                         this.updateStatusBar();
 
                         const maxSelections = parseInt(sectionElement.dataset.maxSelections || 1, 10);
-                        
+
                         if (this.state.currentTurnDecisions.length >= maxSelections) {
                             this.elements.game.style.display = 'none';
                             this.showFullIntermission();
@@ -696,7 +810,7 @@
                         this.elements.continueButton.style.display = 'none';
 
                         this.state.currentTurnDecisions = [];
-                        
+
                         if (nextPath === 'finalSection') {
                             this.showFinalReport();
                         } else {
@@ -704,7 +818,7 @@
                             this.showSection(nextPath);
                         }
                     });
-                    
+
                     this.elements.leaderboard.btnClose?.addEventListener('click', () => this.closeLeaderboard());
                     this.elements.leaderboard.btnRefresh?.addEventListener('click', () => this.loadLeaderboard());
                     this.elements.leaderboard.overlay.addEventListener('click', (e) => {
@@ -715,7 +829,7 @@
                 },
 
                 showFullIntermission() {
-                    this.elements.intermissionDetails.innerHTML = ''; 
+                    this.elements.intermissionDetails.innerHTML = '';
 
                     let totalChanges = { operationalImpact: 0, compromisedAccounts: 0, systemIntegrity: 0, userTrust: 0 };
                     let combinedDecisionTitles = [];
@@ -727,7 +841,7 @@
                         totalChanges.compromisedAccounts += info.changes.compromisedAccounts || 0;
                         totalChanges.systemIntegrity += info.changes.systemIntegrity || 0;
                         totalChanges.userTrust += info.changes.userTrust || 0;
-                        
+
                         combinedDecisionTitles.push(info.title);
                         combinedDecisionTexts.push(info.text);
                         combinedStrategicNotes.push(info.strat);
@@ -755,7 +869,7 @@
                         </div>
                     `);
 
-                    switch(this.state.currentSectionId) {
+                    switch (this.state.currentSectionId) {
                         case 'phase1_triage': nextSectionToGo = 'phase2_analysis'; break;
                         case 'phase2_analysis': nextSectionToGo = 'phase3_containment'; break;
                         case 'phase3_containment': nextSectionToGo = 'phase4_implementation'; break;
@@ -763,7 +877,7 @@
                         case 'phase5_hardening': nextSectionToGo = 'finalSection'; break; // Bu kısım uzatılacak
                         default: nextSectionToGo = 'finalSection'; break;
                     }
-                    
+
                     this.elements.continueButton.dataset.nextPath = nextSectionToGo;
                     this.elements.intermission.style.display = 'flex';
                     this.elements.continueButton.style.display = 'flex';
@@ -776,7 +890,7 @@
                         const arrow = value > 0 ? 'up' : 'down';
                         const sign = value > 0 ? '+' : '';
                         let colorClass = 'neutral';
-                        
+
                         if (isNegativeGood) {
                             colorClass = value < 0 ? 'positive' : 'negative';
                         } else {
@@ -790,7 +904,7 @@
                     metricsHTML += formatChange('Sistem Bütünlüğü', changes.systemIntegrity, '%', 'fa-tasks', false);
                     metricsHTML += formatChange('Operasyonel Etki', changes.operationalImpact, '', 'fa-business-time', true);
                     metricsHTML += formatChange('Kullanıcı Güveni', changes.userTrust, '', 'fa-users', false);
-                    
+
                     if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1.1em; opacity: 0.8;">Bu kararların metriklere doğrudan bir etkisi olmadı.</p>';
                     return metricsHTML;
                 },
@@ -828,20 +942,20 @@
                         button.disabled = info && this.state[info.clue];
                     });
                 },
-                
+
                 showFinalReport() {
                     this.stopGlobalTimer();
                     this.elements.intro.style.display = 'none';
                     this.elements.intermission.style.display = 'none';
-                    this.elements.game.style.display = 'block'; 
+                    this.elements.game.style.display = 'block';
                     document.getElementById('statusBar').style.display = 'none';
 
                     this.elements.sections.forEach(section => section.style.display = 'none');
-                    
+
                     const finalSection = document.getElementById('finalSection');
                     if (!finalSection) { console.error("Final bölümü HTML'de bulunamadı!"); return; }
                     finalSection.style.display = 'flex';
-                    
+
                     const badge = document.getElementById('performance-badge');
                     const metricsContainer = document.getElementById('finalMetricsContainer');
                     const timelineList = document.getElementById('decision-timeline-list');
@@ -849,42 +963,84 @@
                     const scoreBreakdownList = document.getElementById('score-breakdown');
 
                     // --- PUANLAMA SİSTEMİ ---
+                    // --- STANDARD PUANLAMA SİSTEMİ (V2) ---
                     let scoreBreakdown = {};
-                    let totalScore = 100;
-                    scoreBreakdown['Başlangıç Puanı'] = { value: 100, class: 'score-neutral' };
-                    
-                    let compromisedPenalty = this.score.compromisedAccounts * 1.5;
-                    totalScore -= compromisedPenalty;
-                    scoreBreakdown['Kalan Riskli Hesap Cezası'] = { value: -Math.round(compromisedPenalty), class: 'score-minus' };
+                    let totalScore = 50;
+                    scoreBreakdown['Başlangıç Puanı'] = { value: 50, class: 'score-neutral' };
 
-                    let impactPenalty = this.score.operationalImpact * 1;
-                    totalScore -= impactPenalty;
-                    scoreBreakdown['Operasyonel Etki Cezası'] = { value: -Math.round(impactPenalty), class: 'score-minus' };
+                    // 1. Karar Bazlı Puanlama (+10 / 0 / -10)
+                    let decisionScore = 0;
+                    this.state.decisionHistory.forEach(decision => {
+                        if (decision.impactType === 'Positive') {
+                            decisionScore += 10;
+                        } else if (decision.impactType === 'Negative') {
+                            decisionScore -= 10;
+                        }
+                    });
 
-                    let trustBonus = (this.score.userTrust - 70) * 0.5;
-                    if (trustBonus > 0) {
-                        totalScore += trustBonus;
-                        scoreBreakdown['Kullanıcı Güveni Bonusu'] = { value: Math.round(trustBonus), class: 'score-plus' };
+                    if (decisionScore !== 0) {
+                        totalScore += decisionScore;
+                        scoreBreakdown['Karar Kalitesi'] = {
+                            value: decisionScore,
+                            class: decisionScore > 0 ? 'score-plus' : 'score-minus'
+                        };
                     }
-                    
+
+                    // 2. Metrik Bazlı Bonuslar
+                    // Sistem Bütünlüğü
+                    if (this.score.systemIntegrity >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['Yüksek Sistem Bütünlüğü'] = { value: 10, class: 'score-plus' };
+                    }
+
+                    // Kullanıcı Güveni
+                    if (this.score.userTrust >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['Yüksek Kullanıcı Güveni'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.userTrust < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Güven Kaybı Cezası'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Riskli Hesap Cezası
+                    if (this.score.compromisedAccounts > 0) {
+                        let penalty = this.score.compromisedAccounts * 5; // Hesap başı 5 puan ceza (max 20 gibi)
+                        totalScore -= penalty;
+                        scoreBreakdown['Riskli Hesap Cezası'] = { value: -penalty, class: 'score-minus' };
+                    }
+
+                    // Operasyonel Etki Cezası
+                    if (this.score.operationalImpact > 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Yüksek Operasyonel Etki'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // 3. Stratejik Bonuslar
                     if (this.state.architectureHardened) {
-                        totalScore += 15;
-                        scoreBreakdown['Mimari Güçlendirme Bonusu'] = { value: 15, class: 'score-plus' };
+                        totalScore += 10;
+                        scoreBreakdown['Mimari Güçlendirme Bonusu'] = { value: 10, class: 'score-plus' };
                     }
 
+                    // Kritik Hata Cezası
                     if (!this.state.tokensRevoked && !this.state.clientDisabled) {
-                        totalScore -= 25;
-                        scoreBreakdown['Kritik Hata: Tehdit Durdurulmadı'] = { value: -25, class: 'score-minus' };
+                        totalScore -= 20;
+                        scoreBreakdown['Kritik Hata: Tehdit Durdurulmadı'] = { value: -20, class: 'score-minus' };
                     }
 
-                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore))); 
+                    // 4. Zaman Bonusu
+                    if (this.timer.remaining >= 180) {
+                        totalScore += 5;
+                        scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' };
+                    }
+
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
                     this.state.totalScore = totalScore;
                     // --- PUANLAMA SİSTEMİ SONU ---
 
                     let badgeInfo = {};
-                    if (totalScore >= 90) { badgeInfo = { text: 'KİMLİK MİMARI', color: 'var(--accent-green)' }; } 
-                    else if (totalScore >= 70) { badgeInfo = { text: 'UZMAN MÜHENDİS', color: 'var(--accent-blue)' }; } 
-                    else if (totalScore >= 50) { badgeInfo = { text: 'YETKİN PROBLEM ÇÖZÜCÜ', color: 'var(--accent-yellow)' }; } 
+                    if (totalScore >= 90) { badgeInfo = { text: 'KİMLİK MİMARI', color: 'var(--accent-green)' }; }
+                    else if (totalScore >= 70) { badgeInfo = { text: 'UZMAN MÜHENDİS', color: 'var(--accent-blue)' }; }
+                    else if (totalScore >= 50) { badgeInfo = { text: 'YETKİN PROBLEM ÇÖZÜCÜ', color: 'var(--accent-yellow)' }; }
                     else { badgeInfo = { text: 'YAPILANDIRMA HATASI', color: '#ff5555' }; }
 
                     badge.textContent = badgeInfo.text;
@@ -908,11 +1064,11 @@
                     }).join('');
 
                     let debriefHTML = '';
-                    if (totalScore >= 85) { 
+                    if (totalScore >= 85) {
                         debriefHTML = `<p><strong>Mükemmel Performans!</strong> Sadece mevcut krizi hızla kontrol altına almakla kalmadın, aynı zamanda kimlik altyapısını gelecekteki tehditlere karşı önemli ölçüde güçlendirdin. Teknik derinliğin ve stratejik vizyonun, şirketi büyük bir itibar ve veri kaybından kurtardı.</p>`;
-                    } else if (totalScore >= 60) { 
+                    } else if (totalScore >= 60) {
                         debriefHTML = `<p><strong>Başarılı Müdahale:</strong> Tehdidi etkili bir şekilde durdurdun ve en kritik güvenlik açıklarını kapattın. Bazı kullanıcılar süreçten olumsuz etkilense de, ana hedefe ulaştın. Mimariyi daha da güçlendirmek için birkaç fırsatı kaçırmış olabilirsin, ancak genel olarak sağlam bir mühendislik sergiledin.</p>`;
-                    } else { 
+                    } else {
                         debriefHTML = `<p><strong>Zorlu Sonuç:</strong> Kriz kontrol altına alındı ancak süreç yavaş ve maliyetli oldu. Belki de ilk müdahalede daha agresif adımlar atılabilirdi veya bazı temel yapılandırma hataları gözden kaçırıldı. Bu simülasyon, modern kimlik sistemlerinin ne kadar karmaşık ve hassas dengelere sahip olduğunu gösteren önemli bir ders oldu.</p>`;
                     }
                     debriefContent.innerHTML = debriefHTML;
@@ -1045,8 +1201,8 @@
                 },
 
                 updateTimerUI() {
-                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2,'0');
-                    const s = String(this.timer.remaining % 60).padStart(2,'0');
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
                     if (this.elements.statusBar.remaining) {
                         this.elements.statusBar.remaining.textContent = `${m}:${s}`;
                     }
@@ -1078,27 +1234,27 @@
                     const key = 'leaderboard-v10.1-iam-crisis';
                     const arr = JSON.parse(localStorage.getItem(key) || '[]');
                     arr.push(payload);
-                    arr.sort((a,b)=> b.score - a.score);
-                    localStorage.setItem(key, JSON.stringify(arr.slice(0,100)));
+                    arr.sort((a, b) => b.score - a.score);
+                    localStorage.setItem(key, JSON.stringify(arr.slice(0, 100)));
                 },
 
                 loadLeaderboard() {
                     const tbody = this.elements.leaderboard.body;
                     const key = 'leaderboard-v10.1-iam-crisis';
                     tbody.innerHTML = `<tr><td colspan="4">Yükleniyor…</td></tr>`;
-                    
+
                     const rows = JSON.parse(localStorage.getItem(key) || '[]');
-                    
+
                     if (!rows.length) {
                         tbody.innerHTML = `<tr><td colspan="4">Henüz kayıt bulunmuyor.</td></tr>`;
                         return;
                     }
-                    
-                    rows.sort((a,b)=> b.score - a.score);
-                    tbody.innerHTML = rows.slice(0,50).map((r,i)=>`
+
+                    rows.sort((a, b) => b.score - a.score);
+                    tbody.innerHTML = rows.slice(0, 50).map((r, i) => `
                         <tr>
-                            <td>${i+1}</td>
-                            <td>${(r.name || 'Anonim').toString().slice(0,40)}</td>
+                            <td>${i + 1}</td>
+                            <td>${(r.name || 'Anonim').toString().slice(0, 40)}</td>
                             <td>${r.score}</td>
                             <td>${r.timestamp ? new Date(r.timestamp).toLocaleString('tr-TR') : '-'}</td>
                         </tr>
@@ -1108,7 +1264,7 @@
             window.game.setup();
         });
     </script>
+<script src="../global-scenario.js"></script>
 </body>
 
 </html>
-

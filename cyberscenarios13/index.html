@@ -1,235 +1,746 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberScenario v9.0: Gelişmiş DNS Tünelleme Kriz Simülasyonu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron:wght@700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
     <style>
         :root {
-            --dark-bg: #1a1a2e; --container-bg: #2a2a4a; --section-bg: #333355; --interactive-bg: #444466;
-            --accent-blue: #8be9fd; --accent-purple: #bd93f9; --accent-pink: #ff79c6; --accent-green: #50fa7b;
-            --accent-yellow: #f1fa8c; --accent-red: #ff5555; --text-light: #f8f8f2; --text-dark: #282a36;
-            --shadow-light: rgba(0, 0, 0, 0.2); --shadow-dark: rgba(0, 0, 0, 0.5);
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #f8f8f2;
+            --text-dark: #282a36;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.5);
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        body { font-family: 'Roboto', sans-serif; background-color: var(--dark-bg); color: var(--text-light); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; line-height: 1.7; font-size: 0.95em; }
-        .container { background-color: var(--container-bg); border-radius: 12px; box-shadow: 0 10px 30px var(--shadow-dark); padding: 20px; max-width: 950px; width: 100%; margin: 40px 0; animation: fadeIn 0.8s ease-out; }
-        @media (min-width: 768px) { .container { padding: 40px; } }
-        .centered-page { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 60vh; }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 2.4em; color: var(--accent-blue); margin-bottom: 25px; text-shadow: 2px 2px 5px var(--shadow-dark); }
-        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.9em; color: var(--accent-blue); border-bottom: 2px solid var(--interactive-bg); padding-bottom: 15px; margin-bottom: 30px; text-align: left; }
-        h3 { font-family: 'Orbitron', sans-serif; font-size: 1.5em; color: var(--accent-purple); margin-top: 25px; margin-bottom: 15px; text-align: left; }
-        h4 { font-size: 1.1em; color: var(--accent-yellow); text-align: left; margin-top: 0; border-bottom: 1px solid var(--interactive-bg); padding-bottom: 10px; }
-        p, .code-block code { font-size: 1em; margin-bottom: 15px; }
-        .section { display: none; padding: 20px; background-color: var(--section-bg); border-radius: 8px; margin-top: 25px; animation: fadeIn 0.7s ease-out; }
-        @media (min-width: 768px) { .section { padding: 30px; } }
-        .interactive-element { background-color: var(--interactive-bg); border-radius: 8px; padding: 25px; margin-top: 30px; box-shadow: 0 5px 15px var(--shadow-light); }
-        .decision-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
-        .btn { background-color: #6272a4; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-size: 1.1em; transition: all 0.3s ease; text-align: left; display: flex; align-items: center; gap: 15px; font-weight: 700; box-shadow: 0 2px 8px var(--shadow-light); }
-        .btn:hover { background-color: #7a8ab9; transform: translateY(-3px); box-shadow: 0 6px 15px var(--shadow-dark); }
-        .btn:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
-        .btn .btn-text { flex-grow: 1; }
-        .btn small { display: block; font-size: 0.85em; opacity: 0.8; margin-top: 5px; font-weight: 400; color: var(--accent-blue); }
-        .btn-start, .btn-continue { font-size: 1.3em; font-weight: bold; text-align: center; background-color: var(--accent-green); color: var(--text-dark); justify-content: center; margin-top: 40px; padding: 18px 30px; }
-        .btn.critical { background-color: var(--accent-pink); } .btn.critical:hover { background-color: #ff6e87; }
-        #intermissionSection .metric-change-summary-container { background-color: var(--section-bg); border-radius: 8px; padding: 25px; margin-top: 0; box-shadow: 0 5px 15px var(--shadow-light); width: 100%; max-width: 600px; }
-        #intermissionSection .metric-change-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
-        #intermissionSection .metric-change { font-size: 1.1em; display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 5px; background-color: var(--interactive-bg); box-shadow: inset 0 1px 5px rgba(0,0,0,0.2); justify-content: center; }
-        .metric-change .positive { color: var(--accent-green); } .metric-change .negative { color: var(--accent-red); } .metric-change .neutral { color: var(--accent-blue); }
-        .intro-info-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-top: 30px; width: 100%; max-width: 800px; text-align: left; }
-        @media (min-width: 768px) { .intro-info-grid { grid-template-columns: 1fr 1fr; } }
-        .intro-roles-container, .intro-metrics-container { background-color: var(--section-bg); border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px var(--shadow-light); border: 1px solid var(--interactive-bg); }
-        .intro-roles-container h3, .intro-metrics-container h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--interactive-bg); color: var(--accent-purple); text-align: center; }
-        .intro-roles-container ul, .intro-metrics-container ul { list-style: none; padding: 0; margin: 0; }
-        .intro-roles-container li, .intro-metrics-container li { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 10px 0; border-bottom: 1px dashed var(--interactive-bg); font-size: 1.05em; }
-        .intro-roles-container li:last-child, .intro-metrics-container li:last-child { border-bottom: none; margin-bottom: 0; }
-        .intro-roles-container li .icon, .intro-metrics-container li .icon { font-size: 1.8em; color: var(--accent-blue); flex-shrink: 0; width: 35px; text-align: center; }
-        .intro-roles-container li strong { color: var(--accent-yellow); }
-        .intro-roles-container li small { display: block; font-size: 0.9em; color: var(--text-light); opacity: 0.8; margin-top: 3px; }
-        #statusBar { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; background-color: var(--text-dark); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #6272a4; box-shadow: 0 4px 12px var(--shadow-dark); }
-        #statusBar .metric { text-align: center; font-size: 0.9em; flex: 1; min-width: 100px; }
-        #statusBar .metric .value { font-size: 1.3em; font-weight: bold; color: var(--accent-yellow); margin-top: 5px; }
-        .final-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 30px; width: 100%; max-width: 850px; }
-        .metric-card { background-color: var(--section-bg); padding: 25px; border-radius: 8px; text-align: center; border: 1px solid var(--interactive-bg); transition: all 0.3s ease; box-shadow: 0 4px 15px var(--shadow-light); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 160px; }
-        .metric-card:hover { transform: scale(1.03); border-color: var(--accent-blue); box-shadow: 0 6px 20px var(--shadow-dark); }
-        .metric-card .icon { font-size: 2.8em; color: var(--accent-blue); margin-bottom: 12px; }
-        .metric-card .label { font-size: 1.1em; margin-bottom: 8px; color: var(--text-light); }
-        .metric-card .value { font-size: 2em; font-weight: bold; color: var(--accent-yellow); }
-        .code-block { background-color: var(--text-dark); border: 1px solid #6272a4; border-radius: 8px; padding: 20px; margin: 20px 0; white-space: pre-wrap; word-break: break-all; font-family: 'Consolas', monospace; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3); }
-        .learning-note { background-color: var(--text-dark); border-left: 5px solid var(--accent-blue); padding: 20px; border-radius: 8px; margin-top: 30px; font-style: italic; opacity: 0.9; }
-        .scenario-image { width: 100%; max-width: 600px; margin: 25px auto; display: block; border-radius: 8px; border: 1px solid var(--interactive-bg); box-shadow: 0 4px 15px var(--shadow-dark); }
-        #finalSection { text-align: center; }
-        #performance-badge-container { margin: 25px 0; }
-        #performance-badge { padding: 15px 35px; font-size: 2em; font-weight: bold; border-radius: 50px; display: inline-block; color: var(--text-dark); box-shadow: 0 5px 20px var(--shadow-dark); transition: transform 0.3s ease; }
-        #performance-badge:hover { transform: scale(1.08); }
-        .post-crisis-layout { display: grid; grid-template-columns: 1fr; gap: 30px; text-align: left; margin-top: 40px; width: 100%; }
-        @media (min-width: 800px) { .post-crisis-layout { grid-template-columns: 1fr 1fr; } }
-        .event-timeline, .strategic-debrief { background-color: var(--interactive-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--section-bg); margin-top: 20px; box-shadow: 0 4px 15px var(--shadow-light); }
-        .event-timeline h3, .strategic-debrief h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--section-bg); color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
-        .event-timeline ul { list-style-type: none; padding-left: 0; margin: 15px 0 0 0; }
-        .event-timeline li { position: relative; padding: 5px 0 15px 35px; border-left: 2px solid var(--section-bg); font-size: 0.95em; }
-        .event-timeline li:last-child { border-left: none; }
-        .event-timeline li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-green); position: absolute; left: -12px; top: 5px; background-color: var(--dark-bg); width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 22px; font-size: 0.8em; border: 2px solid var(--section-bg); }
-        .event-timeline li.negative::before { content: '\f00d'; color: var(--accent-red); }
-        .event-timeline li.neutral::before { content: '\f05a'; color: var(--accent-blue); }
-        .event-timeline li .decision-title { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 4px; }
-        #strategic-debrief-content p { font-size: 1.1em; margin-bottom: 15px; }
-        #score-breakdown { list-style: none; padding: 0; margin-top: 15px; text-align: left; }
-        #score-breakdown li { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 1.05em; display: flex; justify-content: space-between; }
-        #score-breakdown .score-plus { background-color: rgba(80, 250, 123, 0.1); border-left: 3px solid var(--accent-green); }
-        #score-breakdown .score-minus { background-color: rgba(255, 85, 85, 0.1); border-left: 3px solid var(--accent-red); }
-        #score-breakdown .score-neutral { background-color: rgba(139, 233, 253, 0.1); border-left: 3px solid var(--accent-blue); }
-        #score-breakdown .score-value { font-weight: bold; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-dark);
+            padding: 20px;
+            max-width: 950px;
+            width: 100%;
+            margin: 40px 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 40px;
+            }
+        }
+
+        .centered-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 60vh;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.4em;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 5px var(--shadow-dark);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.9em;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--interactive-bg);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            color: var(--accent-purple);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            color: var(--accent-yellow);
+            text-align: left;
+            margin-top: 0;
+            border-bottom: 1px solid var(--interactive-bg);
+            padding-bottom: 10px;
+        }
+
+        p,
+        .code-block code {
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .section {
+            display: none;
+            padding: 20px;
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            margin-top: 25px;
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                padding: 30px;
+            }
+        }
+
+        .interactive-element {
+            background-color: var(--interactive-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .decision-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background-color: #6272a4;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .btn:hover {
+            background-color: #7a8ab9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow-dark);
+        }
+
+        .btn:disabled {
+            background-color: #555 !important;
+            color: #999 !important;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .btn .btn-text {
+            flex-grow: 1;
+        }
+
+        .btn small {
+            display: block;
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-weight: 400;
+            color: var(--accent-blue);
+        }
+
+        .btn-start,
+        .btn-continue {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            background-color: var(--accent-green);
+            color: var(--text-dark);
+            justify-content: center;
+            margin-top: 40px;
+            padding: 18px 30px;
+        }
+
+        .btn.critical {
+            background-color: var(--accent-pink);
+        }
+
+        .btn.critical:hover {
+            background-color: #ff6e87;
+        }
+
+        #intermissionSection .metric-change-summary-container {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 0;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #intermissionSection .metric-change-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #intermissionSection .metric-change {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--interactive-bg);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
+            justify-content: center;
+        }
+
+        .metric-change .positive {
+            color: var(--accent-green);
+        }
+
+        .metric-change .negative {
+            color: var(--accent-red);
+        }
+
+        .metric-change .neutral {
+            color: var(--accent-blue);
+        }
+
+        .intro-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        @media (min-width: 768px) {
+            .intro-info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .intro-roles-container,
+        .intro-metrics-container {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border: 1px solid var(--interactive-bg);
+        }
+
+        .intro-roles-container h3,
+        .intro-metrics-container h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple);
+            text-align: center;
+        }
+
+        .intro-roles-container ul,
+        .intro-metrics-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .intro-roles-container li,
+        .intro-metrics-container li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--interactive-bg);
+            font-size: 1.05em;
+        }
+
+        .intro-roles-container li:last-child,
+        .intro-metrics-container li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .intro-roles-container li .icon,
+        .intro-metrics-container li .icon {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            width: 35px;
+            text-align: center;
+        }
+
+        .intro-roles-container li strong {
+            color: var(--accent-yellow);
+        }
+
+        .intro-roles-container li small {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-light);
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        #statusBar {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            background-color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #6272a4;
+            box-shadow: 0 4px 12px var(--shadow-dark);
+        }
+
+        #statusBar .metric {
+            text-align: center;
+            font-size: 0.9em;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        #statusBar .metric .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+            margin-top: 5px;
+        }
+
+        .final-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .metric-card {
+            background-color: var(--section-bg);
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--interactive-bg);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 160px;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent-blue);
+            box-shadow: 0 6px 20px var(--shadow-dark);
+        }
+
+        .metric-card .icon {
+            font-size: 2.8em;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .metric-card .label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .metric-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .code-block {
+            background-color: var(--text-dark);
+            border: 1px solid #6272a4;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Consolas', monospace;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .learning-note {
+            background-color: var(--text-dark);
+            border-left: 5px solid var(--accent-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .scenario-image {
+            width: 100%;
+            max-width: 600px;
+            margin: 25px auto;
+            display: block;
+            border-radius: 8px;
+            border: 1px solid var(--interactive-bg);
+            box-shadow: 0 4px 15px var(--shadow-dark);
+        }
+
+        #finalSection {
+            text-align: center;
+        }
+
+        #performance-badge-container {
+            margin: 25px 0;
+        }
+
+        #performance-badge {
+            padding: 15px 35px;
+            font-size: 2em;
+            font-weight: bold;
+            border-radius: 50px;
+            display: inline-block;
+            color: var(--text-dark);
+            box-shadow: 0 5px 20px var(--shadow-dark);
+            transition: transform 0.3s ease;
+        }
+
+        #performance-badge:hover {
+            transform: scale(1.08);
+        }
+
+        .post-crisis-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: left;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        @media (min-width: 800px) {
+            .post-crisis-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .event-timeline,
+        .strategic-debrief {
+            background-color: var(--interactive-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--section-bg);
+            margin-top: 20px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+        }
+
+        .event-timeline h3,
+        .strategic-debrief h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--section-bg);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-timeline ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 15px 0 0 0;
+        }
+
+        .event-timeline li {
+            position: relative;
+            padding: 5px 0 15px 35px;
+            border-left: 2px solid var(--section-bg);
+            font-size: 0.95em;
+        }
+
+        .event-timeline li:last-child {
+            border-left: none;
+        }
+
+        .event-timeline li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-green);
+            position: absolute;
+            left: -12px;
+            top: 5px;
+            background-color: var(--dark-bg);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 0.8em;
+            border: 2px solid var(--section-bg);
+        }
+
+        .event-timeline li.negative::before {
+            content: '\f00d';
+            color: var(--accent-red);
+        }
+
+        .event-timeline li.neutral::before {
+            content: '\f05a';
+            color: var(--accent-blue);
+        }
+
+        .event-timeline li .decision-title {
+            font-weight: bold;
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #strategic-debrief-content p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        #score-breakdown {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        #score-breakdown li {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-breakdown .score-plus {
+            background-color: rgba(80, 250, 123, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        #score-breakdown .score-minus {
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        #score-breakdown .score-neutral {
+            background-color: rgba(139, 233, 253, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        #score-breakdown .score-value {
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
     <div id="app-container">
-        </div>
-    
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
-    // IIFE (Immediately Invoked Function Expression) to avoid polluting the global scope
-    (function() {
-        // =================================================================================
-        // SCENARIO DATA
-        // All text and game logic parameters are stored here for easy editing.
-        // =================================================================================
-        const scenarioData = {
-            title: "Gelişmiş DNS Tünelleme Simülasyonu",
-            icon: "fa-satellite-dish",
-            introText: "Merhabalar, Network Security Engineer. Göreviniz, ÇOLHAK Teknoloji'nin altyapısında tespit edilen sinsi bir veri sızıntısını ortaya çıkarmak. Saldırganlar, en değerli veritabanı sunucusundan, standart güvenlik katmanlarını atlatmak için DNS protokolünü bir tünel olarak kullanıyor. Bu, basit bir log analizinin ötesinde, derin paket ve protokol analizi gerektiren bir kriz. Alacağınız kararlar, şirketin en değerli varlıklarının korunmasını belirleyecek.",
-            roles: [
-                { name: "Sizin Rolünüz: Network Security Engineer", desc: "Ağ altyapısını, protokolleri ve trafik akışını analiz ederek sinsi tehditleri tespit edip engellemekle sorumlusunuz.", icon: "fa-user-ninja" },
-                { name: "Threat Intelligence (CTI) Analisti", desc: "Dış tehdit aktörleri, TTP'ler ve IoC'ler hakkında istihbarat sağlar.", icon: "fa-user-secret" },
-                { name: "SOC Müdürü", desc: "Güvenlik operasyonlarının genel koordinasyonunu sağlar ve kaynakları yönetir.", icon: "fa-user-shield" }
-            ],
-            metrics: [
-                { id: "dataIntegrity", name: "Veri Bütünlüğü", desc: "Hassas veritabanı verilerinin sızdırılma oranı.", startValue: 100, unit: "%", icon: "fa-database", color: "var(--accent-green)" },
-                { id: "financialImpact", name: "Finansal Etki", desc: "Olayın şirkete getireceği mali yük.", startValue: 0, unit: "₺", icon: "fa-hand-holding-dollar", color: "var(--accent-red)" },
-                { id: "networkPerformance", name: "Ağ Performansı", desc: "Ağ altyapısının stabilitesi ve hızı.", startValue: 100, unit: "", icon: "fa-ethernet", color: "var(--accent-yellow)" },
-                { id: "reputation", name: "Şirket İtibarı", desc: "Şirketinizin kamuoyu ve sektördeki imajı.", startValue: 100, unit: "", icon: "fa-building-shield", color: "var(--accent-blue)" }
-            ],
-            timer: 300, // 6 minutes
-            phases: [
-                {
-                    id: 'phase1_triage',
-                    title: "Aşama 1: Anomali Tespiti",
-                    description: "Haftaya sakin bir başlangıç yaparken, ağ performans izleme aracınız (NPM) Nagios'tan, kritik veritabanı sunucusu `DB-PROD-01` için ortalama DNS çözümleme süresinde hafif bir artış olduğuna dair rutin bir uyarı alıyorsunuz. Bu, göz ardı edilebilecek küçük bir performans sorunu mu, yoksa daha derin bir problemin ilk fısıltısı mı?",
-                    image: "anomali.png",
-                    maxChoices: 1,
-                    decisions: [
-                        { id: 'd1_investigate', title: "Performans Uyarısını İncele", smallText: "DNS gecikmesinin nedenini anlamak için temel trafik metriklerini ve sunucu loglarını kontrol et.", strat: "Her anormallik bir potansiyel tehdittir. Özellikle kritik bir varlıktan gelen performans uyarısını bile doğrulamak, proaktif güvenliğin ilk adımıdır.", changes: { financialImpact: 1000, networkPerformance: -2 }, impact: 'Positive' },
-                        { id: 'd1_ignore', title: "Uyarıyı Göz Ardı Et", smallText: "Bunun geçici bir ağ yoğunluğu olduğunu varsay ve uyarıyı 'düşük öncelikli' olarak işaretle.", strat: "Küçük sinyalleri göz ardı etmek, gelişmiş ve sinsi saldırganlara en değerli hediyeyi verir: zaman. En küçük anormallikler bile bazen en büyük tehditleri gizler.", changes: { financialImpact: 50000, dataIntegrity: -15, reputation: -5 }, impact: 'Negative' }
-                    ]
+        // IIFE (Immediately Invoked Function Expression) to avoid polluting the global scope
+        (function () {
+            // =================================================================================
+            // SCENARIO DATA
+            // All text and game logic parameters are stored here for easy editing.
+            // =================================================================================
+            const scenarioData = {
+                title: "Gelişmiş DNS Tünelleme Simülasyonu",
+                icon: "fa-satellite-dish",
+                introText: "Merhabalar, Network Security Engineer. Göreviniz, ÇOLHAK Teknoloji'nin altyapısında tespit edilen sinsi bir veri sızıntısını ortaya çıkarmak. Saldırganlar, en değerli veritabanı sunucusundan, standart güvenlik katmanlarını atlatmak için DNS protokolünü bir tünel olarak kullanıyor. Bu, basit bir log analizinin ötesinde, derin paket ve protokol analizi gerektiren bir kriz. Alacağınız kararlar, şirketin en değerli varlıklarının korunmasını belirleyecek.",
+                roles: [
+                    { name: "Sizin Rolünüz: Network Security Engineer", desc: "Ağ altyapısını, protokolleri ve trafik akışını analiz ederek sinsi tehditleri tespit edip engellemekle sorumlusunuz.", icon: "fa-user-ninja" },
+                    { name: "Threat Intelligence (CTI) Analisti", desc: "Dış tehdit aktörleri, TTP'ler ve IoC'ler hakkında istihbarat sağlar.", icon: "fa-user-secret" },
+                    { name: "SOC Müdürü", desc: "Güvenlik operasyonlarının genel koordinasyonunu sağlar ve kaynakları yönetir.", icon: "fa-user-shield" }
+                ],
+                metrics: [
+                    { id: "dataIntegrity", name: "Veri Bütünlüğü", desc: "Hassas veritabanı verilerinin sızdırılma oranı.", startValue: 100, unit: "%", icon: "fa-database", color: "var(--accent-green)" },
+                    { id: "financialImpact", name: "Finansal Etki", desc: "Olayın şirkete getireceği mali yük.", startValue: 0, unit: "₺", icon: "fa-hand-holding-dollar", color: "var(--accent-red)" },
+                    { id: "networkPerformance", name: "Ağ Performansı", desc: "Ağ altyapısının stabilitesi ve hızı.", startValue: 100, unit: "", icon: "fa-ethernet", color: "var(--accent-yellow)" },
+                    { id: "reputation", name: "Şirket İtibarı", desc: "Şirketinizin kamuoyu ve sektördeki imajı.", startValue: 100, unit: "", icon: "fa-building-shield", color: "var(--accent-blue)" }
+                ],
+                timer: 300, // 6 minutes
+                phases: [
+                    {
+                        id: 'phase1_triage',
+                        title: "Aşama 1: Anomali Tespiti",
+                        description: "Haftaya sakin bir başlangıç yaparken, ağ performans izleme aracınız (NPM) Nagios'tan, kritik veritabanı sunucusu `DB-PROD-01` için ortalama DNS çözümleme süresinde hafif bir artış olduğuna dair rutin bir uyarı alıyorsunuz. Bu, göz ardı edilebilecek küçük bir performans sorunu mu, yoksa daha derin bir problemin ilk fısıltısı mı?",
+                        image: "anomali.png",
+                        maxChoices: 1,
+                        decisions: [
+                            { id: 'd1_investigate', title: "Performans Uyarısını İncele", smallText: "DNS gecikmesinin nedenini anlamak için temel trafik metriklerini ve sunucu loglarını kontrol et.", strat: "Her anormallik bir potansiyel tehdittir. Özellikle kritik bir varlıktan gelen performans uyarısını bile doğrulamak, proaktif güvenliğin ilk adımıdır.", changes: { financialImpact: 1000, networkPerformance: -2 }, impact: 'Positive' },
+                            { id: 'd1_ignore', title: "Uyarıyı Göz Ardı Et", smallText: "Bunun geçici bir ağ yoğunluğu olduğunu varsay ve uyarıyı 'düşük öncelikli' olarak işaretle.", strat: "Küçük sinyalleri göz ardı etmek, gelişmiş ve sinsi saldırganlara en değerli hediyeyi verir: zaman. En küçük anormallikler bile bazen en büyük tehditleri gizler.", changes: { financialImpact: 50000, dataIntegrity: -15, reputation: -5 }, impact: 'Negative' }
+                        ]
+                    },
+                    {
+                        id: 'phase2_datagathering',
+                        title: "Aşama 2: Veri Toplama",
+                        description: "İlk incelemeniz, basit bir gecikmeden daha fazlası olduğunu gösteriyor. `DB-PROD-01` sunucusundan internete doğru şüpheli bir trafik akışı var gibi görünüyor. Şimdi ne olduğunu anlamak için daha fazla kanıt toplamanız gerekiyor.",
+                        image: "data.png",
+                        maxChoices: 2,
+                        decisions: [
+                            { id: 'd2_netflow', title: "NetFlow/IPFIX Trafik Analizi", smallText: "Trafik akış verilerini analiz ederek `DB-PROD-01`'den çıkan UDP/53 trafiğinin hacmini ve hedeflerini doğrula.", strat: "NetFlow, ağın kan akışını gösterir. Büyük resmi görmek ve anormal iletişim kanallarını tespit etmek için ilk adımdır.", changes: { financialImpact: 2000 }, impact: 'Positive' },
+                            { id: 'd2_zeek', title: "Zeek (Bro) Loglarını İncele", smallText: "Zeek'in ürettiği `dns.log` ve `conn.log` dosyalarını inceleyerek anormalliğin protokol seviyesindeki detaylarını ara.", strat: "Zeek, standart logların ötesinde zengin protokol meta verileri sağlar. Bu, 'normal görünen anormal' trafiği tespit etmek için paha biçilmezdir.", changes: { financialImpact: 4000 }, impact: 'Positive' },
+                            { id: 'd2_firewall_logs', title: "Firewall Loglarını Filtrele", smallText: "`DB-PROD-01` kaynaklı tüm DNS isteklerini NGFW loglarından filtreleyerek hedeflenen alan adlarını ve istek sıklığını analiz et.", strat: "Güvenlik duvarı logları, ağın kapı bekçisidir. Kimin girip çıktığını görmek, soruşturmanın yönünü belirler.", changes: { financialImpact: 1000, networkPerformance: -1 }, impact: 'Neutral' },
+                            { id: 'd2_pcap', title: "Anlık Paket Yakalama (PCAP)", smallText: "Sunucunun bağlı olduğu switch portunda mirroring (SPAN) yapılandırıp `tcpdump` ile ham paket analizi için veri topla.", strat: "En kesin kanıt ham paketin kendisidir. Diğer her şey yorumdur, PCAP ise gerçeğin ta kendisidir.", changes: { financialImpact: 5000, networkPerformance: -3 }, impact: 'Positive' }
+                        ]
+                    },
+                    {
+                        id: 'phase3_analysis',
+                        title: "Aşama 3: Derinlemesine Analiz",
+                        description: "Topladığınız veriler, `DB-PROD-01`'in sürekli olarak `*.c2-apt41.com` gibi şüpheli bir alan adına anlamsız alt alan adları (subdomain) ile sorgu yaptığını gösteriyor. Eğer PCAP verisi topladıysanız, şimdi paketin içine bakma zamanı.",
+                        image: "wireshark.png",
+                        maxChoices: 1,
+                        decisions: [
+                            { id: 'd3_wireshark', title: "PCAP'i Wireshark ile İncele", smallText: "Yakalanan paketleri Wireshark ile açarak DNS sorgularının içeriğini protokol seviyesinde deşifre et.", strat: "Wireshark, ağ mühendislerinin mikroskobudur. Protokol diseksiyonu, standart dışı davranışları ve gizli kanalları ortaya çıkarmak için en güçlü yöntemdir.", changes: { financialImpact: 3000, dataIntegrity: -15 }, impact: 'Positive' },
+                            { id: 'd3_cti', title: "CTI Ekibinden IoC Kontrolü İste", smallText: "Şüpheli alan adını (`*.c2-apt41.com`) CTI ekibine ileterek bilinen tehdit aktörleriyle bağlantısını sorgula.", strat: "Bir IoC bulduğunuzda, CTI veritabanları bu göstergenin bağlamını (hangi aktör, hangi kampanya) anlamanızı sağlar, bu da tehdidin ciddiyetini ortaya koyar.", changes: { financialImpact: 1000, reputation: -2 }, impact: 'Positive' }
+                        ]
+                    },
+                    {
+                        id: 'phase4_containment',
+                        title: "Aşama 4: Sınırlama ve Engelleme",
+                        description: "Analiziniz kesin: DNS Tünelleme yoluyla aktif bir veri sızıntısı yaşanıyor. Saldırganlar, veritabanından bilgi çalmak için DNS protokolünü bir kalkan gibi kullanıyor. Her geçen dakika daha fazla veri kayboluyor. Şimdi, bu sızıntıyı hemen durdurmalısınız.",
+                        image: "firewall.png",
+                        maxChoices: 1,
+                        decisions: [
+                            { id: 'd4_block_domain', title: "NGFW'de Alan Adını Engelle", smallText: "Hızlı bir çözüm olarak, NGFW üzerinde `*.c2-apt41.com` hedefine giden tüm trafiği engelle.", strat: "Basit domain bloklaması, sofistike saldırganlar için sadece küçük bir hız tümseğidir. Daha dayanıklı bir savunma için taktiğin kendisine odaklanmak gerekir.", changes: { financialImpact: 5000, dataIntegrity: +5, networkPerformance: -5 }, impact: 'Neutral' },
+                            { id: 'd4_dns_firewall', title: "DNS Firewall'da Davranışsal Kural Yaz", smallText: "DNS güvenlik katmanında, tünelleme davranışını (anormal sorgu tipleri/uzunlukları) hedef alan bir politika oluştur.", strat: "Davranışsal ve paterne dayalı kurallar oluşturmak, reaktif IoC bloklamasından çok daha etkilidir. Saldırganın aracını değil, tekniğini (TTP) hedef alır.", changes: { financialImpact: 25000, dataIntegrity: +25, reputation: +10 }, impact: 'Positive' },
+                            { id: 'd4_ips_signature', title: "IPS İçin Özel İmza Geliştir", smallText: "Ağ IPS'i için, tespit ettiğin paket yapısına özel bir imza yazarak benzer tüm trafiği anında blokla.", strat: "Özel IPS imzaları, kuruluşunuza özgü tehditlere karşı en etkili savunma katmanlarından birini oluşturur. Bu, reaktif savunmadan proaktif güvenliğe geçiştir.", changes: { financialImpact: 15000, dataIntegrity: +15, networkPerformance: -3 }, impact: 'Positive' }
+                        ]
+                    },
+                    {
+                        id: 'phase5_eradication',
+                        title: "Aşama 5: Yok Etme ve Doğrulama",
+                        description: "İlk engellemeyi başarıyla uyguladınız. Ancak profesyonel bir mühendis işini şansa bırakmaz. Müdahalenizin gerçekten işe yaradığından emin olmalı ve saldırganın ağda başka bir kalıntısı veya `DB-PROD-01` sunucusunda bir arka kapısı olmadığından emin olmalısınız. Saldırgan hala sizi izliyor olabilir.",
+                        image: "server.png",
+                        maxChoices: 1,
+                        decisions: [
+                            { id: 'd5_monitor', title: "Trafik Akışını İzle ve Doğrula", smallText: "Engelleme sonrası DNS ve diğer trafik loglarını izleyerek anormalliğin tamamen durduğunu teyit et.", strat: "Bir engelleme uyguladıktan sonra, işinin bittiğini varsayma. Her zaman doğrulama yap. Saldırganlar genellikle engellendiklerini anladıklarında alternatif yollar denerler.", changes: { financialImpact: 5000, networkPerformance: -1 }, impact: 'Positive' },
+                            { id: 'd5_sinkhole', title: "DNS Sinkholing ile Tehdit İstihbaratı Topla", smallText: "Zararlı alan adını bloklamak yerine, trafiği bir analiz sunucusuna yönlendirerek saldırganın TTP'leri hakkında daha fazla bilgi topla.", strat: "DNS Sinkholing, reaktif savunmadan proaktif istihbarat toplamaya geçişin en ileri adımlarından biridir. Saldırgan hakkında bilgi toplamak, onu engellemek kadar değerlidir.", changes: { financialImpact: 20000, reputation: +5, dataIntegrity: +5 }, impact: 'Positive' },
+                            { id: 'd5_isolate_host', title: "Sunucuyu Ağdan Tamamen İzole Et", smallText: "Riski sıfırlamak için etkilenen sunucuyu ağdan çek ve adli analiz için Olay Müdahale ekibine devret.", strat: "Tam izolasyon, en güvenli yok etme yöntemidir ancak iş sürekliliğine etkisi büyüktür. Risk ve fayda dengesi dikkatle değerlendirilmelidir.", changes: { financialImpact: 50000, networkPerformance: -20, dataIntegrity: +10 }, impact: 'Negative' }
+                        ]
+                    },
+                    {
+                        id: 'phase6_post_incident',
+                        title: "Aşama 6: Olay Sonrası ve Raporlama",
+                        description: "Tehdit tamamen kontrol altına alındı. Şimdi bu olayın neden yaşandığını raporlamak ve gelecekte benzer olayları önlemek için kalıcı adımlar önermek, bir mühendis olarak en önemli sorumluluklarınızdan biridir. Yönetim, bu olayın tekrar etmeyeceğinden emin olmak istiyor.",
+                        image: "report.png",
+                        maxChoices: 1,
+                        decisions: [
+                            { id: 'd6_report', title: "Kök Neden Analizi ve Raporlama", smallText: "Tüm bulguları, atılan adımları ve sonuçları içeren detaylı bir RCA raporu hazırlayıp yönetime sun.", strat: "İyi bir müdahale, iyi bir raporlama ile biter. Ne yaptığınızı, neden yaptığınızı ve sonuçlarını belgelemek, hem öğrenme süreci hem de kurumsal sorumluluk için esastır.", changes: { financialImpact: 1000, reputation: +5 }, impact: 'Positive' },
+                            { id: 'd6_full_mitigation', title: "Kalıcı Çözüm ve Ağ Sertleştirme Önerileri", smallText: "Ağ genelinde DNS denetimini artıracak ve Egress Filtreleme kurallarını sıkılaştıracak bir proje öner.", strat: "Her kriz bir öğrenme fırsatıdır. Olay sonrası sadece yarayı sarmak değil, gelecekteki benzer olayları önleyecek kalıcı iyileştirmeler önermek, kıdemli bir mühendisin en önemli görevlerindendir.", changes: { financialImpact: 30000, dataIntegrity: +5, reputation: +2 }, impact: 'Positive' }
+                        ]
+                    }
+                ]
+            };
+
+            // =================================================================================
+            // GAME ENGINE
+            // This part runs the simulation based on the scenario data above.
+            // =================================================================================
+            const game = {
+                score: {},
+                state: {},
+                elements: {},
+                timer: {},
+
+                init() {
+                    this.elements.appContainer = document.getElementById('app-container');
+
+                    scenarioData.metrics.forEach(m => {
+                        this.score[m.id] = m.startValue;
+                    });
+
+                    this.state = {
+                        currentPhaseIndex: 0,
+                        decisionHistory: [],
+                        currentTurnDecisions: [],
+                        totalScore: null
+                    };
+
+                    this.timer = {
+                        total: scenarioData.timer,
+                        remaining: scenarioData.timer,
+                        intervalId: null,
+                        running: false
+                    };
+
+                    this.renderIntro();
                 },
-                {
-                    id: 'phase2_datagathering',
-                    title: "Aşama 2: Veri Toplama",
-                    description: "İlk incelemeniz, basit bir gecikmeden daha fazlası olduğunu gösteriyor. `DB-PROD-01` sunucusundan internete doğru şüpheli bir trafik akışı var gibi görünüyor. Şimdi ne olduğunu anlamak için daha fazla kanıt toplamanız gerekiyor.",
-                    image: "data.png",
-                    maxChoices: 2,
-                    decisions: [
-                        { id: 'd2_netflow', title: "NetFlow/IPFIX Trafik Analizi", smallText: "Trafik akış verilerini analiz ederek `DB-PROD-01`'den çıkan UDP/53 trafiğinin hacmini ve hedeflerini doğrula.", strat: "NetFlow, ağın kan akışını gösterir. Büyük resmi görmek ve anormal iletişim kanallarını tespit etmek için ilk adımdır.", changes: { financialImpact: 2000 }, impact: 'Positive' },
-                        { id: 'd2_zeek', title: "Zeek (Bro) Loglarını İncele", smallText: "Zeek'in ürettiği `dns.log` ve `conn.log` dosyalarını inceleyerek anormalliğin protokol seviyesindeki detaylarını ara.", strat: "Zeek, standart logların ötesinde zengin protokol meta verileri sağlar. Bu, 'normal görünen anormal' trafiği tespit etmek için paha biçilmezdir.", changes: { financialImpact: 4000 }, impact: 'Positive' },
-                        { id: 'd2_firewall_logs', title: "Firewall Loglarını Filtrele", smallText: "`DB-PROD-01` kaynaklı tüm DNS isteklerini NGFW loglarından filtreleyerek hedeflenen alan adlarını ve istek sıklığını analiz et.", strat: "Güvenlik duvarı logları, ağın kapı bekçisidir. Kimin girip çıktığını görmek, soruşturmanın yönünü belirler.", changes: { financialImpact: 1000, networkPerformance: -1 }, impact: 'Neutral' },
-                        { id: 'd2_pcap', title: "Anlık Paket Yakalama (PCAP)", smallText: "Sunucunun bağlı olduğu switch portunda mirroring (SPAN) yapılandırıp `tcpdump` ile ham paket analizi için veri topla.", strat: "En kesin kanıt ham paketin kendisidir. Diğer her şey yorumdur, PCAP ise gerçeğin ta kendisidir.", changes: { financialImpact: 5000, networkPerformance: -3 }, impact: 'Positive' }
-                    ]
+
+                render(html) {
+                    this.elements.appContainer.innerHTML = html;
                 },
-                {
-                    id: 'phase3_analysis',
-                    title: "Aşama 3: Derinlemesine Analiz",
-                    description: "Topladığınız veriler, `DB-PROD-01`'in sürekli olarak `*.c2-apt41.com` gibi şüpheli bir alan adına anlamsız alt alan adları (subdomain) ile sorgu yaptığını gösteriyor. Eğer PCAP verisi topladıysanız, şimdi paketin içine bakma zamanı.",
-                    image: "wireshark.png",
-                    maxChoices: 1,
-                    decisions: [
-                        { id: 'd3_wireshark', title: "PCAP'i Wireshark ile İncele", smallText: "Yakalanan paketleri Wireshark ile açarak DNS sorgularının içeriğini protokol seviyesinde deşifre et.", strat: "Wireshark, ağ mühendislerinin mikroskobudur. Protokol diseksiyonu, standart dışı davranışları ve gizli kanalları ortaya çıkarmak için en güçlü yöntemdir.", changes: { financialImpact: 3000, dataIntegrity: -15 }, impact: 'Positive' },
-                        { id: 'd3_cti', title: "CTI Ekibinden IoC Kontrolü İste", smallText: "Şüpheli alan adını (`*.c2-apt41.com`) CTI ekibine ileterek bilinen tehdit aktörleriyle bağlantısını sorgula.", strat: "Bir IoC bulduğunuzda, CTI veritabanları bu göstergenin bağlamını (hangi aktör, hangi kampanya) anlamanızı sağlar, bu da tehdidin ciddiyetini ortaya koyar.", changes: { financialImpact: 1000, reputation: -2 }, impact: 'Positive' }
-                    ]
-                },
-                {
-                    id: 'phase4_containment',
-                    title: "Aşama 4: Sınırlama ve Engelleme",
-                    description: "Analiziniz kesin: DNS Tünelleme yoluyla aktif bir veri sızıntısı yaşanıyor. Saldırganlar, veritabanından bilgi çalmak için DNS protokolünü bir kalkan gibi kullanıyor. Her geçen dakika daha fazla veri kayboluyor. Şimdi, bu sızıntıyı hemen durdurmalısınız.",
-                    image: "firewall.png",
-                    maxChoices: 1,
-                    decisions: [
-                        { id: 'd4_block_domain', title: "NGFW'de Alan Adını Engelle", smallText: "Hızlı bir çözüm olarak, NGFW üzerinde `*.c2-apt41.com` hedefine giden tüm trafiği engelle.", strat: "Basit domain bloklaması, sofistike saldırganlar için sadece küçük bir hız tümseğidir. Daha dayanıklı bir savunma için taktiğin kendisine odaklanmak gerekir.", changes: { financialImpact: 5000, dataIntegrity: +5, networkPerformance: -5 }, impact: 'Neutral' },
-                        { id: 'd4_dns_firewall', title: "DNS Firewall'da Davranışsal Kural Yaz", smallText: "DNS güvenlik katmanında, tünelleme davranışını (anormal sorgu tipleri/uzunlukları) hedef alan bir politika oluştur.", strat: "Davranışsal ve paterne dayalı kurallar oluşturmak, reaktif IoC bloklamasından çok daha etkilidir. Saldırganın aracını değil, tekniğini (TTP) hedef alır.", changes: { financialImpact: 25000, dataIntegrity: +25, reputation: +10 }, impact: 'Positive' },
-                        { id: 'd4_ips_signature', title: "IPS İçin Özel İmza Geliştir", smallText: "Ağ IPS'i için, tespit ettiğin paket yapısına özel bir imza yazarak benzer tüm trafiği anında blokla.", strat: "Özel IPS imzaları, kuruluşunuza özgü tehditlere karşı en etkili savunma katmanlarından birini oluşturur. Bu, reaktif savunmadan proaktif güvenliğe geçiştir.", changes: { financialImpact: 15000, dataIntegrity: +15, networkPerformance: -3 }, impact: 'Positive' }
-                    ]
-                },
-                {
-                    id: 'phase5_eradication',
-                    title: "Aşama 5: Yok Etme ve Doğrulama",
-                    description: "İlk engellemeyi başarıyla uyguladınız. Ancak profesyonel bir mühendis işini şansa bırakmaz. Müdahalenizin gerçekten işe yaradığından emin olmalı ve saldırganın ağda başka bir kalıntısı veya `DB-PROD-01` sunucusunda bir arka kapısı olmadığından emin olmalısınız. Saldırgan hala sizi izliyor olabilir.",
-                    image: "server.png",
-                    maxChoices: 1,
-                    decisions: [
-                        { id: 'd5_monitor', title: "Trafik Akışını İzle ve Doğrula", smallText: "Engelleme sonrası DNS ve diğer trafik loglarını izleyerek anormalliğin tamamen durduğunu teyit et.", strat: "Bir engelleme uyguladıktan sonra, işinin bittiğini varsayma. Her zaman doğrulama yap. Saldırganlar genellikle engellendiklerini anladıklarında alternatif yollar denerler.", changes: { financialImpact: 5000, networkPerformance: -1 }, impact: 'Positive' },
-                        { id: 'd5_sinkhole', title: "DNS Sinkholing ile Tehdit İstihbaratı Topla", smallText: "Zararlı alan adını bloklamak yerine, trafiği bir analiz sunucusuna yönlendirerek saldırganın TTP'leri hakkında daha fazla bilgi topla.", strat: "DNS Sinkholing, reaktif savunmadan proaktif istihbarat toplamaya geçişin en ileri adımlarından biridir. Saldırgan hakkında bilgi toplamak, onu engellemek kadar değerlidir.", changes: { financialImpact: 20000, reputation: +5, dataIntegrity: +5 }, impact: 'Positive' },
-                        { id: 'd5_isolate_host', title: "Sunucuyu Ağdan Tamamen İzole Et", smallText: "Riski sıfırlamak için etkilenen sunucuyu ağdan çek ve adli analiz için Olay Müdahale ekibine devret.", strat: "Tam izolasyon, en güvenli yok etme yöntemidir ancak iş sürekliliğine etkisi büyüktür. Risk ve fayda dengesi dikkatle değerlendirilmelidir.", changes: { financialImpact: 50000, networkPerformance: -20, dataIntegrity: +10 }, impact: 'Negative' }
-                    ]
-                },
-                {
-                    id: 'phase6_post_incident',
-                    title: "Aşama 6: Olay Sonrası ve Raporlama",
-                    description: "Tehdit tamamen kontrol altına alındı. Şimdi bu olayın neden yaşandığını raporlamak ve gelecekte benzer olayları önlemek için kalıcı adımlar önermek, bir mühendis olarak en önemli sorumluluklarınızdan biridir. Yönetim, bu olayın tekrar etmeyeceğinden emin olmak istiyor.",
-                    image: "report.png",
-                    maxChoices: 1,
-                    decisions: [
-                        { id: 'd6_report', title: "Kök Neden Analizi ve Raporlama", smallText: "Tüm bulguları, atılan adımları ve sonuçları içeren detaylı bir RCA raporu hazırlayıp yönetime sun.", strat: "İyi bir müdahale, iyi bir raporlama ile biter. Ne yaptığınızı, neden yaptığınızı ve sonuçlarını belgelemek, hem öğrenme süreci hem de kurumsal sorumluluk için esastır.", changes: { financialImpact: 1000, reputation: +5 }, impact: 'Positive' },
-                        { id: 'd6_full_mitigation', title: "Kalıcı Çözüm ve Ağ Sertleştirme Önerileri", smallText: "Ağ genelinde DNS denetimini artıracak ve Egress Filtreleme kurallarını sıkılaştıracak bir proje öner.", strat: "Her kriz bir öğrenme fırsatıdır. Olay sonrası sadece yarayı sarmak değil, gelecekteki benzer olayları önleyecek kalıcı iyileştirmeler önermek, kıdemli bir mühendisin en önemli görevlerindendir.", changes: { financialImpact: 30000, dataIntegrity: +5, reputation: +2 }, impact: 'Positive' }
-                    ]
-                }
-            ]
-        };
 
-        // =================================================================================
-        // GAME ENGINE
-        // This part runs the simulation based on the scenario data above.
-        // =================================================================================
-        const game = {
-            score: {},
-            state: {},
-            elements: {},
-            timer: {},
+                renderIntro() {
+                    const rolesHtml = scenarioData.roles.map(r => `<li><span class="icon"><i class="fa-solid ${r.icon}"></i></span><div><strong>${r.name}</strong> <small>${r.desc}</small></div></li>`).join('');
+                    const metricsHtml = scenarioData.metrics.map(m => `<li><span class="icon" style="color: ${m.color};"><i class="fa-solid ${m.icon}"></i></span><div><strong>${m.name}</strong> <small>${m.desc} (Başlangıç: ${m.startValue}${m.unit})</small></div></li>`).join('');
 
-            init() {
-                this.elements.appContainer = document.getElementById('app-container');
-                
-                scenarioData.metrics.forEach(m => {
-                    this.score[m.id] = m.startValue;
-                });
-
-                this.state = {
-                    currentPhaseIndex: 0,
-                    decisionHistory: [],
-                    currentTurnDecisions: [],
-                    totalScore: null
-                };
-                
-                this.timer = {
-                    total: scenarioData.timer,
-                    remaining: scenarioData.timer,
-                    intervalId: null,
-                    running: false
-                };
-
-                this.renderIntro();
-            },
-
-            render(html) {
-                this.elements.appContainer.innerHTML = html;
-            },
-
-            renderIntro() {
-                const rolesHtml = scenarioData.roles.map(r => `<li><span class="icon"><i class="fa-solid ${r.icon}"></i></span><div><strong>${r.name}</strong> <small>${r.desc}</small></div></li>`).join('');
-                const metricsHtml = scenarioData.metrics.map(m => `<li><span class="icon" style="color: ${m.color};"><i class="fa-solid ${m.icon}"></i></span><div><strong>${m.name}</strong> <small>${m.desc} (Başlangıç: ${m.startValue}${m.unit})</small></div></li>`).join('');
-
-                const introHtml = `
+                    const introHtml = `
                     <div class="container">
                         <div id="introSection" class="centered-page">
                             <h1><i class="fa-solid ${scenarioData.icon}"></i> ${scenarioData.title}</h1>
@@ -242,18 +753,18 @@
                             <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Simülasyonu Başlat</button>
                         </div>
                     </div>`;
-                this.render(introHtml);
-                document.getElementById('startButton').addEventListener('click', () => this.startGame());
-            },
+                    this.render(introHtml);
+                    document.getElementById('startButton').addEventListener('click', () => this.startGame());
+                },
 
-            startGame() {
-                const statusBarMetricsHtml = scenarioData.metrics.map(m => `
+                startGame() {
+                    const statusBarMetricsHtml = scenarioData.metrics.map(m => `
                     <div class="metric">
                         <span><i class="fa-solid ${m.icon}"></i> ${m.name}</span>
                         <div class="value" id="status-${m.id}">${m.startValue}${m.unit === '₺' ? '₺' : ''}${m.startValue.toLocaleString('tr-TR')}${m.unit !== '₺' ? m.unit : ''}</div>
                     </div>`).join('');
-                
-                const gameHtml = `
+
+                    const gameHtml = `
                     <div class="container">
                         <div id="gameContainer">
                             <div id="statusBar">
@@ -271,43 +782,43 @@
                             <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i class="fa-solid fa-forward"></i> Devam Et</button>
                         </div>
                     </div>`;
-                this.render(gameHtml);
+                    this.render(gameHtml);
 
-                this.elements.statusBar = {};
-                scenarioData.metrics.forEach(m => {
-                    this.elements.statusBar[m.id] = document.getElementById(`status-${m.id}`);
-                });
-                this.elements.statusBar.remaining = document.getElementById('status-remaining');
-                this.elements.gameContent = document.getElementById('game-content');
-                
-                this.startTimer();
-                this.renderPhase(this.state.currentPhaseIndex);
-            },
+                    this.elements.statusBar = {};
+                    scenarioData.metrics.forEach(m => {
+                        this.elements.statusBar[m.id] = document.getElementById(`status-${m.id}`);
+                    });
+                    this.elements.statusBar.remaining = document.getElementById('status-remaining');
+                    this.elements.gameContent = document.getElementById('game-content');
 
-            renderPhase(phaseIndex) {
-                const phase = scenarioData.phases[phaseIndex];
-                if (!phase) {
-                    this.renderFinalReport();
-                    return;
-                }
+                    this.startTimer();
+                    this.renderPhase(this.state.currentPhaseIndex);
+                },
 
-                const decisionsHtml = phase.decisions.map(d => {
-                    const is_disabled = this.state[d.id] || false;
-                    let dependencyMet = true;
-                    let dependencyText = d.smallText;
-
-                    if (d.id === 'd3_wireshark' && !this.state.d2_pcap) {
-                        dependencyMet = false;
-                        dependencyText = 'Önce paket yakalama (PCAP) işlemi başlatmalısınız.';
+                renderPhase(phaseIndex) {
+                    const phase = scenarioData.phases[phaseIndex];
+                    if (!phase) {
+                        this.renderFinalReport();
+                        return;
                     }
 
-                    return `<button class="btn ${d.impact === 'Negative' ? 'critical' : ''}" data-decision-id="${d.id}" ${is_disabled || !dependencyMet ? 'disabled' : ''}>
+                    const decisionsHtml = phase.decisions.map(d => {
+                        const is_disabled = this.state[d.id] || false;
+                        let dependencyMet = true;
+                        let dependencyText = d.smallText;
+
+                        if (d.id === 'd3_wireshark' && !this.state.d2_pcap) {
+                            dependencyMet = false;
+                            dependencyText = 'Önce paket yakalama (PCAP) işlemi başlatmalısınız.';
+                        }
+
+                        return `<button class="btn ${d.impact === 'Negative' ? 'critical' : ''}" data-decision-id="${d.id}" ${is_disabled || !dependencyMet ? 'disabled' : ''}>
                                 <i class="fa-solid fa-chevron-right"></i>
                                 <div class="btn-text">${d.title}<small>${dependencyText}</small></div>
                             </button>`;
-                }).join('');
+                    }).join('');
 
-                const phaseHtml = `
+                    const phaseHtml = `
                     <div class="section" style="display: block;" data-max-selections="${phase.maxChoices}">
                         <h2>${phase.title}</h2>
                         <p>${phase.description}</p>
@@ -317,73 +828,73 @@
                             <div class="decision-buttons">${decisionsHtml}</div>
                         </div>
                     </div>`;
-                this.elements.gameContent.innerHTML = phaseHtml;
-                this.elements.gameContent.querySelector('.decision-buttons').addEventListener('click', (e) => {
-                    const button = e.target.closest('.btn[data-decision-id]');
-                    if (button && !button.disabled) {
-                        this.handleDecision(button.dataset.decisionId);
+                    this.elements.gameContent.innerHTML = phaseHtml;
+                    this.elements.gameContent.querySelector('.decision-buttons').addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision-id]');
+                        if (button && !button.disabled) {
+                            this.handleDecision(button.dataset.decisionId);
+                        }
+                    });
+                },
+
+                handleDecision(decisionId) {
+                    const phase = scenarioData.phases[this.state.currentPhaseIndex];
+                    const decision = phase.decisions.find(d => d.id === decisionId);
+
+                    if (!decision) return;
+
+                    document.querySelector(`[data-decision-id="${decisionId}"]`).disabled = true;
+                    this.state.currentTurnDecisions.push(decision);
+                    this.state[decision.id] = true;
+                    this.state.decisionHistory.push(decision);
+
+                    for (const key in decision.changes) {
+                        if (this.score.hasOwnProperty(key)) {
+                            this.score[key] += decision.changes[key];
+                        }
                     }
-                });
-            },
+                    this.updateStatusBar();
 
-            handleDecision(decisionId) {
-                const phase = scenarioData.phases[this.state.currentPhaseIndex];
-                const decision = phase.decisions.find(d => d.id === decisionId);
-
-                if (!decision) return;
-
-                document.querySelector(`[data-decision-id="${decisionId}"]`).disabled = true;
-                this.state.currentTurnDecisions.push(decision);
-                this.state[decision.id] = true;
-                this.state.decisionHistory.push(decision);
-
-                for (const key in decision.changes) {
-                    if (this.score.hasOwnProperty(key)) {
-                        this.score[key] += decision.changes[key];
+                    if (this.state.currentTurnDecisions.length >= phase.maxChoices) {
+                        this.renderIntermission();
                     }
-                }
-                this.updateStatusBar();
+                },
 
-                if (this.state.currentTurnDecisions.length >= phase.maxChoices) {
-                    this.renderIntermission();
-                }
-            },
-            
-            renderIntermission() {
-                const decisionsMade = this.state.currentTurnDecisions;
-                this.state.currentPhaseIndex++;
-                const nextPhase = scenarioData.phases[this.state.currentPhaseIndex];
-                
-                document.getElementById('gameContainer').style.display = 'none';
-                const intermissionSection = document.getElementById('intermissionSection');
-                const titleEl = document.getElementById('intermissionTitle');
-                const detailsEl = document.getElementById('intermissionDetails');
-                const continueBtn = document.getElementById('continueButton');
+                renderIntermission() {
+                    const decisionsMade = this.state.currentTurnDecisions;
+                    this.state.currentPhaseIndex++;
+                    const nextPhase = scenarioData.phases[this.state.currentPhaseIndex];
 
-                let totalChanges = {};
-                scenarioData.metrics.forEach(m => totalChanges[m.id] = 0);
-                
-                let combinedTitles = [], combinedStrats = [];
-                decisionsMade.forEach(d => {
-                    for (const key in d.changes) { totalChanges[key] += d.changes[key]; }
-                    combinedTitles.push(d.title);
-                    combinedStrats.push(d.strat);
-                });
-                
-                const metricsHtml = scenarioData.metrics.map(m => {
-                    const change = totalChanges[m.id];
-                    if (change === 0 || change === undefined) return '';
-                    const isNegativeGood = m.id === 'financialImpact';
-                    const arrow = change > 0 ? 'up' : 'down';
-                    let colorClass = 'neutral';
-                    if (change !== 0) {
-                        colorClass = isNegativeGood ? (change < 0 ? 'positive' : 'negative') : (change > 0 ? 'positive' : 'negative');
-                    }
-                    return `<div class="metric-change ${colorClass}"><i class="fa-solid ${m.icon}"></i> ${m.name}: <i class="fa-solid fa-arrow-${arrow}-long"></i> ${change > 0 ? '+' : ''}${change.toLocaleString('tr-TR')}${m.unit}</div>`;
-                }).join('');
+                    document.getElementById('gameContainer').style.display = 'none';
+                    const intermissionSection = document.getElementById('intermissionSection');
+                    const titleEl = document.getElementById('intermissionTitle');
+                    const detailsEl = document.getElementById('intermissionDetails');
+                    const continueBtn = document.getElementById('continueButton');
 
-                titleEl.textContent = "Aşama Değerlendirmesi";
-                detailsEl.innerHTML = `
+                    let totalChanges = {};
+                    scenarioData.metrics.forEach(m => totalChanges[m.id] = 0);
+
+                    let combinedTitles = [], combinedStrats = [];
+                    decisionsMade.forEach(d => {
+                        for (const key in d.changes) { totalChanges[key] += d.changes[key]; }
+                        combinedTitles.push(d.title);
+                        combinedStrats.push(d.strat);
+                    });
+
+                    const metricsHtml = scenarioData.metrics.map(m => {
+                        const change = totalChanges[m.id];
+                        if (change === 0 || change === undefined) return '';
+                        const isNegativeGood = m.id === 'financialImpact';
+                        const arrow = change > 0 ? 'up' : 'down';
+                        let colorClass = 'neutral';
+                        if (change !== 0) {
+                            colorClass = isNegativeGood ? (change < 0 ? 'positive' : 'negative') : (change > 0 ? 'positive' : 'negative');
+                        }
+                        return `<div class="metric-change ${colorClass}"><i class="fa-solid ${m.icon}"></i> ${m.name}: <i class="fa-solid fa-arrow-${arrow}-long"></i> ${change > 0 ? '+' : ''}${change.toLocaleString('tr-TR')}${m.unit}</div>`;
+                    }).join('');
+
+                    titleEl.textContent = "Aşama Değerlendirmesi";
+                    detailsEl.innerHTML = `
                     <div class="metric-change-summary-container">
                         <div class="metric-change-summary">${metricsHtml || '<p>Doğrudan metrik etkisi olmadı.</p>'}</div>
                     </div>
@@ -396,64 +907,111 @@
                     </div>
                 `;
 
-                intermissionSection.style.display = 'flex';
-                continueBtn.style.display = 'flex';
-                continueBtn.onclick = () => {
-                    intermissionSection.style.display = 'none';
-                    document.getElementById('gameContainer').style.display = 'block';
-                    this.state.currentTurnDecisions = [];
-                    if (nextPhase) {
-                        this.renderPhase(this.state.currentPhaseIndex);
-                    } else {
-                        this.renderFinalReport();
+                    intermissionSection.style.display = 'flex';
+                    continueBtn.style.display = 'flex';
+                    continueBtn.onclick = () => {
+                        intermissionSection.style.display = 'none';
+                        document.getElementById('gameContainer').style.display = 'block';
+                        this.state.currentTurnDecisions = [];
+                        if (nextPhase) {
+                            this.renderPhase(this.state.currentPhaseIndex);
+                        } else {
+                            this.renderFinalReport();
+                        }
+                    };
+
+                    if (!nextPhase) {
+                        continueBtn.innerHTML = '<i class="fa-solid fa-flag-checkered"></i> Raporu Görüntüle';
                     }
-                };
+                },
 
-                if (!nextPhase) {
-                    continueBtn.innerHTML = '<i class="fa-solid fa-flag-checkered"></i> Raporu Görüntüle';
-                }
-            },
+                renderFinalReport() {
+                    this.stopTimer();
+                    // --- STANDARD PUANLAMA SİSTEMİ (V2) ---
+                    let totalScore = 50;
+                    let scoreBreakdown = { 'Başlangıç Puanı': { value: 50, class: 'score-neutral' } };
 
-            renderFinalReport() {
-                this.stopTimer();
-                let totalScore = 100;
-                let scoreBreakdown = { 'Başlangıç Puanı': { value: 100, class: 'score-neutral' } };
+                    // 1. Karar Bazlı Puanlama (+10 / 0 / -10)
+                    let decisionScore = 0;
+                    this.state.decisionHistory.forEach(d => {
+                        if (d.impact === 'Positive') { decisionScore += 10; }
+                        else if (d.impact === 'Negative') { decisionScore -= 10; }
+                    });
 
-                if (this.state.d1_ignore) { totalScore -= 70; scoreBreakdown['Kritik Hata: Anomaliyi Göz Ardı Etme'] = { value: -70, class: 'score-minus' }; }
-                if (this.state.d3_wireshark) { totalScore += 5; scoreBreakdown['Uzman Analizi: Wireshark Kullanımı'] = { value: 5, class: 'score-plus' }; }
-                if (this.state.d4_dns_firewall || this.state.d4_ips_signature) { totalScore += 20; scoreBreakdown['Proaktif Savunma: Akıllı Engelleme'] = { value: 20, class: 'score-plus' }; }
-                if (this.state.d5_sinkhole) { totalScore += 5; scoreBreakdown['İleri Seviye Taktik: DNS Sinkhole'] = { value: 15, class: 'score-plus' }; }
-                if (this.state.d6_full_mitigation) { totalScore += 10; scoreBreakdown['Stratejik Vizyon: Kalıcı Güçlendirme'] = { value: 10, class: 'score-plus' }; }
-                if (this.score.dataIntegrity < 70) { totalScore -= 25; scoreBreakdown['Yüksek Veri Sızıntısı'] = { value: -25, class: 'score-minus' }; }
-                
-                totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
+                    if (decisionScore !== 0) {
+                        totalScore += decisionScore;
+                        scoreBreakdown['Karar Kalitesi'] = {
+                            value: decisionScore,
+                            class: decisionScore > 0 ? 'score-plus' : 'score-minus'
+                        };
+                    }
 
-                let badgeInfo = {};
-                if (this.state.d1_ignore) { badgeInfo = { text: 'KRİTİK HATA', color: 'var(--accent-red)' }; }
-                else if (totalScore >= 90) { badgeInfo = { text: 'AĞ USTASI', color: 'var(--accent-green)' }; }
-                else if (totalScore >= 85) { badgeInfo = { text: 'ETKİN SAVUNMA', color: 'var(--accent-blue)' }; }
-                else if (totalScore >= 50) { badgeInfo = { text: 'YETERLİ MÜDAHALE', color: 'var(--accent-yellow)' }; }
-                else { badgeInfo = { text: 'GELİŞTİRİLMELİ', color: '#ff5555' }; }
-                
-                const metricsHtml = scenarioData.metrics.map(m => {
-                    const value = this.score[m.id];
-                    return `<div class="metric-card">
+                    // 2. Metrik Bazlı Bonuslar
+                    // Veri Bütünlüğü
+                    if (this.score.dataIntegrity >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['Yüksek Veri Bütünlüğü'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.dataIntegrity < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Veri Sızıntısı Cezası'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Şirket İtibarı
+                    if (this.score.reputation >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['Yüksek İtibar'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.reputation < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['İtibar Kaybı Cezası'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Ağ Performansı
+                    if (this.score.networkPerformance >= 90) {
+                        totalScore += 5;
+                        scoreBreakdown['Yüksek Ağ Performansı'] = { value: 5, class: 'score-plus' };
+                    }
+
+                    // 3. Stratejik Bonuslar (Öncekilerden korunanlar)
+                    if (this.state.d1_ignore) { totalScore -= 20; scoreBreakdown['Kritik Hata: Anomaliyi Göz Ardı Etme'] = { value: -20, class: 'score-minus' }; }
+                    if (this.state.d5_sinkhole) { totalScore += 5; scoreBreakdown['İleri Seviye Taktik: DNS Sinkhole'] = { value: 5, class: 'score-plus' }; }
+                    if (this.state.d6_full_mitigation) { totalScore += 5; scoreBreakdown['Stratejik Vizyon: Kalıcı Güçlendirme'] = { value: 5, class: 'score-plus' }; }
+
+                    // 4. Zaman Bonusu (ScenarioData.timer = 300sn)
+                    // Eğer yarısından fazlası (150sn) arttıysa bonus
+                    if (this.timer.remaining >= 150) {
+                        totalScore += 5;
+                        scoreBreakdown['Hızlı Müdahale Bonusu'] = { value: 5, class: 'score-plus' };
+                    }
+
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
+                    // --- PUANLAMA SİSTEMİ SONU ---
+
+                    let badgeInfo = {};
+                    if (this.state.d1_ignore) { badgeInfo = { text: 'KRİTİK HATA', color: 'var(--accent-red)' }; }
+                    else if (totalScore >= 90) { badgeInfo = { text: 'AĞ USTASI', color: 'var(--accent-green)' }; }
+                    else if (totalScore >= 85) { badgeInfo = { text: 'ETKİN SAVUNMA', color: 'var(--accent-blue)' }; }
+                    else if (totalScore >= 50) { badgeInfo = { text: 'YETERLİ MÜDAHALE', color: 'var(--accent-yellow)' }; }
+                    else { badgeInfo = { text: 'GELİŞTİRİLMELİ', color: '#ff5555' }; }
+
+                    const metricsHtml = scenarioData.metrics.map(m => {
+                        const value = this.score[m.id];
+                        return `<div class="metric-card">
                                 <div class="icon" style="color:${m.color}"><i class="fa-solid ${m.icon}"></i></div>
                                 <div class="label">${m.name}</div>
                                 <div class="value">${m.unit === '₺' ? '₺' : ''}${typeof value === 'number' ? value.toLocaleString('tr-TR') : value}${m.unit !== '₺' ? m.unit : ''}</div>
                             </div>`;
-                }).join('');
+                    }).join('');
 
-                const timelineHtml = this.state.decisionHistory.map(d => `<li class="${d.impact.toLowerCase()}"><span class="decision-title">${d.title}</span></li>`).join('');
-                const breakdownHtml = Object.entries(scoreBreakdown).map(([key, item]) => `<li class="${item.class}"><span>${key}</span><span class="score-value">${item.value > 0 ? '+' : ''}${item.value} Puan</span></li>`).join('');
+                    const timelineHtml = this.state.decisionHistory.map(d => `<li class="${d.impact.toLowerCase()}"><span class="decision-title">${d.title}</span></li>`).join('');
+                    const breakdownHtml = Object.entries(scoreBreakdown).map(([key, item]) => `<li class="${item.class}"><span>${key}</span><span class="score-value">${item.value > 0 ? '+' : ''}${item.value} Puan</span></li>`).join('');
 
-                let debriefHTML = '';
-                if (totalScore >= 90) { debriefHTML = `<p><strong>Mükemmel Performans!</strong> En ufak bir anormallikten yola çıkarak gelişmiş bir tehdidi ortaya çıkardınız. Doğru araçları metodik bir şekilde kullandınız ve en önemlisi, sadece anlık tehdidi değil, saldırganın tekniğini hedef alan proaktif ve kalıcı çözümler ürettiniz. Bu, kıdemli bir Ağ Güvenlik Mühendisi'nin sergilemesi gereken vizyon ve yetenektir.</p>`; }
-                else if (totalScore >= 70) { debriefHTML = `<p><strong>Etkili Müdahale:</strong> Zorlu bir tehdidi doğru adımlarla ve kanıt toplayarak başarılı bir şekilde yönettiniz. Veri sızıntısını büyük ölçüde durdurdunuz ve ağın güvenliğini sağladınız. Genel olarak krizi yetkin bir şekilde kontrol altına aldınız.</p>`; }
-                else { debriefHTML = `<p><strong>Öğrenim Fırsatı:</strong> Tehdidi yönettiniz ancak müdahale sürecinde daha hızlı veya etkili olabilecek bazı adımları atlamış olabilirsiniz. Bu simülasyon, derinlemesine paket analizi ve proaktif savunma stratejilerinin ne kadar kritik olduğunu gösteren önemli bir deneyim oldu.</p>`; }
-                if (this.state.d1_ignore) { debriefHTML = `<p><strong>Kritik Hata:</strong> Simülasyonun başında uyarıyı göz ardı etmeniz, saldırganlara değerli zaman kazandırdı ve veri sızıntısının boyutunu artırdı. Bu, özellikle kritik varlıklardan gelen en küçük uyarıların bile neden hafife alınmaması gerektiğini gösteren önemli bir derstir.</p>`; }
-                
-                const finalHtml = `
+                    let debriefHTML = '';
+                    if (totalScore >= 90) { debriefHTML = `<p><strong>Mükemmel Performans!</strong> En ufak bir anormallikten yola çıkarak gelişmiş bir tehdidi ortaya çıkardınız. Doğru araçları metodik bir şekilde kullandınız ve en önemlisi, sadece anlık tehdidi değil, saldırganın tekniğini hedef alan proaktif ve kalıcı çözümler ürettiniz. Bu, kıdemli bir Ağ Güvenlik Mühendisi'nin sergilemesi gereken vizyon ve yetenektir.</p>`; }
+                    else if (totalScore >= 70) { debriefHTML = `<p><strong>Etkili Müdahale:</strong> Zorlu bir tehdidi doğru adımlarla ve kanıt toplayarak başarılı bir şekilde yönettiniz. Veri sızıntısını büyük ölçüde durdurdunuz ve ağın güvenliğini sağladınız. Genel olarak krizi yetkin bir şekilde kontrol altına aldınız.</p>`; }
+                    else { debriefHTML = `<p><strong>Öğrenim Fırsatı:</strong> Tehdidi yönettiniz ancak müdahale sürecinde daha hızlı veya etkili olabilecek bazı adımları atlamış olabilirsiniz. Bu simülasyon, derinlemesine paket analizi ve proaktif savunma stratejilerinin ne kadar kritik olduğunu gösteren önemli bir deneyim oldu.</p>`; }
+                    if (this.state.d1_ignore) { debriefHTML = `<p><strong>Kritik Hata:</strong> Simülasyonun başında uyarıyı göz ardı etmeniz, saldırganlara değerli zaman kazandırdı ve veri sızıntısının boyutunu artırdı. Bu, özellikle kritik varlıklardan gelen en küçük uyarıların bile neden hafife alınmaması gerektiğini gösteren önemli bir derstir.</p>`; }
+
+                    const finalHtml = `
                 <div class="container">
                     <div id="finalSection" class="section" style="display: flex; flex-direction: column; align-items: center;">
                         <h2><i class="fa-solid fa-chart-line"></i> Kriz Sonrası Değerlendirme Raporu</h2>
@@ -475,47 +1033,49 @@
                         </div>
                     </div>
                 </div>`;
-                this.render(finalHtml);
-            },
-            
-            updateStatusBar() {
-                scenarioData.metrics.forEach(m => {
-                    if (this.elements.statusBar[m.id]) {
-                        const value = this.score[m.id];
-                        this.elements.statusBar[m.id].textContent = `${m.unit === '₺' ? '₺' : ''}${typeof value === 'number' ? value.toLocaleString('tr-TR') : value}${m.unit !== '₺' ? m.unit : ''}`;
-                    }
-                });
-            },
+                    this.render(finalHtml);
+                },
 
-            startTimer() {
-                if (this.timer.running) return;
-                this.timer.running = true;
-                this.updateTimerUI();
-                this.timer.intervalId = setInterval(() => {
-                    this.timer.remaining--;
+                updateStatusBar() {
+                    scenarioData.metrics.forEach(m => {
+                        if (this.elements.statusBar[m.id]) {
+                            const value = this.score[m.id];
+                            this.elements.statusBar[m.id].textContent = `${m.unit === '₺' ? '₺' : ''}${typeof value === 'number' ? value.toLocaleString('tr-TR') : value}${m.unit !== '₺' ? m.unit : ''}`;
+                        }
+                    });
+                },
+
+                startTimer() {
+                    if (this.timer.running) return;
+                    this.timer.running = true;
                     this.updateTimerUI();
-                    if (this.timer.remaining <= 0) {
-                        this.stopTimer();
-                        this.renderFinalReport();
-                    }
-                }, 1000);
-            },
-            stopTimer() {
-                clearInterval(this.timer.intervalId);
-                this.timer.running = false;
-            },
-            updateTimerUI() {
-                if (!this.elements.statusBar.remaining) return;
-                const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
-                const s = String(this.timer.remaining % 60).padStart(2, '0');
-                this.elements.statusBar.remaining.textContent = `${m}:${s}`;
-            }
-        };
+                    this.timer.intervalId = setInterval(() => {
+                        this.timer.remaining--;
+                        this.updateTimerUI();
+                        if (this.timer.remaining <= 0) {
+                            this.stopTimer();
+                            this.renderFinalReport();
+                        }
+                    }, 1000);
+                },
+                stopTimer() {
+                    clearInterval(this.timer.intervalId);
+                    this.timer.running = false;
+                },
+                updateTimerUI() {
+                    if (!this.elements.statusBar.remaining) return;
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
+                    this.elements.statusBar.remaining.textContent = `${m}:${s}`;
+                }
+            };
 
-        // Initialize the game when the DOM is ready
-        game.init();
+            // Initialize the game when the DOM is ready
+            game.init();
 
-    })();
+        })();
     </script>
+<script src="../global-scenario.js"></script>
 </body>
+
 </html>
