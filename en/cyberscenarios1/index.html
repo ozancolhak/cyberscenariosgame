@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>CyberScenario v1: IoT Crisis</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .container-custom {
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            max-width: 950px;
+            width: 100%;
+            margin: 40px auto;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--interactive-bg);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: var(--accent-blue);
+        }
+
+        .btn {
+            background-color: #6272a4;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+        }
+
+        .btn:hover {
+            background-color: #7a8ab9;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            background-color: #555 !important;
+            color: #999 !important;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .btn-start,
+        .btn-continue {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            background-color: var(--accent-green);
+            color: var(--text-dark);
+            justify-content: center;
+        }
+
+        .scenario-image {
+            border-radius: 8px;
+            border: 1px solid var(--interactive-bg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .bg-gray-800 {
+            background-color: var(--text-dark);
+        }
+
+        .border-gray-700 {
+            border-color: #6272a4;
+        }
+
+        .text-cyan-400 {
+            color: var(--accent-blue);
+        }
+
+        .text-cyan-300 {
+            color: var(--accent-blue);
+        }
+
+        .text-pink-300 {
+            color: var(--accent-pink);
+        }
+
+        .text-red-400 {
+            color: var(--accent-red);
+        }
+
+        .text-yellow-300 {
+            color: var(--accent-yellow);
+        }
+
+        .text-green-300 {
+            color: var(--accent-green);
+        }
+
+        .text-orange-300 {
+            color: #ffb86c;
+        }
+
+        .text-indigo-300 {
+            color: var(--accent-purple);
+        }
+
+        .text-green-400 {
+            color: var(--accent-green);
+        }
+
+        .text-yellow-400 {
+            color: var(--accent-yellow);
+        }
+
+        .text-blue-400 {
+            color: var(--accent-blue);
+        }
+
+        .text-purple-300 {
+            color: var(--accent-purple);
+        }
+
+        #rolesInfo {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid var(--interactive-bg);
+        }
+
+        #rolesInfo h3 {
+            color: var(--accent-green);
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--interactive-bg);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #rolesInfo ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        #rolesInfo ul li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        #rolesInfo ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        #rolesInfo ul li::before {
+            content: '\f007';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-purple);
+            position: absolute;
+            left: 0;
+            top: 3px;
+        }
+
+        #rolesInfo ul li.your-role::before {
+            color: var(--accent-yellow);
+        }
+
+        #rolesInfo ul li strong {
+            color: var(--accent-blue);
+        }
+
+        #statusBar {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            background-color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #6272a4;
+        }
+
+        #statusBar .metric {
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        #statusBar .metric .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .final-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .metric-card {
+            background-color: var(--section-bg);
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--interactive-bg);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-blue);
+        }
+
+        .metric-card .icon {
+            font-size: 2.5em;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+        }
+
+        .metric-card .label {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
+
+        .metric-card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        #performance-badge-container {
+            margin: 25px 0;
+        }
+
+        #performance-badge {
+            padding: 12px 30px;
+            font-size: 1.8em;
+            font-weight: bold;
+            border-radius: 50px;
+            display: inline-block;
+            color: var(--text-dark);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        #performance-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .post-crisis-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: left;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        @media (min-width: 800px) {
+            .post-crisis-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .event-timeline,
+        .strategic-debrief {
+            background-color: var(--interactive-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--section-bg);
+            margin-top: 20px;
+        }
+
+        .event-timeline h3,
+        .strategic-debrief h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--section-bg);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-timeline ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 15px 0 0 0;
+        }
+
+        .event-timeline li {
+            position: relative;
+            padding: 5px 0 15px 35px;
+            border-left: 2px solid var(--section-bg);
+            font-size: 0.95em;
+        }
+
+        .event-timeline li:last-child {
+            border-left: none;
+        }
+
+        .event-timeline li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-green);
+            position: absolute;
+            left: -12px;
+            top: 5px;
+            background-color: var(--dark-bg);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 0.8em;
+            border: 2px solid var(--section-bg);
+        }
+
+        .event-timeline li.positive::before {
+            content: '\f00c';
+            color: var(--accent-green);
+        }
+
+        .event-timeline li.negative::before {
+            content: '\f00d';
+            color: var(--accent-red);
+        }
+
+        .event-timeline li.neutral::before {
+            content: '\f05a';
+            color: var(--accent-blue);
+        }
+
+        .event-timeline li .decision-title {
+            font-weight: bold;
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #score-breakdown {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        #score-breakdown li {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-breakdown .score-plus {
+            background-color: rgba(80, 250, 123, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        #score-breakdown .score-minus {
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        #score-breakdown .score-neutral {
+            background-color: rgba(139, 233, 253, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        #score-breakdown .score-value {
+            font-weight: bold;
+        }
+
+        .lb-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 25, .7);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .lb-modal {
+            background: linear-gradient(180deg, #2a2a4a 0%, #1f1f36 100%);
+            color: var(--text-light);
+            width: 100%;
+            max-width: 760px;
+            border-radius: 14px;
+            padding: 22px 22px 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .04);
+        }
+
+        .lb-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .lb-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25em;
+            font-weight: 800;
+            letter-spacing: .2px;
+            color: var(--accent-yellow);
+        }
+
+        .lb-tablewrap {
+            margin-top: 10px;
+            max-height: 60vh;
+            overflow: auto;
+            border: 1px solid var(--interactive-bg);
+            border-radius: 10px;
+        }
+
+        table.lb-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .97em;
+        }
+
+        table.lb-table th,
+        table.lb-table td {
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        table.lb-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #1f1f36;
+            color: #e9e9ff;
+            border-bottom: 1px solid #3b3b66;
+            font-weight: 700;
+        }
+
+        .lb-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .lb-close,
+        .lb-refresh {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all .12s ease;
+        }
+
+        .lb-refresh {
+            background: var(--accent-blue);
+            color: #0c1130;
+        }
+
+        .lb-close {
+            background: #3d3d60;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body class="text-white font-sans">
+    <div class="container-custom">
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fas fa-server"></i> Affected Systems</span>
+                    <div class="value" id="status-affectedSystems">1</div>
+                </div>
+                <div class="metric"><span><i class="fas fa-lira-sign"></i> Financial Loss</span>
+                    <div class="value" id="status-financialLoss">$0</div>
+                </div>
+                <div class="metric"><span><i class="fas fa-shield-alt"></i> Reputation</span>
+                    <div class="value" id="status-reputation">100</div>
+                </div>
+                <div class="metric"><span><i class="fas fa-brain"></i> Intel Score</span>
+                    <div class="value" id="status-intelScore">0</div>
+                </div>
+                <div class="metric" id="status-timer"><span><i class="fas fa-clock"></i> Time Left</span>
+                    <div class="value">05:00</div>
+                </div>
+            </div>
+        </div>
+        <div id="game-content">
+            <section class="step space-y-4 text-center" id="step0">
+                <h2 class="text-2xl text-cyan-300 font-semibold">Welcome to the Scenario</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">In this interactive scenario, you are a Cybersecurity
+                    Engineer at COLHAK Corporation. Your mission is to analyze an evolving security threat, make
+                    critical decisions, and protect the company from potential disaster. Carefully evaluate the
+                    information presented at each step. Are you ready?</p>
+                <img alt="Cyber Security Center" class="scenario-image mx-auto" src="giris.png"
+                    style="max-height: 300px; width: auto; object-fit: cover;" />
+                <div class="mx-auto" id="rolesInfo">
+                    <h3><i class="fa-solid fa-people-arrows"></i> Simulation Roles</h3>
+                    <ul>
+                        <li class="your-role"><strong>Your Role: Cybersecurity Engineer</strong> - You are part of the
+                            COLHAK Corporation cybersecurity team. You will take an active role in incident response,
+                            perform analysis, and make critical decisions.</li>
+                        <li><strong>Ezgi (Tier-1 SOC Analyst)</strong> - The eyes and ears of your team; detecting
+                            initial alerts and suspicious activities.</li>
+                        <li><strong>Alper (Tier-2 Analyst)</strong> - The expert who deeply analyzes incidents escalated
+                            by Ezgi and conducts technical investigations.</li>
+                        <li><strong>Ceyda (Cybersecurity Manager)</strong> - The leader of your cybersecurity team,
+                            making final decisions during crisis moments and providing strategic guidance.</li>
+                        <li><strong>Sales Director</strong> - A critical stakeholder responsible for business
+                            operations; absolutely avoids disruptions to business processes like live demos.</li>
+                        <li><strong>Finance Director (CFO)</strong> - The senior executive responsible for the company's
+                            financial health.</li>
+                    </ul>
+                </div>
+                <div class="flex justify-center mt-6">
+                    <button class="btn btn-start" id="startButton"><i class="fas fa-play"></i> Start Simulation</button>
+                </div>
+            </section>
+            <section class="step space-y-4" id="step1" style="display:none;">
+                <h2 class="text-xl text-cyan-300 font-semibold">🕒 07:15 – First Signal: Enriched SIEM Alert</h2>
+                <p>At the start of the day, Tier-1 SOC Analyst Ezgi notices a critical alert on the SIEM (Security
+                    Information and Event Management) dashboard. A correlation rule has been triggered: <strong
+                        class="text-red-400">"Periodic Data Exfiltration from Critical Asset Network to Unknown C2
+                        Server"</strong>.</p>
+                <img alt="SIEM Alert Dashboard"
+                    class="rounded-xl border-2 shadow-lg border-cyan-400 w-full max-w-3xl mx-auto object-cover"
+                    src="alert.png" />
+                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mt-4">
+                    <pre class="text-sm text-yellow-300 whitespace-pre-wrap"><code>ALERT ID: 8451
+TRIGGER: Correlation Rule - "Suspicious C2 Beaconing"
+SOURCE IP: 10.10.30.15 (VLAN: IoT Devices)
+HOSTNAME: CAMERA-3FLOOR-OCEAN
+SOURCE MAC: 00:1A:2B:3C:4D:5E
+DESTINATION IP: 88.54.12.219 (Reputation: Low, Category: Unknown)
+PROTOCOL: UDP/443
+OBSERVATION: A 128KB data packet is sent every 5 minutes for the last 3 hours.
+PCAP SUMMARY: DNS query for 'update.serve-config.net' resolved to 88.54.12.219. UDP payload contains obfuscated Base64 strings.
+MITRE ATT&ACK MAPPING: T1041 (Exfiltration Over C2), T1571 (Non-Standard Port)</code></pre>
+                </div>
+                <blockquote class="italic text-gray-400 border-l-4 border-cyan-500 pl-4 mt-4">Ezgi: "This isn't normal
+                    traffic. Source IP appears in the IoT VLAN and the destination is a suspicious address we haven't
+                    seen before. The MITRE matches are also concerning. I'm escalating this to Tier-2 (Alper)
+                    immediately."</blockquote>
+                <button class="btn btn-continue" data-next-section="step2"><i class="fas fa-search"></i> Start
+                    Investigation</button>
+            </section>
+            <section class="step space-y-6" id="step2" style="display:none;">
+                <h2 class="text-xl text-pink-300 font-semibold">🕒 07:30 – Simultaneous Developments and First Decision
+                    Point</h2>
+                <p>Almost simultaneously with Ezgi's analysis, two different incident logs drop into the system. As a
+                    team, you must decide which event to prioritize.</p>
+                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                    <h3 class="font-bold text-pink-400">Incident 1: Help Desk Ticket #7254</h3>
+                    <p class="mt-2 text-gray-300"><strong>User:</strong> Ayse Yilmaz</p>
+                    <p class="text-gray-300"><strong>Subject:</strong> The camera in the 3rd Floor Ocean Meeting Room
+                        keeps freezing and the web interface is very slow. There was no such problem yesterday morning.
+                    </p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg border border-red-500 mt-4">
+                    <h3 class="font-bold text-red-400">Incident 2: Critical System Alert #9112 (Red Herring)</h3>
+                    <p class="mt-2 text-gray-300"><strong>System:</strong> Active Directory</p>
+                    <p class="text-gray-300"><strong>Subject:</strong> Over 50 failed login attempts detected on the
+                        Finance Director's (CFO) account within the last 15 minutes.</p>
+                </div>
+                <blockquote class="italic text-gray-400 border-l-4 border-yellow-500 pl-4 mt-4">Team Leader: "We have
+                    two potentially serious incidents. One could be potential data leakage, the other an attack on a
+                    senior executive's account. Our resources are limited, which one do we focus on?"</blockquote>
+                <div class="flex flex-col md:flex-row gap-4 mt-4">
+                    <button class="btn w-full" data-decision="step2-camera" data-next-section="step3"><i
+                            class="fas fa-video"></i> Priority: Correlate Camera Incident and SIEM Alert</button>
+                    <button class="btn w-full" data-decision="step2-cfo" data-next-section="step_distraction"
+                        style="background-color: #ff5555;"><i class="fas fa-user-shield"></i> Priority: Secure Finance
+                        Director's Account</button>
+                </div>
+            </section>
+            <section class="step space-y-4" id="step_distraction" style="display:none;">
+                <h2 class="text-xl text-yellow-300 font-semibold">🕒 07:50 – Incorrect Prioritization</h2>
+                <p>The team decides to focus on the Finance Director's account. Rapid investigation reveals that the CFO
+                    is on vacation abroad and forgot their new password, causing multiple failed login attempts from
+                    their mobile device. The account is temporarily locked, and the situation is contained.</p>
+                <blockquote class="italic text-gray-400 border-l-4 border-red-500 pl-4 mt-4">Alper: "This was a 'false
+                    positive'. But we lost about 20 minutes investigating this. Now we need to urgently return to the
+                    other incident. I hope we're not too late."</blockquote>
+                <button class="btn btn-continue" data-next-section="step3"><i class="fas fa-undo"></i> Return to Main
+                    Incident</button>
+            </section>
+            <section class="step space-y-4" id="step3" style="display:none;">
+                <h2 class="text-xl text-green-300 font-semibold">🧑‍💻 08:00 – Alper's Deep Analysis</h2>
+                <p>Tier-2 Analyst Alper combines the SIEM alert with the help desk ticket. He queries the suspicious
+                    `10.10.30.15` IP address in the company's Asset Management System. The result is clear: The IP
+                    belongs to a <strong class="text-green-400">"SmartEye 3000"</strong> model IP camera in the 3rd
+                    Floor Ocean Meeting Room.</p>
+                <p class="text-gray-300 mt-4">A quick internet search reveals a recently disclosed critical
+                    vulnerability (<strong class="text-red-400">CVE-2025-1337</strong>) in this model's firmware. This
+                    vulnerability allows unauthorized Remote Code Execution (RCE).</p>
+                <blockquote class="italic text-gray-400 border-l-4 border-green-500 pl-4 mt-4">Alper: "Okay, now
+                    everything fits. The slowness in the camera isn't a malfunction, it's a symptom. The device has been
+                    compromised via a known vulnerability and is sending data to a C2 server as part of a botnet. We
+                    need to determine the next step."</blockquote>
+                <button class="btn btn-continue" data-next-section="step3_2"
+                    style="background-color: var(--accent-green); color: var(--text-dark);"><i
+                        class="fas fa-sitemap"></i> Deepen Investigation</button>
+            </section>
+            <section class="step space-y-4" id="step3_2" style="display:none;">
+                <h2 class="text-xl text-cyan-300 font-semibold">🕵️‍♂️ 08:15 – Deepening Investigation: What is the
+                    Enemy's Intent?</h2>
+                <p>Alper's findings are clear: The device is compromised. But what is the enemy's real goal? Is it just
+                    a DDoS botnet, or the first step of a larger plan? Ceyda turns to you to decide the next step.</p>
+                <blockquote class="italic text-gray-400 border-l-4 border-cyan-500 pl-4">Ceyda: "We found the entry
+                    point, good job. Now we need to understand what they are after. We have three options: Investigate
+                    outside, focus inside, or check for spread?"</blockquote>
+                <div class="flex flex-col md:flex-row gap-4 mt-4">
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-blue-400">Option A: Analyze C2 Server</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Investigate the target IP and domain on Threat
+                            Intelligence platforms (VirusTotal, Shodan, etc.). This can provide info on the attacker's
+                            identity and TTPs (Tactics, Techniques, Procedures).</p>
+                        <button class="btn mt-4 w-full" data-decision="step3_2-c2" data-next-section="step3_5"
+                            style="background-color: var(--accent-blue); color: var(--text-dark);"><i
+                                class="fas fa-globe"></i> Research External Threats</button>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-yellow-400">Option B: Analyze Payload</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Analyze the 'payload.sh' script and 'c2.pl' Perl
+                            script downloaded to the device in a sandbox. Learn exactly what the malware does and its
+                            capabilities (e.g., network scanning).</p>
+                        <button class="btn mt-4 w-full" data-decision="step3_2-payload" data-next-section="step3_5"
+                            style="background-color: var(--accent-yellow); color: var(--text-dark);"><i
+                                class="fas fa-bug"></i> Analyze Malware</button>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-green-400">Option C: Perform Internal Network Scan</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Start an emergency scan to find other "SmartEye
+                            3000" cameras on the network. Understand how widespread the vulnerability is and identify
+                            other potential victims.</p>
+                        <button class="btn mt-4 w-full" data-decision="step3_2-scan" data-next-section="step3_5"
+                            style="background-color: var(--accent-green); color: var(--text-dark);"><i
+                                class="fas fa-network-wired"></i> Check Spread</button>
+                    </div>
+                </div>
+            </section>
+            <section class="step space-y-4" id="step3_5" style="display:none;">
+                <h2 class="text-xl text-orange-300 font-semibold">🕒 08:30 – Sudden Complication: Management Pressure
+                </h2>
+                <p>Just as your analysis is concluding, that expected call comes from the Sales Director. Her voice is
+                    quite tense.</p>
+                <img alt="Meeting Room"
+                    class="rounded-xl border-2 shadow-lg border-orange-400 w-full max-w-md mx-auto object-cover"
+                    src="toplanti.png" />
+                <div class="bg-gray-800 p-4 rounded-lg border border-cyan-500 mt-4" id="intel-report"></div>
+                <blockquote class="italic text-gray-400 border-l-4 border-orange-500 pl-4 mt-4">Sales Director: "Is your
+                    team messing with the camera in the Ocean Room? That camera needs to be working in 1 hour; we are
+                    doing a live demo presentation for a very important foreign client! You cannot close the room, find
+                    a solution immediately!"</blockquote>
+                <p>This new information reveals that the decision to be made has not only a technical but also an
+                    operational dimension. The pressure on the team has increased.</p>
+                <button class="btn btn-continue" data-next-section="step4"
+                    style="background-color: #ffb86c; color: var(--text-dark);"><i class="fas fa-users"></i> Plan Crisis
+                    Meeting Under Pressure</button>
+            </section>
+            <section class="step space-y-4" id="step4" style="display:none;">
+                <h2 class="text-xl text-indigo-300 font-semibold">🏢 08:45 – Crisis Meeting and Final Decision</h2>
+                <p>You summarize the situation to Cybersecurity Manager Ceyda: "We have an IP camera compromised using
+                    the CVE-2025-1337 vulnerability. It's not just communicating externally, but also <strong
+                        class="text-yellow-300" id="dynamic-info-placeholder">acting according to our initial
+                        findings</strong>. We haven't detected lateral movement within the network yet. However, the
+                    Sales Department needs that camera in less than 1 hour."</p>
+                <blockquote class="italic text-gray-400 border-l-4 border-indigo-500 pl-4">Ceyda: "Understood. We are
+                    short on time and under pressure. We seem to have three options. The decision is yours. What do we
+                    do?"</blockquote>
+                <p class="font-bold text-yellow-300">Make your decision as a team:</p>
+                <div class="flex flex-col md:flex-row gap-4 mt-4">
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-green-400">Option A: Isolate and Patch (Safe Route)</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Immediately disconnect the camera from the
+                            network. Take the device to the lab, capture its image, and update with the latest firmware.
+                            The threat is stopped instantly.</p>
+                        <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> We can't learn more about the
+                            attacker's ultimate goal. The sales presentation will be cancelled.</p>
+                        <button class="btn mt-4 w-full" data-decision="step4-isolate" data-next-section="step5"
+                            style="background-color: var(--accent-green); color: var(--text-dark);"><i
+                                class="fas fa-check-circle"></i> Apply Option A</button>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-red-400">Option B: Divert to Honeypot (Risky Observation)</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Redirect the camera's traffic to a "Honeypot"
+                            environment completely isolated from the main network. Collect valuable intelligence by
+                            secretly watching the attacker's behaviors (TTPs).</p>
+                        <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> The attacker might notice the
+                            Honeypot or launch a more aggressive attack (e.g., ransomware) during observation.</p>
+                        <button class="btn mt-4 w-full" data-decision="step4-honeypot" data-next-section="step5"
+                            style="background-color: var(--accent-red);"><i class="fas fa-biohazard"></i> Apply Option
+                            B</button>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-blue-400">Option C: Quarantine and Observe (Calculated Middle
+                            Ground)</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Move the camera to an isolated VLAN with no
+                            internet access. Block the device's internet exit but observe what it tries to do to 'bait'
+                            assets on the local network. This might reveal lateral movement attempts.</p>
+                        <p class="text-xs text-yellow-400 mt-2"><strong>Risk:</strong> A misconfiguration could allow
+                            the attacker to escape quarantine. The sales presentation might still be delayed.</p>
+                        <button class="btn mt-4 w-full" data-decision="step4-quarantine" data-next-section="step5"
+                            style="background-color: var(--accent-blue); color: var(--text-dark);"><i
+                                class="fas fa-balance-scale"></i> Apply Option C</button>
+                    </div>
+                </div>
+            </section>
+            <section class="step space-y-4" id="step5" style="display:none;">
+                <h2 class="text-xl text-purple-300 font-semibold">📞 09:00 – Communication Crisis: Stakeholder
+                    Management</h2>
+                <p>While your technical intervention decision is being implemented, Ceyda comes to you. She looks
+                    worried. "The technical side seems under control, but my phone won't stop ringing. The Sales
+                    Director is asking about the fate of the demo, and the CFO wants a report on potential financial
+                    impact. How do we manage the situation internally? What should be our official position?"</p>
+                <blockquote class="italic text-gray-400 border-l-4 border-purple-500 pl-4 mt-4">Ceyda: "We are at a
+                    moment as important as the technical intervention. The advice you give will determine how the
+                    company perceives this crisis internally. What do we say?"</blockquote>
+                <div class="flex flex-col md:flex-row gap-4 mt-4">
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-red-400">Option A: Technical Focus</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Say 'My priority is to stop this threat,
+                            communication is your job' and focus only on the technical operation. Let management resolve
+                            the situation among themselves.</p>
+                        <button class="btn mt-4 w-full" data-decision="step5-technical" data-next-section="finalSection"
+                            style="background-color: var(--accent-red);"><i class="fas fa-laptop-code"></i> Focus Only
+                            on Technical</button>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-green-400">Option B: Full Transparency</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Inform the Sales Director that the demo is
+                            definitely cancelled due to a critical cybersecurity incident. Explain the situation to the
+                            CFO in full detail and ensure they are prepared for the worst-case scenario.</p>
+                        <button class="btn mt-4 w-full" data-decision="step5-transparent"
+                            data-next-section="finalSection"
+                            style="background-color: var(--accent-green); color: var(--text-dark);"><i
+                                class="fas fa-bullhorn"></i> Be Transparent</button>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
+                        <h3 class="text-lg font-bold text-yellow-400">Option C: Controlled Information Flow</h3>
+                        <p class="text-sm text-gray-300 mt-2 flex-grow">Tell Sales there is a 'temporary network issue'
+                            and you are trying to resolve it. Report the situation to the CFO as an 'incident under
+                            control' to avoid creating panic.</p>
+                        <button class="btn mt-4 w-full" data-decision="step5-controlled"
+                            data-next-section="finalSection"
+                            style="background-color: var(--accent-yellow); color: var(--text-dark);"><i
+                                class="fas fa-comment-dots"></i> Manage the Situation</button>
+                    </div>
+                </div>
+            </section>
+            <section class="step space-y-6 text-center" id="finalSection" style="display:none;">
+                <h2 class="text-2xl font-semibold text-cyan-300">Post-Crisis Evaluation Report</h2>
+                <p>Simulation completed. Below is a detailed breakdown of your crisis management performance.</p>
+                <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                <div class="final-metrics" id="finalMetricsContainer"></div>
+                <div class="post-crisis-layout">
+                    <div class="event-timeline">
+                        <h3><i class="fas fa-timeline"></i> Decision Timeline</h3>
+                        <ul id="decision-timeline-list"></ul>
+                    </div>
+                    <div class="strategic-debrief">
+                        <h3><i class="fas fa-lightbulb"></i> Strategic Evaluation</h3>
+                        <div id="strategic-debrief-content"></div>
+                        <h3 style="margin-top: 20px;"><i class="fas fa-calculator"></i> Score Breakdown</h3>
+                        <ul id="score-breakdown"></ul>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-6 gap-4">
+                    <button class="btn btn-start" onclick="window.location.reload()"><i class="fas fa-redo"></i> Restart
+                        Simulation</button>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="lb-overlay" id="leaderboardOverlay" role="dialog">
+        <div class="lb-modal">
+            <div class="lb-header">
+                <h2 class="lb-title"><i class="fas fa-trophy"></i> Leaderboard</h2>
+            </div>
+            <div class="lb-tablewrap">
+                <table class="lb-table" id="leaderboardTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr>
+                            <td colspan="4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="lb-actions">
+                <button class="lb-refresh" id="lbRefreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button class="lb-close" id="lbCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const game = {
+                score: { affectedSystems: 1, financialLoss: 0, reputation: 100, intelScore: 0 },
+                state: { currentSection: 'step0', decisionHistory: [], knownVulnerableDevices: 1 },
+                elements: {},
+                timer: { total: 300, remaining: 300, intervalId: null, running: false },
+                decisionInfo: {
+                    'step2-camera': { title: "Priority: Camera Incident", impact: 'Positive' },
+                    'step2-cfo': { title: "Priority: CFO Account", impact: 'Negative', changes: { financialLoss: 10000, reputation: -5 } },
+                    'step3_2-c2': { title: "Intel: C2 Analysis", impact: 'Positive', changes: { intelScore: 40 } },
+                    'step3_2-payload': { title: "Intel: Payload Analysis", impact: 'Positive', changes: { intelScore: 30 } },
+                    'step3_2-scan': { title: "Intel: Internal Network Scan", impact: 'Positive', changes: { intelScore: 20 } },
+                    'step4-isolate': { title: "Response: Isolate and Patch", impact: 'Neutral', changes: { financialLoss: 50000, reputation: -5 } },
+                    'step4-honeypot': { title: "Response: Divert to Honeypot", impact: 'Negative', changes: { financialLoss: 15000000, reputation: -80, affectedSystems: 4 } },
+                    'step4-quarantine': { title: "Response: Quarantine", impact: 'Positive', changes: { financialLoss: 5000, reputation: 5, intelScore: 50 } },
+                    'step5-transparent': { title: "Communication: Full Transparency", impact: 'Positive', changes: { reputation: 10 } },
+                    'step5-controlled': { title: "Communication: Controlled Information", impact: 'Neutral', changes: { reputation: -10 } },
+                    'step5-technical': { title: "Communication: Technical Focus", impact: 'Negative', changes: { reputation: -20 } }
+                },
+
+                setup() {
+                    this.elements = {
+                        gameContainer: document.getElementById('gameContainer'),
+                        gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'),
+                        openLeaderboardBtn: document.getElementById('openLeaderboardBtn'),
+                        statusBar: {
+                            affectedSystems: document.getElementById('status-affectedSystems'),
+                            financialLoss: document.getElementById('status-financialLoss'),
+                            reputation: document.getElementById('status-reputation'),
+                            intelScore: document.getElementById('status-intelScore'),
+                            timer: document.getElementById('status-timer').querySelector('.value')
+                        },
+                        leaderboard: {
+                            overlay: document.getElementById('leaderboardOverlay'),
+                            body: document.getElementById('leaderboardBody'),
+                            btnClose: document.getElementById('lbCloseBtn'),
+                            btnRefresh: document.getElementById('lbRefreshBtn'),
+                        },
+                        final: {
+                            badge: document.getElementById('performance-badge'),
+                            metricsContainer: document.getElementById('finalMetricsContainer'),
+                            timelineList: document.getElementById('decision-timeline-list'),
+                            debriefContent: document.getElementById('strategic-debrief-content'),
+                            scoreBreakdown: document.getElementById('score-breakdown')
+                        }
+                    };
+                    this.attachListeners();
+                    this.showSection('step0');
+                },
+
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.gameContainer.style.display = 'block';
+                        this.startGlobalTimer();
+                        this.showSection('step1');
+                    });
+
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('button[data-next-section]');
+                        if (!button || button.disabled) return;
+
+                        button.closest('.flex-col, .flex-row, .flex')?.querySelectorAll('button').forEach(b => b.disabled = true);
+
+                        const decisionId = button.dataset.decision;
+                        const nextSectionId = button.dataset.nextSection;
+
+                        if (decisionId) {
+                            this.handleDecision(decisionId);
+                        }
+
+                        setTimeout(() => {
+                            if (nextSectionId === 'finalSection') {
+                                this.showFinalReport();
+                            } else {
+                                this.showSection(nextSectionId);
+                            }
+                        }, 400);
+                    });
+
+                    this.elements.leaderboard.btnClose.addEventListener('click', () => this.closeLeaderboard());
+                    this.elements.leaderboard.btnRefresh.addEventListener('click', () => this.loadLeaderboard());
+                    this.elements.leaderboard.overlay.addEventListener('click', (e) => {
+                        if (e.target === this.elements.leaderboard.overlay) this.closeLeaderboard();
+                    });
+                    this.elements.openLeaderboardBtn.addEventListener('click', () => this.openLeaderboard());
+                },
+
+                handleDecision(decisionId) {
+                    const info = this.decisionInfo[decisionId];
+                    if (!info) return;
+
+                    this.state.decisionHistory.push({ id: decisionId, title: info.title, impactType: info.impact });
+                    if (info.changes) {
+                        this.score.financialLoss += info.changes.financialLoss || 0;
+                        this.score.reputation += info.changes.reputation || 0;
+                        this.score.affectedSystems += info.changes.affectedSystems || 0;
+                        this.score.intelScore += info.changes.intelScore || 0;
+                    }
+                    if (decisionId === 'step3_2-scan') {
+                        this.state.knownVulnerableDevices = 4;
+                    }
+                    this.updateStatusBar();
+                    this.updateDynamicContent(decisionId);
+                },
+
+                updateDynamicContent() {
+                    if (this.state.currentSection === 'step3_5' || this.state.currentSection === 'step4') {
+                        let intelHTML = '<h4><i class="fas fa-search-plus text-cyan-400"></i> Collected Intel Report:</h4>';
+                        let ceydaInfo = "acting according to our initial findings";
+
+                        const c2Choice = this.state.decisionHistory.some(d => d.id === 'step3_2-c2');
+                        const payloadChoice = this.state.decisionHistory.some(d => d.id === 'step3_2-payload');
+                        const scanChoice = this.state.decisionHistory.some(d => d.id === 'step3_2-scan');
+
+                        if (c2Choice) {
+                            intelHTML += '<p class="text-red-400 mt-2"><strong>Critical:</strong> The C2 server belongs to the "Karakurt" group known for ransomware attacks. This is not a simple botnet!</p>';
+                            ceydaInfo = "we know the target could be ransomware";
+                        }
+                        if (payloadChoice) {
+                            intelHTML += '<p class="text-yellow-400 mt-2"><strong>Warning:</strong> The malware contains a module to scan the local network and infiltrate SMB services. High risk of lateral movement.</p>';
+                            ceydaInfo = "the malware has potential to spread in the network";
+                        }
+                        if (scanChoice) {
+                            intelHTML += `<p class="text-green-400 mt-2"><strong>Info:</strong> ${this.state.knownVulnerableDevices - 1} more cameras with this vulnerability were detected on our network. Total ${this.state.knownVulnerableDevices} devices are at risk.</p>`;
+                            ceydaInfo = `we know the vulnerability exists in ${this.state.knownVulnerableDevices - 1} other locations`;
+                        }
+                        if (!c2Choice && !payloadChoice && !scanChoice) {
+                            intelHTML += '<p class="text-gray-400 mt-2">Full scale of the threat is unknown as deep analysis was not performed.</p>';
+                        }
+                        document.getElementById('intel-report').innerHTML = intelHTML;
+
+                        const placeholder = document.getElementById('dynamic-info-placeholder');
+                        if (placeholder) placeholder.textContent = ceydaInfo;
+                    }
+                },
+
+                showSection(id) {
+                    document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
+                    const section = document.getElementById(id);
+                    if (section) {
+                        section.style.display = 'block';
+                        section.style.animation = 'fadeIn 0.5s ease-out';
+                        window.scrollTo(0, 0);
+                        this.state.currentSection = id;
+                        this.updateDynamicContent();
+                    }
+                },
+
+                updateStatusBar() {
+                    Object.keys(this.elements.statusBar).forEach(key => {
+                        if (key === 'timer') return;
+                        let value = this.score[key];
+                        if (key === 'financialLoss') value = `$${value.toLocaleString('en-US')}`;
+                        this.elements.statusBar[key].textContent = value;
+                    });
+                },
+
+                showFinalReport() {
+                    this.stopGlobalTimer();
+                    this.showSection('finalSection');
+
+                    let scoreBreakdown = {};
+                    let totalScore = 50; // STANDARD: Starting Score
+                    scoreBreakdown['Starting Score'] = { value: 50, class: 'score-neutral' };
+
+                    // 1. Decision Quality Scoring (STANDARD: +10 / 0 / -10)
+                    this.state.decisionHistory.forEach(d => {
+                        if (d.impactType === 'Positive') {
+                            totalScore += 10;
+                            scoreBreakdown[`Decision: ${d.title}`] = { value: 10, class: 'score-plus' };
+                        } else if (d.impactType === 'Negative') {
+                            totalScore -= 10;
+                            scoreBreakdown[`Decision: ${d.title}`] = { value: -10, class: 'score-minus' };
+                        } else {
+                            // Neutral: 0 Points
+                            scoreBreakdown[`Decision: ${d.title}`] = { value: 0, class: 'score-neutral' };
+                        }
+                    });
+
+                    // 2. Metric Bonus (Intel Score > 50 then +10)
+                    if (this.score.intelScore >= 50) {
+                        totalScore += 10;
+                        scoreBreakdown['High Intel Bonus'] = { value: 10, class: 'score-plus' };
+                    }
+
+                    // 3. Time Bonus (+5)
+                    if (this.timer.remaining > 60) { // If more than 1 minute left
+                        totalScore += 5;
+                        scoreBreakdown['Quick Response Bonus'] = { value: 5, class: 'score-plus' };
+                    }
+
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
+
+                    // STANDARD: Badges
+                    let badgeInfo = {};
+                    if (totalScore >= 90) badgeInfo = { text: 'LEGEND (TRUST ARCHITECT)', color: 'var(--accent-green)' };
+                    else if (totalScore >= 70) badgeInfo = { text: 'EXPERT', color: 'var(--accent-blue)' };
+                    else if (totalScore >= 50) badgeInfo = { text: 'SUCCESSFUL', color: 'var(--accent-yellow)' };
+                    else badgeInfo = { text: 'FAILED', color: 'var(--accent-red)' };
+
+                    this.elements.final.badge.textContent = badgeInfo.text;
+                    this.elements.final.badge.style.backgroundColor = badgeInfo.color;
+
+                    this.elements.final.metricsContainer.innerHTML = `
+                <div class="metric-card"><div class="icon"><i class="fas fa-file-invoice-dollar"></i></div><div class="label">Final Score</div><div class="value">${totalScore}/100</div></div>
+                <div class="metric-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><div class="label">Reputation</div><div class="value">${Math.max(0, this.score.reputation)}/100</div></div>
+                <div class="metric-card"><div class="icon"><i class="fas fa-lira-sign"></i></div><div class="label">Financial Loss</div><div class="value">$${this.score.financialLoss.toLocaleString('en-US')}</div></div>
+                <div class="metric-card"><div class="icon"><i class="fas fa-brain"></i></div><div class="label">Intel Score</div><div class="value">${this.score.intelScore}</div></div>
+            `;
+
+                    this.elements.final.timelineList.innerHTML = this.state.decisionHistory.map(d => `<li class="${d.impactType.toLowerCase()}"><span class="decision-title">${d.title}</span></li>`).join('');
+                    this.elements.final.scoreBreakdown.innerHTML = Object.entries(scoreBreakdown).map(([key, item]) => `<li class="${item.class}"><span>${key}</span><span class="score-value">${item.value >= 0 ? '+' : ''}${Math.round(item.value)} Points</span></li>`).join('');
+
+                    let debriefHTML = '';
+                    if (totalScore >= 90) debriefHTML = `<p><strong>Flawless Operation:</strong> You detected the threat at the earliest stage, made the correct technical intervention, and managed communication perfectly. You are a true cybersecurity leader.</p>`;
+                    else if (totalScore >= 70) debriefHTML = `<p><strong>Strong Defense:</strong> The crisis was successfully managed. Correct decisions were made with a few minor hiccups. The company is safe.</p>`;
+                    else if (totalScore >= 50) debriefHTML = `<p><strong>Mid-Level Management:</strong> The crisis was averted but mistakes were made. Risky decisions or communication gaps cost you points.</p>`;
+                    else debriefHTML = `<p><strong>Critical Errors:</strong> Incorrect prioritization or risky technical decisions caused the crisis to escalate.</p>`;
+                    this.elements.final.debriefContent.innerHTML = debriefHTML;
+
+                    this.saveLeaderboard(totalScore);
+                },
+
+                startGlobalTimer() {
+                    if (this.timer.running) return;
+                    this.timer.running = true;
+                    this.timer.intervalId = setInterval(() => {
+                        this.timer.remaining--;
+                        this.updateTimerUI();
+                        if (this.timer.remaining <= 0) {
+                            this.stopGlobalTimer();
+                            alert("Time is up! Generating report.");
+                            this.state.decisionHistory.push({ id: 'timeout', title: 'Time Up', impactType: 'Negative' });
+                            this.showFinalReport();
+                        }
+                    }, 1000);
+                },
+                stopGlobalTimer() { clearInterval(this.timer.intervalId); this.timer.running = false; },
+                updateTimerUI() {
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
+                    if (this.elements.statusBar.timer) this.elements.statusBar.timer.textContent = `${m}:${s}`;
+                },
+
+                openLeaderboard() { this.elements.leaderboard.overlay.style.display = 'flex'; this.loadLeaderboard(); },
+                closeLeaderboard() { this.elements.leaderboard.overlay.style.display = 'none'; },
+                async saveLeaderboard(finalScore) {
+                    const name = localStorage.getItem('playerName') || 'Anonymous';
+                    const payload = { scenario: 'v1-iot-crisis', name: name.slice(0, 40), score: finalScore, timestamp: new Date().toISOString() };
+                    try {
+                        throw new Error('API not available, using local storage.');
+                    } catch (e) {
+                        const key = 'leaderboard-v1-iot-crisis';
+                        const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                        arr.push(payload);
+                        localStorage.setItem(key, JSON.stringify(arr.sort((a, b) => b.score - a.score).slice(0, 100)));
+                    }
+                },
+                async loadLeaderboard() {
+                    const tbody = this.elements.leaderboard.body;
+                    tbody.innerHTML = `<tr><td colspan="4">Loading...</td></tr>`;
+                    let rows = [];
+                    try {
+                        throw new Error('API not available, using local storage.');
+                    } catch (e) {
+                        rows = JSON.parse(localStorage.getItem('leaderboard-v1-iot-crisis') || '[]');
+                    }
+                    if (!rows.length) {
+                        tbody.innerHTML = `<tr><td colspan="4">No records found yet.</td></tr>`;
+                        return;
+                    }
+                    tbody.innerHTML = rows.sort((a, b) => b.score - a.score).slice(0, 50).map((r, i) => `<tr><td>${i + 1}</td><td>${r.name}</td><td>${r.score}</td><td>${new Date(r.timestamp).toLocaleString('en-US')}</td></tr>`).join('');
+                },
+            };
+
+            game.setup();
+        });
+    </script>
+    <script src="../../global-scenario.js"></script>
+</body>
+
+</html>

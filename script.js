@@ -1,17 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 0. Detect Language based on URL
+    const isEnglish = window.location.pathname.includes('/en/');
+    const basePath = isEnglish ? '../' : '';
+    const homePath = 'index.html'; // Within en/ it is index.html, root is index.html
+
+    // Define Text Resources
+    const txt = isEnglish ? {
+        brand: "Cyber Scenarios",
+        home: "Home",
+        corp: "For Corporations",
+        pros: "For Cyber Pros",
+        infosec: "InfoSec",
+        about: "About",
+        dev: "Developer",
+        rights: "All rights reserved.",
+        langLink: "../index.html",
+        langLabel: "TR",
+        langFlag: "🇹🇷"
+    } : {
+        brand: "Siber Senaryolar",
+        home: "Ana Sayfa",
+        corp: "Kurumlar İçin",
+        pros: "Siber Güvenlikçiler İçin",
+        infosec: "Bilgi Güvenliği",
+        about: "Hakkında",
+        dev: "Geliştirici",
+        rights: "Tüm hakları saklıdır.",
+        langLink: "en/index.html",
+        langLabel: "EN",
+        langFlag: "🇬🇧"
+    };
+
     // 1. Inject Navigation Bar
     const navHTML = `
         <nav class="main-nav">
-            <a href="index.html" class="nav-brand">Siber Senaryolar</a>
+            <a href="${homePath}" class="nav-brand">${txt.brand}</a>
             <button class="menu-toggle" aria-label="Toggle Menu">
                 <i class="fas fa-bars"></i>
             </button>
             <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
-                <li><a href="sirket.html" class="nav-link">Kurumlar İçin</a></li>
-                <li><a href="krizler.html" class="nav-link">Siber Güvenlikçiler İçin</a></li>
-                <li><a href="bilgi.html" class="nav-link">Bilgi Güvenliği</a></li>
-                <li><a href="hakkinda.html" class="nav-link">Hakkında</a></li>
+                <li><a href="${homePath}" class="nav-link">${txt.home}</a></li>
+                <li><a href="sirket.html" class="nav-link">${txt.corp}</a></li>
+                <li><a href="krizler.html" class="nav-link">${txt.pros}</a></li>
+                <li><a href="bilgi.html" class="nav-link">${txt.infosec}</a></li>
+                <li><a href="hakkinda.html" class="nav-link">${txt.about}</a></li>
+                <li><a href="${txt.langLink}" class="nav-link lang-switch" style="color:var(--main-accent); border:1px solid var(--main-accent); padding: 5px 10px; border-radius: 5px;">${txt.langFlag} ${txt.langLabel}</a></li>
             </ul>
         </nav>
     `;
@@ -23,9 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const footerHTML = `
         <footer class="main-footer">
             <div class="footer-content">
-                <p>&copy; 2025 Siber Kriz Simülasyonları. Tüm hakları saklıdır.</p>
+                <p>&copy; 2025 ${isEnglish ? 'Cyber Crisis Simulations' : 'Siber Kriz Simülasyonları'}. ${txt.rights}</p>
                 <div class="footer-links">
-                    <a href="hakkinda.html" class="footer-link">Geliştirici</a>
+                    <a href="hakkinda.html" class="footer-link">${txt.dev}</a>
                     <a href="https://github.com/ozancolhak" target="_blank" class="footer-link"><i class="fab fa-github"></i> GitHub</a>
                     <a href="https://linkedin.com/in/ozan-ismail-çolhak-119003313" target="_blank" class="footer-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
                 </div>
@@ -41,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-link');
 
     navLinks.forEach(link => {
+        // Simple check: matches href exactly (ignoring path depth for simple pages)
         if (link.getAttribute('href') === currentPage) {
             link.classList.add('active');
         }
@@ -77,5 +111,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Actually relying on CSS class on body tag in HTML is better as per my refactor.
     // So this step is skipped to avoid overriding specific page structures.
 
-    console.log('Cyber Scenarios script loaded and UI injected.');
+    console.log(`Cyber Scenarios script loaded (${isEnglish ? 'EN' : 'TR'}) and UI injected.`);
 });

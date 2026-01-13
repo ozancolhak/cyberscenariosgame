@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SOC Analyst | Scenario Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../script.js" defer></script>
+</head>
+
+<body class="page-content">
+    <div class="grid-bg"></div>
+    <div class="container">
+        <h1>Select Simulation</h1>
+        <p class="subtitle">As a SOC Analyst, you are on the first line of defense. You will analyze incoming alerts and
+            detect threats early. Choose a scenario to test your skills.</p>
+
+        <div class="scenarios-grid">
+            <a href="cyberscenarios9/index.html" class="scenario-card">
+                <img src="../vpn.png" alt="Suspicious VPN Connection Concept">
+                <div class="content">
+                    <h2>Suspicious VPN Connection</h2>
+                    <p>A successful VPN connection was made from an executive's account from an unexpected location. Is
+                        this a business trip or a data breach? Investigate the logs!</p>
+
+                    <div class="card-info">
+                        <span class="difficulty-easy">
+                            <i class="fas fa-signal"></i>
+                            Difficulty: Easy
+                        </span>
+                        <span class="focus-color">
+                            <i class="fas fa-search"></i>
+                            Focus: Log Analysis
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="cyberscenarios5/index.html" class="scenario-card">
+                <img src="../phishing_card.png" alt="Phishing Attack Concept">
+                <div class="content">
+                    <h2>Phishing Crisis</h2>
+                    <p>A suspicious email report from an employee could be the first step of a major attack. Analyze the
+                        email, find the root cause, and stop the threat before it spreads.</p>
+
+                    <div class="card-info">
+                        <span class="difficulty-medium">
+                            <i class="fas fa-signal"></i>
+                            Difficulty: Medium
+                        </span>
+                        <span class="focus-color">
+                            <i class="fas fa-envelope-open-text"></i>
+                            Focus: Email Analysis
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="cyberscenarios8/index.html" class="scenario-card">
+                <img src="../ddos_card.png" alt="DDoS Attack Concept">
+                <div class="content">
+                    <h2>Large Scale DDoS Crisis</h2>
+                    <p>The company's web services are being crushed under an unprecedented flood of traffic. Diagnose
+                        the attack, analyze the traffic, and keep the service running.</p>
+
+                    <div class="card-info">
+                        <span class="difficulty-high">
+                            <i class="fas fa-signal"></i>
+                            Difficulty: High
+                        </span>
+                        <span class="focus-color">
+                            <i class="fas fa-shield-alt"></i>
+                            Focus: Network Defense
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

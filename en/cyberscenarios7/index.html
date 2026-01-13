@@ -1,0 +1,887 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Cyber Scenario v7: Zero-Day Crisis Simulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css" rel="stylesheet" />
+    <style>
+        /* ... (styles remain same) */
+        /* ... */
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="centered-page" id="introSection">
+            <h1><i class="fa-solid fa-cloud-bolt"></i> Zero-Day Attack</h1>
+            <p style="max-width: 600px;">Welcome, **COLHAK Technology**'s **Cybersecurity Manager**!
+                You have a critical role in your team. You realized that an unpatched **zero-day vulnerability**
+                targeting your company's web application is being actively exploited. Attackers are infiltrating systems
+                to access sensitive data. Your mission: Stop this attack, control the damage, demand urgent mitigation
+                from the vendor, and start a race against time with system isolation decisions!</p>
+            <img alt="Cyber attack themed intro image" class="scenario-image" src="intro.png" />
+            <div class="intro-info-grid">
+                <div class="intro-roles-container">
+                    <h3><i class="fa-solid fa-people-arrows"></i> Simulation Roles</h3>
+                    <ul>
+                        <li class="your-role">
+                            <span class="icon"><i class="fa-solid fa-user-secret"></i></span>
+                            <div>
+                                <strong>Your Role: Cybersecurity Manager</strong>
+                                <small>You are the leader of the team that detects the active attack and makes the first
+                                    intervention. You play an active role in technical analysis, threat hunting, and
+                                    mitigation steps. Your choices will directly affect the outcome.</small>
+                            </div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span>
+                            <div><strong>CISO Anil Yilmaz</strong> <small>Responsible for security, expects fast
+                                    action.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-microchip"></i></span>
+                            <div><strong>CTO Sadi Orcun</strong> <small>Responsible for technical infrastructure and
+                                    application, vendor communication goes through him.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-users-gear"></i></span>
+                            <div><strong>CEO Sultan Goze</strong> <small>Reputation and business continuity are
+                                    priorities.</small>
+                            </div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-handshake-angle"></i></span>
+                            <div><strong>Vendor Representative (App Developer)</strong> <small>Obligated to patch the
+                                    zero-day vulnerability, might be slow.</small></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="intro-metrics-container">
+                    <h3><i class="fa-solid fa-chart-line"></i> Key Metrics</h3>
+                    <ul>
+                        <li><span class="icon" style="color: var(--accent-red);"><i
+                                    class="fa-solid fa-shield-halved"></i></span>
+                            <div><strong>App Security Status</strong> <small>How vulnerable the application is to
+                                    exploits. (Initial: Critical)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-green);"><i
+                                    class="fa-solid fa-user-lock"></i></span>
+                            <div><strong>Attacker Access</strong> <small>The attacker's penetration into the system.
+                                    (Initial: Limited)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i
+                                    class="fa-solid fa-sack-dollar"></i></span>
+                            <div><strong>Potential Financial Loss</strong> <small>Cost of the attack. (Initial:
+                                    $0)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i
+                                    class="fa-solid fa-hourglass-half"></i></span>
+                            <div><strong>Crisis Duration</strong> <small>Time to control the crisis. (Initial: 0
+                                    Hours)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-pink);"><i
+                                    class="fa-solid fa-heart-crack"></i></span>
+                            <div><strong>User Trust</strong> <small>Users' belief in the application. (Initial:
+                                    100)</small></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Start Simulation</button>
+        </div>
+        <div class="centered-page" id="intermissionSection" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <p id="intermissionText" style="max-width: 600px;"></p>
+            <div class="interactive-element" style="width: 100%; max-width: 500px;">
+                <h4>Decision Impacts</h4>
+                <div id="intermissionMetrics"></div>
+            </div>
+            <div class="interactive-element"
+                style="width: 100%; max-width: 500px; border-left-color: var(--accent-blue); margin-top: 20px;">
+                <h4>Strategic Evaluation</h4>
+                <p id="strategicText" style="font-size: 1em;"></p>
+            </div>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px;"><i
+                    class="fa-solid fa-forward"></i> Continue</button>
+        </div>
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-shield-halved"></i> App Security</span>
+                    <div class="value" id="status-appSecurity">Critical</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-user-lock"></i> Attacker Access</span>
+                    <div class="value" id="status-attackerAccess">Limited</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-sack-dollar"></i> Financial Loss</span>
+                    <div class="value" id="status-financialLoss">$0</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-hourglass-half"></i> Crisis Duration</span>
+                    <div class="value" id="status-crisisDuration">0 Hours</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-heart-crack"></i> User Trust</span>
+                    <div class="value" id="status-userTrust">100</div>
+                </div>
+                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Time Remaining</span>
+                    <div class="value" id="status-remaining">04:00</div>
+                </div>
+            </div>
+            <div id="game-content">
+                <div class="section" id="phase1_initial_detection">
+                    <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Phase 1: Initial Detection and Shock</h2>
+                    <h3>Moment 0:00 - Zero-Day Exploit Alarm!</h3>
+                    <p>During the night shift, you detected unusual activity in the WAF (Web Application Firewall) logs
+                        of your critical web application. You see that some requests normally blocked are now being
+                        bypassed and the application is responding in unexpected ways. Initial analysis indicates that
+                        an unknown vulnerability is being actively exploited: A **zero-day attack**! Attackers are
+                        trying to access the application's user database.</p>
+                    <p>You receive an urgent call from CISO Anil Yilmaz: *"What does this mean? How can a vulnerability
+                        we are unaware of be exploited? We must stop it immediately! What are we doing?!"*</p>
+                    <img alt="Zero-day detection visual" class="scenario-image" src="zero_day_detection.png" />
+                    <div class="interactive-element">
+                        <h4>What will be your first emergency response as Cybersecurity Manager?</h4>
+                        <div class="decision-buttons"><button class="btn" data-decision="p1-isolate-app"
+                                data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-server"></i>
+                                <div class="btn-text">Option A: Immediately Isolate the Risky Web Application from the
+                                    Network.<small>Take a radical step to instantly stop the spread of the attack and
+                                        data leakage.</small></div>
+                            </button><button class="btn" data-decision="p1-monitor-traffic"
+                                data-next-section="phase2a_vendor_contact_initial"><i class="fa-solid fa-eye"></i>
+                                <div class="btn-text">Option B: Monitor Attacker Behavior and Try to Understand
+                                    Vulnerability.<small>Observe to understand how the zero-day is exploited and the
+                                        attacker's goals.</small></div>
+                            </button></div>
+                    </div>
+                    <div class="learning-note"><strong>Learning Note:</strong> Initial response is critical in zero-day
+                        attacks. Rapid isolation limits damage; detailed observation provides intelligence but carries
+                        risk.</div>
+                </div>
+                <div class="section" id="phase2a_vendor_contact_initial">
+                    <h2><i class="fa-solid fa-headset"></i> Phase 2A: Vendor Communication - Initial Response and
+                        Notification</h2>
+                    <h3>Moment 1:30 - Initial Response from Vendor</h3>
+                    <p>Immediately after detecting the zero-day vulnerability, you arranged an urgent meeting with the
+                        vendor firm that developed the application. You conveyed the situation in all details. The
+                        vendor team is surprised and confirmed that this vulnerability was not in their knowledge base.
+                        This proves it is indeed a **zero-day**. The vendor stated they would mobilize their entire team
+                        to develop a patch quickly, but it could take **estimated 8-12 hours**.</p>
+                    <img alt="Vendor communication visual" class="scenario-image" src="vendor_contact.png" />
+                    <div class="interactive-element">
+                        <h4>With this information, how will you notify the executives in the crisis team?</h4>
+                        <div class="decision-buttons"><button class="btn" data-decision="p2a-inform-wait"
+                                data-next-section="phase2b_mitigation_strategy"><i class="fa-solid fa-clock"></i>
+                                <div class="btn-text">Option A: Inform Management and Wait for Vendor's
+                                    Patch.<small>Report the situation to upper management and suggest waiting until the
+                                        vendor's official patch arrives.</small></div>
+                            </button><button class="btn" data-decision="p2a-demand-temp-fix"
+                                data-next-section="phase2b_mitigation_strategy"><i
+                                    class="fa-solid fa-hand-holding-medical"></i>
+                                <div class="btn-text">Option B: Demand Urgent Temporary Mitigation from
+                                    Vendor.<small>Pressure the vendor for a quick and temporary solution to stop the
+                                        attack until the patch arrives.</small></div>
+                            </button></div>
+                    </div>
+                    <div class="learning-note"><strong>Learning Note:</strong> Vendor response and patching process are
+                        vital in zero-days. Instead of sitting idle, pushing for temporary solutions shows a proactive
+                        approach in crisis management.</div>
+                </div>
+                <div class="section" id="phase2b_mitigation_strategy">
+                    <h2><i class="fa-solid fa-screwdriver-wrench"></i> Phase 2B: Temporary Mitigation Strategies</h2>
+                    <h3>Moment 2:30 - Search for Urgent Temporary Mitigation</h3>
+                    <p>While time is running out for the expected full patch from the vendor, CISO Anil Yilmaz and CTO
+                        Sadi Orcun are holding an urgent meeting with you. They don't want the application to remain at
+                        risk. "Keeping the application active is vital for us. What can we do until the patch arrives
+                        from the vendor?" they ask. You have three possible temporary mitigation strategies:</p>
+                    <p>1. **WAF Rules:** Adding custom rules to the Web Application Firewall (WAF) based on the
+                        attacker's exploit patterns. This allows blocking attacks based on specific signatures but may
+                        leave vulnerabilities against unknown variations.
+                        2. **Disable Feature:** Temporarily disabling the specific application feature that hosts the
+                        zero-day vulnerability. This definitively closes the gap but makes a part of the application
+                        unusable.
+                        3. **Take Offline:** Taking the application completely offline. It is the safest method but
+                        causes business interruption and negatively affects customer satisfaction.</p>
+                    <div class="interactive-element">
+                        <h4>Which temporary mitigation strategy will you recommend in line with current risks and
+                            business needs?</h4>
+                        <div class="decision-buttons"><button class="btn" data-decision="p2b-waf-rules"
+                                data-next-section="phase3a_data_breach_detection"><i
+                                    class="fa-solid fa-shield-virus"></i>
+                                <div class="btn-text">Option A: Add Custom Rules to WAF Targeting Attacker's
+                                    Exploit.<small>Provide temporary protection by creating WAF rules based on known
+                                        exploit patterns.</small></div>
+                            </button><button class="btn" data-decision="p2b-disable-feature"
+                                data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-toggle-off"></i>
+                                <div class="btn-text">Option B: Temporarily Disable the Exploited Feature.<small>Reduce
+                                        the attack surface by turning off the application feature hosting the zero-day
+                                        vulnerability.</small></div>
+                            </button><button class="btn" data-decision="p2b-take-offline"
+                                data-next-section="phase3a_data_breach_detection"><i class="fa-solid fa-power-off"></i>
+                                <div class="btn-text">Option C: Take the Application Completely Offline.<small>Take the
+                                        step that is risk-free but causes the biggest business interruption.</small>
+                                </div>
+                            </button></div>
+                    </div>
+                    <div class="learning-note"><strong>Learning Note:</strong> Temporary mitigations are vital for
+                        buying time in zero-day crises. Each option has different effects on security, functionality,
+                        and user experience.</div>
+                </div>
+                <div class="section" id="phase3a_data_breach_detection">
+                    <h2><i class="fa-solid fa-database"></i> Phase 3A: Data Breach Detection and Damage Assessment</h2>
+                    <h3>Moment 3:00 - User Database Access Detected!</h3>
+                    <p>Despite temporary mitigation steps, while your system monitoring continues, you face a
+                        frightening reality: The attacker has gained access to the user database using the zero-day
+                        vulnerability! Sensitive customer information (e-mail addresses, password hashes, and phone
+                        numbers) has started to leak. It is estimated that **10,000 user records** may have been
+                        affected in the first stage. CISO is now in panic: *"This is a data breach! It means GDPR
+                        violation! How will we explain this? What will be the financial impact?"*</p>
+                    <img alt="Data breach visual" class="scenario-image" src="data_breach.png" />
+                    <div class="interactive-element">
+                        <h4>In the face of this critical data breach, what will you do to control the damage and
+                            determine future steps?</h4>
+                        <div class="decision-buttons"><button class="btn" data-decision="p3a-reset-passwords"
+                                data-next-section="phase3b_insider_threat_suspicion"><i class="fa-solid fa-key"></i>
+                                <div class="btn-text">Option A: Force Reset All User Passwords and Notify
+                                    Users.<small>Secure user accounts immediately, but negatively affect user
+                                        experience.</small></div>
+                            </button><button class="btn" data-decision="p3a-forensic-analysis"
+                                data-next-section="phase3b_insider_threat_suspicion"><i
+                                    class="fa-solid fa-microscope"></i>
+                                <div class="btn-text">Option B: Start Forensic Analysis and Determine Full Scope of
+                                    Breach.<small>Conduct a detailed investigation to map out the depth of the attack
+                                        and the full list of affected data.</small></div>
+                            </button></div>
+                    </div>
+                    <div class="learning-note"><strong>Learning Note:</strong> Rapid and accurate notification in data
+                        breaches is important for maintaining user trust. Technical steps and communication strategies
+                        should be carried out simultaneously.</div>
+                </div>
+                <div class="section" id="phase3b_insider_threat_suspicion">
+                    <h2><i class="fa-solid fa-user-secret"></i> Phase 3B: Insider Threat Suspicion and Root Cause
+                        Analysis</h2>
+                    <h3>Moment 4:00 - Suspicious Internal Activity!</h3>
+                    <p>During the in-depth log analysis and forensic investigations following the data breach, you came
+                        across a surprising finding: Immediately after the attacker exploited the zero-day
+                        vulnerability, a suspicious connection was detected from within the company network,
+                        specifically from a developer workstation (<span
+                            style="color: var(--accent-yellow); font-weight: bold;">dev_workstation_01</span>), towards
+                        the outside (via an <span style="color: var(--accent-pink); font-weight: bold;">anonymous proxy
+                            server</span>). This connection might be related to sending a copy of the leaked data. This
+                        raises the possibility of either insider collaboration or another malicious software infecting
+                        the workstation.</p>
+                    <p>CTO Sadi Orcun is worried about this information spreading: *"Does this mean an insider threat?
+                        If this rumor spreads, the team's morale will collapse completely! What should we do?"*</p>
+                    <img alt="Insider threat visual" class="scenario-image" src="insider_threat.png" />
+                    <div class="interactive-element">
+                        <h4>How will you proceed regarding this critical insider threat suspicion?</h4>
+                        <div class="decision-buttons"><button class="btn" data-decision="p3b-covert-monitor"
+                                data-next-section="phase4_public_announcement"><i class="fa-solid fa-user-secret"></i>
+                                <div class="btn-text">Option B: Covertly Monitor the Workstation and Gather More
+                                    Info.<small>Observe secretly to better understand the origin and scope of the
+                                        attack, but risk continued leakage.</small></div>
+                            </button><button class="btn" data-decision="p3b-isolate-workstation"
+                                data-next-section="phase4_public_announcement"><i
+                                    class="fa-solid fa-plug-circle-xmark"></i>
+                                <div class="btn-text">Option A: Immediately Isolate Suspicious Workstation and Start
+                                    Rapid Forensic Investigation.<small>Stop a potential insider threat instantly, but
+                                        risk violating privacy and affecting employee morale.</small></div>
+                            </button><button class="btn" data-decision="p3b-employee-interview"
+                                data-next-section="phase4_public_announcement"><i
+                                    class="fa-solid fa-users-viewfinder"></i>
+                                <div class="btn-text">Option C: Call Workstation Owner for a Confidential
+                                    Interview.<small>Try to learn the reason for the suspicious connection directly, but
+                                        you might warn the employee and cause them to destroy evidence.</small></div>
+                            </button></div>
+                    </div>
+                    <div class="learning-note"><strong>Learning Note:</strong> Insider threats are one of the most
+                        complex dimensions of cybersecurity crises. Finding the balance requires a delicate balance
+                        between rapid response and accurate information gathering.</div>
+                </div>
+                <div class="section" id="phase4_public_announcement">
+                    <h2><i class="fa-solid fa-bullhorn"></i> Phase 4: Public Relations and Zero-Day Race</h2>
+                    <h3>Moment 5:00 - Press and Social Media Pressure!</h3>
+                    <p>News of the zero-day attack and potential data breach has started to leak. Whispers are
+                        circulating on social media, tech news sites have started making negative reports about COLHAK
+                        Technology. CEO Sultan Goze calls you angrily: *"Our reputation is being destroyed! Is the
+                        launch cancelled? We must make a press statement immediately. How will we explain this zero-day
+                        event?"*</p>
+                    <p>No official patch has arrived from the vendor yet. The crisis team is in a heated discussion
+                        about the content and timing of the statement to be made to the public.</p>
+                    <img alt="Public announcement visual" class="scenario-image"
+                        src="press_social_media_pressure.png" />
+                    <div class="interactive-element">
+                        <h4>How will you message the public regarding this zero-day attack and data breach?</h4>
+                        <div class="decision-buttons"><button class="btn" data-decision="p4-focus-on-future"
+                                data-next-section="phase5_patch_deployment"><i class="fa-solid fa-lightbulb"></i>
+                                <div class="btn-text">Option C: Focus on Future Security Investments, Don't Detail
+                                    Zero-Day.<small>Skip the details of the crisis and emphasize the company's future
+                                        security commitments and investments.</small></div>
+                            </button><button class="btn" data-decision="p4-minimize-impact"
+                                data-next-section="phase5_patch_deployment"><i class="fa-solid fa-masks-theater"></i>
+                                <div class="btn-text">Option B: Avoid Zero-Day Term, Call it 'Technical
+                                    Issue'.<small>Downplay the seriousness of the event, avoid using the term zero-day,
+                                        and state it was a 'minor technical issue'.</small></div>
+                            </button><button class="btn" data-decision="p4-transparent-disclosure"
+                                data-next-section="phase5_patch_deployment"><i class="fa-solid fa-handshake"></i>
+                                <div class="btn-text">Option A: Be Completely Transparent, Explain Situation and
+                                    Measures.<small>Share the zero-day vulnerability, data breach, and all mitigation
+                                        steps taken with the public.</small></div>
+                            </button></div>
+                    </div>
+                    <div class="learning-note"><strong>Learning Note:</strong> In serious crises like zero-day,
+                        communication strategy has a direct impact on reputation and user trust. Honesty is the best
+                        policy in the long run.</div>
+                </div>
+                <div class="section" id="phase5_patch_deployment">
+                    <h2><i class="fa-solid fa-screwdriver-wrench"></i> Phase 5: Patch Deployment and Closing the Crisis
+                    </h2>
+                    <h3>Moment 7:00 - Zero-Day Patch Ready!</h3>
+                    <p>Finally! The vendor has completed the patch closing the zero-day vulnerability and sent it to
+                        you. However, this patch requires a critical system update and will require the application to
+                        be offline for a short time (about 30 minutes). CTO Sadi Orcun wants to apply the patch
+                        immediately. However, shutting down the application will cause downtime for active users and
+                        affect final pre-launch tests.</p>
+                    <img alt="Patch deployment visual" class="scenario-image" src="patch_deployment.png" />
+                    <div class="interactive-element">
+                        <h4>When and how will you deploy the zero-day patch?</h4>
+                        <div class="decision-buttons"><button class="btn" data-decision="p5-immediate-patch"
+                                data-next-section="finalSection"><i class="fa-solid fa-bolt"></i>
+                                <div class="btn-text">Option A: Deploy Patch Immediately During Business
+                                    Hours.<small>Intervene instantly to close the risk quickly, but accept user
+                                        downtime.</small></div>
+                            </button><button class="btn" data-decision="p5-scheduled-patch"
+                                data-next-section="finalSection"><i class="fa-solid fa-clock"></i>
+                                <div class="btn-text">Option B: Deploy Patch at Midnight or Low Usage
+                                    Hours.<small>Perform a planned outage to minimize user impact, but sustain zero-day
+                                        risk for a few more hours.</small></div>
+                            </button><button class="btn" data-decision="p5-risk-acceptance"
+                                data-next-section="finalSection"><i class="fa-solid fa-triangle-exclamation"></i>
+                                <div class="btn-text">Option C: Do Not Apply Patch, Try to Proceed with Temporary
+                                    Mitigations.<small>Risk it to not shut down the app at all, but the zero-day
+                                        vulnerability cannot be fully closed.</small></div>
+                            </button></div>
+                    </div>
+                    <div class="learning-note"><strong>Learning Note:</strong> Risk management in cybersecurity
+                        sometimes conflicts directly with business continuity. It is important to understand the
+                        expectations and risk tolerance of all stakeholders to make the best decision.</div>
+                </div>
+                <div class="section centered-page" id="finalSection" style="display: none;">
+                    <h2><i class="fa-solid fa-chart-line"></i> Post-Crisis Evaluation Report</h2>
+                    <p>Simulation completed. Detailed breakdown of your zero-day attack management performance is below.
+                    </p>
+                    <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                    <div class="final-metrics" id="finalMetricsContainer"></div>
+                    <div class="post-crisis-layout">
+                        <div class="event-timeline">
+                            <h3><i class="fa-solid fa-timeline"></i> Decision Timeline</h3>
+                            <ul id="decision-timeline-list"></ul>
+                        </div>
+                        <div class="strategic-debrief">
+                            <h3><i class="fa-solid fa-lightbulb"></i> Strategic Evaluation and Lessons</h3>
+                            <div id="strategic-debrief-content"></div>
+                        </div>
+                    </div>
+                    <div class="decision-buttons"
+                        style="margin-top: 40px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+                        <button class="btn btn-start" onclick="location.reload()"><i
+                                class="fa-solid fa-arrow-rotate-right"></i> Restart Simulation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div aria-labelledby="lbTitle" aria-modal="true" class="lb-overlay" id="leaderboardOverlay" role="dialog">
+        <div class="lb-modal">
+            <h2 class="lb-title" id="lbTitle"><i class="fa-solid fa-trophy"></i> Leaderboard</h2>
+            <div class="lb-tablewrap">
+                <table class="lb-table" id="leaderboardTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr>
+                            <td colspan="4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="lb-actions">
+                <button class="lb-refresh" id="lbRefreshBtn"><i class="fa-solid fa-arrows-rotate"></i> Yenile</button>
+                <button class="lb-close" id="lbCloseBtn">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = {
+                // Metrics
+                score: { appSecurity: 'Critical', attackerAccess: 'Limited', financialLoss: 0, crisisDuration: 0, userTrust: 100 },
+                // State
+                state: {
+                    currentSectionId: 'start',
+                    decisionHistory: [],
+                    totalScore: null
+                },
+                // Element References
+                elements: {},
+                // GLOBAL TIMER (4:00)
+                timer: {
+                    total: 240,
+                    remaining: 240,
+                    intervalId: null,
+                    running: false
+                },
+
+                decisionInfo: {
+                    'p1-isolate-app': { title: "Isolate Application", text: "You immediately isolated the web application from the network. This instantly stopped the spread of the attack and data leakage. The application is temporarily offline.", strat: "In zero-day attacks, the first and most radical step is to close the attack surface. This minimizes damage but causes business interruption.", changes: { appSecurity: 'Risky', attackerAccess: 'Blocked', financialLoss: 20000, crisisDuration: 1, userTrust: -5 }, impact: 'Positive' },
+                    'p1-monitor-traffic': { title: "Monitor Attacker", text: "You continued to monitor the attacker's behavior and gathered critical intelligence on exactly how the zero-day exploit works. However, during this time, the attacker managed to penetrate further and more data was compromised.", strat: "Monitoring the attacker provides valuable information to strengthen defenses in the long run. However, in an active attack, this increases the risk of further damage.", changes: { appSecurity: 'Critical', attackerAccess: 'Advanced', financialLoss: 50000, crisisDuration: 2, userTrust: -15 }, impact: 'Negative' },
+                    'p2a-inform-wait': { title: "Inform Management and Wait", text: "You reported the situation to upper management and suggested waiting until the vendor's official patch arrives. This did not cause major disruption to the workflow, but the lack of a proactive mitigation step against the zero-day meant the risk persisted.", strat: "Informing management is always important. However, in a zero-day situation, just waiting can pave the way for the attack to progress and weakens the company's proactive security posture.", changes: { financialLoss: 10000, crisisDuration: 2, userTrust: -5 }, impact: 'Neutral' },
+                    'p2a-demand-temp-fix': { title: "Demand Urgent Temporary Mitigation", text: "You pressured the vendor to develop a quick and temporary solution to stop the attack until the patch arrived. The vendor team started working on an urgent temporary solution (e.g., WAF rule or feature disable) upon your expectation.", strat: "Being proactive and demanding urgent temporary solutions from the vendor is vital to minimizing business interruption and damage in zero-day attacks. This strengthens the company's security posture.", changes: { financialLoss: 0, crisisDuration: 0.5, userTrust: +5 }, impact: 'Positive' },
+                    'p2b-waf-rules': { title: "Add Custom WAF Rules", text: "You added custom WAF rules targeting the attacker's exploit patterns. This largely blocked the attack and allowed the application to keep running. However, the zero-day vulnerability still exists in the base code and the attacker may try new variations.", strat: "WAF rules can be a fast and effective temporary solution against zero-day attacks. This reduces risk while maintaining business continuity.", changes: { appSecurity: 'Medium', financialLoss: 10000, crisisDuration: 1, userTrust: +5 }, impact: 'Positive' },
+                    'p2b-disable-feature': { title: "Disable Exploited Feature", text: "You temporarily disabled the critical application feature hosting the zero-day vulnerability. This instantly closed the hole and cut off the attacker's access. However, a part of the application became unusable, which affected user experience.", strat: "The most definitive temporary solution against a zero-day is to close the vulnerable feature. However, this may restrict the application's functionality.", changes: { appSecurity: 'Good', financialLoss: 15000, crisisDuration: 1, userTrust: -10 }, impact: 'Positive' },
+                    'p2b-take-offline': { title: "Take Application Offline", text: "You decided to take the application completely offline. This was the safest path security-wise and prevented the attacker from progressing further. However, the application remaining inaccessible for a long time caused significant business interruption.", strat: "Waiting for full security might be logical, but in zero-day attacks, every moment is critical and business continuity costs can be very high.", changes: { appSecurity: 'Secure', financialLoss: 100000, crisisDuration: 4, userTrust: -20 }, impact: 'Negative' },
+                    'p3a-reset-passwords': { title: "Reset All User Passwords", text: "You forced a reset of all affected users' passwords and sent them urgent notification emails. This prevented the misuse of compromised accounts and demonstrated a proactive security posture. Although some users were annoyed, most appreciated it.", strat: "Securing user accounts is a priority in a data breach. Transparent communication and rapid action are vital to maintaining user trust.", changes: { userTrust: +10, financialLoss: 5000, attackerAccess: 'Limited' }, impact: 'Positive' },
+                    'p3a-forensic-analysis': { title: "Start Forensic Analysis", text: "You started a comprehensive forensic analysis. This helped you deeply understand the full scope of the leak, affected data types, and attacker methods. However, this process took time and the attacker potentially gathered more info during this time.", strat: "Forensic analysis is critical to determine the root cause and full scope of a breach. But in emergencies, it must be balanced with operational steps.", changes: { userTrust: -5, financialLoss: 10000, attackerAccess: 'Advanced', crisisDuration: 2 }, impact: 'Neutral' },
+                    'p3b-isolate-workstation': { title: "Isolate Workstation and Inspect", text: "You immediately isolated the suspicious workstation from the network and started a rapid forensic investigation. This prevented the potential insider threat from spreading and preserved evidence. Although the employee's work was disrupted, security was prioritized.", strat: "Rapid isolation is a critical step in insider threat suspicion to stop damage and spread. Forensic investigation is essential to preserve evidence integrity.", changes: { attackerAccess: 'Blocked', financialLoss: 10000, crisisDuration: 1, userTrust: -3 }, impact: 'Positive' },
+                    'p3b-covert-monitor': { title: "Covertly Monitor Workstation", text: "You put the workstation under covert surveillance and tried to gather more information. This allowed you to gather valuable intelligence to understand the true nature of the attack and whether it originated internally or externally. However, a small-scale data leak continued during this process.", strat: "Covert monitoring is a good method to understand the threat actor's methods but increases the risk of active leakage. A balance must be struck between intelligence gathering and risk management.", changes: { attackerAccess: 'Advanced', financialLoss: 25000, crisisDuration: 2, userTrust: -10 }, impact: 'Neutral' },
+                    'p3b-employee-interview': { title: "Interview Workstation Owner", text: "You called the workstation owner for a confidential interview. The employee claimed to have established the suspicious connection purely by mistake and cooperated. This quickly clarified the situation but carried the risk of tipping off a potential malicious actor and causing them to destroy evidence.", strat: "Direct questioning can provide a quick response but is a sensitive approach in insider threats. Trust may be shaken or evidence lost.", changes: { attackerAccess: 'Limited', financialLoss: 5000, userTrust: -5 }, impact: 'Neutral' },
+                    'p4-transparent-disclosure': { title: "Be Completely Transparent", text: "You shared the zero-day vulnerability, data breach, and all mitigation steps taken with the public transparently. This initially led to some media backlash, but in the long run strengthened the company's perception of honesty and responsibility and increased user trust.", strat: "Transparency in cyber crises is the foundation of reputation and trust in the long run, even if difficult in the short term. Honesty is the best policy.", changes: { userTrust: +15, financialLoss: 20000, appSecurity: 'Risky' }, impact: 'Positive' },
+                    'p4-minimize-impact': { title: "Avoid Zero-Day Term", text: "Downplaying the seriousness of the event, you avoided using the term zero-day and described the event as a 'minor technical issue'. This reduced panic in the short term, but when the media and users realized the truth, your company's reputation took a heavy blow and trust was lost.", strat: "Distorting or downplaying facts may reduce pressure in the short term but damages trust and reputation irreversibly in the long run.", changes: { userTrust: -30, financialLoss: 100000, appSecurity: 'Critical' }, impact: 'Negative' },
+                    'p4-focus-on-future': { title: "Focus on Future Investments", text: "Skipping the details of the crisis, you made a statement emphasizing the company's future security commitments and investments. This shifted media focus slightly but increased doubts as it didn't provide enough info about the zero-day and data breach.", strat: "Turning focus to the future can be a strategy in crisis communication but leads to distrust when current situation isn't explained enough.", changes: { userTrust: -10, financialLoss: 50000, appSecurity: 'Risky' }, impact: 'Neutral' },
+                    'p5-immediate-patch': { title: "Deploy Patch Immediately", text: "You deployed the patch immediately during business hours. The application was offline for a short time, which caused inconvenience to some users. However, the zero-day vulnerability was instantly closed and the risk of the attack continuing was completely eliminated.", strat: "Rapid patch deployment in a critical vulnerability is the safest path, even at the cost of business interruption. Security can be prioritized over business continuity.", changes: { appSecurity: 'Secure', attackerAccess: 'Blocked', financialLoss: 5000, userTrust: -2, crisisDuration: 0.5 }, impact: 'Positive' },
+                    'p5-scheduled-patch': { title: "Deploy Patch at Midnight", text: "You planned to deploy the patch at midnight or during low usage hours. This minimized user downtime and provided a smoother deployment. However, this meant the zero-day vulnerability remained active for a few more hours, creating a small risk during this time.", strat: "A patching strategy prioritizing user experience is commonly used. However, in a zero-day situation, delay can carry additional risks.", changes: { appSecurity: 'Good', attackerAccess: 'Limited', financialLoss: 10000, userTrust: +5, crisisDuration: 8 }, impact: 'Neutral' },
+                    'p5-risk-acceptance': { title: "Do Not Apply Patch", text: "You tried not to apply the patch and proceed only with temporary mitigations. This avoided keeping the application offline but means the zero-day vulnerability still exists. The risk of the attacker finding new exploit methods continues.", strat: "Not applying a zero-day patch means constant risk. Temporary solutions do not provide full protection and are not sustainable in the long run.", changes: { appSecurity: 'Critical', attackerAccess: 'Advanced', financialLoss: 75000, userTrust: -25, crisisDuration: 12 }, impact: 'Negative' },
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'),
+                        game: document.getElementById('gameContainer'),
+                        gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'),
+                        intermission: document.getElementById('intermissionSection'),
+                        intermissionTitle: document.getElementById('intermissionTitle'),
+                        intermissionText: document.getElementById('intermissionText'),
+                        intermissionMetrics: document.getElementById('intermissionMetrics'),
+                        strategicText: document.getElementById('strategicText'),
+                        continueButton: document.getElementById('continueButton'),
+                        statusBar: {
+                            appSecurity: document.getElementById('status-appSecurity'),
+                            attackerAccess: document.getElementById('status-attackerAccess'),
+                            financialLoss: document.getElementById('status-financialLoss'),
+                            crisisDuration: document.getElementById('status-crisisDuration'),
+                            userTrust: document.getElementById('status-userTrust'),
+                            remaining: document.getElementById('status-remaining') // ADDED
+                        },
+                        leaderboard: { // ADDED
+                            overlay: document.getElementById('leaderboardOverlay'),
+                            body: document.getElementById('leaderboardBody'),
+                            table: document.getElementById('leaderboardTable'),
+                            btnOpen: document.getElementById('openLeaderboardBtn'),
+                            btnClose: document.getElementById('lbCloseBtn'),
+                            btnRefresh: document.getElementById('lbRefreshBtn')
+                        }
+                    };
+                    this.loadGameHTML();
+                    this.attachListeners();
+                    this.elements.intro.style.display = 'flex';
+                    this.elements.game.style.display = 'none';
+                },
+
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.intro.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+                        this.startGlobalTimer(); // ADDED: Start timer
+                        this.showSection('phase1_initial_detection');
+                    });
+
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button || button.disabled) {
+                            return;
+                        }
+
+                        const decisionId = button.dataset.decision;
+                        const nextSection = button.dataset.nextSection;
+
+                        this.handleDecision(decisionId, nextSection);
+                    });
+
+                    this.elements.continueButton.addEventListener('click', () => {
+                        const nextSectionId = this.elements.continueButton.dataset.nextSection;
+                        this.elements.intermission.style.display = 'none';
+
+                        if (nextSectionId === 'finalSection') {
+                            this.showFinalReport();
+                        } else {
+                            this.elements.game.style.display = 'block';
+                            this.showSection(nextSectionId);
+                        }
+                    });
+
+                    // ADDED: Leaderboard Modal buttons
+                    this.elements.leaderboard.btnOpen?.addEventListener('click', () => this.openLeaderboard());
+                    this.elements.leaderboard.btnClose?.addEventListener('click', () => this.closeLeaderboard());
+                    this.elements.leaderboard.btnRefresh?.addEventListener('click', () => this.loadLeaderboard());
+                    this.elements.leaderboard.overlay.addEventListener('click', (e) => {
+                        if (e.target === this.elements.leaderboard.overlay) this.closeLeaderboard();
+                    });
+                },
+
+                handleDecision(decisionId, nextSectionId) {
+                    const info = this.decisionInfo[decisionId];
+                    if (!info) { console.error("Decision info not found:", decisionId); return; }
+
+                    // Apply metric changes
+                    this.score.appSecurity = info.changes.appSecurity || this.score.appSecurity;
+                    this.score.attackerAccess = info.changes.attackerAccess || this.score.attackerAccess;
+                    this.score.financialLoss += info.changes.financialLoss || 0;
+                    this.score.crisisDuration += info.changes.crisisDuration || 0;
+                    this.score.userTrust = Math.max(0, Math.min(100, this.score.userTrust + (info.changes.userTrust || 0)));
+
+                    this.state.decisionHistory.push({ id: decisionId, title: info.title, text: info.text, impactType: info.impact, sectionId: this.state.currentSectionId });
+
+                    this.updateState();
+                    this.showIntermission(info.title, info.text, info.strat, info.changes, nextSectionId);
+                },
+
+                showIntermission(title, text, strat, changes, nextSectionId) {
+                    this.elements.intermissionTitle.textContent = title;
+                    this.elements.intermissionText.textContent = text;
+                    this.elements.strategicText.textContent = strat;
+
+                    let metricsHTML = '';
+                    const formatChange = (label, value, unit, icon, isPositive) => {
+                        let colorClass = 'neutral';
+                        let displayValue = value;
+                        let arrowIcon = '';
+
+                        if (typeof value === 'number') {
+                            if (label === 'Financial Loss' || label === 'Crisis Duration') {
+                                colorClass = value > 0 ? 'negative' : (value < 0 ? 'positive' : 'neutral');
+                                arrowIcon = value > 0 ? 'fa-arrow-up-long' : (value < 0 ? 'fa-arrow-down-long' : '');
+                            } else if (label === 'User Trust') {
+                                colorClass = value > 0 ? 'positive' : (value < 0 ? 'negative' : 'neutral');
+                                arrowIcon = value > 0 ? 'fa-arrow-up-long' : (value < 0 ? 'fa-arrow-down-long' : '');
+                            }
+                            displayValue = `${value >= 0 ? '+' : ''}${value.toLocaleString('en-US')}`;
+                        } else {
+                            if (label === 'App Security Status') {
+                                if (value === 'Secure' || value === 'Good') colorClass = 'positive';
+                                else if (value === 'Critical') colorClass = 'negative';
+                                else colorClass = 'neutral';
+                            } else if (label === 'Attacker Access') {
+                                if (value === 'Blocked') colorClass = 'positive';
+                                else if (value === 'Full' || value === 'Advanced') colorClass = 'negative';
+                                else colorClass = 'neutral';
+                            }
+                        }
+
+                        return `<div class="metric-change ${colorClass}"><i class="fa-solid ${icon}"></i> ${label}: ${arrowIcon ? `<i class="fa-solid ${arrowIcon}"></i>` : ''} ${displayValue}${unit}</div>`;
+                    };
+
+                    if (changes.appSecurity !== undefined) metricsHTML += formatChange('App Security Status', changes.appSecurity, '', 'fa-shield-halved', false);
+                    if (changes.attackerAccess !== undefined) metricsHTML += formatChange('Attacker Access', changes.attackerAccess, '', 'fa-user-lock', false);
+                    if (changes.financialLoss !== undefined && changes.financialLoss !== 0) metricsHTML += formatChange('Financial Loss', changes.financialLoss, '$', 'fa-sack-dollar', false);
+                    if (changes.crisisDuration !== undefined && changes.crisisDuration !== 0) metricsHTML += formatChange('Crisis Duration', changes.crisisDuration, ' Hours', 'fa-hourglass-half', false);
+                    if (changes.userTrust !== undefined && changes.userTrust !== 0) metricsHTML += formatChange('User Trust', changes.userTrust, '', 'fa-heart-crack', true);
+
+                    if (metricsHTML === '') metricsHTML = '<p style="text-align: center; font-size: 1em; opacity: 0.8;">This decision had no direct impact on metrics.</p>';
+
+                    this.elements.intermissionMetrics.innerHTML = metricsHTML;
+                    this.elements.continueButton.dataset.nextSection = nextSectionId;
+                    this.elements.game.style.display = 'none';
+                    this.elements.intermission.style.display = 'flex';
+                },
+
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.appSecurity.textContent = s.appSecurity;
+                    this.elements.statusBar.attackerAccess.textContent = s.attackerAccess;
+                    this.elements.statusBar.financialLoss.textContent = `$${s.financialLoss.toLocaleString('en-US')}`;
+                    this.elements.statusBar.crisisDuration.textContent = `${s.crisisDuration} Hours`;
+                    this.elements.statusBar.userTrust.textContent = Math.max(0, s.userTrust);
+                },
+
+                showSection(sectionId) {
+                    this.elements.sections.forEach(section => { section.style.display = 'none'; });
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        this.state.currentSectionId = sectionId;
+                        this.updateDynamicContent(sectionId);
+                    } else {
+                        console.error('Section not found:', sectionId);
+                        this.showFinalReport();
+                    }
+                    this.updateState();
+                },
+
+                showFinalReport() {
+                    this.stopGlobalTimer(); // ADDED
+
+                    this.elements.intro.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block';
+                    document.getElementById('statusBar').style.display = 'none';
+
+                    this.elements.sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+
+                    const finalSection = document.getElementById('finalSection');
+                    if (!finalSection) { console.error("Final section not found in HTML!"); return; }
+
+                    finalSection.style.display = 'flex';
+
+                    const badge = document.getElementById('performance-badge');
+                    const metricsContainer = document.getElementById('finalMetricsContainer');
+                    const timelineList = document.getElementById('decision-timeline-list');
+                    const debriefContent = document.getElementById('strategic-debrief-content');
+
+                    const finalAppSecurity = this.score.appSecurity;
+                    const finalAttackerAccess = this.score.attackerAccess;
+                    const finalFinancialLoss = this.score.financialLoss;
+                    const finalCrisisDuration = this.score.crisisDuration;
+                    const finalUserTrust = this.score.userTrust;
+
+                    // --- STANDARD SCORING SYSTEM (V2) ---
+                    let scoreBreakdown = {};
+                    let totalScore = 50;
+                    scoreBreakdown['Initial Score'] = { value: 50, class: 'score-neutral' };
+
+                    // 1. Decision Based Scoring (+10 / 0 / -10)
+                    let decisionScore = 0;
+                    this.state.decisionHistory.forEach(decision => {
+                        if (decision.impactType === 'Positive') {
+                            decisionScore += 10;
+                        } else if (decision.impactType === 'Negative') {
+                            decisionScore -= 10;
+                        }
+                    });
+
+                    if (decisionScore !== 0) {
+                        totalScore += decisionScore;
+                        scoreBreakdown['Decision Quality'] = {
+                            value: decisionScore,
+                            class: decisionScore > 0 ? 'score-plus' : 'score-minus'
+                        };
+                    }
+
+                    // 2. Metric Based Bonuses/Penalties
+                    // App Security
+                    if (this.score.appSecurity === 'Secure') {
+                        totalScore += 10;
+                        scoreBreakdown['Excellent App Security'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.appSecurity === 'Critical') {
+                        totalScore -= 10;
+                        scoreBreakdown['Critical Security Vulnerability'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Attacker Access
+                    if (this.score.attackerAccess === 'Blocked') {
+                        totalScore += 10;
+                        scoreBreakdown['Attacker Access Blocked'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.attackerAccess === 'Full') {
+                        totalScore -= 10;
+                        scoreBreakdown['Full System Access Penalty'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // User Trust
+                    if (this.score.userTrust >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['High User Trust'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.userTrust < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Low User Trust'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Financial Penalty
+                    if (this.score.financialLoss > 500000) {
+                        totalScore -= 10;
+                        scoreBreakdown['High Financial Loss'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // 3. Time Bonus
+                    if (this.timer.remaining >= 180) {
+                        totalScore += 5;
+                        scoreBreakdown['Fast Response Bonus'] = { value: 5, class: 'score-plus' };
+                    }
+
+                    // Capping (0-100)
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
+                    this.state.totalScore = totalScore;
+                    // --- SCORING SYSTEM END ---
+
+                    let badgeInfo = {};
+                    if (totalScore >= 90) badgeInfo = { text: 'LEGEND (ZERO-DAY MASTER)', color: 'var(--accent-green)' };
+                    else if (totalScore >= 70) badgeInfo = { text: 'EXPERT (RESILIENT ANALYST)', color: 'var(--accent-blue)' };
+                    else if (totalScore >= 50) badgeInfo = { text: 'INTERMEDIATE (DIFFICULT EXPERIENCE)', color: 'var(--accent-yellow)' };
+                    else badgeInfo = { text: 'FAILED (DISASTER)', color: 'var(--accent-red)' };
+
+                    badge.textContent = badgeInfo.text;
+                    badge.style.backgroundColor = badgeInfo.color;
+
+                    metricsContainer.innerHTML = `
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-file-invoice-dollar"></i></div><div class="label">Final Score</div><div class="value">${totalScore}/100</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-shield-halved"></i></div><div class="label">App Security</div><div class="value">${finalAppSecurity}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-user-lock"></i></div><div class="label">Attacker Access</div><div class="value">${finalAttackerAccess}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-sack-dollar"></i></div><div class="label">Financial Loss</div><div class="value">$${finalFinancialLoss.toLocaleString('en-US')}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-hourglass-half"></i></div><div class="label">Crisis Duration</div><div class="value">${finalCrisisDuration} Hours</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-heart-crack"></i></div><div class="label">User Trust</div><div class="value">${finalUserTrust}/100</div></div>
+                    `;
+
+                    timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                        let liClass = decision.impactType === 'Positive' ? 'positive' : (decision.impactType === 'Negative' ? 'negative' : 'neutral');
+                        return `<li class="${liClass}"><span class="decision-title">${decision.title}</span></li>`;
+                    }).join('');
+
+                    let debriefHTML = '';
+                    if (badgeInfo.text.includes('ZERO-DAY MASTER')) {
+                        debriefHTML += `<p><strong>Outstanding Success!</strong> As a Cybersecurity Manager, you expertly managed a zero-day attack. Thanks to rapid detection, smart temporary mitigations, and effective communication strategies, your company survived this critical threat with minimal damage. You fully secured app security and strengthened user trust. You proved to be a true leader in cybersecurity!</p>`;
+                    } else if (badgeInfo.text.includes('RESILIENT ANALYST')) {
+                        debriefHTML += `<p><strong>Successful Zero-Day Intervention!</strong> Despite facing a very complex zero-day crisis, you succeeded in controlling the crisis with effective technical interventions and strategic decisions. Although some financial losses and disruptions occurred, you generally preserved app security and user trust significantly. You will strengthen your future zero-day defenses with the lessons learned.</p>`;
+                    } else if (badgeInfo.text.includes('DIFFICULT EXPERIENCE')) {
+                        debriefHTML += `<p><strong>Major Lessons Learned:</strong> You struggled to manage the zero-day attack and experienced significant losses in app security and user trust. Financial losses increased and the crisis duration extended. However, this experience provided invaluable lessons to fundamentally change your zero-day defense strategies and better prepare your team. You need urgent action plans and training.</p>`;
+                    } else {
+                        debriefHTML += `<p><strong>ZERO-DAY DISASTER:</strong> As a Cybersecurity Manager, you faced serious difficulties managing this zero-day crisis. App security remained critical, the attacker gained wide access to systems, financial losses reached massive proportions, and user trust completely collapsed. This situation was a painful lesson requiring radical change in cybersecurity strategies for COLHAK Technology.</p>`;
+                    }
+                    debriefContent.innerHTML = debriefHTML;
+
+                    this.saveLeaderboard(totalScore); // ADDED
+                },
+
+                updateState() { this.updateStatusBar(); this.updateSlackChat(this.state.currentSectionId); },
+
+                updateSlackChat(currentSection) {
+                    const sectionElement = document.getElementById(currentSection);
+                    if (!sectionElement) return;
+                    const chatViewer = sectionElement.querySelector('.slack-chat');
+                    if (!chatViewer) return;
+
+                    let chat = '';
+                    chatViewer.innerHTML = chat;
+                },
+
+                updateDynamicContent(sectionId) { },
+
+                loadGameHTML() {
+                    this.elements.sections = document.querySelectorAll('.section');
+                    hljs.highlightAll();
+                },
+
+                /* === NEW ADDED FUNCTIONS === */
+
+                startGlobalTimer() {
+                    if (this.timer.running) return;
+                    this.timer.running = true;
+                    this.timer.remaining = this.timer.total;
+                    this.updateTimerUI();
+                    this.timer.intervalId = setInterval(() => {
+                        this.timer.remaining--;
+                        this.updateTimerUI();
+                        if (this.timer.remaining <= 0) {
+                            this.stopGlobalTimer();
+                            this.showFinalReport();
+                        }
+                    }, 1000);
+                },
+
+                stopGlobalTimer() {
+                    if (this.timer.intervalId) clearInterval(this.timer.intervalId);
+                    this.timer.intervalId = null;
+                    this.timer.running = false;
+                },
+
+                updateTimerUI() {
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
+                    if (this.elements.statusBar.remaining) {
+                        this.elements.statusBar.remaining.textContent = `${m}:${s}`;
+                    }
+                },
+
+                openLeaderboard() {
+                    this.elements.leaderboard.overlay.style.display = 'flex';
+                    this.loadLeaderboard();
+                },
+
+                closeLeaderboard() {
+                    this.elements.leaderboard.overlay.style.display = 'none';
+                },
+
+                async saveLeaderboard(finalScore) {
+                    const name = (localStorage.getItem('playerName') || 'Anonymous').toString().slice(0, 40);
+                    const payload = {
+                        scenario: 'v7-zeroday', // SCENARIO NAME UPDATED
+                        name,
+                        score: finalScore,
+                        details: {
+                            financialLoss: this.score.financialLoss,
+                            crisisDuration: this.score.crisisDuration,
+                            userTrust: this.score.userTrust,
+                            appSecurity: this.score.appSecurity,
+                            attackerAccess: this.score.attackerAccess,
+                            decisions: this.state.decisionHistory.map(d => d.id)
+                        },
+                        timeSpentSec: this.timer.total - this.timer.remaining,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    try {
+                        const res = await fetch('/api/score', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                    } catch (e) {
+                        const key = 'leaderboard-v7-zeroday';
+                        const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                        arr.push(payload);
+                        arr.sort((a, b) => b.score - a.score);
+                        localStorage.setItem(key, JSON.stringify(arr.slice(0, 100)));
+                    }
+                },
+
+                async loadLeaderboard() {
+                    const tbody = this.elements.leaderboard.body;
+                    const key = 'leaderboard-v7-zeroday';
+                    tbody.innerHTML = `<tr><td colspan="4">Loading...</td></tr>`;
+                    let rows = [];
+                    try {
+                        const res = await fetch('/api/leaderboard?scenario=v7-zeroday', { method: 'GET' });
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        const data = await res.json();
+                        rows = Array.isArray(data) ? data : [];
+                    } catch (e) {
+                        const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                        rows = arr.map(x => ({ name: x.name, score: x.score, timestamp: x.timestamp }));
+                    }
+
+                    if (!rows.length) {
+                        tbody.innerHTML = `<tr><td colspan="4">No records found.</td></tr>`;
+                        return;
+                    }
+                    rows.sort((a, b) => b.score - a.score);
+                    tbody.innerHTML = rows.slice(0, 50).map((r, i) => `
+                        <tr>
+                            <td>${i + 1}</td>
+                            <td>${(r.name || 'Anonymous').toString().slice(0, 40)}</td>
+                            <td>${r.score}</td>
+                            <td>${r.timestamp ? new Date(r.timestamp).toLocaleString('en-US') : '-'}</td>
+                        </tr>
+                    `).join('');
+                }
+            };
+            window.game.setup();
+        });
+    </script>
+    <script src="../global-scenario.js"></script>
+</body>
+
+</html>

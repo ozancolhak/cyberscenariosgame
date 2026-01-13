@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>USB Awareness Simulation v3.0 (7 Stages)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-dark);
+            padding: 20px;
+            max-width: 950px;
+            width: 100%;
+            margin: 40px 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 40px;
+            }
+        }
+
+        .centered-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 60vh;
+        }
+
+        h1 {
+            font-size: 2.4em;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 5px var(--shadow-dark);
+        }
+
+        h2 {
+            font-size: 1.9em;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--interactive-bg);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: var(--accent-purple);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .section {
+            padding: 30px;
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            margin-top: 25px;
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        .interactive-element {
+            background-color: var(--interactive-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .decision-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background-color: #6272a4;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .btn:hover {
+            background-color: #7a8ab9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow-dark);
+        }
+
+        .btn:disabled {
+            background-color: #555 !important;
+            color: #999 !important;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .btn .btn-text {
+            flex-grow: 1;
+        }
+
+        .btn small {
+            display: block;
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-weight: 400;
+            color: var(--accent-blue);
+        }
+
+        .btn-start,
+        .btn-continue,
+        .btn-restart {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            background-color: var(--accent-green);
+            color: var(--text-dark);
+            justify-content: center;
+            margin-top: 40px;
+            padding: 18px 30px;
+        }
+
+        #intermissionSection .metric-change-summary-container {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 25px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #intermissionSection .metric-change-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #intermissionSection .metric-change {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--interactive-bg);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
+            justify-content: center;
+        }
+
+        .metric-change .positive {
+            color: var(--accent-green);
+        }
+
+        .metric-change .negative {
+            color: var(--accent-red);
+        }
+
+        .metric-change .neutral {
+            color: var(--accent-blue);
+        }
+
+        .intro-metrics-container {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border: 1px solid var(--interactive-bg);
+            margin-top: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .intro-metrics-container h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple);
+            text-align: center;
+        }
+
+        .intro-metrics-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .intro-metrics-container li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--interactive-bg);
+        }
+
+        .intro-metrics-container li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .intro-metrics-container li .icon {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            width: 35px;
+            text-align: center;
+        }
+
+        .intro-metrics-container li>div {
+            text-align: left;
+        }
+
+        .intro-metrics-container li small {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-light);
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        #statusBar {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            background-color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #6272a4;
+            box-shadow: 0 4px 12px var(--shadow-dark);
+        }
+
+        #statusBar .metric {
+            text-align: center;
+            font-size: 0.9em;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        #statusBar .metric .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+            margin-top: 5px;
+        }
+
+        .scenario-image {
+            width: 100%;
+            max-width: 700px;
+            margin: 25px auto;
+            display: block;
+            border-radius: 8px;
+            border: 1px solid var(--interactive-bg);
+            box-shadow: 0 4px 15px var(--shadow-dark);
+        }
+
+        .final-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .metric-card {
+            background-color: var(--section-bg);
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--interactive-bg);
+        }
+
+        .metric-card .icon {
+            font-size: 2.8em;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .metric-card .label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .metric-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .post-crisis-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: left;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        @media (min-width: 800px) {
+            .post-crisis-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .event-timeline,
+        .strategic-debrief {
+            background-color: var(--interactive-bg);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .event-timeline h3,
+        .strategic-debrief h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--section-bg);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-timeline ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 15px 0 0 0;
+        }
+
+        .event-timeline li {
+            position: relative;
+            padding: 5px 0 15px 35px;
+            border-left: 2px solid var(--section-bg);
+        }
+
+        .event-timeline li:last-child {
+            border-left: none;
+        }
+
+        .event-timeline li::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-blue);
+            position: absolute;
+            left: -12px;
+            top: 5px;
+            background-color: var(--dark-bg);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 0.8em;
+        }
+
+        .event-timeline li.positive::before {
+            content: '\f00c';
+            color: var(--accent-green);
+        }
+
+        .event-timeline li.negative::before {
+            content: '\f00d';
+            color: var(--accent-red);
+        }
+
+        .event-timeline li.neutral::before {
+            content: '\f071';
+            color: var(--accent-yellow);
+        }
+
+        .event-timeline li .decision-title {
+            font-weight: bold;
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #score-breakdown {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        #score-breakdown li {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-breakdown .score-plus {
+            background-color: rgba(80, 250, 123, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        #score-breakdown .score-minus {
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        #score-breakdown .score-neutral {
+            background-color: rgba(139, 233, 253, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        #score-breakdown .score-value {
+            font-weight: bold;
+        }
+
+        #performance-badge {
+            padding: 15px 35px;
+            font-size: 2em;
+            font-weight: bold;
+            border-radius: 50px;
+            display: inline-block;
+            color: var(--text-dark);
+            box-shadow: 0 5px 20px var(--shadow-dark);
+            margin: 25px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="centered-page" id="introSection">
+            <h1><i class="fa-solid fa-memory"></i> USB Awareness Simulation</h1>
+            <p style="max-width: 700px;">In this simulation, you will experience how a seemingly innocent USB drive can
+                pose a huge threat to your company. You will see how curiosity and good intentions can lead to risks in
+                cybersecurity. Your decisions will affect the data security of the entire company.</p>
+            <img alt="USB Drive found on the ground" class="scenario-image" src="usb1.png" />
+            <div class="intro-metrics-container">
+                <h3><i class="fa-solid fa-chart-line"></i> Key Metrics</h3>
+                <ul>
+                    <li><span class="icon" style="color: var(--accent-green);"><i
+                                class="fa-solid fa-shield-halved"></i></span>
+                        <div><strong>Network Security</strong><small>Integrity of the company network against external
+                                threats.</small>
+                        </div>
+                    </li>
+                    <li><span class="icon" style="color: var(--accent-red);"><i
+                                class="fa-solid fa-biohazard"></i></span>
+                        <div><strong>Malware Risk</strong><small>Likelihood of virus infection.</small></div>
+                    </li>
+                    <li><span class="icon" style="color: var(--accent-yellow);"><i
+                                class="fa-solid fa-user-check"></i></span>
+                        <div><strong>Procedure Compliance</strong><small>Your level of adherence to company security
+                                policies.</small></div>
+                    </li>
+                    <li><span class="icon" style="color: var(--accent-blue);"><i
+                                class="fa-solid fa-file-zipper"></i></span>
+                        <div><strong>Data Leak Probability</strong><small>Likelihood of sensitive data theft.</small>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Start Simulation</button>
+        </div>
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-shield-halved"></i> Ağ Güvenliği</span>
+                    <div class="value" id="status-security">100%</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-biohazard"></i> Zararlı Yazılım Riski</span>
+                    <div class="value" id="status-risk">0</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-user-check"></i> Prosedür Uyumu</span>
+                    <div class="value" id="status-compliance">100</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-file-zipper"></i> Veri Sızıntısı</span>
+                    <div class="value" id="status-leak">0%</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-stopwatch"></i> Kalan Süre</span>
+                    <div class="value" id="status-timer">10:00</div>
+                </div>
+            </div>
+            <div id="game-content"></div>
+        </div>
+        <div class="centered-page" id="intermissionSection" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <div id="intermissionDetails"></div>
+            <button class="btn btn-continue" id="continueButton"><i class="fa-solid fa-forward"></i> Sonraki Aşamaya
+                Geç</button>
+        </div>
+        <div class="section centered-page" id="finalSection"
+            style="display: none; flex-direction:column; align-items:center;">
+            <h2><i class="fa-solid fa-award"></i> Simulation Completed: Evaluation Report</h2>
+            <p>You have successfully completed the simulation. Below is the analysis of your decisions against physical
+                media threats.</p>
+            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+            <div class="final-metrics" id="finalMetricsContainer"></div>
+            <div class="post-crisis-layout">
+                <div class="event-timeline">
+                    <h3><i class="fa-solid fa-timeline"></i> Decision Timeline</h3>
+                    <ul id="decision-timeline-list"></ul>
+                </div>
+                <div class="strategic-debrief">
+                    <h3><i class="fa-solid fa-lightbulb"></i> Lessons Learned</h3>
+                    <div id="strategic-debrief-content"></div>
+                    <h3 style="margin-top: 20px;"><i class="fa-solid fa-calculator"></i> Score Breakdown</h3>
+                    <ul id="score-breakdown"></ul>
+                </div>
+            </div>
+            <button class="btn btn-restart" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i>
+                Restart Simulation</button>
+        </div>
+        <div id="html-content-templates" style="display: none;">
+            <div id="stage1">
+                <h2><i class="fa-solid fa-parking"></i> Stage 1: Finding the USB</h2>
+                <p>In the company parking lot, a brightly colored USB drive on the ground next to your car catches your
+                    eye.
+                    You notice <strong>"Payroll List - Current"</strong> handwritten on the label.</p><img
+                    alt="USB drive found in parking lot" class="scenario-image" src="usb2.png" />
+                <div class="interactive-element">
+                    <h4>What do you do?</h4>
+                    <div class="decision-buttons"><button class="btn" data-decision="s1a"><i
+                                class="fa-solid fa-computer"></i>
+                            <div class="btn-text">Option A: I immediately get into my car, plug it into my laptop and
+                                check what's inside.<small></small></div>
+                        </button><button class="btn" data-decision="s1b"><i class="fa-solid fa-pocket"></i>
+                            <div class="btn-text">Option B: I pick up the USB and put it in my pocket.<small></small>
+                            </div>
+                        </button><button class="btn" data-decision="s1c"><i class="fa-solid fa-person-shelter"></i>
+                            <div class="btn-text">Option C: I pick up the USB and take it directly to the IT
+                                department.<small></small></div>
+                        </button></div>
+                </div>
+            </div>
+            <div id="stage2">
+                <h2><i class="fa-solid fa-brain"></i> Stage 2: Curiosity</h2>
+                <p>You took the USB drive and put it on your desk. The words "Payroll List" keep playing on your mind.
+                    "I wonder who earns how much? Maybe there's a mistake in my salary. What harm could a quick look
+                    do?"
+                    you think. Curiosity is one of the most basic human emotions.
+                </p><img alt="Curiosity and USB" class="scenario-image" src="usb3.png" />
+                <div class="interactive-element">
+                    <h4>How do you handle your curiosity?</h4>
+                    <div class="decision-buttons"><button class="btn" data-decision="s2a"><i
+                                class="fa-solid fa-plug"></i>
+                            <div class="btn-text">Option A: I succumb to curiosity and plug the USB into my work
+                                computer.<small></small></div>
+                        </button><button class="btn" data-decision="s2b"><i class="fa-solid fa-box-archive"></i>
+                            <div class="btn-text">Option B: I lock it in my drawer and try to forget about
+                                it.<small></small>
+                            </div>
+                        </button><button class="btn" data-decision="s2c"><i class="fa-solid fa-headset"></i>
+                            <div class="btn-text">Option C: I consider it might be a risk, but my focus on work
+                                diminishes.<small></small></div>
+                        </button></div>
+                </div>
+            </div>
+            <div id="stage3">
+                <h2><i class="fa-solid fa-virus-covid"></i> Stage 3: The Risk of Plugging In</h2>
+                <p>You plugged the USB into your computer. The USB drive appeared in "This PC", but when you clicked
+                    inside,
+                    you noticed it was empty. While thinking "It must be broken", an "autorun" script actually executed
+                    in the background without you noticing, and malware began infiltrating your system.</p><img
+                    alt="Malware Loading" class="scenario-image" src="usb4.png" />
+                <div class="interactive-element">
+                    <h4>What do you do when you see the USB is empty?</h4>
+                    <div class="decision-buttons"><button class="btn" data-decision="s3c"><i
+                                class="fa-solid fa-triangle-exclamation"></i>
+                            <div class="btn-text">Option C: I realize something is unusual, immediately unplug the USB,
+                                and notify IT.<small></small></div>
+                        </button><button class="btn" data-decision="s3b"><i
+                                class="fa-solid fa-file-circle-question"></i>
+                            <div class="btn-text">Option B: I say "It's broken", unplug the USB, and throw it in the
+                                trash.<small></small>
+                            </div>
+                        </button><button class="btn" data-decision="s3a"><i class="fa-solid fa-arrows-rotate"></i>
+                            <div class="btn-text">Option A: I unplug the USB and plug it back in again.<small></small>
+                            </div>
+                        </button></div>
+                </div>
+            </div>
+            <div id="stage4">
+                <h2><i class="fa-solid fa-map-location-dot"></i> Stage 4: IT Investigation</h2>
+                <p>You reported the situation to the IT department. The IT specialist asks you to understand the
+                    severity of the incident:
+                    <strong>"Where exactly and approximately when did you find this USB drive? This information is
+                        critical for us to review security footage."</strong>
+                </p><img alt="IT Investigation" class="scenario-image" src="usb5.png" />
+                <div class="interactive-element">
+                    <h4>How do you answer this question from IT?</h4>
+                    <div class="decision-buttons"><button class="btn" data-decision="s4b"><i
+                                class="fa-solid fa-envelope"></i>
+                            <div class="btn-text">Option B: I send an email explaining the situation in detail for the
+                                official process.<small></small></div>
+                        </button><button class="btn" data-decision="s4a"><i class="fa-solid fa-brain"></i>
+                            <div class="btn-text">Option A: I explain all the details I remember
+                                completely.<small></small></div>
+                        </button><button class="btn" data-decision="s4c"><i class="fa-solid fa-question"></i>
+                            <div class="btn-text">Option C: I give a vague answer like "I don't remember much, I think
+                                it was somewhere in the parking lot".<small></small></div>
+                        </button></div>
+                </div>
+            </div>
+            <div id="stage5">
+                <h2><i class="fa-solid fa-keyboard"></i> Stage 5: Understanding the Threat</h2>
+                <p>After thanking you, the IT specialist explains: "Such USBs can sometimes be special devices known as
+                    'badUSB'. Even if there are no files inside, when plugged into a computer, it can identify itself as
+                    a keyboard and execute hundreds of commands in seconds to bypass security systems. This could be a
+                    deliberate and professional infiltration attempt."</p><img alt="BadUSB Threat"
+                    class="scenario-image" src="usb6.png" />
+                <div class="interactive-element">
+                    <h4>What is your reaction when you learn about this professional attack technique?</h4>
+                    <div class="decision-buttons"><button class="btn" data-decision="s5c"><i
+                                class="fa-solid fa-circle-question"></i>
+                            <div class="btn-text">Option C: "I don't really believe such a complex attack would target
+                                our company."<small></small></div>
+                        </button><button class="btn" data-decision="s5a"><i class="fa-solid fa-user-ninja"></i>
+                            <div class="btn-text">Option A: I say "Luckily I didn't plug it into my computer and I'm
+                                safe" and inform the IT team.<small>.</small></div>
+                        </button><button class="btn" data-decision="s5b"><i class="fa-solid fa-lightbulb"></i>
+                            <div class="btn-text">Option B: I understand the severity of the threat and ask what else I
+                                can do about it.<small></small></div>
+                        </button></div>
+                </div>
+            </div>
+            <div id="stage6">
+                <h2><i class="fa-solid fa-building-circle-exclamation"></i> Stage 6: Crisis Communication</h2>
+                <p>While reviewing security footage thanks to the information you provided, the IT team notices similar
+                    USBs in hallways on other floors and break areas, and sees some employees picking them up and taking
+                    them to their rooms. Due to the urgency of the situation, a warning announcement needs to be
+                    prepared immediately.</p><img alt="Widespread Threat" class="scenario-image" src="usb7.png" />
+                <div class="interactive-element">
+                    <h4>How do you take action while the IT team prepares the official announcement?</h4>
+                    <div class="decision-buttons"><button class="btn" data-decision="s6c"><i
+                                class="fa-solid fa-circle-check"></i>
+                            <div class="btn-text">Option C: I help spread this information after the IT announcement is
+                                made.<small></small></div>
+                        </button><button class="btn" data-decision="s6b"><i class="fa-solid fa-user-group-slash"></i>
+                            <div class="btn-text">Option B: I say "I did my duty, I reported it to IT" and help them
+                                resolve the incident this way.<small></small></div>
+                        </button><button class="btn" data-decision="s6a"><i class="fa-solid fa-bullhorn"></i>
+                            <div class="btn-text">Option A: To warn everyone as soon as possible, I send an email to the
+                                whole company saying "URGENT: DO NOT TOUCH USBS IN THE PARKING LOT!" and take individual
+                                responsibility.<small></small></div>
+                        </button></div>
+                </div>
+            </div>
+            <div id="stage7">
+                <h2><i class="fa-solid fa-shield-virus"></i> Stage 7: Aftershock Attack</h2>
+                <p>One hour after the general warning from the IT department, a new email arrives to the whole company
+                    under the name of the IT Director. The email says, "Due to the USB incident, all computers must be
+                    scanned for security immediately. Please download and run the 'Emergency Security Scanner' from the
+                    link below. This is mandatory to protect our network." The email looks extremely official.</p>
+                <img alt="Aftershock Attack Email" class="scenario-image" src="usb1.png" />
+                <div class="interactive-element">
+                    <h4>What do you do in the face of this new and critical email?</h4>
+                    <div class="decision-buttons"><button class="btn" data-decision="s7b"><i
+                                class="fa-solid fa-share-nodes"></i>
+                            <div class="btn-text">Option B: I immediately share the link in the department chat
+                                group.<small></small></div>
+                        </button><button class="btn" data-decision="s7c"><i class="fa-solid fa-phone-volume"></i>
+                            <div class="btn-text">Option C: I doubt the legitimacy of the email and call IT to
+                                confirm.<small></small></div>
+                        </button><button class="btn" data-decision="s7a"><i class="fa-solid fa-download"></i>
+                            <div class="btn-text">Option A: I follow the IT Director's instruction and download and run
+                                the program immediately.<small></small></div>
+                        </button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const game = {
+                score: { security: 100, risk: 0, compliance: 100, leak: 0 },
+                state: { currentStageId: 'stage1', decisionHistory: [], usbPluggedIn: false },
+                timer: { total: 300, remaining: 300, intervalId: null },
+                elements: {},
+                decisionInfo: {
+                    's1a': { title: "You Plugged it Into Your Laptop", strat: "Plugging a found USB directly into a personal or work computer is the fastest way to open a door to a cyber attack. Curiosity is security's greatest enemy.", changes: { security: -40, risk: +60, compliance: -50, leak: +30 }, impact: 'Negative' },
+                    's1b': { title: "You Put it in Your Pocket", strat: "Carrying the threat with you without realizing it only postpones the risk. The device is still a threat, and eventually, your curiosity might push you to make a wrong decision.", changes: { risk: +20, compliance: -20 }, impact: 'Neutral' },
+                    's1c': { title: "You Took it Directly to IT", strat: "You displayed the most correct and professional behavior by taking an unclaimed device directly to IT. This is a perfect application of the 'zero trust' principle.", changes: { compliance: +10, risk: -5 }, impact: 'Positive' },
+                    's2a': { title: "You Succumbed to Curiosity", strat: "Curiosity is the human vulnerability attackers rely on most. A tempting title like 'Payroll List' is specifically chosen to trigger this vulnerability.", changes: { security: -35, risk: +50, leak: +25 }, impact: 'Negative' },
+                    's2b': { title: "You Locked it in Your Drawer", strat: "You didn't eliminate the threat, you just hid it. You reduced the risk of someone else finding and plugging it in, but you didn't solve the problem. Being passive in security usually leads to increased risk.", changes: { risk: +10, compliance: -15 }, impact: 'Neutral' },
+                    's2c': { title: "You Called IT", strat: "You made the right decision by overcoming your curiosity with logic and procedural knowledge. This indicates a high level of security awareness.", changes: { compliance: +15, risk: -10 }, impact: 'Positive' },
+                    's3a': { title: "You Plugged it Back In", strat: "When you notice an anomaly, repeating the same action usually makes the problem worse. This is like giving the malware a second chance to infiltrate deeper into the system.", changes: { security: -20, risk: +30, leak: +10 }, impact: 'Negative' },
+                    's3b': { title: "You Threw it in the Trash", strat: "You already plugged the USB into your computer. Malware may have already infected it. Throwing the threat in the trash destroys evidence and prevents IT from understanding the problem. The situation must be reported.", changes: { security: -10, compliance: -25, leak: +5 }, impact: 'Neutral' },
+                    's3c': { title: "You Notified IT Immediately", strat: "Even if you made a mistake, realizing it as quickly as possible and reporting it to the right authority is the most critical step to minimize damage.", changes: { security: +10, compliance: +10, risk: -20 }, impact: 'Positive' },
+                    's4a': { title: "You Explained All Details", strat: "In a physical intrusion attempt, where and when the incident occurred is the most important part of the investigation. This information is vital for reviewing security cameras.", changes: { compliance: +15 }, impact: 'Positive' },
+                    's4b': { title: "You Made a Written Notification", strat: "While formality is a correct instinct, speed is essential in urgent security incidents. Email can slow down the process and eliminates the opportunity for immediate Q&A provided by verbal communication. First response should be verbal.", changes: { compliance: -10, risk: +5 }, impact: 'Neutral' },
+                    's4c': { title: "You Gave a Vague Answer", strat: "Not sharing important details makes the security team's job almost impossible and can cause the investigation to slow down or fail. Every piece of information is valuable.", changes: { compliance: -25, risk: +10 }, impact: 'Negative' },
+                    's5a': { title: "You Felt Safe", strat: "A security incident affects the entire company. The thought 'It won't happen to me' is contrary to the spirit of teamwork and weakens the overall security culture. No one is completely safe until the threat is eliminated.", changes: { compliance: -10, leak: +5 }, impact: 'Neutral' },
+                    's5b': { title: "You Acted Proactively", strat: "Being open to learning new and complex attack vectors and trying to be part of the solution is the most important cybersecurity competency an employee can have.", changes: { compliance: +15 }, impact: 'Positive' },
+                    's5c': { title: "You Underestimated the Threat", strat: "Underestimating or finding cyber threats unrealistic is the biggest obstacle to awareness. Attackers always use the most unexpected and 'exaggerated' looking methods.", changes: { compliance: -20, risk: +15 }, impact: 'Negative' },
+                    's6a': { title: "You Sent an Unauthorized Email", strat: "Even with good intentions, unauthorized and uncontrolled communication during a crisis can increase panic, cause misinformation to spread, and reduce the impact of IT's official announcement. Communication should always be done through a single and official channel.", changes: { compliance: -15, leak: +5, reputation: -10 }, impact: 'Neutral' },
+                    's6b': { title: "You Remained Passive", strat: "Security is the joint responsibility of all employees, not just the IT department. Remaining passive at a critical moment can mean turning a blind eye to the spread of danger.", changes: { compliance: -20, risk: +10 }, impact: 'Negative' },
+                    's6c': { title: "You Supported the Official Announcement", strat: "It is important to have a single and reliable voice in a time of crisis. Helping to spread official announcements and preventing information pollution is the most correct and responsible behavior.", changes: { compliance: +15, risk: -10, reputation: +5 }, impact: 'Positive' },
+
+                    's7a': { title: "You Ran the Scanner", strat: "Attackers often use a moment of crisis, a time when people let their guard down, for a second attack. This 'aftershock' attack can be more devastating than the first incident. Even if it's an instruction from a trusted source (or appears to be), unexpected software should never be run.", changes: { security: -50, risk: +70, leak: +40 }, impact: 'Negative' },
+                    's7b': { title: "You Shared the Link", strat: "Sharing an unverified and potentially malicious link with others, even with good intentions, is helping the attack spread. This can create dozens of victims instead of a single one.", changes: { security: -20, risk: +40, compliance: -20, reputation: -15 }, impact: 'Neutral' },
+                    's7c': { title: "You Called IT to Confirm", strat: "Congratulations! You recognized even the most advanced social engineering trap. 'Helpful' or 'mandatory' emails coming right after a crisis are the most dangerous. Always getting confirmation verbally and through a separate channel is the highest level of security awareness.", changes: { compliance: +20, security: +10, reputation: +5 }, impact: 'Positive' },
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'),
+                        gameContent: document.getElementById('game-content'), startButton: document.getElementById('startButton'),
+                        intermission: document.getElementById('intermissionSection'), intermissionTitle: document.getElementById('intermissionTitle'),
+                        intermissionDetails: document.getElementById('intermissionDetails'), continueButton: document.getElementById('continueButton'),
+                        finalSection: document.getElementById('finalSection'),
+                        htmlTemplates: document.getElementById('html-content-templates'),
+                        statusBar: {
+                            security: document.getElementById('status-security'), risk: document.getElementById('status-risk'),
+                            compliance: document.getElementById('status-compliance'), leak: document.getElementById('status-leak'),
+                            timer: document.getElementById('status-timer'),
+                        }
+                    };
+                    this.attachListeners();
+                },
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.intro.style.display = 'none'; this.elements.game.style.display = 'block';
+                        this.startTimer(); this.showStage('stage1');
+                    });
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button || button.disabled) return;
+                        this.handleDecision(button.dataset.decision);
+                    });
+                    this.elements.continueButton.addEventListener('click', () => {
+                        this.elements.intermission.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+
+                        const lastDecisionId = this.state.decisionHistory[this.state.decisionHistory.length - 1].id;
+                        let nextStageId = '';
+
+                        switch (this.state.currentStageId) {
+                            case 'stage1':
+                                if (lastDecisionId === 's1a') { this.state.usbPluggedIn = true; nextStageId = 'stage3'; }
+                                else if (lastDecisionId === 's1b') { nextStageId = 'stage2'; }
+                                else { nextStageId = 'stage4'; }
+                                break;
+                            case 'stage2':
+                                if (lastDecisionId === 's2a') { this.state.usbPluggedIn = true; nextStageId = 'stage3'; }
+                                else { nextStageId = 'stage4'; }
+                                break;
+                            case 'stage3': nextStageId = 'stage4'; break;
+                            case 'stage4': nextStageId = 'stage5'; break;
+                            case 'stage5': nextStageId = 'stage6'; break;
+                            case 'stage6': nextStageId = 'stage7'; break; // 6'dan sonra 7'ye git
+                            case 'stage7':
+                                this.showFinalReport();
+                                return; // Final raporu gösterildiği için fonksiyondan çık
+                        }
+                        this.showStage(nextStageId);
+                    });
+                },
+                handleDecision(decisionId) {
+                    const info = this.decisionInfo[decisionId];
+                    if (!info) return;
+                    this.state.decisionHistory.push({ ...info, id: decisionId });
+                    this.updateScore(info.changes);
+                    this.elements.game.style.display = 'none';
+                    this.showIntermission(info);
+                },
+                updateScore(changes) {
+                    this.score.security = Math.max(0, Math.min(100, this.score.security + (changes.security || 0)));
+                    this.score.risk = Math.max(0, Math.min(100, this.score.risk + (changes.risk || 0)));
+                    this.score.compliance = Math.max(0, Math.min(100, this.score.compliance + (changes.compliance || 0)));
+                    this.score.leak = Math.max(0, Math.min(100, this.score.leak + (changes.leak || 0)));
+                    this.updateStatusBar();
+                },
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.security.textContent = `${s.security}%`;
+                    this.elements.statusBar.risk.textContent = s.risk;
+                    this.elements.statusBar.compliance.textContent = s.compliance;
+                    this.elements.statusBar.leak.textContent = `${s.leak}%`;
+                },
+                showStage(stageId) {
+                    this.state.currentStageId = stageId;
+                    const stageTemplate = this.elements.htmlTemplates.querySelector(`#${stageId}`);
+                    if (stageTemplate) { this.elements.gameContent.innerHTML = stageTemplate.innerHTML; }
+                },
+                showIntermission(info) {
+                    this.elements.intermissionTitle.textContent = `Your Decision: ${info.title}`;
+                    let metricsHTML = '';
+                    const formatChange = (label, value, isRisk = false, unit = '') => {
+                        if (value === undefined || value === 0) return '';
+                        let colorClass = 'neutral'; const sign = value > 0 ? '+' : '';
+                        if (isRisk) { colorClass = value > 0 ? 'negative' : 'positive'; }
+                        else { colorClass = value > 0 ? 'positive' : 'negative'; }
+                        return `<div class="metric-change ${colorClass}">${label}: ${sign}${value}${unit}</div>`;
+                    };
+                    metricsHTML += formatChange('Network Security', info.changes.security, false, '%');
+                    metricsHTML += formatChange('Malware Risk', info.changes.risk, true);
+                    metricsHTML += formatChange('Procedure Compliance', info.changes.compliance);
+                    metricsHTML += formatChange('Data Leak Probability', info.changes.leak, true, '%');
+                    this.elements.intermissionDetails.innerHTML = `
+                    <div class="metric-change-summary-container"><h4>Immediate Effects of Decision</h4><div class="metric-change-summary">${metricsHTML}</div></div>
+                    <div class="interactive-element" style="text-align:left; width:100%; max-width:600px; margin-top:20px;">
+                        <h4>Strategic Note</h4><p>${info.strat}</p>
+                    </div>`;
+                    this.elements.intermission.style.display = 'flex';
+                },
+                showFinalReport() {
+                    this.stopTimer();
+                    this.elements.game.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.finalSection.style.display = 'flex';
+
+                    // --- STANDARD SCORING SYSTEM ---
+                    let totalScore = 50; // STANDARD: Start Score
+                    let scoreBreakdown = { 'Starting Score': { value: 50, class: 'score-neutral' } };
+
+                    // 1. Decision Quality (+10 / 0 / -10)
+                    this.state.decisionHistory.forEach(d => {
+                        if (d.impact === 'Positive') {
+                            totalScore += 10;
+                            scoreBreakdown[`Decision: ${d.title}`] = { value: 10, class: 'score-plus' };
+                        } else if (d.impact === 'Negative') {
+                            totalScore -= 10;
+                            scoreBreakdown[`Decision: ${d.title}`] = { value: -10, class: 'score-minus' };
+                        } else {
+                            // Neutral
+                            scoreBreakdown[`Decision: ${d.title}`] = { value: 0, class: 'score-neutral' };
+                        }
+                    });
+
+                    // 2. Metric Bonuses (High Success Bonus)
+                    // Network Security > 90 Bonus
+                    if (this.score.security >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['High Network Security'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.security < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Network Security Vulnerability'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Procedure Compliance > 90 Bonus
+                    if (this.score.compliance >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['Perfect Procedure Compliance'] = { value: 10, class: 'score-plus' };
+                    }
+
+                    // Risk Penalty (Risk > 50 Penalty)
+                    if (this.score.risk > 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['High Risk Level'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // 3. Time Bonus (+5) (remaining > 60 seconds)
+                    if (this.timer.remaining > 60) {
+                        totalScore += 5;
+                        scoreBreakdown['Speed Bonus'] = { value: 5, class: 'score-plus' };
+                    }
+
+                    totalScore = Math.max(0, Math.min(100, Math.round(totalScore)));
+                    // --- END SCORING SYSTEM ---
+
+                    let badgeInfo = {};
+                    if (totalScore >= 90) { badgeInfo = { text: 'LEGEND (SECURITY LEADER)', color: 'var(--accent-green)' }; }
+                    else if (totalScore >= 70) { badgeInfo = { text: 'EXPERT', color: 'var(--accent-blue)' }; }
+                    else if (totalScore >= 50) { badgeInfo = { text: 'SUCCESSFUL', color: 'var(--accent-yellow)' }; }
+                    else { badgeInfo = { text: 'UNSUCCESSFUL', color: 'var(--accent-red)' }; }
+
+                    this.elements.finalSection.querySelector('#performance-badge').textContent = badgeInfo.text;
+                    this.elements.finalSection.querySelector('#performance-badge').style.backgroundColor = badgeInfo.color;
+                    this.elements.finalSection.querySelector('#finalMetricsContainer').innerHTML = `
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-star"></i></div><div class="label">Overall Performance</div><div class="value">${totalScore}/100</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-shield-halved"></i></div><div class="label">Network Security</div><div class="value">${this.score.security}%</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-biohazard"></i></div><div class="label">Malware Risk</div><div class="value">${this.score.risk}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-user-check"></i></div><div class="label">Procedure Compliance</div><div class="value">${this.score.compliance}</div></div>
+                    <div class="metric-card"><div class="icon"><i class="fa-solid fa-file-zipper"></i></div><div class="label">Data Leak Probability</div><div class="value">${this.score.leak}%</div></div>`;
+                    this.elements.finalSection.querySelector('#decision-timeline-list').innerHTML = this.state.decisionHistory.map(d => `<li class="${d.impact.toLowerCase()}"><span class="decision-title">${d.title}</span></li>`).join('');
+                    this.elements.finalSection.querySelector('#score-breakdown').innerHTML = Object.entries(scoreBreakdown).map(([key, item]) => `<li class="${item.class}"><span>${key}</span><span class="score-value">${item.value > 0 ? '+' : ''}${item.value} Points</span></li>`).join('');
+
+                    let debriefHTML = '';
+                    if (totalScore >= 90) debriefHTML = `<p><strong>Flawless Awareness:</strong> You recognized all traps, followed procedures strictly, and protected the company from a major threat. You are an exemplary employee.</p>`;
+                    else if (totalScore >= 70) debriefHTML = `<p><strong>High Awareness:</strong> Although you took a few small risks, you generally made the right decisions and managed the threat successfully.</p>`;
+                    else if (totalScore >= 50) debriefHTML = `<p><strong>Intermediate Level:</strong> You completed the simulation but made some critical mistakes. Your curiosity or haste compromised security.</p>`;
+                    else debriefHTML = `<p><strong>Serious Risk:</strong> The mistakes you made during the simulation could have resulted in the theft of all company data or system crashes in a real event.</p>`;
+
+                    let debriefContent = this.elements.finalSection.querySelector('#strategic-debrief-content');
+                    debriefContent.innerHTML = debriefHTML + `
+                <ul style="text-align:left; max-width: 500px; margin: 20px auto; list-style-type: disc;">
+                    <li>Found devices (USB, HDD, etc.) should <strong>never</strong> be plugged into a computer.</li>
+                    <li>Suspicious devices should be delivered directly to IT.</li>
+                    <li>Curiosity is the greatest enemy of security.</li>
+                </ul>`;
+                },
+                startTimer() {
+                    this.timer.intervalId = setInterval(() => {
+                        this.timer.remaining--;
+                        const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                        const s = String(this.timer.remaining % 60).padStart(2, '0');
+                        this.elements.statusBar.timer.textContent = `${m}:${s}`;
+                        if (this.timer.remaining <= 0) { this.stopTimer(); alert("Time's up!"); this.showFinalReport(); }
+                    }, 1000);
+                },
+                stopTimer() { clearInterval(this.timer.intervalId); }
+            };
+            game.setup();
+        });
+    </script>
+    <script src="../global-scenario.js"></script>
+</body>
+
+</html>

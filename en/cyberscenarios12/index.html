@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberScenario v6: APT Crisis Simulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --container-bg: #2a2a4a;
+            --section-bg: #333355;
+            --interactive-bg: #444466;
+            --accent-blue: #8be9fd;
+            --accent-purple: #bd93f9;
+            --accent-pink: #ff79c6;
+            --accent-green: #50fa7b;
+            --accent-yellow: #f1fa8c;
+            --accent-red: #ff5555;
+            --text-light: #e0e0e0;
+            --text-dark: #282a36;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-size: 0.90em;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-dark);
+            padding: 20px;
+            max-width: 950px;
+            width: 100%;
+            margin: 40px 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 40px;
+            }
+        }
+
+        .centered-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 60vh;
+        }
+
+        h1 {
+            font-size: 2.4em;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 5px var(--shadow-dark);
+        }
+
+        h2 {
+            font-size: 1.9em;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--interactive-bg);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: var(--accent-purple);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            color: var(--accent-yellow);
+            text-align: left;
+            margin-top: 0;
+            border-bottom: 1px solid var(--interactive-bg);
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .section {
+            display: none;
+            padding: 20px;
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            margin-top: 25px;
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                padding: 30px;
+            }
+        }
+
+        .interactive-element {
+            background-color: var(--interactive-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .decision-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background-color: #6272a4;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .btn:hover {
+            background-color: #7a8ab9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow-dark);
+        }
+
+        .btn:disabled {
+            background-color: #555 !important;
+            color: #999 !important;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .btn .btn-text {
+            flex-grow: 1;
+        }
+
+        .btn small {
+            display: block;
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-weight: 400;
+            color: var(--accent-blue);
+        }
+
+        .btn-start,
+        .btn-continue {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            background-color: var(--accent-green);
+            color: var(--text-dark);
+            justify-content: center;
+            margin-top: 40px;
+            padding: 18px 30px;
+        }
+
+        .btn.critical {
+            background-color: var(--accent-pink);
+        }
+
+        .btn.critical:hover {
+            background-color: #ff6e87;
+        }
+
+        #intermissionSection .metric-change-summary-container {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 0;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #intermissionSection .metric-change-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #intermissionSection .metric-change {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--interactive-bg);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
+            justify-content: center;
+        }
+
+        .metric-change .positive {
+            color: var(--accent-green);
+        }
+
+        .metric-change .negative {
+            color: var(--accent-red);
+        }
+
+        .metric-change .neutral {
+            color: var(--accent-blue);
+        }
+
+        .intro-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        @media (min-width: 768px) {
+            .intro-info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .intro-roles-container,
+        .intro-metrics-container {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border: 1px solid var(--interactive-bg);
+        }
+
+        .intro-roles-container h3,
+        .intro-metrics-container h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--interactive-bg);
+            color: var(--accent-purple);
+            text-align: center;
+        }
+
+        .intro-roles-container ul,
+        .intro-metrics-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .intro-roles-container li,
+        .intro-metrics-container li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--interactive-bg);
+            font-size: 1.05em;
+        }
+
+        .intro-roles-container li:last-child,
+        .intro-metrics-container li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .intro-roles-container li .icon,
+        .intro-metrics-container li .icon {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            width: 35px;
+            text-align: center;
+        }
+
+        .intro-roles-container li strong {
+            color: var(--accent-yellow);
+        }
+
+        .intro-roles-container li small {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-light);
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        #statusBar {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            background-color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #6272a4;
+            box-shadow: 0 4px 12px var(--shadow-dark);
+        }
+
+        #statusBar .metric {
+            text-align: center;
+            font-size: 0.9em;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        #statusBar .metric .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+            margin-top: 5px;
+        }
+
+        .final-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .metric-card {
+            background-color: var(--section-bg);
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--interactive-bg);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 160px;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent-blue);
+            box-shadow: 0 6px 20px var(--shadow-dark);
+        }
+
+        .metric-card .icon {
+            font-size: 2.8em;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .metric-card .label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .metric-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .code-block,
+        .slack-chat {
+            background-color: var(--text-dark);
+            border: 1px solid #6272a4;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Consolas', monospace;
+            font-size: 0.95em;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .learning-note {
+            background-color: var(--text-dark);
+            border-left: 5px solid var(--accent-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .scenario-image {
+            width: 100%;
+            max-width: 600px;
+            margin: 25px auto;
+            display: block;
+            border-radius: 8px;
+            border: 1px solid var(--interactive-bg);
+            box-shadow: 0 4px 15px var(--shadow-dark);
+        }
+
+        .slack-chat .message {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 7px;
+            background-color: #3f3f5a;
+            border: 1px solid #555577;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .slack-chat .sender {
+            font-weight: bold;
+            color: var(--accent-pink);
+            margin-right: 8px;
+        }
+
+        /* New Roles */
+        .slack-chat .sender.ciso {
+            color: var(--accent-green);
+        }
+
+        /* Player */
+        .slack-chat .sender.cto {
+            color: var(--accent-yellow);
+        }
+
+        /* CTO */
+        .slack-chat .sender.legal {
+            color: var(--accent-blue);
+        }
+
+        /* Legal */
+        .slack-chat .sender.pr {
+            color: var(--accent-red);
+        }
+
+        /* PR */
+        .slack-chat .sender.ceo {
+            color: var(--accent-purple);
+        }
+
+        /* CEO */
+
+
+        .suspect-card {
+            background-color: var(--interactive-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 5px solid var(--accent-purple);
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .suspect-card h4 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            border-bottom: none;
+            color: var(--accent-purple);
+        }
+
+        #finalSection {
+            text-align: center;
+        }
+
+        #performance-badge-container {
+            margin: 25px 0;
+        }
+
+        #performance-badge {
+            padding: 15px 35px;
+            font-size: 2em;
+            font-weight: bold;
+            border-radius: 50px;
+            display: inline-block;
+            color: var(--text-dark);
+            box-shadow: 0 5px 20px var(--shadow-dark);
+            transition: transform 0.3s ease;
+        }
+
+        #performance-badge:hover {
+            transform: scale(1.08);
+        }
+
+        .post-crisis-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: left;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        @media (min-width: 800px) {
+            .post-crisis-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .event-timeline,
+        .strategic-debrief {
+            background-color: var(--interactive-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--section-bg);
+            margin-top: 20px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+        }
+
+        .event-timeline h3,
+        .strategic-debrief h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--section-bg);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-timeline ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 15px 0 0 0;
+        }
+
+        .event-timeline li {
+            position: relative;
+            padding: 5px 0 15px 35px;
+            border-left: 2px solid var(--section-bg);
+            font-size: 0.95em;
+        }
+
+        .event-timeline li:last-child {
+            border-left: none;
+        }
+
+        .event-timeline li::before {
+            content: '\f00c';
+            /* check */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-green);
+            position: absolute;
+            left: -12px;
+            top: 5px;
+            background-color: var(--dark-bg);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 0.8em;
+            border: 2px solid var(--section-bg);
+        }
+
+        .event-timeline li.negative::before {
+            content: '\f00d';
+            color: var(--accent-red);
+        }
+
+        /* times */
+        .event-timeline li.neutral::before {
+            content: '\f05a';
+            color: var(--accent-blue);
+        }
+
+        /* info */
+
+        .event-timeline li .decision-title {
+            font-weight: bold;
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #strategic-debrief-content p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        #score-breakdown {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        #score-breakdown li {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-breakdown .score-plus {
+            background-color: rgba(80, 250, 123, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        #score-breakdown .score-minus {
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        #score-breakdown .score-neutral {
+            background-color: rgba(139, 233, 253, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        #score-breakdown .score-value {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="introSection" class="centered-page">
+            <h1><i class="fa-solid fa-satellite-dish"></i> APT Crisis Simulation: The CORESEC Incident</h1>
+            <p style="max-width: 700px;">Welcome, CORESEC Technologies' new CISO! Your company, providing critical
+                infrastructure monitoring to the finance sector, has been targeted by a state-sponsored APT (Advanced
+                Persistent Threat) group across multiple countries. You face DNS manipulation, physical intrusion, data
+                encryption, and deepfake disinformation attacks. Your mission: Manage the technical chaos, resist
+                geopolitical pressures, and lead the company out of this complex crisis!</p>
+            <img src="giris.png" alt="Advanced cyber attack operations room" class="scenario-image">
+
+            <div class="intro-info-grid">
+                <div class="intro-roles-container">
+                    <h3><i class="fa-solid fa-people-arrows"></i> Simulation Roles</h3>
+                    <ul>
+                        <li><span class="icon"><i class="fa-solid fa-user-shield"></i></span>
+                            <div><strong>Your Role: CISO (Chief Information Security Officer)</strong>
+                                <small>Responsible for managing the crisis in all aspects and making strategic
+                                    decisions.</small>
+                            </div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-user-tie"></i></span>
+                            <div><strong>CEO</strong> <small>Focused on general reputation, share value, and business
+                                    continuity.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-microchip"></i></span>
+                            <div><strong>CTO (Chief Technology Officer)</strong> <small>Technical recovery operations
+                                    and system restructuring.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-gavel"></i></span>
+                            <div><strong>Legal Counsel</strong> <small>Legal obligations, regulations (GDPR/KVKK), and
+                                    potential lawsuits.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-bullhorn"></i></span>
+                            <div><strong>Communications Director</strong> <small>Media, press, public opinion, and
+                                    internal communication management.</small></div>
+                        </li>
+                        <li><span class="icon"><i class="fa-solid fa-hands-holding-child"></i></span>
+                            <div><strong>Government Relations Officer</strong> <small>Communication with national
+                                    agencies and geopolitical stakeholders.</small></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="intro-metrics-container">
+                    <h3><i class="fa-solid fa-chart-line"></i> Key Metrics</h3>
+                    <ul>
+                        <li><span class="icon" style="color: var(--accent-green);"><i
+                                    class="fa-solid fa-power-off"></i></span>
+                            <div><strong>Operational Continuity</strong> <small>Survival rate of critical financial
+                                    services. (Start: 100%)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-red);"><i
+                                    class="fa-solid fa-hand-holding-dollar"></i></span>
+                            <div><strong>Financial Loss</strong> <small>Cost of the crisis to the company (recovery,
+                                    fines, loss). (Start: $0)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-yellow);"><i
+                                    class="fa-solid fa-users"></i></span>
+                            <div><strong>Cust. & Stakeholder Trust</strong> <small>Belief of customers and shareholders
+                                    in the company. (Start: 100)</small></div>
+                        </li>
+                        <li><span class="icon" style="color: var(--accent-blue);"><i
+                                    class="fa-solid fa-globe"></i></span>
+                            <div><strong>International Reputation</strong> <small>Your company's image in the public and
+                                    international arena. (Start: 100)</small></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-start" id="startButton"><i class="fa-solid fa-play"></i> Start Simulation</button>
+        </div>
+
+        <div id="intermissionSection" class="centered-page" style="display: none;">
+            <h2 id="intermissionTitle"></h2>
+            <div id="intermissionDetails">
+            </div>
+            <button class="btn btn-continue" id="continueButton" style="margin-top: 30px; display: none;"><i
+                    class="fa-solid fa-forward"></i> Continue</button>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div id="statusBar">
+                <div class="metric"><span><i class="fa-solid fa-power-off"></i> Operational Continuity</span>
+                    <div class="value" id="status-continuity">100%</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-hand-holding-dollar"></i> Financial Loss</span>
+                    <div class="value" id="status-financialLoss">$0</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-users"></i> Cust. & Stakeholder Trust</span>
+                    <div class="value" id="status-trust">100</div>
+                </div>
+                <div class="metric"><span><i class="fa-solid fa-globe"></i> International Reputation</span>
+                    <div class="value" id="status-reputation">100</div>
+                </div>
+                <div class="metric" id="status-timer"><span><i class="fa-solid fa-stopwatch"></i> Time Remaining</span>
+                    <div class="value" id="status-remaining">10:00</div>
+                </div>
+            </div>
+            <div id="game-content">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = {
+                score: { continuity: 100, financialLoss: 0, trust: 100, reputation: 100 },
+                state: {
+                    currentSectionId: 'start',
+                    decisionHistory: [],
+                    currentTurnDecisions: [],
+                    totalScore: null,
+                    // State flags for decisions
+                    dnsHardened: false, physicalSecurityAlerted: false, crisisTeamActivated: false, threatHuntingStarted: false,
+                    segmentsIsolated: false, deepfakeCountered: false, ransomwareAnalyzed: false, clientsNotified: false,
+                    reportToRegulators: false, publicStatementIssued: false, governmentBriefingAccepted: false, commsDelayed: false,
+                    fullTransparency: false, limitedDisclosure: false, counterOpRejected: false, counterOpAccepted: false,
+                    restoreFromBackup: false, legalNotificationsSent: false, systemsPatched: false, deepfakeSourceInvestigated: false,
+                    zeroTrustAdopted: false, redTeamingMandated: false, intelSharingProgram: false, crisisPlanRevised: false
+                },
+
+                elements: {},
+
+                timer: {
+                    total: 600, // 10 minutes
+                    remaining: 600,
+                    intervalId: null,
+                    running: false
+                },
+
+                decisionInfo: {
+                    'd1-dns-harden': { title: "Harden DNS Infrastructure", text: "You instructed the SOC to immediately roll back suspicious DNS records and urgently enable additional security layers like DNSSEC. This slowed the spread of the attack but caused short-term interruptions in some client access.", strat: "Targeting the primary attack vector is a correct start. DNS security is a critical area often overlooked.", changes: { financialLoss: 50000, continuity: -5, trust: -2 }, clue: 'dnsHardened', impact: 'Positive' },
+                    'd1-physical-alert': { title: "Alert Physical Security Teams", text: "Taking physical intrusion reports seriously, you put security teams in all country offices on high alert. Entry-exit logs and camera footages started being examined. This caused panic among staff.", strat: "In multi-layered attacks, physical and cyber security must work integrated. Physical leakage can be a harbinger of a greater insider threat.", changes: { financialLoss: 20000, trust: -5, reputation: -2 }, clue: 'physicalSecurityAlerted', impact: 'Neutral' },
+                    'd1-activate-crisis-team': { title: "Activate Core Crisis Management Team", text: "Anticipating the severity of the event, you gathered the crisis desk involving CEO, CTO, Legal, and Comms directors. This increased coordination but drew all top management attention to this issue, increasing operational pressure.", strat: "Early coordination can prevent the crisis from growing. Informing key stakeholders early allows for a controlled response instead of panic.", changes: { financialLoss: 10000, trust: +2 }, clue: 'crisisTeamActivated', impact: 'Positive' },
+                    'd1-threat-hunt': { title: "Launch Comprehensive Threat Hunt", text: "You ordered SOC and Threat Intelligence teams to start a proactive threat hunt across the global network using detected IoCs (Indicators of Compromise). This required intense resources and slowed down other operations.", strat: "Proactive threat hunting can be vital to detect other steps of the attacker in the network, but it is costly and distracting.", changes: { financialLoss: 150000, continuity: -3 }, clue: 'threatHuntingStarted', impact: 'Neutral' },
+
+                    'd2-isolate-segments': { title: "Isolate Affected Network Segments", text: "You immediately isolated network segments where ransomware was detected. This prevented encryption from spreading to critical systems, but services in isolated segments stopped completely.", strat: "Priority in an attack is to stop the bleeding. Isolation hurts in the short term but prevents disaster in the long term.", changes: { financialLoss: 250000, continuity: -15, trust: -5 }, clue: 'segmentsIsolated', impact: 'Positive' },
+                    'd2-counter-deepfake': { title: "Launch Urgent Comms Against Deepfake", text: "You instructed the comms team to prepare a press release and social media announcement characterizing the deepfake video as 'fake and malicious disinformation'. This cleared some confusion in public opinion but indirectly confirmed the attack.", strat: "Speed is critical in fighting disinformation. Taking control is better than rumors spreading, but carries reputation risks.", changes: { financialLoss: 80000, reputation: +5, trust: -3 }, clue: 'deepfakeCountered', impact: 'Positive' },
+                    'd2-analyze-ransomware': { title: "Analyze Ransomware", text: "You sent the malware sample to the reverse engineering team. It was understood to be a custom variant used by the APT group and also included a data exfiltration module. There was a contact address in the ransom note but no payment instruction yet.", strat: "Knowing the enemy is the first step to developing the right defense. Ransomware analysis reveals not just encryption but data leak risks.", changes: { financialLoss: 120000, continuity: -2 }, clue: 'ransomwareAnalyzed', impact: 'Neutral' },
+                    'd2-notify-clients': { title: "Notify Key Clients Limitedly", text: "You called executives of your 10 largest clients, informing them you are experiencing 'a cyber security event causing operational challenges' but their money and main data are safe. This shook trust but transparency was appreciated.", strat: "Proactive communication with critical stakeholders can save relationships post-crisis. But its timing and content are very sensitive.", changes: { financialLoss: 10000, trust: -10, reputation: -5 }, clue: 'clientsNotified', impact: 'Negative' },
+
+                    'd3-report-regulators': { title: "Submit Preliminary Report to Regulators", text: "Working with the legal team, you submitted a preliminary information report containing confirmed parts of the incident (DNS manipulation, ransomware) to national CERTs and finance regulators. This fulfilled legal obligations but caused official investigations to start.", strat: "Complying with legal obligations is not negotiable. Early and honest communication can mitigate potential fines.", changes: { financialLoss: 50000, reputation: -7 }, clue: 'reportToRegulators', impact: 'Neutral' },
+                    'd3-issue-statement': { title: "Issue Detailed Public Statement", text: "Facing cameras with the CEO, you announced you are under a complex state-sponsored attack, the deepfake is fake, and you are working to control the situation. Stock dropped temporarily, but transparency can gain trust in the long run.", strat: "Showing leadership in crisis communication is important. Controlled transparency ends speculation and puts the narrative in your control.", changes: { financialLoss: 200000, reputation: -10, trust: +5 }, clue: 'publicStatementIssued', impact: 'Positive' },
+                    'd3-accept-briefing': { title: "Brief Allied Country Government", text: "Through the Government Relations unit, you gave a secret briefing to the allied country agency requesting intelligence. In return, you received critical intelligence about the attacker APT group. This might cause other governments to pressure you.", strat: "In geopolitical crises, you get stronger as you share information. But this makes you a part of international politics and increases risks.", changes: { financialLoss: 10000, reputation: -5 }, clue: 'governmentBriefingAccepted', impact: 'Positive' },
+                    'd3-delay-comms': { title: "Stop All Comms and Stay Silent", text: "You decided to stop all external communication and follow a 'no comment on rumors' policy. This allowed the team to focus on technical recovery but caused uncontrolled rumors to spread, increasing client and shareholder panic.", strat: "Staying silent is rarely a good strategy. It buys time in the short term but destroys trust and reputation in the long term.", changes: { continuity: +2, trust: -15, reputation: -15 }, clue: 'commsDelayed', impact: 'Negative' },
+
+                    'd4-full-transparency': { title: "Full Transparency and Report Sharing", text: "You decided to share a comprehensive report including all technical details of the attack, affected systems, and response steps with public, clients, and all relevant state agencies. This strengthened your reputation and provided international support, but you exposed your tactics to attackers.", strat: "Radical transparency is the strongest way to rebuild trust but can risk operational security.", changes: { financialLoss: 300000, trust: +15, reputation: +10 }, clue: 'fullTransparency', impact: 'Positive' },
+                    'd4-limited-disclosure': { title: "Limited Disclosure and Operational Secrecy", text: "You shared only the minimum legally required information and kept technical details secret. This protected operational security and allowed the team to work without pressure, but strengthened the perception that the company is hiding something.", strat: "Operational Security (OPSEC) is critical, but there is a fine line between secrecy and insecurity.", changes: { financialLoss: 50000, trust: -10, reputation: -8 }, clue: 'limitedDisclosure', impact: 'Neutral' },
+                    'd4-reject-counter-op': { title: "Reject Counter-Operation Offer", text: "You rejected the 'active defense' and cyber counter-attack offer from state agencies, citing legal risks and potential escalation danger. This kept you on safer legal ground but caused attackers to go unpunished.", strat: "Counter-attack (hack-back) is a legal and ethical grey area. For most private companies, risks outweigh potential benefits.", changes: { financialLoss: 0, reputation: -2 }, clue: 'counterOpRejected', impact: 'Positive' },
+                    'd4-accept-counter-op': { title: "Join Coordinated Counter-Operation", text: "In coordination with state agencies, you supported a disruption operation against the attackers' C2 (Command-Control) infrastructure. The operation was successful and attacker infrastructure was collapsed. But this caused your company to become part of an international cyber conflict and increased retaliation risk.", strat: "State-sponsored counter-operations send a strong message but can turn a company into a geopolitical target. This must be a decision of the whole board and state, not just CISO.", changes: { financialLoss: 500000, continuity: -5, reputation: +5, trust: +5 }, clue: 'counterOpAccepted', impact: 'Negative' },
+
+                    'd5-restore-backup': { title: "Restore Systems from Secure Backups", text: "CTO's team started restoring all encrypted systems from pre-incident verified, clean backups. This minimized data loss but the process was long and return of services to normal took time.", strat: "Reliable and tested backups are the most effective defense against ransomware. Recovery Time (RTO) shows the quality of the business continuity plan.", changes: { financialLoss: 400000, continuity: +10 }, clue: 'restoreFromBackup', impact: 'Positive' },
+                    'd5-legal-notifications': { title: "Send Official Data Breach Notifications", text: "Legal department sent official data breach notifications to all affected customers and data protection authorities (under GDPR/KVKK). This brought risk of huge fines but was a legal obligation.", strat: "Data breach notifications must be done on time and accurately. Delay increases fines and reputation loss.", changes: { financialLoss: 1000000, reputation: -10, trust: -8 }, clue: 'legalNotificationsSent', impact: 'Negative' },
+                    'd5-patch-systems': { title: "Emergency Patching of All Vulnerabilities", text: "You started a large-scale emergency patching and security hardening operation to close all vulnerabilities (DNS, software, physical) used by attackers. This increased resilience against future attacks but was costly and laborious.", strat: "A crisis is an opportunity to fundamentally strengthen the security posture. Bandaging the wound is not enough, root cause must be eliminated.", changes: { financialLoss: 750000, continuity: -5 }, clue: 'systemsPatched', impact: 'Positive' },
+                    'd5-investigate-deepfake': { title: "Investigate Deepfake Source", text: "You hired an expert digital forensics firm to analyze the deepfake video and find its source. This provided valuable intelligence about the infrastructure behind the disinformation campaign, but cost quite a lot.", strat: "Fighting disinformation involves not just denying but also understanding its source and motivation.", changes: { financialLoss: 350000, reputation: +3 }, clue: 'deepfakeSourceInvestigated', impact: 'Neutral' },
+
+                    'd6-zero-trust': { title: "Transition to Zero Trust Architecture", text: "With lessons learned from the crisis, you started a comprehensive project to transition to a Zero Trust architecture that completely abandons the 'inside is safe' assumption and verifies every access request. This will significantly increase long-term security but requires very high investment.", strat: "Zero Trust is the foundation of modern cyber security strategies. Crises can create the budget and will required for such major transformations.", changes: { financialLoss: 2000000, continuity: +10, trust: +5 }, clue: 'zeroTrustAdopted', impact: 'Positive' },
+                    'd6-red-teaming': { title: "Establish Continuous Red Teaming Program", text: "To continuously test your defense, you established a program where independent red teams (internal and external) will regularly simulate attacks. This will allow you to proactively find vulnerabilities.", strat: "The best defense is constantly tested defense. Red teaming questions your assumptions and prepares you for real-world attacks.", changes: { financialLoss: 500000, continuity: +5 }, clue: 'redTeamingMandated', impact: 'Positive' },
+                    'd6-intel-sharing': { title: "Lead International Intelligence Sharing Program", text: "You decided to lead a program (ISAC) where you will actively share cyber threat intelligence with other financial institutions and state agencies. This strengthened collective defense and positioned your company as a sector leader.", strat: "Cyber security is a team sport. Shared intelligence makes the entire ecosystem safer.", changes: { financialLoss: 100000, reputation: +10, trust: +5 }, clue: 'intelSharingProgram', impact: 'Positive' },
+                    'd6-revise-crisis-plan': { title: "Revise Crisis Management Plan", text: "With lessons learned from the event, you updated your crisis management plan to include deepfake, physical intrusion, and geopolitical pressures. You clarified roles and responsibilities and increased drill frequency.", strat: "Every crisis is a lesson to be better prepared for the next one. Crisis management plan must be a living document.", changes: { financialLoss: 75000, reputation: +3, trust: +3 }, clue: 'crisisPlanRevised', impact: 'Neutral' }
+                },
+
+                setup() {
+                    this.elements = {
+                        intro: document.getElementById('introSection'), game: document.getElementById('gameContainer'), gameContent: document.getElementById('game-content'),
+                        startButton: document.getElementById('startButton'), intermission: document.getElementById('intermissionSection'),
+                        intermissionTitle: document.getElementById('intermissionTitle'), intermissionDetails: document.getElementById('intermissionDetails'),
+                        continueButton: document.getElementById('continueButton'),
+                        statusBar: {
+                            continuity: document.getElementById('status-continuity'),
+                            financialLoss: document.getElementById('status-financialLoss'),
+                            trust: document.getElementById('status-trust'),
+                            reputation: document.getElementById('status-reputation'),
+                            remaining: document.getElementById('status-remaining')
+                        }
+                    };
+                    this.loadGameHTML();
+                    this.attachListeners();
+                },
+
+                attachListeners() {
+                    this.elements.startButton.addEventListener('click', () => {
+                        this.elements.intro.style.display = 'none';
+                        this.elements.game.style.display = 'block';
+                        this.startGlobalTimer();
+                        this.showSection('stage1_initial_alert');
+                    });
+
+                    this.elements.gameContent.addEventListener('click', (e) => {
+                        const button = e.target.closest('.btn[data-decision]');
+                        if (!button || button.disabled) return;
+
+                        const sectionElement = button.closest('.section');
+                        const decisionId = button.dataset.decision;
+                        const info = this.decisionInfo[decisionId];
+
+                        button.disabled = true;
+                        this.state.currentTurnDecisions.push(info);
+
+                        this.score.financialLoss += info.changes.financialLoss || 0;
+                        this.score.reputation = Math.max(0, Math.min(100, this.score.reputation + (info.changes.reputation || 0)));
+                        this.score.continuity = Math.max(0, Math.min(100, this.score.continuity + (info.changes.continuity || 0)));
+                        this.score.trust = Math.max(0, Math.min(100, this.score.trust + (info.changes.trust || 0)));
+                        this.state[info.clue] = true;
+                        this.updateStatusBar();
+
+                        const maxSelections = parseInt(sectionElement.dataset.maxSelections || 1, 10);
+
+                        if (this.state.currentTurnDecisions.length >= maxSelections) {
+                            this.elements.game.style.display = 'none';
+                            this.showFullIntermission();
+                        } else {
+                            this.updateButtonStates(this.state.currentSectionId);
+                        }
+                    });
+
+                    this.elements.continueButton.addEventListener('click', () => {
+                        this.state.currentTurnDecisions.forEach(decision => {
+                            this.state.decisionHistory.push({ id: decision.clue, title: decision.title, text: decision.text, impactType: decision.impact });
+                        });
+
+                        const nextPath = this.elements.continueButton.dataset.nextPath;
+                        this.elements.intermission.style.display = 'none';
+                        this.elements.continueButton.style.display = 'none';
+
+                        this.state.currentTurnDecisions = [];
+
+                        if (nextPath === 'finalSection') {
+                            this.showFinalReport();
+                        } else {
+                            this.elements.game.style.display = 'block';
+                            this.showSection(nextPath);
+                        }
+                    });
+
+                    this.updateStatusBar();
+                },
+
+                showFullIntermission(stageId) {
+                    const stageDecisions = this.state.currentTurnDecisions; // Use currentTurnDecisions
+                    if (!stageDecisions || stageDecisions.length === 0) return;
+
+                    this.elements.intermissionTitle.textContent = "Impact of Your Choices";
+
+                    let detailsHTML = `<div class="intermission-grid">
+                        <div class="intermission-decisions">
+                            <h3><i class="fa-solid fa-list-check"></i> Your Decisions</h3>
+                            <ul>`;
+
+                    stageDecisions.forEach(d => {
+                        detailsHTML += `<li><strong>${d.title}:</strong> ${d.text}</li>`;
+                    });
+
+                    detailsHTML += `</ul></div>
+                        <div class="intermission-analysis">
+                            <h3><i class="fa-solid fa-chess-board"></i> Strategic Assessment</h3>
+                            <ul>`;
+
+                    stageDecisions.forEach(d => {
+                        detailsHTML += `<li><p>${d.strat}</p></li>`;
+                    });
+
+                    detailsHTML += `</ul></div></div>`;
+
+                    // Metric Impacts
+                    let metricsHTML = `<div class="intermission-metrics-impact">
+                        <h3><i class="fa-solid fa-chart-line"></i> Metric Impacts</h3>
+                        <div class="metrics-impact-grid">`;
+
+                    let hasImpact = false;
+                    stageDecisions.forEach(d => {
+                        if (d.changes) {
+                            metricsHTML += this.getMetricsHtml(d.changes);
+                            hasImpact = true;
+                        }
+                    });
+
+                    if (!hasImpact) {
+                        metricsHTML += `<p>These decisions had no direct impact on the metrics.</p>`;
+                    }
+
+                    metricsHTML += `</div></div>`;
+                    detailsHTML += metricsHTML;
+
+                    this.elements.intermissionDetails.innerHTML = detailsHTML;
+                    this.elements.intermission.style.display = 'flex';
+                    this.elements.continueButton.style.display = 'flex';
+                },
+
+                getMetricsHtml(changes) {
+                    let html = '';
+                    if (changes.continuity) {
+                        const val = changes.continuity;
+                        const color = val > 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+                        const icon = val > 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                        html += `<div class="metric-change-card" style="border-left: 4px solid ${color}">
+                            <div class="metric-name">Operational Continuity</div>
+                            <div class="metric-val" style="color:${color}"><i class="fa-solid ${icon}"></i> ${val > 0 ? '+' : ''}${val}%</div>
+                        </div>`;
+                    }
+                    if (changes.financialLoss) {
+                        const val = changes.financialLoss;
+                        const color = 'var(--accent-red)';
+                        const icon = 'fa-arrow-down';
+                        html += `<div class="metric-change-card" style="border-left: 4px solid ${color}">
+                            <div class="metric-name">Financial Loss</div>
+                            <div class="metric-val" style="color:${color}"><i class="fa-solid ${icon}"></i> +$${val.toLocaleString('en-US')}</div>
+                        </div>`;
+                    }
+                    if (changes.trust) {
+                        const val = changes.trust;
+                        const color = val > 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+                        const icon = val > 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                        html += `<div class="metric-change-card" style="border-left: 4px solid ${color}">
+                            <div class="metric-name">Cust. & Stakeholder Trust</div>
+                            <div class="metric-val" style="color:${color}"><i class="fa-solid ${icon}"></i> ${val > 0 ? '+' : ''}${val}</div>
+                        </div>`;
+                    }
+                    if (changes.reputation) {
+                        const val = changes.reputation;
+                        const color = val > 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+                        const icon = val > 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                        html += `<div class="metric-change-card" style="border-left: 4px solid ${color}">
+                            <div class="metric-name">International Reputation</div>
+                            <div class="metric-val" style="color:${color}"><i class="fa-solid ${icon}"></i> ${val > 0 ? '+' : ''}${val}</div>
+                        </div>`;
+                    }
+                    return html;
+                },
+
+                updateStatusBar() {
+                    const s = this.score;
+                    this.elements.statusBar.continuity.textContent = `${Math.max(0, s.continuity)}%`;
+                    this.elements.statusBar.financialLoss.textContent = `$${s.financialLoss.toLocaleString('en-US')}`;
+                    this.elements.statusBar.trust.textContent = Math.max(0, s.trust);
+                    this.elements.statusBar.reputation.textContent = Math.max(0, s.reputation);
+                },
+
+                showSection(sectionId) {
+                    this.elements.sections.forEach(section => { section.style.display = 'none'; });
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        this.state.currentSectionId = sectionId;
+                        this.updateButtonStates(sectionId);
+                        this.state.currentTurnDecisions = []; // Reset for new section
+
+                        this.elements.continueButton.style.display = 'none';
+
+                    } else {
+                        console.error('Section not found:', sectionId);
+                        this.showFinalReport();
+                    }
+                    this.updateSlackChat(sectionId);
+                },
+
+                updateButtonStates(sectionId) {
+                    const currentSectionElement = document.getElementById(sectionId);
+                    if (!currentSectionElement) return;
+
+                    const buttons = currentSectionElement.querySelectorAll('.btn[data-decision]');
+                    buttons.forEach(button => {
+                        const decisionId = button.dataset.decision;
+                        const info = this.decisionInfo[decisionId];
+
+                        // Disable if already chosen in the entire game
+                        if (info && this.state[info.clue]) {
+                            button.disabled = true;
+                        } else {
+                            button.disabled = false;
+                        }
+
+                        // Specific logic for counter-op
+                        if (decisionId === 'd4-accept-counter-op') {
+                            if (!this.state.governmentBriefingAccepted) {
+                                button.disabled = true;
+                                button.querySelector('small').textContent = 'This option is only active if the government has been briefed and an offer received.';
+                            }
+                        }
+                    });
+                },
+
+                showFinalReport() {
+                    this.stopGlobalTimer();
+                    this.elements.intro.style.display = 'none';
+                    this.elements.intermission.style.display = 'none';
+                    this.elements.game.style.display = 'block';
+                    document.getElementById('statusBar').style.display = 'none';
+
+                    this.elements.sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+
+                    const finalSection = document.getElementById('finalSection');
+                    if (!finalSection) { console.error("Final section not found in HTML!"); return; }
+
+                    finalSection.style.display = 'flex';
+
+                    const badge = document.getElementById('performance-badge');
+                    const metricsContainer = document.getElementById('finalMetricsContainer');
+                    const timelineList = document.getElementById('decision-timeline-list');
+                    const debriefContent = document.getElementById('strategic-debrief-content');
+                    const scoreBreakdownList = document.getElementById('score-breakdown');
+
+                    // --- STANDARD SCORING SYSTEM (V2) ---
+                    let scoreBreakdown = {};
+                    let totalScore = 50;
+                    scoreBreakdown['Initial Score'] = { value: 50, class: 'score-neutral' };
+
+                    // 1. Decision-Based Scoring (+10 / 0 / -10)
+                    let decisionScore = 0;
+                    this.state.decisionHistory.forEach(decision => {
+                        if (decision.impactType === 'Positive') {
+                            decisionScore += 10;
+                        } else if (decision.impactType === 'Negative') {
+                            decisionScore -= 10;
+                        }
+                    });
+
+                    if (decisionScore !== 0) {
+                        totalScore += decisionScore;
+                        scoreBreakdown['Decision Quality'] = {
+                            value: decisionScore,
+                            class: decisionScore > 0 ? 'score-plus' : 'score-minus'
+                        };
+                    }
+
+                    // 2. Metric-Based Bonuses
+                    // Operational Continuity
+                    if (this.score.continuity >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['High Operational Continuity'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.continuity < 50) {
+                        totalScore -= 10;
+                        scoreBreakdown['Continuity Loss Penalty'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // Reputation and Trust
+                    if (this.score.reputation >= 90) {
+                        totalScore += 10;
+                        scoreBreakdown['High Reputation'] = { value: 10, class: 'score-plus' };
+                    }
+                    if (this.score.trust >= 90) {
+                        totalScore += 5; // Extra trust bonus
+                        scoreBreakdown['High Stakeholder Trust'] = { value: 5, class: 'score-plus' };
+                    }
+
+                    // Financial Bonus
+                    if (this.score.financialLoss <= 500000) {
+                        totalScore += 10;
+                        scoreBreakdown['Financial Damage Control'] = { value: 10, class: 'score-plus' };
+                    } else if (this.score.financialLoss > 5000000) {
+                        totalScore -= 10;
+                        scoreBreakdown['High Financial Loss'] = { value: -10, class: 'score-minus' };
+                    }
+
+                    // 3. Strategic Bonuses
+                    if (this.state.fullTransparency) { totalScore += 5; scoreBreakdown['Strategic Move: Full Transparency'] = { value: 5, class: 'score-plus' }; }
+                    if (this.state.zeroTrustAdopted && this.state.intelSharingProgram) { totalScore += 5; scoreBreakdown['Visionary Leadership Bonus'] = { value: 5, class: 'score-plus' }; }
+
+                    // 4. Time Bonus
+                    if (this.timer.remaining >= 180) {
+                        totalScore += 5;
+                        scoreBreakdown['Rapid Response Bonus'] = { value: 5, class: 'score-plus' };
+                    }
+
+                    totalScore = Math.round(Math.max(0, Math.min(100, totalScore)));
+                    this.state.totalScore = totalScore;
+                    // --- SCORING SYSTEM END ---
+
+                    let badgeInfo = {};
+                    if (totalScore >= 90) { badgeInfo = { text: 'CRISIS STRATEGIST', color: 'var(--accent-green)' }; }
+                    else if (totalScore >= 75) { badgeInfo = { text: 'RESILIENT LEADER', color: 'var(--accent-blue)' }; }
+                    else if (totalScore >= 50) { badgeInfo = { text: 'DAMAGE CONTROL', color: 'var(--accent-yellow)' }; }
+                    else { badgeInfo = { text: 'SEVERE LOSSES', color: '#ff5555' }; }
+
+                    badge.textContent = badgeInfo.text;
+                    badge.style.backgroundColor = badgeInfo.color;
+
+                    metricsContainer.innerHTML = `
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-file-invoice-dollar"></i></div><div class="label">Final Score</div><div class="value">${totalScore}/100</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-globe"></i></div><div class="label">International Reputation</div><div class="value">${this.score.reputation}/100</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="label">Financial Loss</div><div class="value">$${this.score.financialLoss.toLocaleString('en-US')}</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-power-off"></i></div><div class="label">Operational Continuity</div><div class="value">${this.score.continuity}%</div></div>
+                        <div class="metric-card"><div class="icon"><i class="fa-solid fa-users"></i></div><div class="label">Cust. & Stakeholder Trust</div><div class="value">${this.score.trust}/100</div></div>
+                    `;
+
+                    timelineList.innerHTML = this.state.decisionHistory.map(decision => {
+                        let liClass = decision.impactType === 'Positive' ? 'positive' : (decision.impactType === 'Negative' ? 'negative' : 'neutral');
+                        return `<li class="${liClass}"><span class="decision-title">${decision.title}</span></li>`;
+                    }).join('');
+
+                    scoreBreakdownList.innerHTML = Object.entries(scoreBreakdown).map(([key, item]) => {
+                        const sign = item.value > 0 ? '+' : '';
+                        return `<li class="${item.class}"><span>${key}</span><span class="score-value">${sign}${item.value} Points</span></li>`;
+                    }).join('');
+
+                    let debriefHTML = '';
+                    if (badgeInfo.text === 'CRISIS STRATEGIST') {
+                        debriefHTML += `<p><strong>Excellent Management!</strong> You demonstrated exceptional leadership in the face of an unprecedented, multi-layered APT attack. You masterfully managed technical, political, and communication challenges. Not only did you keep the company afloat, but you also transformed the crisis into an opportunity for reputation and leadership, positioning CORESEC stronger than before.</p>`;
+                    } else if (badgeInfo.text === 'RESILIENT LEADER') {
+                        debriefHTML += `<p><strong>Effective Response!</strong> In an extremely challenging crisis, you protected the company from a major disaster with sound strategic decisions. While some losses were inevitable, you largely preserved operational continuity, customer trust, and reputation. Your management ensured CORESEC emerged from this ordeal with valuable lessons learned.</p>`;
+                    } else if (badgeInfo.text === 'DAMAGE CONTROL') {
+                        debriefHTML += `<p><strong>Tough Battle:</strong> You managed to limit the devastating effects of the crisis, but the attack still caused significant financial and reputational damage to the company. There were serious disruptions in operational continuity. This simulation offers critical learnings to strengthen your future crisis management plans.</p>`;
+                    } else {
+                        debriefHTML += `<p><strong>Devastating Consequences:</strong> The state-sponsored attack deeply shook CORESEC's operations, financial standing, and reputation. The decisions made were insufficient to control the spread and impact of the crisis. The company's recovery will be a long and costly process. Security and crisis management strategies need to be fundamentally restructured.</p>`;
+                    }
+                    debriefContent.innerHTML = debriefHTML;
+                },
+
+                updateSlackChat(currentSection) {
+                    const chatViewer = document.getElementById('slackChat');
+                    if (!chatViewer) return;
+                    let chat = '';
+                    if (currentSection === 'stage2_escalation') {
+                        chat = `
+                            <div class="message"><span class="sender cto">CTO:</span> The situation is bad! Ransomware encryption has started on some servers! Data integrity is at risk!</div>
+                            <div class="message"><span class="sender pr">Comms Director:</span> OH MY GOD! The CEO's deepfake video is everywhere! We know it's fake, but people believe it! Our brand reputation is collapsing!</div>
+                            <div class="message"><span class="sender ceo">CEO:</span> This is a nightmare! Stop that video immediately! What about our customers? Are systems crashing?!</div>
+                            <div class="message"><span class="sender ciso">You (CISO):</span> Calm down. This is a coordinated attack. Our priority is to stop the spread and control disinformation. We will proceed step by step.</div>
+                        `;
+                    } else if (currentSection === 'stage3_external_pressure') {
+                        chat = `
+                            <div class="message"><span class="sender legal">Legal Counsel:</span> Regulators are calling, they want a report within 24 hours! We are facing heavy fines under GDPR and KVKK.</div>
+                            <div class="message"><span class="sender pr">Comms Director:</span> Reuters and Bloomberg are on the other line. If we don't make a statement, they'll write their own stories.</div>
+                            <div class="message"><span class="sender gov">Government Relations:</span> Washington called. They want information about the attacker APT group, offering help in return. This is very sensitive.</div>
+                            <div class="message"><span class="sender ciso">You (CISO):</span> Pressure is coming from all sides. We must immediately define our communication strategy and legal position. Every decision we make could have geopolitical consequences.</div>
+                        `;
+                    } else if (currentSection === 'stage6_long_term') {
+                        chat = `
+                            <div class="message"><span class="sender ceo">CEO:</span> We weathered the storm. But our wounds are deep. We must never again find ourselves in such a situation. Whatever budget is needed will be found. What is your roadmap?</div>
+                            <div class="message"><span class="sender cto">CTO:</span> We are rebuilding the infrastructure, but we cannot continue with the old logic. We need a more resilient architecture.</div>
+                            <div class="message"><span class="sender legal">Legal Counsel:</span> Investigations and lawsuits could last for years. Our crisis management plan must cover such long-term effects.</div>
+                            <div class="message"><span class="sender ciso">You (CISO):</span> This crisis must be a turning point for us. Technical patches alone are not enough. We must redefine our culture, our architecture, and our role in the industry. It's time to move to proactive and collective defense.</div>
+                        `;
+                    }
+                    chatViewer.innerHTML = chat;
+                },
+
+                loadGameHTML() {
+                    const gameHTMLContent = `
+                        <div id="stage1_initial_alert" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-hourglass-start"></i> Stage 1: Initial Alarms and Uncertainty</h2>
+                            <h3>Day 1, 09:15 - Chaos Begins</h3>
+                            <p>As the week begins, abnormal query and traffic patterns targeting your global DNS infrastructure appear on your SIEM console. Simultaneously, a report of 'unauthorized physical access' comes from the Frankfurt office. Is there a connection between the two events, or is it just a coincidence?</p>
+                            <img src="ilk.png" alt="DNS anomaly graphs and security camera footage" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>As CISO, what will be your first reaction? How will you prioritize these two uncertain threats? (Make 2 Selections)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d1-dns-harden"><i class="fa-solid fa-network-wired"></i><div class="btn-text">Option A: Focus on DNS infrastructure.<small>Instruct the SOC team to roll back suspicious records and urgently tighten DNS security.</small></div></button>
+                                    <button class="btn" data-decision="d1-physical-alert"><i class="fa-solid fa-door-closed"></i><div class="btn-text">Option B: Alert physical security.<small>Raise physical security levels in all offices and order examination of entry logs.</small></div></button>
+                                    <button class="btn" data-decision="d1-activate-crisis-team"><i class="fa-solid fa-users"></i><div class="btn-text">Option C: Assemble core crisis team.<small>Considering the potential severity, immediately inform key executives and activate the crisis desk.</small></div></button>
+                                    <button class="btn" data-decision="d1-threat-hunt"><i class="fa-solid fa-magnifying-glass-chart"></i><div class="btn-text">Option D: Launch proactive threat hunt.<small>Search the entire network for similar or related threat indicators (IoC) using detected anomalies.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Learning Note:</strong> Advanced attacks often begin with confusing signals across multiple vectors. Accurately analyzing the situation and initiating a coordinated response without panic in the first hours is critical.</div>
+                        </div>
+
+                        <div id="stage2_escalation" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-fire"></i> Stage 2: Attack Escalates and Reveals Itself</h2>
+                            <h3>Day 1, 14:30 - Multi-Layered Attack</h3>
+                            <p>While grappling with DNS issues, reports emerge of ransomware encryption starting on some secondary servers in your Asia data center. Worse still, a highly realistic deepfake video of your CEO announcing 'our company is experiencing a major security breach' rapidly spreads on social media. The attack is coordinated and multi-layered.</p>
+                             <div class="slack-chat" id="slackChat"></div>
+                            <div class="interactive-element">
+                                <h4>The crisis is escalating. What urgent actions will you implement to stop the spread and combat disinformation? (Make 2 Selections)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d2-isolate-segments"><i class="fa-solid fa-plug-circle-minus"></i><div class="btn-text">Option A: Immediately isolate affected network segments.<small>Radically cut network connections to prevent ransomware from spreading to critical systems.</small></div></button>
+                                    <button class="btn" data-decision="d2-counter-deepfake"><i class="fa-solid fa-bullhorn"></i><div class="btn-text">Option B: Launch urgent communication against deepfake.<small>Instruct the comms team to prepare a statement announcing the video is fake and denying the situation.</small></div></button>
+                                    <button class="btn" data-decision="d2-analyze-ransomware"><i class="fa-solid fa-bug-slash"></i><div class="btn-text">Option C: Analyze the ransomware sample.<small>Examine the malware to learn about the attacker's identity, capabilities, and whether data was exfiltrated.</small></div></button>
+                                    <button class="btn" data-decision="d2-notify-clients"><i class="fa-solid fa-phone-volume"></i><div class="btn-text">Option D: Inform key clients limitedly.<small>Proactively notify your largest clients to minimize loss of trust.</small></div></button>
+                                </div>
+                            </div>
+                             <div class="learning-note"><strong>Learning Note:</strong> APT attacks aim to cause psychological and reputational damage in addition to technical harm. Technical intervention and crisis communication must be executed simultaneously and in a coordinated manner.</div>
+                        </div>
+
+                        <div id="stage3_external_pressure" class="section" data-max-selections="2">
+                            <h2><i class="fa-solid fa-building-columns"></i> Stage 3: External Pressure and Geopolitical Chess</h2>
+                            <h3>Day 2, 10:00 - The World Reacts</h3>
+                            <p>The incident is no longer a secret. Financial regulators, national cybersecurity agencies (CERTs), the press, and panicked shareholders are all knocking on your door simultaneously. On one side, governments demand a detailed attack report; on the other, some advise you to remain silent. Time is running out, and every decision you make will have international consequences.</p>
+                             <img src="iki.png" alt="A conceptual image showing a crossroads" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>With the world watching, how will you manage this web of pressure? Which stakeholder will you prioritize? (Make 2 Selections)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d3-report-regulators"><i class="fa-solid fa-gavel"></i><div class="btn-text">Option A: Submit preliminary report to regulators.<small>Send a preliminary report containing confirmed information to financial regulators and CERTs to fulfill legal obligations.</small></div></button>
+                                    <button class="btn" data-decision="d3-issue-statement"><i class="fa-solid fa-microphone-lines"></i><div class="btn-text">Option B: Issue a detailed public statement.<small>Together with the CEO, transparently explain the situation to take control of the narrative and end speculation.</small></div></button>
+                                    <button class="btn" data-decision="d3-accept-briefing"><i class="fa-solid fa-handshake"></i><div class="btn-text">Option C: Secretly brief allied country government.<small>Arrange a confidential briefing to exchange intelligence about the attacker in return for an offer of assistance.</small></div></button>
+                                    <button class="btn" data-decision="d3-delay-comms"><i class="fa-solid fa-volume-xmark"></i><div class="btn-text">Option D: Stop all communications and remain silent.<small>Cut all external communication and adopt a 'no comment' policy to focus on technical recovery.</small></div></button>
+                                </div>
+                            </div>
+                            <div class="learning-note"><strong>Learning Note:</strong> In a global crisis, the CISO is also a diplomat. A delicate balance must be struck between legal, commercial, and geopolitical interests.</div>
+                        </div>
+                        
+                        <div id="stage4_strategic_decision" class="section" data-max-selections="1">
+                            <h2><i class="fa-solid fa-chess-king"></i> Stage 4: Moment of Strategic Decision</h2>
+                            <h3>Day 2, 16:00 - Crossroads</h3>
+                            <p>You are at the most critical point of the crisis. While technical teams are fighting, there are two fundamental strategic questions on the board's table: How transparent will we be? And what will we do against those who attacked us? Your decision will determine CORESEC's future and its place in the cybersecurity world.</p>
+                             <img src="üc.png" alt="A conceptual image showing a crossroads" class="scenario-image">
+                            <div class="interactive-element">
+                                <h4>You need to make two critical decisions. What should be the company's main strategy? (Make only 1 Selection)</h4>
+                                <div class="decision-buttons">
+                                    <button class="btn" data-decision="d4-full-transparency"><i class="fa-solid fa-eye"></i><div class="btn-text">Strategy 1: Full Transparency.<small>Share all technical details of the attack with the public. Rebuild trust, but expose your tactics.</small></div></button>
+                                    <button class="btn" data-decision="d4-limited-disclosure"><i class="fa-solid fa-eye-slash"></i><div class="btn-text">Strategy 2: Limited Disclosure.<small>Share only legally required information, prioritize operational security. Risk distrust.</small></div></button>
+                                    <button class="btn" data-decision="d4-reject-counter-op"><i class="fa-solid fa-shield-halved"></i><div class="btn-text">Strategy 3: Passive Defense.<small>Reject the 'counter-operation' offer from the state due to legal and escalation risks.</small></div></button>
+                                    <button class="btn" data-decision="d4-accept-counter-op"><i class="fa-solid fa-crosshairs"></i><div class="btn-text">Strategy 4: Active Defense.<small>Participate in a cyber operation against the attacker's infrastructure in coordination with state agencies. (High Risk)</small></div></button>
+                                </div>
+                            </div>
+                             <div class="learning-note"><strong>Learning Note:</strong> Some decisions are not about technology, but about philosophy and risk appetite. A CISO must be able to present clear options and consequences to the board for these fundamental strategic decisions.</div>
+                        </div>
+
+                        <div id="stage5_recovery" class="section" data-max-selections="2">
+                             <h2><i class="fa-solid fa-briefcase-medical"></i> Stage 5: Recovery and Healing Wounds</h2>
+                             <h3>Day 3, 11:30 - Clearing the Wreckage</h3>
+                             <p>The acute crisis is under control, but the aftermath of the battle is just beginning. Systems are still down, data is damaged, customers are angry, and the legal department is busy with potential lawsuits and penalties. Now it's time to clear the wreckage and get operations back on their feet.</p>
+                              <img src="dört.png" alt="A rebuilt data center" class="scenario-image">
+                             <div class="interactive-element">
+                                 <h4>Which steps will you prioritize in the recovery process? (Make 2 Selections)</h4>
+                                 <div class="decision-buttons">
+                                     <button class="btn" data-decision="d5-restore-backup"><i class="fa-solid fa-database"></i><div class="btn-text">Option A: Restore systems from secure backups.<small>Restart services by reverting from verified and clean backups. (Time Consuming)</small></div></button>
+                                     <button class="btn" data-decision="d5-legal-notifications"><i class="fa-solid fa-scale-balanced"></i><div class="btn-text">Option B: Send official data breach notifications.<small>Start managing potential penalties by making all legal notifications under GDPR/KVKK.</small></div></button>
+                                     <button class="btn" data-decision="d5-patch-systems"><i class="fa-solid fa-screwdriver-wrench"></i><div class="btn-text">Option C: Emergency patch all vulnerabilities.<small>Launch a large-scale hardening operation to close all entry points used by attackers.</small></div></button>
+                                     <button class="btn" data-decision="d5-investigate-deepfake"><i class="fa-solid fa-masks-theater"></i><div class="btn-text">Option D: Investigate the deepfake source.<small>Hire an expert firm to analyze the deepfake video and uncover the infrastructure behind the disinformation campaign.</small></div></button>
+                                 </div>
+                             </div>
+                             <div class="learning-note"><strong>Learning Note:</strong> Recovery is not just a technical process. Legal, communication, and operational steps must be taken in the correct sequence and in harmony with each other. MTTR (Mean Time to Recover) is one of the most critical metrics.</div>
+                        </div>
+                        
+                        <div id="stage6_long_term" class="section" data-max-selections="2">
+                             <h2><i class="fa-solid fa-graduation-cap"></i> Stage 6: Lessons Learned and Long-Term Strategy</h2>
+                             <h3>Day 5 - Building the Future</h3>
+                             <p>The dust has settled. Now is the time to turn this destructive experience into an opportunity to make CORESEC more resilient against future threats. The board expects a long-term, fundamental strategic plan from you to ensure such a crisis never happens again.</p>
+                             <img src="bes.png" alt="A conceptual image showing a crossroads" class="scenario-image">
+                             <div class="interactive-element">
+                                 <h4>Which key investments will you propose to shape CORESEC's cybersecurity future? (Make 2 Selections)</h4>
+                                 <div class="decision-buttons">
+                                     <button class="btn" data-decision="d6-zero-trust"><i class="fa-solid fa-dungeon"></i><div class="btn-text">Option A: Transition to Zero Trust Architecture.<small>Initiate a fundamental architectural transformation project that abandons the 'inside is safe' assumption and verifies every access request.</small></div></button>
+                                     <button class="btn" data-decision="d6-red-teaming"><i class="fa-solid fa-flag-checkered"></i><div class="btn-text">Option B: Establish a Continuous Red Teaming Program.<small>Ensure regular attack simulations by internal and external 'ethical hacker' teams to continuously test defenses.</small></div></button>
+                                     <button class="btn" data-decision="d6-intel-sharing"><i class="fa-solid fa-share-nodes"></i><div class="btn-text">Option C: Lead International Intelligence Sharing Program.<small>Strengthen collective defense by actively sharing threat intelligence with the industry and governments.</small></div></button>
+                                     <button class="btn" data-decision="d6-revise-crisis-plan"><i class="fa-solid fa-book-open"></i><div class="btn-text">Option D: Update Crisis Management Plan and Drills.<small>Update the crisis plan based on lessons learned and conduct regular, challenging drills involving all management.</small></div></button>
+                                 </div>
+                             </div>
+                             <div class="learning-note"><strong>Learning Note:</strong> True cyber resilience is built not just with technology, but with culture, processes, and a proactive approach. Crises are the best catalysts for such fundamental transformations.</div>
+                        </div>
+
+
+                        <div id="finalSection" class="section centered-page" style="display: none;">
+                            <h2><i class="fa-solid fa-chart-line"></i> Post-Crisis Assessment Report</h2>
+                            <p>Simulation complete. Below is a detailed breakdown of your crisis management performance against this complex APT attack.</p>
+                            <div id="performance-badge-container"><span id="performance-badge"></span></div>
+                            <div class="final-metrics" id="finalMetricsContainer"></div>
+                            <div class="post-crisis-layout">
+                                <div class="event-timeline">
+                                    <h3><i class="fa-solid fa-timeline"></i> Decision Timeline</h3>
+                                    <ul id="decision-timeline-list"></ul>
+                                </div>
+                                <div class="strategic-debrief">
+                                    <h3><i class="fa-solid fa-lightbulb"></i> Strategic Debrief</h3>
+                                    <div id="strategic-debrief-content"></div>
+                                    <h3 style="margin-top: 20px;"><i class="fa-solid fa-calculator"></i> Score Breakdown</h3>
+                                    <ul id="score-breakdown"></ul>
+                                </div>
+                            </div>
+                            <div class="decision-buttons" style="margin-top: 40px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+                                <button class="btn btn-start" onclick="location.reload()"><i class="fa-solid fa-arrow-rotate-right"></i> Restart Simulation</button>
+                            </div>
+                        </div>
+                    `;
+                    this.elements.gameContent.innerHTML = gameHTMLContent;
+                    this.elements.sections = this.elements.gameContent.querySelectorAll('.section');
+                    hljs.highlightAll();
+                },
+
+                startGlobalTimer() {
+                    if (this.timer.running) return;
+                    this.timer.running = true;
+                    this.timer.remaining = this.timer.total;
+                    this.updateTimerUI();
+                    this.timer.intervalId = setInterval(() => {
+                        this.timer.remaining--;
+                        this.updateTimerUI();
+                        if (this.timer.remaining <= 0) {
+                            this.stopGlobalTimer();
+                            alert("Time is up! Generating report.");
+                            this.showFinalReport();
+                        }
+                    }, 1000);
+                },
+
+                stopGlobalTimer() {
+                    if (this.timer.intervalId) clearInterval(this.timer.intervalId);
+                    this.timer.intervalId = null;
+                    this.timer.running = false;
+                },
+
+                updateTimerUI() {
+                    const m = String(Math.floor(this.timer.remaining / 60)).padStart(2, '0');
+                    const s = String(this.timer.remaining % 60).padStart(2, '0');
+                    if (this.elements.statusBar.remaining) {
+                        this.elements.statusBar.remaining.textContent = `${m}:${s}`;
+                    }
+                }
+            };
+            window.game.setup();
+        });
+    </script>
+    <script src="../global-scenario.js"></script>
+</body>
+
+</html>
